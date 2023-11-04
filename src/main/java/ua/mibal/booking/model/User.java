@@ -31,6 +31,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.NaturalId;
+import org.hibernate.proxy.HibernateProxy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import ua.mibal.booking.model.embeddable.Phone;
@@ -40,6 +41,7 @@ import ua.mibal.booking.model.embeddable.UserSettings;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -84,6 +86,22 @@ public class User implements UserDetails {
             indexes = @Index(name = "roles_user_id_idx", columnList = "user_id")
     )
     private Set<Role> roles = new HashSet<>();
+
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
+        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
+        if (thisEffectiveClass != oEffectiveClass) return false;
+        User user = (User) o;
+        return getEmail() != null && Objects.equals(getEmail(), user.getEmail());
+    }
+
+    @Override
+    public final int hashCode() {
+        return Objects.hash(email);
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
