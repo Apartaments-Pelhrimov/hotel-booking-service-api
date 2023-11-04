@@ -18,21 +18,23 @@ package ua.mibal.booking.model.embeddable;
 
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
-@Data
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Embeddable
-public class Role {
+public class Role implements GrantedAuthority {
+
     public static final Role USER = new Role("ROLE_USER");
     public static final Role LOCAL_MANAGER = new Role("ROLE_LOCAL_MANAGER");
     public static final Role GLOBAL_MANAGER = new Role("ROLE_GLOBAL_MANAGER");
 
-    private String role;
+    private String authority;
 }
