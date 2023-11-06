@@ -89,6 +89,7 @@ public class Apartment {
             name = "apartment_photos",
             joinColumns = @JoinColumn(
                     name = "apartment_id",
+                    nullable = false,
                     foreignKey = @ForeignKey(name = "apartment_photos_apartment_id_fk")
             ))
     private List<Photo> photos = new ArrayList<>();
@@ -98,6 +99,7 @@ public class Apartment {
             name = "apartment_beds",
             joinColumns = @JoinColumn(
                     name = "apartment_id",
+                    nullable = false,
                     foreignKey = @ForeignKey(name = "apartment_beds_apartment_id_fk")
             ))
     private List<Bed> beds = new ArrayList<>();

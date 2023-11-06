@@ -85,6 +85,7 @@ public class Hotel {
             name = "hotel_photos",
             joinColumns = @JoinColumn(
                     name = "hotel_id",
+                    nullable = false,
                     foreignKey = @ForeignKey(name = "hotel_photos_hotel_id_fk")
             ),
             indexes = @Index(
@@ -101,10 +102,12 @@ public class Hotel {
             name = "hotel_managers",
             joinColumns = @JoinColumn(
                     name = "hotel_id",
+                    nullable = false,
                     foreignKey = @ForeignKey(name = "hotel_managers_hotel_id_fk")
             ),
             inverseJoinColumns = @JoinColumn(
                     name = "user_id",
+                    nullable = false,
                     foreignKey = @ForeignKey(name = "hotel_managers_user_id_fk")
             ),
             indexes = {

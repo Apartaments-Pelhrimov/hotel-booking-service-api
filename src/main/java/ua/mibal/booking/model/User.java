@@ -86,6 +86,7 @@ public class User implements UserDetails {
             name = "roles",
             joinColumns = @JoinColumn(
                     name = "user_id",
+                    nullable = false,
                     foreignKey = @ForeignKey(name = "roles_user_id_fk")
             ),
             indexes = @Index(name = "roles_user_id_idx", columnList = "user_id")
