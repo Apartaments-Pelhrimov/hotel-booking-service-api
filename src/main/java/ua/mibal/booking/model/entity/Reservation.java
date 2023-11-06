@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model;
+package ua.mibal.booking.model.entity;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -29,6 +32,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ua.mibal.booking.model.embeddable.ReservationDetails;
 
 import java.time.ZonedDateTime;
 
@@ -41,21 +45,24 @@ import java.time.ZonedDateTime;
 @Getter
 @Setter
 @Entity
-@Table(name = "comments", indexes = {
-        @Index(name = "comments_user_id_idx", columnList = "user_id"),
-        @Index(name = "comments_apartment_id_idx", columnList = "apartment_id")
+@Table(name = "reservations", indexes = {
+        @Index(name = "reservations_user_id_idx", columnList = "user_id"),
+        @Index(name = "reservations_apartment_id_idx", columnList = "apartment_id")
 })
-public class Comment {
+public class Reservation {
 
     @Id
     @GeneratedValue
     private Long id;
 
+    @Column(nullable = false)
+    private ZonedDateTime dateTime;
+
     @ManyToOne(optional = false)
     @JoinColumn(
             name = "user_id",
             nullable = false,
-            foreignKey = @ForeignKey(name = "comments_user_id_fk")
+            foreignKey = @ForeignKey(name = "reservations_user_id_fk")
     )
     private User user;
 
@@ -63,25 +70,30 @@ public class Comment {
     @JoinColumn(
             name = "apartment_id",
             nullable = false,
-            foreignKey = @ForeignKey(name = "comments_apartment_id_fk")
+            foreignKey = @ForeignKey(name = "reservations_apartment_id_fk")
     )
     private Apartment apartment;
 
-    @Column(nullable = false)
-    private ZonedDateTime creationDateTime;
+    @Embedded
+    private ReservationDetails details;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String body;
+    private State state;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Comment that)) return false;
+        if (!(o instanceof Reservation that)) return false;
         return id != null && id.equals(that.id);
     }
 
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    public enum State {
+        IN_PROGRESS, PROCESSED, REJECTED
     }
 }

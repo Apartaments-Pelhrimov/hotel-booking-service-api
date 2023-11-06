@@ -16,7 +16,7 @@
 
 package ua.mibal.booking.exception;
 
-import ua.mibal.booking.model.User;
+import ua.mibal.booking.model.entity.User;
 
 /**
  * @author Mykhailo Balakhon

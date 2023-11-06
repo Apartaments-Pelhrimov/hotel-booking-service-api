@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model;
+package ua.mibal.booking.model.entity;
 
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
