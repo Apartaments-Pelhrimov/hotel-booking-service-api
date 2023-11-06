@@ -37,6 +37,7 @@ public class Role implements GrantedAuthority {
     public static final Role LOCAL_MANAGER = new Role("ROLE_LOCAL_MANAGER");
     public static final Role GLOBAL_MANAGER = new Role("ROLE_GLOBAL_MANAGER");
 
+    @Column(nullable = false)
     private String authority;
 
     @Override
