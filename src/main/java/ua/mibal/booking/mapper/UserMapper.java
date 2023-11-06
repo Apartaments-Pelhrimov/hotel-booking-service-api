@@ -16,7 +16,12 @@
 
 package ua.mibal.booking.mapper;
 
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants;
+import org.mapstruct.Named;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import ua.mibal.booking.model.dto.RegistrationDto;
 import ua.mibal.booking.model.entity.User;
 
@@ -24,11 +29,17 @@ import ua.mibal.booking.model.entity.User;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
-@Component
-public class UserMapper {
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+public abstract class UserMapper {
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-    // TODO
-    public User registrationDtoToUser(RegistrationDto registrationDto) {
-        return null;
+    @Mapping(target = "phone.number", source = "phone")
+    @Mapping(target = "password", qualifiedByName = "encodePassword")
+    public abstract User toEntity(RegistrationDto registrationDto);
+
+    @Named("encodePassword")
+    public String encodePassword(String rawPassword) {
+        return passwordEncoder.encode(rawPassword);
     }
 }

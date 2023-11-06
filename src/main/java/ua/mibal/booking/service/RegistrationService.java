@@ -34,7 +34,7 @@ public class RegistrationService {
     private final UserMapper userMapper;
 
     public void register(RegistrationDto registrationDto) {
-        User user = userMapper.registrationDtoToUser(registrationDto);
+        User user = userMapper.toEntity(registrationDto);
         userRepository.save(user);
     }
 }
