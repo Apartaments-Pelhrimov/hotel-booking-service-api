@@ -52,6 +52,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import static lombok.AccessLevel.PRIVATE;
+import static ua.mibal.booking.model.embeddable.Role.GLOBAL_MANAGER;
+import static ua.mibal.booking.model.embeddable.Role.LOCAL_MANAGER;
+import static ua.mibal.booking.model.embeddable.Role.USER;
+
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
@@ -104,16 +109,75 @@ public class User implements UserDetails {
             ),
             indexes = @Index(name = "roles_user_id_idx", columnList = "user_id")
     )
+    @Setter(PRIVATE)
     private Set<Role> roles = new HashSet<>();
 
     @ManyToMany(mappedBy = "managers")
+    @Setter(PRIVATE)
     private Set<Hotel> hotels = new HashSet<>();
 
     @OneToMany(mappedBy = "user")
+    @Setter(PRIVATE)
     private List<Reservation> reservations = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
+    @Setter(PRIVATE)
     private List<Comment> comments = new ArrayList<>();
+
+    public boolean is(Role role) {
+        return getRoles().contains(role);
+    }
+
+    public void addRole(Role role) {
+        if (role.equals(GLOBAL_MANAGER)) {
+            this.roles.add(LOCAL_MANAGER);
+        }
+        this.roles.add(role);
+    }
+
+    public void deleteRole(Role role) {
+        if (role.equals(USER)) return;
+        if (role.equals(LOCAL_MANAGER)) {
+            if (this.is(GLOBAL_MANAGER)) {
+                this.roles.remove(GLOBAL_MANAGER);
+            }
+            this.hotels.forEach(hotel -> hotel.removeManager(this));
+            this.hotels.clear();
+        }
+        this.roles.remove(role);
+    }
+
+    public void addHotel(Hotel hotel) {
+        hotel.addManager(this);
+    }
+
+    public void removeHotel(Hotel hotel) {
+        hotel.removeManager(this);
+    }
+
+    public void addReservation(Reservation reservation) {
+        reservation.setUser(this);
+        this.reservations.add(reservation);
+    }
+
+    public void removeReservation(Reservation reservation) {
+        if (this.reservations.contains(reservation)) {
+            this.reservations.remove(reservation);
+            reservation.setUser(null);
+        }
+    }
+
+    public void addComment(Comment comment) {
+        comment.setUser(this);
+        this.comments.add(comment);
+    }
+
+    public void removeComment(Comment comment) {
+        if (this.comments.contains(comment)) {
+            this.comments.remove(comment);
+            comment.setUser(null);
+        }
+    }
 
     @Override
     public final boolean equals(Object o) {

@@ -16,6 +16,7 @@
 
 package ua.mibal.booking.model.embeddable;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -37,4 +38,17 @@ public class Role implements GrantedAuthority {
     public static final Role GLOBAL_MANAGER = new Role("ROLE_GLOBAL_MANAGER");
 
     private String authority;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Role role = (Role) o;
+        return authority != null && authority.equals(role.authority);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

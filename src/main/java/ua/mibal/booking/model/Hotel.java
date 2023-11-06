@@ -36,6 +36,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ua.mibal.booking.exception.IllegalRoleException;
 import ua.mibal.booking.model.embeddable.HotelOptions;
 import ua.mibal.booking.model.embeddable.Location;
 import ua.mibal.booking.model.embeddable.Photo;
@@ -44,6 +45,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static lombok.AccessLevel.PRIVATE;
+import static ua.mibal.booking.model.embeddable.Role.GLOBAL_MANAGER;
+import static ua.mibal.booking.model.embeddable.Role.LOCAL_MANAGER;
 
 /**
  * @author Mykhailo Balakhon
@@ -92,9 +97,11 @@ public class Hotel {
                     name = "hotel_photos_hotel_id_idx",
                     columnList = "hotel_id"
             ))
+    @Setter(PRIVATE)
     private List<Photo> photos = new ArrayList<>();
 
     @OneToMany(mappedBy = "hotel")
+    @Setter(PRIVATE)
     private List<Apartment> apartments = new ArrayList<>();
 
     @ManyToMany
@@ -114,6 +121,7 @@ public class Hotel {
                     @Index(name = "hotel_managers_hotel_id_idx", columnList = "hotel_id"),
                     @Index(name = "hotel_managers_user_id_idx", columnList = "user_id")
             })
+    @Setter(PRIVATE)
     private Set<User> managers = new HashSet<>();
 
     @Override
@@ -126,6 +134,40 @@ public class Hotel {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    public void addPhoto(Photo photo) {
+        this.photos.add(photo);
+    }
+
+    public void deletePhoto(Photo photo) {
+        this.photos.remove(photo);
+    }
+
+    public void addApartment(Apartment apartment) {
+        apartment.setHotel(this);
+        this.apartments.add(apartment);
+    }
+
+    public void deleteApartment(Apartment apartment) {
+        if (this.apartments.contains(apartment)) {
+            this.apartments.remove(apartment);
+            apartment.setHotel(null);
+        }
+    }
+
+    public void addManager(User user) {
+        if (user.is(GLOBAL_MANAGER)) return;
+        if (!user.is(LOCAL_MANAGER)) throw new IllegalRoleException(user);
+        this.managers.add(user);
+        user.getHotels().add(this);
+    }
+
+    public void removeManager(User user) {
+        if (this.managers.contains(user)) {
+            this.managers.remove(user);
+            user.getHotels().remove(this);
+        }
     }
 
     public enum Money {

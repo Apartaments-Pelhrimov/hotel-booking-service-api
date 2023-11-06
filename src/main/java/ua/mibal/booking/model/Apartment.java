@@ -43,6 +43,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import static lombok.AccessLevel.PRIVATE;
+
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
@@ -93,6 +95,7 @@ public class Apartment {
                     nullable = false,
                     foreignKey = @ForeignKey(name = "apartment_photos_apartment_id_fk")
             ))
+    @Setter(PRIVATE)
     private List<Photo> photos = new ArrayList<>();
 
     @ElementCollection
@@ -103,13 +106,40 @@ public class Apartment {
                     nullable = false,
                     foreignKey = @ForeignKey(name = "apartment_beds_apartment_id_fk")
             ))
+    @Setter(PRIVATE)
     private List<Bed> beds = new ArrayList<>();
 
     @OneToMany(mappedBy = "apartment")
+    @Setter(PRIVATE)
     private List<Reservation> reservations = new ArrayList<>();
 
     @OneToMany(mappedBy = "apartment")
+    @Setter(PRIVATE)
     private List<Comment> comments = new ArrayList<>();
+
+    public void addReservation(Reservation reservation) {
+        reservation.setApartment(this);
+        this.reservations.add(reservation);
+    }
+
+    public void removeReservation(Reservation reservation) {
+        if (this.reservations.contains(reservation)) {
+            this.reservations.remove(reservation);
+            reservation.setApartment(null);
+        }
+    }
+
+    public void addComment(Comment comment) {
+        comment.setApartment(this);
+        this.comments.add(comment);
+    }
+
+    public void removeComment(Comment comment) {
+        if (this.comments.contains(comment)) {
+            this.comments.remove(comment);
+            comment.setApartment(null);
+        }
+    }
 
     @Override
     public boolean equals(Object o) {
