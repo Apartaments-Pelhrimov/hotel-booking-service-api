@@ -19,17 +19,19 @@ package ua.mibal.booking.model.embeddable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.type.NumericBooleanConverter;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class HotelOptions {
 
     public static final HotelOptions DEFAULT

@@ -26,9 +26,9 @@ import org.springframework.security.core.GrantedAuthority;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
-@Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
 @Embeddable
 public class Role implements GrantedAuthority {
 
