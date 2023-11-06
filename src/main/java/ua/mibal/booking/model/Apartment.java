@@ -18,31 +18,29 @@ package ua.mibal.booking.model;
 
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ua.mibal.booking.model.embeddable.HotelOptions;
-import ua.mibal.booking.model.embeddable.Location;
+import org.hibernate.type.NumericBooleanConverter;
+import ua.mibal.booking.model.embeddable.ApartmentOptions;
+import ua.mibal.booking.model.embeddable.Bed;
 import ua.mibal.booking.model.embeddable.Photo;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author Mykhailo Balakhon
@@ -53,8 +51,11 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = "hotels")
-public class Hotel {
+@Table(
+        name = "apartments",
+        indexes = @Index(name = "apartments_hotel_id_idx", columnList = "hotel_id")
+)
+public class Apartment {
 
     @Id
     @GeneratedValue
@@ -63,46 +64,41 @@ public class Hotel {
     @Column(nullable = false)
     private String name;
 
-    private Integer stars;
-
-    @Embedded
-    private Location location;
-
-    private String description;
-
-    private String rules;
-
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Money money;
+    private Integer rooms;
+
+    @Column(nullable = false)
+    private BigDecimal oneDayCost;
 
     @Embedded
-    private HotelOptions hotelOptions;
+    private ApartmentOptions apartmentOptions;
+
+    @Convert(converter = NumericBooleanConverter.class)
+    @Column(nullable = false)
+    private Boolean published;
+
+    @ManyToOne
+    @JoinColumn(
+            name = "hotel_id",
+            nullable = false,
+            foreignKey = @ForeignKey(name = "apartments_hotel_id_fk"))
+    private Hotel hotel;
 
     @ElementCollection
     @CollectionTable(
-            name = "hotel_photos",
-            joinColumns = @JoinColumn(name = "hotel_id"),
-            indexes = @Index(
-                    name = "hotel_photos_hotel_id_idx",
-                    columnList = "hotel_id"
+            name = "apartment_photos",
+            joinColumns = @JoinColumn(
+                    name = "apartment_id",
+                    foreignKey = @ForeignKey(name = "apartment_photos_apartment_id_fk")
             ))
     private List<Photo> photos = new ArrayList<>();
 
-    @OneToMany(mappedBy = "hotel")
-    private List<Apartment> apartments = new ArrayList<>();
-
-    @ManyToMany
-    @JoinTable(
-            name = "hotel_managers",
-            joinColumns = @JoinColumn(name = "hotel_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"), indexes = {
-            @Index(name = "hotel_managers_hotel_id_idx", columnList = "hotel_id"),
-            @Index(name = "hotel_managers_user_id_idx", columnList = "user_id")
-    })
-    private Set<User> managers = new HashSet<>();
-
-    public enum Money {
-        USD, EUR, UAH, CZK,
-    }
+    @ElementCollection
+    @CollectionTable(
+            name = "apartment_beds",
+            joinColumns = @JoinColumn(
+                    name = "apartment_id",
+                    foreignKey = @ForeignKey(name = "apartment_beds_apartment_id_fk")
+            ))
+    private List<Bed> beds = new ArrayList<>();
 }
