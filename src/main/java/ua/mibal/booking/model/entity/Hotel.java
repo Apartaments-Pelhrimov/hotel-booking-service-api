@@ -83,7 +83,7 @@ public class Hotel {
     private Money money;
 
     @Embedded
-    private HotelOptions hotelOptions;
+    private HotelOptions hotelOptions = HotelOptions.DEFAULT;
 
     @ElementCollection
     @CollectionTable(

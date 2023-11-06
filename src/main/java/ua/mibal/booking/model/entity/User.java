@@ -90,14 +90,14 @@ public class User implements UserDetails {
     private Photo photo;
 
     @Embedded
-    private UserSettings userSettings;
+    private UserSettings userSettings = UserSettings.DEFAULT;
 
     @Convert(converter = NumericBooleanConverter.class)
     @Column(nullable = false)
-    private Boolean enabled;
+    private Boolean enabled = false;
 
     @Column(nullable = false)
-    private ZonedDateTime creationDateTime;
+    private ZonedDateTime creationDateTime = ZonedDateTime.now();
 
     @ElementCollection
     @CollectionTable(

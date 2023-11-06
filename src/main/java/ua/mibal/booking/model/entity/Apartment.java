@@ -74,11 +74,11 @@ public class Apartment {
     private BigDecimal oneDayCost;
 
     @Embedded
-    private ApartmentOptions apartmentOptions;
+    private ApartmentOptions apartmentOptions = ApartmentOptions.DEFAULT;
 
     @Convert(converter = NumericBooleanConverter.class)
     @Column(nullable = false)
-    private Boolean published;
+    private Boolean published = false;
 
     @ManyToOne(optional = false)
     @JoinColumn(

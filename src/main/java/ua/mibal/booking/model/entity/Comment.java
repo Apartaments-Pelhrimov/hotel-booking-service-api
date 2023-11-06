@@ -68,7 +68,7 @@ public class Comment {
     private Apartment apartment;
 
     @Column(nullable = false)
-    private ZonedDateTime creationDateTime;
+    private ZonedDateTime creationDateTime = ZonedDateTime.now();
 
     @Column(nullable = false)
     private String body;

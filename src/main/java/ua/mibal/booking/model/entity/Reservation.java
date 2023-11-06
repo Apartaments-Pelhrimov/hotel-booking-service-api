@@ -56,7 +56,7 @@ public class Reservation {
     private Long id;
 
     @Column(nullable = false)
-    private ZonedDateTime dateTime;
+    private ZonedDateTime dateTime = ZonedDateTime.now();
 
     @ManyToOne(optional = false)
     @JoinColumn(
@@ -79,7 +79,7 @@ public class Reservation {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private State state;
+    private State state = State.IN_PROGRESS;
 
     @Override
     public boolean equals(Object o) {
