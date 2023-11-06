@@ -21,6 +21,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
@@ -83,7 +84,10 @@ public class User implements UserDetails {
     @ElementCollection
     @CollectionTable(
             name = "roles",
-            joinColumns = @JoinColumn(name = "user_id"),
+            joinColumns = @JoinColumn(
+                    name = "user_id",
+                    foreignKey = @ForeignKey(name = "roles_user_id_fk")
+            ),
             indexes = @Index(name = "roles_user_id_idx", columnList = "user_id")
     )
     private Set<Role> roles = new HashSet<>();

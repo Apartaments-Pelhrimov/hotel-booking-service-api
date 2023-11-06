@@ -23,6 +23,7 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
@@ -82,7 +83,10 @@ public class Hotel {
     @ElementCollection
     @CollectionTable(
             name = "hotel_photos",
-            joinColumns = @JoinColumn(name = "hotel_id"),
+            joinColumns = @JoinColumn(
+                    name = "hotel_id",
+                    foreignKey = @ForeignKey(name = "hotel_photos_hotel_id_fk")
+            ),
             indexes = @Index(
                     name = "hotel_photos_hotel_id_idx",
                     columnList = "hotel_id"
@@ -95,11 +99,18 @@ public class Hotel {
     @ManyToMany
     @JoinTable(
             name = "hotel_managers",
-            joinColumns = @JoinColumn(name = "hotel_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"), indexes = {
-            @Index(name = "hotel_managers_hotel_id_idx", columnList = "hotel_id"),
-            @Index(name = "hotel_managers_user_id_idx", columnList = "user_id")
-    })
+            joinColumns = @JoinColumn(
+                    name = "hotel_id",
+                    foreignKey = @ForeignKey(name = "hotel_managers_hotel_id_fk")
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "user_id",
+                    foreignKey = @ForeignKey(name = "hotel_managers_user_id_fk")
+            ),
+            indexes = {
+                    @Index(name = "hotel_managers_hotel_id_idx", columnList = "hotel_id"),
+                    @Index(name = "hotel_managers_user_id_idx", columnList = "user_id")
+            })
     private Set<User> managers = new HashSet<>();
 
     public enum Money {
