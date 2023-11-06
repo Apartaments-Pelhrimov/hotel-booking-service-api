@@ -18,6 +18,7 @@ package ua.mibal.booking.model;
 
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -35,6 +36,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.proxy.HibernateProxy;
+import org.hibernate.type.NumericBooleanConverter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import ua.mibal.booking.model.embeddable.Phone;
@@ -84,6 +86,13 @@ public class User implements UserDetails {
 
     @Embedded
     private UserSettings userSettings;
+
+    @Convert(converter = NumericBooleanConverter.class)
+    @Column(nullable = false)
+    private Boolean enabled;
+
+    @Column(nullable = false)
+    private ZonedDateTime creationDateTime;
 
     @ElementCollection
     @CollectionTable(
@@ -154,6 +163,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 }
