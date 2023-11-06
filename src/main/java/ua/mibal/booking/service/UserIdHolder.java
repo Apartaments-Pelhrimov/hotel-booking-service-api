@@ -16,26 +16,22 @@
 
 package ua.mibal.booking.service;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import ua.mibal.booking.mapper.UserMapper;
-import ua.mibal.booking.model.dto.RegistrationDto;
-import ua.mibal.booking.model.entity.User;
-import ua.mibal.booking.repository.UserRepository;
+import lombok.Getter;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.annotation.SessionScope;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
-@RequiredArgsConstructor
-@Service
-public class RegistrationService {
-    private final UserRepository userRepository;
-    private final UserMapper userMapper;
+@Component
+@SessionScope
+public class UserIdHolder {
 
-    public void register(RegistrationDto registrationDto) {
-        User user = userMapper.toEntity(registrationDto);
-        userRepository.save(user);
-        UserIdHolder.setUserId(user.getId());
+    @Getter
+    private static Long userId;
+
+    public static void setUserId(Long userId) {
+        UserIdHolder.userId = userId;
     }
 }

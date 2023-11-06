@@ -14,28 +14,18 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service;
+package ua.mibal.booking.model.dto;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import ua.mibal.booking.mapper.UserMapper;
-import ua.mibal.booking.model.dto.RegistrationDto;
-import ua.mibal.booking.model.entity.User;
-import ua.mibal.booking.repository.UserRepository;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
-@RequiredArgsConstructor
-@Service
-public class RegistrationService {
-    private final UserRepository userRepository;
-    private final UserMapper userMapper;
-
-    public void register(RegistrationDto registrationDto) {
-        User user = userMapper.toEntity(registrationDto);
-        userRepository.save(user);
-        UserIdHolder.setUserId(user.getId());
-    }
+@Getter
+@Setter
+public class LoginDto {
+    private String username;
+    private String password;
 }

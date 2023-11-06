@@ -21,6 +21,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.repository.UserRepository;
 
 /**
@@ -34,10 +35,12 @@ public class UserDetailsSecurityService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository
+        User user = userRepository
                 .findByEmailFetchRoles(email)
                 .orElseThrow(() -> new UsernameNotFoundException(
                         "User for email=" + email + " not found"
                 ));
+        UserIdHolder.setUserId(user.getId());
+        return user;
     }
 }
