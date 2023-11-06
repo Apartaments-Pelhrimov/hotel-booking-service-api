@@ -27,6 +27,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -41,8 +42,11 @@ import ua.mibal.booking.model.embeddable.Photo;
 import ua.mibal.booking.model.embeddable.Role;
 import ua.mibal.booking.model.embeddable.UserSettings;
 
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -95,6 +99,9 @@ public class User implements UserDetails {
 
     @ManyToMany(mappedBy = "managers")
     private Set<Hotel> hotels = new HashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Reservation> reservations = new ArrayList<>();
 
     @Override
     public final boolean equals(Object o) {
