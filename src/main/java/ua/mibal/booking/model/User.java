@@ -103,6 +103,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<Reservation> reservations = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user")
+    private List<Comment> comments = new ArrayList<>();
+
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;

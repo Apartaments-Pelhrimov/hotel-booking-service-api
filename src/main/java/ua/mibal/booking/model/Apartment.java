@@ -107,4 +107,7 @@ public class Apartment {
 
     @OneToMany(mappedBy = "apartment")
     private List<Reservation> reservations = new ArrayList<>();
+
+    @OneToMany(mappedBy = "apartment")
+    private List<Comment> comments = new ArrayList<>();
 }
