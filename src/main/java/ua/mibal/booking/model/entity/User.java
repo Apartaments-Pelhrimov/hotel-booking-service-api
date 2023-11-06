@@ -80,7 +80,7 @@ public class User implements UserDetails {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false, length = 8)
+    @Column(nullable = false)
     private String password;
 
     @Embedded
