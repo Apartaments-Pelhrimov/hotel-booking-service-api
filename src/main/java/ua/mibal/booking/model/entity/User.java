@@ -110,7 +110,7 @@ public class User implements UserDetails {
             indexes = @Index(name = "roles_user_id_idx", columnList = "user_id")
     )
     @Setter(PRIVATE)
-    private Set<Role> roles = new HashSet<>();
+    private Set<Role> roles = new HashSet<>(Set.of(USER));
 
     @ManyToMany(mappedBy = "managers")
     @Setter(PRIVATE)
