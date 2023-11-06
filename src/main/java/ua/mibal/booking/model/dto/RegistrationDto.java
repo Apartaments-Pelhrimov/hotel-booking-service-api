@@ -35,7 +35,7 @@ public class RegistrationDto {
     String name;
 
     @NotNull
-    @Pattern(regexp = "\\+([0-9]){10,12}$")
+    @Pattern(regexp = "\\+([0-9]){10,15}$")
     String phone;
 
     @NotNull
