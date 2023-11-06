@@ -25,6 +25,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -86,6 +87,9 @@ public class User implements UserDetails {
             indexes = @Index(name = "roles_user_id_idx", columnList = "user_id")
     )
     private Set<Role> roles = new HashSet<>();
+
+    @ManyToMany(mappedBy = "managers")
+    private Set<Hotel> hotels = new HashSet<>();
 
     @Override
     public final boolean equals(Object o) {
