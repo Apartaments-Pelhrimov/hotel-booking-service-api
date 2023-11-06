@@ -78,7 +78,7 @@ public class Apartment {
     @Column(nullable = false)
     private Boolean published;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(
             name = "hotel_id",
             nullable = false,

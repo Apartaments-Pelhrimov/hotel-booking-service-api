@@ -58,7 +58,7 @@ public class Reservation {
     @Column(nullable = false)
     private ZonedDateTime dateTime;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(
             name = "user_id",
             nullable = false,
@@ -66,7 +66,7 @@ public class Reservation {
     )
     private User user;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(
             name = "apartment_id",
             nullable = false,

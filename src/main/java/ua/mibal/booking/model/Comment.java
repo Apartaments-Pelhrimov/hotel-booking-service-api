@@ -51,7 +51,7 @@ public class Comment {
     @GeneratedValue
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(
             name = "user_id",
             nullable = false,
@@ -59,7 +59,7 @@ public class Comment {
     )
     private User user;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(
             name = "apartment_id",
             nullable = false,
