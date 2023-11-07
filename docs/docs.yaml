@@ -1,0 +1,91 @@
+openapi: "3.0.3"
+info:
+  title: "hotel-booking-service API"
+  description: "API docs for hotel-booking-service"
+  version: "1.0.0"
+servers:
+  - url: "http://localhost:8080"
+paths:
+  /api/auth/login:
+    post:
+      summary: "POST api/auth/login"
+      operationId: "token"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/AuthResponseDto"
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SpringDefaultServerError"
+  /api/auth/register:
+    post:
+      summary: "POST api/auth/register"
+      operationId: "register"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegistrationDto"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/AuthResponseDto"
+        "500":
+          description: "Server error TODO: handle this exception"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SpringDefaultServerError"
+
+
+
+
+
+
+
+
+
+
+components:
+  schemas:
+    RegistrationDto:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        phone:
+          type: "string"
+        email:
+          type: "string"
+        password:
+          type: "string"
+    AuthResponseDto:
+      type: "object"
+      properties:
+        id:
+          type: "number"
+        name:
+          type: "string"
+        token:
+          type: "string"
+    SpringDefaultServerError:
+      type: "object"
+      properties:
+        timestamp:
+          type: "string"
+        status:
+          type: "number"
+        error:
+          type: "string"
+        path:
+          type: "string"
