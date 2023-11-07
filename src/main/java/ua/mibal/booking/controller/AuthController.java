@@ -18,11 +18,14 @@ package ua.mibal.booking.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ua.mibal.booking.model.dto.AuthResponseDto;
 import ua.mibal.booking.model.dto.RegistrationDto;
-import ua.mibal.booking.service.RegistrationService;
+import ua.mibal.booking.security.AuthService;
 
 /**
  * @author Mykhailo Balakhon
@@ -30,11 +33,17 @@ import ua.mibal.booking.service.RegistrationService;
  */
 @RequiredArgsConstructor
 @RestController
-public class RegistrationController {
-    private final RegistrationService registrationService;
+@RequestMapping("/api/auth")
+public class AuthController {
+    private final AuthService authService;
 
-    @PostMapping("/registration")
-    public void register(@Valid @RequestBody RegistrationDto registrationDto) {
-        registrationService.register(registrationDto);
+    @PostMapping("/login")
+    public AuthResponseDto token(Authentication authentication) {
+        return authService.getUserToken(authentication);
+    }
+
+    @PostMapping("/register")
+    public AuthResponseDto register(@Valid @RequestBody RegistrationDto registrationDto) {
+        return authService.register(registrationDto);
     }
 }

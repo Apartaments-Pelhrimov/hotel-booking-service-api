@@ -22,6 +22,7 @@ import org.mapstruct.MappingConstants;
 import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import ua.mibal.booking.model.dto.AuthResponseDto;
 import ua.mibal.booking.model.dto.RegistrationDto;
 import ua.mibal.booking.model.entity.User;
 
@@ -37,6 +38,8 @@ public abstract class UserMapper {
     @Mapping(target = "phone.number", source = "phone")
     @Mapping(target = "password", qualifiedByName = "encodePassword")
     public abstract User toEntity(RegistrationDto registrationDto);
+
+    public abstract AuthResponseDto toAuthResponse(User user, String token);
 
     @Named("encodePassword")
     public String encodePassword(String rawPassword) {
