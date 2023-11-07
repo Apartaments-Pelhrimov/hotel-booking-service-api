@@ -16,15 +16,13 @@
 
 package ua.mibal.booking.model.dto;
 
-import lombok.Value;
-
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
-@Value
-public class AuthResponseDto {
-    Long id;
-    String name;
-    String token;
+public record AuthResponseDto(
+        Long id,
+        String name,
+        String token
+) {
 }
