@@ -10,6 +10,8 @@ paths:
     post:
       summary: "POST api/auth/login"
       operationId: "token"
+      security:
+        - basicAuth: []
       responses:
         "200":
           description: "OK"
@@ -57,6 +59,14 @@ paths:
 
 
 components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     RegistrationDto:
       type: "object"
