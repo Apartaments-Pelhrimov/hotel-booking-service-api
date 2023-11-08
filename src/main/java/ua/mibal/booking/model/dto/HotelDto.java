@@ -16,9 +16,21 @@
 
 package ua.mibal.booking.model.dto;
 
+import ua.mibal.booking.model.embeddable.Location;
+import ua.mibal.booking.model.embeddable.Photo;
+
+import java.math.BigDecimal;
+import java.util.List;
+
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
-public class HotelDto {
+public record HotelDto(
+        String name,
+        List<Photo> photos,
+        Location location,
+        Integer rating,
+        BigDecimal minCost
+) {
 }
