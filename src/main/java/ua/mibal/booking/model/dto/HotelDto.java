@@ -30,7 +30,7 @@ public record HotelDto(
         String name,
         List<Photo> photos,
         Location location,
-        Integer rating,
+        Float rating,
         BigDecimal minCost
 ) {
 }
