@@ -16,18 +16,25 @@
 
 package ua.mibal.booking.model.search;
 
+import jakarta.validation.constraints.NotNull;
+import lombok.Value;
+
 import java.time.LocalDate;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
-public record SearchParams(
-        String query,
-        LocalDate from,
-        LocalDate to,
-        Integer apartments,
-        Integer adult,
-        Integer child
-) {
+@Value
+public class SearchParams {
+    @NotNull
+    String query;
+    @NotNull
+    LocalDate from;
+    @NotNull
+    LocalDate to;
+    @NotNull
+    Integer adult;
+    @NotNull
+    Integer child;
 }

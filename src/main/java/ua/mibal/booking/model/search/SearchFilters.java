@@ -25,7 +25,6 @@ import lombok.Value;
 @Value
 public class SearchFilters {
     Integer stars = 0;
-    Integer priceFrom = 0;
-    Integer priceTo = Integer.MAX_VALUE;
+    Integer maxPrice = Integer.MAX_VALUE;
     Integer rating = 0;
 }
