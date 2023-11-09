@@ -19,9 +19,6 @@ package ua.mibal.booking.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
-import org.mapstruct.Named;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import ua.mibal.booking.model.dto.AuthResponseDto;
 import ua.mibal.booking.model.dto.RegistrationDto;
 import ua.mibal.booking.model.entity.User;
@@ -31,18 +28,10 @@ import ua.mibal.booking.model.entity.User;
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
-public abstract class UserMapper {
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+public interface UserMapper {
 
     @Mapping(target = "phone.number", source = "phone")
-    @Mapping(target = "password", qualifiedByName = "encodePassword")
-    public abstract User toEntity(RegistrationDto registrationDto);
+    User toEntity(RegistrationDto registrationDto, String password);
 
-    public abstract AuthResponseDto toAuthResponse(User user, String token);
-
-    @Named("encodePassword")
-    public String encodePassword(String rawPassword) {
-        return passwordEncoder.encode(rawPassword);
-    }
+    AuthResponseDto toAuthResponse(User user, String token);
 }

@@ -18,6 +18,7 @@ package ua.mibal.booking.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ua.mibal.booking.mapper.UserMapper;
 import ua.mibal.booking.model.dto.AuthResponseDto;
@@ -35,6 +36,7 @@ public class AuthService {
     private final TokenService tokenService;
     private final UserMapper userMapper;
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public AuthResponseDto getUserToken(Authentication authentication) {
         return userMapper.toAuthResponse(
@@ -44,7 +46,8 @@ public class AuthService {
     }
 
     public AuthResponseDto register(RegistrationDto registrationDto) {
-        User user = userMapper.toEntity(registrationDto);
+        String encodedPass = passwordEncoder.encode(registrationDto.password());
+        User user = userMapper.toEntity(registrationDto, encodedPass);
         userRepository.save(user);
         String token = tokenService.generateToken(user);
         return userMapper.toAuthResponse(user, token);
