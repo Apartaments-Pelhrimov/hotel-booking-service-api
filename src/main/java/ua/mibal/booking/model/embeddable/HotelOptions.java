@@ -18,6 +18,7 @@ package ua.mibal.booking.model.embeddable;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
+import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,6 +33,7 @@ import org.hibernate.type.NumericBooleanConverter;
 @NoArgsConstructor
 @Getter
 @Setter
+@Embeddable
 public class HotelOptions {
 
     public static final HotelOptions DEFAULT
