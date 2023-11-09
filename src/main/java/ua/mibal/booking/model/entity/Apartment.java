@@ -80,6 +80,9 @@ public class Apartment {
     @Column(nullable = false)
     private Boolean published = false;
 
+    @Column(nullable = false)
+    private Integer size;
+
     @ManyToOne(optional = false)
     @JoinColumn(
             name = "hotel_id",
