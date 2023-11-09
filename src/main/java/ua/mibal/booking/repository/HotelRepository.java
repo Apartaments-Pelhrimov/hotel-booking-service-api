@@ -16,12 +16,43 @@
 
 package ua.mibal.booking.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import ua.mibal.booking.model.entity.Hotel;
+import ua.mibal.booking.model.search.Request;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
 public interface HotelRepository extends JpaRepository<Hotel, Long> {
+
+    @Query("select distinct h from Hotel h " +
+           "left join fetch h.photos " +
+
+           "left join h.hotelOptions ho " +
+           "left join h.apartments a " +
+           "left join a.apartmentOptions ao " +
+           "left join a.reservations r " +
+           "where " +
+
+           "(h.name like concat('%', :#{#r.query}, '%') or h.location.city like concat('%', :#{#r.query}, '%')) and " +
+           "(r = null or r.details.reservedTo < :#{#r.from} or r.details.reservedFrom > :#{#r.to}) and " +
+           "a.size >= :#{#r.adult} and " +
+
+           "h.stars >= :#{#r.stars} and " +
+           "a.oneDayCost <= :#{#r.maxPrice} and " +
+
+           "ao.mealsIncluded in(:#{#r.meals}, true) and " +
+           "ao.kitchen in(:#{#r.kitchen}, true) and " +
+           "ao.bathroom in(:#{#r.bathroom}, true) and " +
+           "ao.wifi in(:#{#r.wifi}, true) and " +
+           "ao.refrigerator in(:#{#r.refrigerator}, true) and " +
+           "ho.pool in(:#{#r.pool}, true) and " +
+           "ho.restaurant in(:#{#r.restaurant}, true) and " +
+           "ho.parking in(:#{#r.parking}, true)")
+    Page<Hotel> findAllByQuery(@Param("r") Request request, Pageable pageable);
 }

@@ -14,27 +14,23 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.search;
+package ua.mibal.booking.mapper;
 
-import jakarta.validation.constraints.NotNull;
-import lombok.Value;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants;
+import ua.mibal.booking.model.dto.HotelDto;
+import ua.mibal.booking.model.entity.Hotel;
 
-import java.time.LocalDate;
+import java.math.BigDecimal;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
-@Value
-public class SearchParams {
-    @NotNull
-    String query;
-    @NotNull
-    LocalDate from;
-    @NotNull
-    LocalDate to;
-    @NotNull
-    Integer adult;
-    @NotNull
-    Integer child;
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+public interface HotelMapper {
+
+    @Mapping(target = "minCost", source = "minimalAllDaysPrice")
+    HotelDto toDto(Hotel hotel, BigDecimal minimalAllDaysPrice, Float rating);
 }

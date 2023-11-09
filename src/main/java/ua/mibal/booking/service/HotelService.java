@@ -20,10 +20,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import ua.mibal.booking.mapper.HotelMapper;
 import ua.mibal.booking.model.dto.HotelDto;
-import ua.mibal.booking.model.search.SearchFilters;
-import ua.mibal.booking.model.search.SearchOptions;
-import ua.mibal.booking.model.search.SearchParams;
+import ua.mibal.booking.model.search.Request;
 import ua.mibal.booking.repository.HotelRepository;
 
 /**
@@ -34,13 +33,14 @@ import ua.mibal.booking.repository.HotelRepository;
 @Service
 public class HotelService {
     private final HotelRepository hotelRepository;
+    private final HotelMapper hotelMapper;
 
-    public Page<HotelDto> findAll(SearchParams searchParams,
-                                  SearchFilters searchFilters,
-                                  SearchOptions searchOptions,
+    public Page<HotelDto> findAll(Request request,
                                   Pageable pageable) {
-        // TODO
-        return null;
+        System.out.println(request);
+        return hotelRepository.findAllByQuery(request, pageable)
+                .map(hotel -> hotelMapper
+                        .toDto(hotel, null, null));
     }
 
 }
