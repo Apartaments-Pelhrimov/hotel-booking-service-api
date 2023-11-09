@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 
 /**
  * @author Mykhailo Balakhon
@@ -38,10 +38,10 @@ import java.time.ZonedDateTime;
 public class ReservationDetails {
 
     @Column(nullable = false)
-    private ZonedDateTime reservedFrom;
+    private LocalDate reservedFrom;
 
     @Column(nullable = false)
-    private ZonedDateTime reservedTo;
+    private LocalDate reservedTo;
 
     @Column(nullable = false)
     private BigDecimal currentOneDayCost;

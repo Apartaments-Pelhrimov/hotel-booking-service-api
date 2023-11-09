@@ -34,7 +34,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ua.mibal.booking.model.embeddable.ReservationDetails;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 
 /**
  * @author Mykhailo Balakhon
@@ -56,7 +56,7 @@ public class Reservation {
     private Long id;
 
     @Column(nullable = false)
-    private ZonedDateTime dateTime = ZonedDateTime.now();
+    private LocalDate dateTime = LocalDate.now();
 
     @ManyToOne(optional = false)
     @JoinColumn(
