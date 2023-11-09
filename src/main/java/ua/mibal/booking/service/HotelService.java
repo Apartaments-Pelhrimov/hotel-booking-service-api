@@ -21,7 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ua.mibal.booking.mapper.HotelMapper;
-import ua.mibal.booking.model.dto.HotelDto;
+import ua.mibal.booking.model.dto.HotelSearchDto;
 import ua.mibal.booking.model.search.Request;
 import ua.mibal.booking.repository.HotelRepository;
 
@@ -35,8 +35,8 @@ public class HotelService {
     private final HotelRepository hotelRepository;
     private final HotelMapper hotelMapper;
 
-    public Page<HotelDto> findAll(Request request,
-                                  Pageable pageable) {
+    public Page<HotelSearchDto> findAll(Request request,
+                                        Pageable pageable) {
         System.out.println(request);
         return hotelRepository.findAllByQuery(request, pageable)
                 .map(hotel -> hotelMapper

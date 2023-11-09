@@ -23,7 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ua.mibal.booking.model.dto.HotelDto;
+import ua.mibal.booking.model.dto.HotelSearchDto;
 import ua.mibal.booking.model.search.Request;
 import ua.mibal.booking.service.HotelService;
 
@@ -38,7 +38,7 @@ public class HotelController {
     private final HotelService hotelService;
 
     @GetMapping
-    public Page<HotelDto> getAll(@Valid Request request, Pageable pageable) {
+    public Page<HotelSearchDto> getAll(@Valid Request request, Pageable pageable) {
         return hotelService.findAll(request, pageable);
     }
 }
