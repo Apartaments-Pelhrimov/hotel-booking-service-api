@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.security;
+package ua.mibal.booking.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -25,6 +25,7 @@ import ua.mibal.booking.model.dto.AuthResponseDto;
 import ua.mibal.booking.model.dto.RegistrationDto;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.repository.UserRepository;
+import ua.mibal.booking.security.TokenService;
 
 /**
  * @author Mykhailo Balakhon
