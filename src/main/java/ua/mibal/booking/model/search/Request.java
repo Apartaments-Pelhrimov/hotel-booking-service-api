@@ -17,6 +17,7 @@
 package ua.mibal.booking.model.search;
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -33,12 +34,17 @@ public class Request {
     @NotNull
     private LocalDate to;
     @NotNull
+    @PositiveOrZero
     private Integer adult;
     @NotNull
+    @PositiveOrZero
     private Integer child;
 
+    @PositiveOrZero
     private Integer stars = 0;
+    @PositiveOrZero
     private Integer maxPrice = Integer.MAX_VALUE;
+    @PositiveOrZero
     private Float rating = 0f;
 
     private Boolean meals = false;
