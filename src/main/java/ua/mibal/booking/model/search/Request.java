@@ -31,9 +31,7 @@ import java.time.LocalDate;
 @ValidDateRange
 public class Request implements DateRangeRequestInterface {
     private String query = "";
-    @NotNull
     private LocalDate from;
-    @NotNull
     private LocalDate to;
     @NotNull
     @PositiveOrZero

@@ -21,6 +21,7 @@ import jakarta.validation.ConstraintValidatorContext;
 import ua.mibal.booking.model.search.DateRangeRequestInterface;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 import static java.time.LocalDate.now;
 
@@ -34,6 +35,7 @@ public class DateRangeValidator implements ConstraintValidator<ValidDateRange, D
     public boolean isValid(DateRangeRequestInterface request, ConstraintValidatorContext context) {
         LocalDate from = request.getFrom();
         LocalDate to = request.getTo();
-        return from.isBefore(to) && from.isAfter(now().minusDays(1));
+        return !Objects.isNull(from) && !Objects.isNull(to) &&
+               from.isBefore(to) && from.isAfter(now().minusDays(1));
     }
 }

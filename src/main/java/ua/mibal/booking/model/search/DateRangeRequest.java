@@ -16,7 +16,6 @@
 
 package ua.mibal.booking.model.search;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import ua.mibal.booking.validation.ValidDateRange;
 
@@ -29,8 +28,6 @@ import java.time.LocalDate;
 @Data
 @ValidDateRange
 public class DateRangeRequest implements DateRangeRequestInterface {
-    @NotNull
     private LocalDate from;
-    @NotNull
     private LocalDate to;
 }
