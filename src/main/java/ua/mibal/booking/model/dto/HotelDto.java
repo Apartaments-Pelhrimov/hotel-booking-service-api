@@ -16,6 +16,7 @@
 
 package ua.mibal.booking.model.dto;
 
+import ua.mibal.booking.model.embeddable.AdditionalInfo;
 import ua.mibal.booking.model.embeddable.HotelOptions;
 import ua.mibal.booking.model.embeddable.Location;
 import ua.mibal.booking.model.embeddable.Photo;
@@ -28,13 +29,11 @@ import java.util.List;
  */
 public record HotelDto(
         String name,
-        String description,
         List<Photo> photos,
         HotelOptions options,
-        Float rating,
         Location location,
-        String rules,
-        String notice,
-        Integer stars
+        AdditionalInfo info,
+        Integer stars,
+        Float rating
 ) {
 }
