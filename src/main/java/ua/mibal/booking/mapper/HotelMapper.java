@@ -17,7 +17,6 @@
 package ua.mibal.booking.mapper;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import ua.mibal.booking.model.dto.HotelDto;
 import ua.mibal.booking.model.dto.HotelSearchDto;
@@ -32,8 +31,7 @@ import java.math.BigDecimal;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface HotelMapper {
 
-    @Mapping(target = "minCost", source = "minimalAllDaysPrice")
-    HotelSearchDto toDto(Hotel hotel, BigDecimal minimalAllDaysPrice, Float rating);
+    HotelSearchDto toDto(Hotel hotel, BigDecimal minCost, Float rating);
 
     HotelDto toDto(Hotel hotel, Float rating);
 }
