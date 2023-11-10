@@ -16,7 +16,6 @@
 
 package ua.mibal.booking.model.search;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -28,8 +27,7 @@ import java.time.LocalDate;
  */
 @Data
 public class Request {
-    @NotBlank
-    private String query;
+    private String query = "";
     @NotNull
     private LocalDate from;
     @NotNull
