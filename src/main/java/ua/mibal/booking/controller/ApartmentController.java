@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ua.mibal.booking.model.dto.ApartmentDto;
+import ua.mibal.booking.model.dto.ApartmentSearchDto;
 import ua.mibal.booking.model.dto.FreeApartmentDto;
 import ua.mibal.booking.model.search.Request;
 import ua.mibal.booking.service.ApartmentService;
@@ -43,9 +44,9 @@ public class ApartmentController {
     private final ApartmentService apartmentService;
 
     @GetMapping("/{hotelId}/apartments")
-    public Page<ApartmentDto> getAllInHotel(@PathVariable Long hotelId,
-                                            @Valid Request request,
-                                            Pageable pageable) {
+    public Page<ApartmentSearchDto> getAllInHotel(@PathVariable Long hotelId,
+                                                  @Valid Request request,
+                                                  Pageable pageable) {
         return apartmentService.getAllInHotel(hotelId, request, pageable);
     }
 

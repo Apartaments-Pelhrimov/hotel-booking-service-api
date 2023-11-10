@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.mapper.ApartmentMapper;
 import ua.mibal.booking.model.dto.ApartmentDto;
+import ua.mibal.booking.model.dto.ApartmentSearchDto;
 import ua.mibal.booking.model.dto.FreeApartmentDto;
 import ua.mibal.booking.model.search.Request;
 import ua.mibal.booking.repository.ApartmentRepository;
@@ -41,9 +42,9 @@ public class ApartmentService {
     private final ApartmentMapper apartmentMapper;
 
     @Transactional(readOnly = true) // for LAZY Apartment.beds fetch
-    public Page<ApartmentDto> getAllInHotel(Long hotelId, Request request, Pageable pageable) {
+    public Page<ApartmentSearchDto> getAllInHotel(Long hotelId, Request request, Pageable pageable) {
         return apartmentRepository.findAllInHotel(hotelId, request, pageable)
-                .map(apartment -> apartmentMapper.toDto(apartment, null));
+                .map(apartment -> apartmentMapper.toSearchDto(apartment, null));
     }
 
     @Transactional(readOnly = true) // for LAZY Apartment.beds fetch

@@ -14,25 +14,25 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.mapper;
+package ua.mibal.booking.model.dto;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.MappingConstants;
-import ua.mibal.booking.model.dto.ApartmentDto;
-import ua.mibal.booking.model.dto.ApartmentSearchDto;
-import ua.mibal.booking.model.dto.FreeApartmentDto;
-import ua.mibal.booking.model.entity.Apartment;
+import ua.mibal.booking.model.embeddable.ApartmentOptions;
+import ua.mibal.booking.model.embeddable.Bed;
+import ua.mibal.booking.model.embeddable.Photo;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
-@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
-public interface ApartmentMapper {
-
-    ApartmentDto toDto(Apartment apartment, Float rating);
-
-    FreeApartmentDto toFreeDto(Boolean free);
-
-    ApartmentSearchDto toSearchDto(Apartment apartment, Float rating);
+public record ApartmentSearchDto(
+        String name,
+        List<Photo> photos,
+        ApartmentOptions options,
+        Float rating,
+        List<Bed> beds,
+        BigDecimal oneDayCost
+) {
 }
