@@ -54,7 +54,9 @@ public class ApartmentService {
     }
 
     public FreeApartmentDto isFree(Long id, DateRangeRequest request) {
-        Boolean free = apartmentRepository.isFreeForRangeById(id, request.getFrom(), request.getTo());
+        Boolean free = apartmentRepository
+                .isFreeForRangeById(id, request.getFrom(), request.getTo())
+                .orElseThrow(() -> new EntityNotFoundException("Entity Apartment by id=" + id + " not found"));
         return apartmentMapper.toFreeDto(free);
     }
 }

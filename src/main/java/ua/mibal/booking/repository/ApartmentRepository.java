@@ -35,12 +35,11 @@ public interface ApartmentRepository extends JpaRepository<Apartment, Long> {
            "where a.id = ?1")
     Optional<Apartment> findByIdFetchPhotosHotel(Long id);
 
-    @Query("select count(a) = 1 from Apartment a " +
+    @Query("select (r = null or r.details.reservedTo < ?2 or r.details.reservedFrom > ?3) from Apartment a " +
            "left join a.reservations r " +
            "where " +
-           "a.id = ?1 and " +
-           "(r = null or r.details.reservedTo < ?2 or r.details.reservedFrom > ?3)")
-    Boolean isFreeForRangeById(Long id, LocalDate from, LocalDate to);
+           "a.id = ?1")
+    Optional<Boolean> isFreeForRangeById(Long id, LocalDate from, LocalDate to);
 
     @Query("select distinct a from Apartment a " +
            "left join fetch a.photos " +
