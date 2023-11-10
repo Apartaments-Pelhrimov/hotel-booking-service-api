@@ -37,8 +37,7 @@ public class HotelService {
     private final HotelRepository hotelRepository;
     private final HotelMapper hotelMapper;
 
-    public Page<HotelSearchDto> findAll(Request request,
-                                        Pageable pageable) {
+    public Page<HotelSearchDto> findAll(Request request, Pageable pageable) {
         return hotelRepository.findAllByQuery(request, pageable)
                 .map(hotel -> hotelMapper
                         .toDto(hotel, null, null));
