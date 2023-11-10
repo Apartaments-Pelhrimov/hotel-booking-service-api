@@ -6,6 +6,12 @@ info:
 servers:
   - url: "http://localhost:8080"
 paths:
+
+
+
+
+#  ----------------------------------- AUTH -----------------------------------
+
   /api/auth/login:
     post:
       summary: "POST api/auth/login"
@@ -50,6 +56,153 @@ paths:
                 $ref: "#/components/schemas/SpringDefaultServerError"
 
 
+
+
+  #  ----------------------------------- APARTMENTS -----------------------------------
+
+  /api/hotels/{hotelId}/apartments:
+    get:
+      summary: "GET api/hotels/{hotelId}/apartments"
+      operationId: "getAllInHotel"
+      parameters:
+        - name: "hotelId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApartmentSearchDto"
+  /api/hotels/apartments/{id}:
+    get:
+      summary: "GET api/hotels/apartments/{id}"
+      operationId: "getOne"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApartmentDto"
+  /api/hotels/apartments/{id}/free:
+    get:
+      summary: "GET api/hotels/apartments/{id}/free"
+      operationId: "isFree"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "from"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+            format: "date"
+        - name: "to"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+            format: "date"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/FreeApartmentDto"
+
+
+
+
+#  ----------------------------------- HOTELS -----------------------------------
+
+  /api/hotels:
+    get:
+      summary: "GET api/hotels"
+      operationId: "getAll"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/HotelSearchDto"
+  /api/hotels/{id}:
+    get:
+      summary: "GET api/hotels/{id}"
+      operationId: "getOne"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/HotelDto"
+
+
+
+
+#  ----------------------------------- COMMENTS -----------------------------------
+
+  /api/hotels/{hotelId}/comments:
+    get:
+      summary: "GET api/hotels/{hotelId}/comments"
+      operationId: "getCommentsForHotel"
+      parameters:
+        - name: "hotelId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/CommentDto"
+  /api/hotels/apartments/{apartmentId}/comments:
+    get:
+      summary: "GET api/hotels/apartments/{apartmentId}/comments"
+      operationId: "getCommentsForApartment"
+      parameters:
+        - name: "apartmentId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/CommentDto"
 
 
 
@@ -98,4 +251,176 @@ components:
         error:
           type: "string"
         path:
+          type: "string"
+    Photo:
+      type: "object"
+      properties:
+        photoLink:
+          type: "string"
+    ApartmentOptions:
+      type: "object"
+      properties:
+        mealsIncluded:
+          type: "boolean"
+        kitchen:
+          type: "boolean"
+        bathroom:
+          type: "boolean"
+        wifi:
+          type: "boolean"
+        refrigerator:
+          type: "boolean"
+    Bed:
+      type: "object"
+      properties:
+        size:
+          type: "integer"
+          format: "int32"
+        bunk:
+          type: "boolean"
+    BigDecimal:
+      type: "object"
+      properties: { }
+    ApartmentSearchDto:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        photos:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Photo"
+        options:
+          $ref: "#/components/schemas/ApartmentOptions"
+        rating:
+          type: "number"
+          format: "float"
+        beds:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Bed"
+        oneDayCost:
+          $ref: "#/components/schemas/BigDecimal"
+    HotelOptions:
+      type: "object"
+      properties:
+        pool:
+          type: "boolean"
+        restaurant:
+          type: "boolean"
+        publicShower:
+          type: "boolean"
+        parking:
+          type: "boolean"
+    Location:
+      type: "object"
+      properties:
+        city:
+          type: "string"
+        locationLink:
+          type: "string"
+    AdditionalInfo:
+      type: "object"
+      properties:
+        description:
+          type: "string"
+        rules:
+          type: "string"
+        notice:
+          type: "string"
+    ApartmentHotelDto:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        options:
+          $ref: "#/components/schemas/HotelOptions"
+        location:
+          $ref: "#/components/schemas/Location"
+        info:
+          $ref: "#/components/schemas/AdditionalInfo"
+        stars:
+          type: "integer"
+          format: "int32"
+    ApartmentDto:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        photos:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Photo"
+        options:
+          $ref: "#/components/schemas/ApartmentOptions"
+        hotel:
+          $ref: "#/components/schemas/ApartmentHotelDto"
+        rating:
+          type: "number"
+          format: "float"
+        beds:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Bed"
+        oneDayCost:
+          $ref: "#/components/schemas/BigDecimal"
+    FreeApartmentDto:
+      type: "object"
+      properties:
+        free:
+          type: "boolean"
+
+    HotelSearchDto:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        photos:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Photo"
+        location:
+          $ref: "#/components/schemas/Location"
+        rating:
+          type: "number"
+          format: "float"
+        minCost:
+          $ref: "#/components/schemas/BigDecimal"
+        money:
+          type: "string"
+    HotelDto:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        photos:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Photo"
+        options:
+          $ref: "#/components/schemas/HotelOptions"
+        location:
+          $ref: "#/components/schemas/Location"
+        info:
+          $ref: "#/components/schemas/AdditionalInfo"
+        stars:
+          type: "integer"
+          format: "int32"
+        rating:
+          type: "number"
+          format: "float"
+    CommentDto:
+      type: "object"
+      properties:
+        userName:
+          type: "string"
+        creationDateTime:
+          type: "string"
+          format: "date-time"
+        rate:
+          type: "number"
+          format: "float"
+        userPhotoLink:
+          type: "string"
+        body:
           type: "string"
