@@ -40,6 +40,6 @@ public class ReservationController {
     @RolesAllowed("USER")
     @GetMapping("/me/reservations")
     public Page<ReservationDto> getMyReservations(Authentication authentication, Pageable pageable) {
-        return reservationService.getMyReservations(authentication, pageable);
+        return reservationService.getReservationsByAuthentication(authentication, pageable);
     }
 }

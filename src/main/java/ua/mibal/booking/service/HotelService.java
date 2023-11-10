@@ -37,13 +37,13 @@ public class HotelService {
     private final HotelRepository hotelRepository;
     private final HotelMapper hotelMapper;
 
-    public Page<HotelSearchDto> findAll(Request request, Pageable pageable) {
+    public Page<HotelSearchDto> getAllByQuery(Request request, Pageable pageable) {
         return hotelRepository.findAllByQuery(request, pageable)
                 .map(hotel -> hotelMapper
                         .toDto(hotel, null, null));
     }
 
-    public HotelDto findOne(Long id) {
+    public HotelDto getOne(Long id) {
         return hotelRepository.findByIdFetchPhotos(id)
                 .map(hotel -> hotelMapper.toDto(hotel, null))
                 .orElseThrow(() -> new EntityNotFoundException("Entity Hotel by id=" + id + " not found"));

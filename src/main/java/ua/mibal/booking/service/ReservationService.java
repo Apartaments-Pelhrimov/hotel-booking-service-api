@@ -35,7 +35,7 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final ReservationMapper reservationMapper;
 
-    public Page<ReservationDto> getMyReservations(Authentication authentication, Pageable pageable) {
+    public Page<ReservationDto> getReservationsByAuthentication(Authentication authentication, Pageable pageable) {
         String email = authentication.getName();
         return reservationRepository.findAllByUserEmail(email, pageable)
                 .map(reservationMapper::toDto);

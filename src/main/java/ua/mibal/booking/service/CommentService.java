@@ -34,12 +34,12 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final CommentMapper commentMapper;
 
-    public Page<CommentDto> getCommentsByHotelId(Long hotelId, Pageable pageable) {
+    public Page<CommentDto> getCommentsInHotel(Long hotelId, Pageable pageable) {
         return commentRepository.findByHotelIdFetchUser(hotelId, pageable)
                 .map(commentMapper::toDto);
     }
 
-    public Page<CommentDto> getCommentsByApartmentId(Long apartmentId, Pageable pageable) {
+    public Page<CommentDto> getCommentsInApartment(Long apartmentId, Pageable pageable) {
         return commentRepository.findByApartmentIdFetchUser(apartmentId, pageable)
                 .map(commentMapper::toDto);
     }

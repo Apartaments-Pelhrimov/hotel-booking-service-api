@@ -41,11 +41,11 @@ public class HotelController {
 
     @GetMapping
     public Page<HotelSearchDto> getAll(@Valid Request request, Pageable pageable) {
-        return hotelService.findAll(request, pageable);
+        return hotelService.getAllByQuery(request, pageable);
     }
 
     @GetMapping("/{id}")
     public HotelDto getOne(@PathVariable Long id) {
-        return hotelService.findOne(id);
+        return hotelService.getOne(id);
     }
 }

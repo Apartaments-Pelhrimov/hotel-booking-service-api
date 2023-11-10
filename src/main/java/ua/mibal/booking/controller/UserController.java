@@ -38,6 +38,6 @@ public class UserController {
     @RolesAllowed("USER")
     @GetMapping("/me")
     public UserDto getMe(Authentication authentication) {
-        return userService.getMe(authentication);
+        return userService.getOneByAuthentication(authentication);
     }
 }

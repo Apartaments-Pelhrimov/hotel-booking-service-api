@@ -34,7 +34,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
-    public UserDto getMe(Authentication authentication) {
+    public UserDto getOneByAuthentication(Authentication authentication) {
         String email = authentication.getName();
         return userRepository.findByEmail(email)
                 .map(userMapper::toDto)

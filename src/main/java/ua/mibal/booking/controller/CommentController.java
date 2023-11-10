@@ -38,11 +38,11 @@ public class CommentController {
 
     @GetMapping("/{hotelId}/comments")
     public Page<CommentDto> getCommentsForHotel(@PathVariable Long hotelId, Pageable pageable) {
-        return commentService.getCommentsByHotelId(hotelId, pageable);
+        return commentService.getCommentsInHotel(hotelId, pageable);
     }
 
     @GetMapping("apartments/{apartmentId}/comments")
     public Page<CommentDto> getCommentsForApartment(@PathVariable Long apartmentId, Pageable pageable) {
-        return commentService.getCommentsByApartmentId(apartmentId, pageable);
+        return commentService.getCommentsInApartment(apartmentId, pageable);
     }
 }
