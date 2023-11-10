@@ -17,11 +17,12 @@
 package ua.mibal.booking.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import ua.mibal.booking.mapper.CommentMapper;
 import ua.mibal.booking.model.dto.CommentDto;
-
-import java.util.List;
+import ua.mibal.booking.repository.CommentRepository;
 
 /**
  * @author Mykhailo Balakhon
@@ -30,11 +31,16 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class CommentService {
-    public List<CommentDto> getCommentsByHotelId(Long hotelId, Pageable pageable) {
-        return null;
+    private final CommentRepository commentRepository;
+    private final CommentMapper commentMapper;
+
+    public Page<CommentDto> getCommentsByHotelId(Long hotelId, Pageable pageable) {
+        return commentRepository.findByHotelIdFetchUser(hotelId, pageable)
+                .map(commentMapper::toDto);
     }
 
-    public List<CommentDto> getCommentsByApartmentId(Long apartmentId, Pageable pageable) {
-        return null;
+    public Page<CommentDto> getCommentsByApartmentId(Long apartmentId, Pageable pageable) {
+        return commentRepository.findByApartmentIdFetchUser(apartmentId, pageable)
+                .map(commentMapper::toDto);
     }
 }

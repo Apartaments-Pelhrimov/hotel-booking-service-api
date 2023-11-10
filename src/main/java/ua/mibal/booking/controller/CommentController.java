@@ -17,6 +17,7 @@
 package ua.mibal.booking.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,8 +25,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ua.mibal.booking.model.dto.CommentDto;
 import ua.mibal.booking.service.CommentService;
-
-import java.util.List;
 
 /**
  * @author Mykhailo Balakhon
@@ -38,12 +37,12 @@ public class CommentController {
     private final CommentService commentService;
 
     @GetMapping("/{hotelId}/comments")
-    public List<CommentDto> getCommentsForHotel(@PathVariable Long hotelId, Pageable pageable) {
+    public Page<CommentDto> getCommentsForHotel(@PathVariable Long hotelId, Pageable pageable) {
         return commentService.getCommentsByHotelId(hotelId, pageable);
     }
 
     @GetMapping("apartments/{apartmentId}/comments")
-    public List<CommentDto> getCommentsForApartment(@PathVariable Long apartmentId, Pageable pageable) {
+    public Page<CommentDto> getCommentsForApartment(@PathVariable Long apartmentId, Pageable pageable) {
         return commentService.getCommentsByApartmentId(apartmentId, pageable);
     }
 }
