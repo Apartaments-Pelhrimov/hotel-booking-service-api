@@ -24,9 +24,8 @@ import java.time.LocalDateTime;
  */
 public record CommentDto(
         String userName,
-        LocalDateTime dateTime,
+        LocalDateTime creationDateTime,
         Float rate,
         String userPhotoLink,
-        String body
-) {
+        String body) {
 }

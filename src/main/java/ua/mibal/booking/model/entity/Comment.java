@@ -30,7 +30,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 /**
  * @author Mykhailo Balakhon
@@ -68,7 +68,10 @@ public class Comment {
     private Apartment apartment;
 
     @Column(nullable = false)
-    private ZonedDateTime creationDateTime = ZonedDateTime.now();
+    private LocalDateTime creationDateTime = LocalDateTime.now();
+
+    @Column(nullable = false)
+    private Float rate;
 
     @Column(nullable = false)
     private String body;
