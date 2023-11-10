@@ -18,7 +18,7 @@ package ua.mibal.booking.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import ua.mibal.booking.model.search.DateRangeRequest;
+import ua.mibal.booking.model.search.DateRangeRequestInterface;
 
 import java.time.LocalDate;
 
@@ -28,10 +28,10 @@ import static java.time.LocalDate.now;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
-public class DateRangeValidator implements ConstraintValidator<ValidDateRange, DateRangeRequest> {
+public class DateRangeValidator implements ConstraintValidator<ValidDateRange, DateRangeRequestInterface> {
 
     @Override
-    public boolean isValid(DateRangeRequest request, ConstraintValidatorContext context) {
+    public boolean isValid(DateRangeRequestInterface request, ConstraintValidatorContext context) {
         LocalDate from = request.getFrom();
         LocalDate to = request.getTo();
         return from.isBefore(to) && from.isAfter(now().minusDays(1));
