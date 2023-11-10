@@ -36,7 +36,7 @@ public @interface ValidDateRange {
 
     String message() default
             "Date range [from=${validatedValue.from}; to=${validatedValue.to}] " +
-            "isn't correct. Must be: now() < from < to.";
+            "must be: now() < from < to";
 
     Class<?>[] groups() default { };
 
