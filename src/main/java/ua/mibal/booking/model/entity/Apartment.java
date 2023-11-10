@@ -75,7 +75,7 @@ public class Apartment {
     private BigDecimal oneDayCost;
 
     @Embedded
-    private ApartmentOptions apartmentOptions = ApartmentOptions.DEFAULT;
+    private ApartmentOptions options = ApartmentOptions.DEFAULT;
 
     @Convert(converter = NumericBooleanConverter.class)
     @Column(nullable = false)

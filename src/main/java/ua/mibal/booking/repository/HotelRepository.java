@@ -37,7 +37,7 @@ public interface HotelRepository extends JpaRepository<Hotel, Long> {
 
            "left join h.options ho " +
            "left join h.apartments a " +
-           "left join a.apartmentOptions ao " +
+           "left join a.options ao " +
            "left join a.reservations r " +
            "where " +
 
