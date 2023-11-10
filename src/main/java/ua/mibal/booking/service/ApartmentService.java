@@ -16,13 +16,17 @@
 
 package ua.mibal.booking.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ua.mibal.booking.mapper.ApartmentMapper;
 import ua.mibal.booking.model.dto.ApartmentDto;
 import ua.mibal.booking.model.dto.FreeDto;
 import ua.mibal.booking.model.search.Request;
+import ua.mibal.booking.repository.ApartmentRepository;
 
 import java.time.LocalDate;
 
@@ -33,13 +37,18 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 @Service
 public class ApartmentService {
+    private final ApartmentRepository apartmentRepository;
+    private final ApartmentMapper apartmentMapper;
 
     public Page<ApartmentDto> getAllInHotel(Long hotelId, Request request, Pageable pageable) {
         return null;
     }
 
+    @Transactional(readOnly = true) // for LAZY ApartmentDto.beds fetch
     public ApartmentDto getOne(Long id) {
-        return null;
+        return apartmentRepository.findByIdFetchPhotosHotel(id)
+                .map(apartment -> apartmentMapper.toDto(apartment, null))
+                .orElseThrow(() -> new EntityNotFoundException("Entity Apartment by id=" + id + " not found"));
     }
 
     public FreeDto isFree(Long id, LocalDate from, LocalDate to) {
