@@ -19,6 +19,7 @@ package ua.mibal.booking.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
+import ua.mibal.booking.model.dto.HotelDto;
 import ua.mibal.booking.model.dto.HotelSearchDto;
 import ua.mibal.booking.model.entity.Hotel;
 
@@ -33,4 +34,9 @@ public interface HotelMapper {
 
     @Mapping(target = "minCost", source = "minimalAllDaysPrice")
     HotelSearchDto toDto(Hotel hotel, BigDecimal minimalAllDaysPrice, Float rating);
+
+    @Mapping(target = "description", source = "hotel.info.description")
+    @Mapping(target = "rules", source = "hotel.info.rules")
+    @Mapping(target = "notice", source = "hotel.info.notice")
+    HotelDto toDto(Hotel hotel, Float rating);
 }
