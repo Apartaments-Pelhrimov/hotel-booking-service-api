@@ -39,10 +39,10 @@ import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.type.NumericBooleanConverter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import ua.mibal.booking.model.embeddable.NotificationSettings;
 import ua.mibal.booking.model.embeddable.Phone;
 import ua.mibal.booking.model.embeddable.Photo;
 import ua.mibal.booking.model.embeddable.Role;
-import ua.mibal.booking.model.embeddable.UserSettings;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -90,7 +90,7 @@ public class User implements UserDetails {
     private Photo photo;
 
     @Embedded
-    private UserSettings userSettings = UserSettings.DEFAULT;
+    private NotificationSettings notificationSettings = NotificationSettings.DEFAULT;
 
     @Convert(converter = NumericBooleanConverter.class)
     @Column(nullable = false)

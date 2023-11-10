@@ -34,10 +34,10 @@ import org.hibernate.type.NumericBooleanConverter;
 @Getter
 @Setter
 @Embeddable
-public class UserSettings {
+public class NotificationSettings {
 
-    public static final UserSettings DEFAULT
-            = new UserSettings(false, false);
+    public static final NotificationSettings DEFAULT
+            = new NotificationSettings(false, false);
 
     @Convert(converter = NumericBooleanConverter.class)
     @Column(nullable = false)
