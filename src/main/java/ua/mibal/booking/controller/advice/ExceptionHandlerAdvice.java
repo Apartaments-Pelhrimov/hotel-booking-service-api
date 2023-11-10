@@ -18,7 +18,6 @@ package ua.mibal.booking.controller.advice;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.Data;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -38,12 +37,16 @@ public class ExceptionHandlerAdvice {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiError> handleValidationException(MethodArgumentNotValidException e) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
-        String message = e.getBindingResult()
-                .getAllErrors().stream()
-                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+        String objErrors = e.getAllErrors().stream()
+                .map(err -> err.getDefaultMessage() + ".")
+                .collect(Collectors.joining(" "));
+        String template = "Field %s=%s %s.";
+        String fieldErrors = e.getBindingResult()
+                .getFieldErrors().stream()
+                .map(er -> String.format(template, er.getField(), er.getRejectedValue(), er.getDefaultMessage()))
                 .collect(Collectors.joining(" "));
         return ResponseEntity.status(status)
-                .body(new ApiError(status, e, message));
+                .body(new ApiError(status, e, (objErrors + fieldErrors).trim()));
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
