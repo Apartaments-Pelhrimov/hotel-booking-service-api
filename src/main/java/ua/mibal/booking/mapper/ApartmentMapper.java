@@ -19,6 +19,7 @@ package ua.mibal.booking.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 import ua.mibal.booking.model.dto.ApartmentDto;
+import ua.mibal.booking.model.dto.FreeApartmentDto;
 import ua.mibal.booking.model.entity.Apartment;
 
 /**
@@ -29,4 +30,6 @@ import ua.mibal.booking.model.entity.Apartment;
 public interface ApartmentMapper {
 
     ApartmentDto toDto(Apartment apartment, Float rating);
+
+    FreeApartmentDto toFreeDto(Boolean free);
 }

@@ -20,6 +20,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ua.mibal.booking.model.entity.Apartment;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 public interface ApartmentRepository extends JpaRepository<Apartment, Long> {
@@ -29,4 +30,11 @@ public interface ApartmentRepository extends JpaRepository<Apartment, Long> {
            "left join fetch a.photos " +
            "where a.id = ?1")
     Optional<Apartment> findByIdFetchPhotosHotel(Long id);
+
+    @Query("select count(a) = 1 from Apartment a " +
+           "left join a.reservations r " +
+           "where " +
+           "a.id = ?1 and " +
+           "(r = null or r.details.reservedTo < ?2 or r.details.reservedFrom > ?3)")
+    Boolean isFreeForRangeById(Long id, LocalDate from, LocalDate to);
 }

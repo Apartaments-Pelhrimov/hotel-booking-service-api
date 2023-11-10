@@ -52,6 +52,7 @@ public class ApartmentService {
     }
 
     public FreeApartmentDto isFree(Long id, LocalDate from, LocalDate to) {
-        return null;
+        Boolean free = apartmentRepository.isFreeForRangeById(id, from, to);
+        return apartmentMapper.toFreeDto(free);
     }
 }
