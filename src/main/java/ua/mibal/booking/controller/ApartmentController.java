@@ -23,15 +23,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ua.mibal.booking.model.dto.ApartmentDto;
 import ua.mibal.booking.model.dto.ApartmentSearchDto;
 import ua.mibal.booking.model.dto.FreeApartmentDto;
+import ua.mibal.booking.model.search.DateRangeRequest;
 import ua.mibal.booking.model.search.Request;
 import ua.mibal.booking.service.ApartmentService;
-
-import java.time.LocalDate;
 
 /**
  * @author Mykhailo Balakhon
@@ -56,9 +54,7 @@ public class ApartmentController {
     }
 
     @GetMapping("/apartments/{id}/free")
-    public FreeApartmentDto isFree(@PathVariable Long id,
-                                   @RequestParam LocalDate from,
-                                   @RequestParam LocalDate to) {
-        return apartmentService.isFree(id, from, to);
+    public FreeApartmentDto isFree(@PathVariable Long id, @Valid DateRangeRequest request) {
+        return apartmentService.isFree(id, request);
     }
 }

@@ -17,7 +17,6 @@
 package ua.mibal.booking.model.search;
 
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 import ua.mibal.booking.validation.ValidDateRange;
 
@@ -29,32 +28,9 @@ import java.time.LocalDate;
  */
 @Data
 @ValidDateRange
-public class Request implements DateRangeRequestInterface {
-    private String query = "";
+public class DateRangeRequest implements DateRangeRequestInterface {
     @NotNull
     private LocalDate from;
     @NotNull
     private LocalDate to;
-    @NotNull
-    @PositiveOrZero
-    private Integer adult;
-    @NotNull
-    @PositiveOrZero
-    private Integer child;
-
-    @PositiveOrZero
-    private Integer stars = 0;
-    @PositiveOrZero
-    private Integer maxPrice = Integer.MAX_VALUE;
-    @PositiveOrZero
-    private Float rating = 0f;
-
-    private Boolean meals = false;
-    private Boolean kitchen = false;
-    private Boolean bathroom = false;
-    private Boolean wifi = false;
-    private Boolean refrigerator = false;
-    private Boolean pool = false;
-    private Boolean restaurant = false;
-    private Boolean parking = false;
 }

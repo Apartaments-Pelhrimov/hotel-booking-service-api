@@ -26,10 +26,9 @@ import ua.mibal.booking.mapper.ApartmentMapper;
 import ua.mibal.booking.model.dto.ApartmentDto;
 import ua.mibal.booking.model.dto.ApartmentSearchDto;
 import ua.mibal.booking.model.dto.FreeApartmentDto;
+import ua.mibal.booking.model.search.DateRangeRequest;
 import ua.mibal.booking.model.search.Request;
 import ua.mibal.booking.repository.ApartmentRepository;
-
-import java.time.LocalDate;
 
 /**
  * @author Mykhailo Balakhon
@@ -54,8 +53,8 @@ public class ApartmentService {
                 .orElseThrow(() -> new EntityNotFoundException("Entity Apartment by id=" + id + " not found"));
     }
 
-    public FreeApartmentDto isFree(Long id, LocalDate from, LocalDate to) {
-        Boolean free = apartmentRepository.isFreeForRangeById(id, from, to);
+    public FreeApartmentDto isFree(Long id, DateRangeRequest request) {
+        Boolean free = apartmentRepository.isFreeForRangeById(id, request.getFrom(), request.getTo());
         return apartmentMapper.toFreeDto(free);
     }
 }
