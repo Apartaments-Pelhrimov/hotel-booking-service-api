@@ -17,9 +17,13 @@
 package ua.mibal.booking.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import ua.mibal.booking.mapper.ReservationMapper;
 import ua.mibal.booking.model.dto.ReservationDto;
+import ua.mibal.booking.repository.ReservationRepository;
 
 /**
  * @author Mykhailo Balakhon
@@ -28,7 +32,12 @@ import ua.mibal.booking.model.dto.ReservationDto;
 @RequiredArgsConstructor
 @Service
 public class ReservationService {
-    public ReservationDto getMyReservations(Authentication authentication) {
-        return null;
+    private final ReservationRepository reservationRepository;
+    private final ReservationMapper reservationMapper;
+
+    public Page<ReservationDto> getMyReservations(Authentication authentication, Pageable pageable) {
+        String email = authentication.getName();
+        return reservationRepository.findAllByUserEmail(email, pageable)
+                .map(reservationMapper::toDto);
     }
 }

@@ -18,6 +18,8 @@ package ua.mibal.booking.controller;
 
 import jakarta.annotation.security.RolesAllowed;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,7 +39,7 @@ public class ReservationController {
 
     @RolesAllowed("USER")
     @GetMapping("/me/reservations")
-    public ReservationDto getMyReservations(Authentication authentication) {
-        return reservationService.getMyReservations(authentication);
+    public Page<ReservationDto> getMyReservations(Authentication authentication, Pageable pageable) {
+        return reservationService.getMyReservations(authentication, pageable);
     }
 }
