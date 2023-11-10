@@ -37,7 +37,7 @@ public class ExceptionHandlerAdvice {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiError> handleValidationException(MethodArgumentNotValidException e) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
-        String objErrors = e.getAllErrors().stream()
+        String objErrors = e.getGlobalErrors().stream()
                 .map(err -> err.getDefaultMessage() + ".")
                 .collect(Collectors.joining(" "));
         String template = "Field %s=%s %s.";
@@ -46,7 +46,7 @@ public class ExceptionHandlerAdvice {
                 .map(er -> String.format(template, er.getField(), er.getRejectedValue(), er.getDefaultMessage()))
                 .collect(Collectors.joining(" "));
         return ResponseEntity.status(status)
-                .body(new ApiError(status, e, (objErrors + fieldErrors).trim()));
+                .body(new ApiError(status, e, (objErrors + " " + fieldErrors).trim()));
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
