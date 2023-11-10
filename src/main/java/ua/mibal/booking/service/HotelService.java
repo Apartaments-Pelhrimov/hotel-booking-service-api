@@ -16,6 +16,7 @@
 
 package ua.mibal.booking.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,14 +39,14 @@ public class HotelService {
 
     public Page<HotelSearchDto> findAll(Request request,
                                         Pageable pageable) {
-        System.out.println(request);
         return hotelRepository.findAllByQuery(request, pageable)
                 .map(hotel -> hotelMapper
                         .toDto(hotel, null, null));
     }
 
-    // TODO
     public HotelDto findOne(Long id) {
-        return null;
+        return hotelRepository.findByIdFetchPhotos(id)
+                .map(hotel -> hotelMapper.toDto(hotel, null))
+                .orElseThrow(() -> new EntityNotFoundException("Entity Hotel by id=" + id + " not found"));
     }
 }

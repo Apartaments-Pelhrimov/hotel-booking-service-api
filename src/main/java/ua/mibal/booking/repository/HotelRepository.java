@@ -24,6 +24,8 @@ import org.springframework.data.repository.query.Param;
 import ua.mibal.booking.model.entity.Hotel;
 import ua.mibal.booking.model.search.Request;
 
+import java.util.Optional;
+
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
@@ -55,4 +57,9 @@ public interface HotelRepository extends JpaRepository<Hotel, Long> {
            "ho.restaurant in(:#{#r.restaurant}, true) and " +
            "ho.parking in(:#{#r.parking}, true)")
     Page<Hotel> findAllByQuery(@Param("r") Request request, Pageable pageable);
+
+    @Query("select h from Hotel h " +
+           "left join fetch h.photos " +
+           "where h.id = ?1")
+    Optional<Hotel> findByIdFetchPhotos(Long id);
 }
