@@ -20,5 +20,5 @@ package ua.mibal.booking.model.dto;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
-public record FreeDto() {
+public record FreeApartmentDto(Boolean free) {
 }

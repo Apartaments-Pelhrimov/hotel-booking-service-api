@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.mapper.ApartmentMapper;
 import ua.mibal.booking.model.dto.ApartmentDto;
-import ua.mibal.booking.model.dto.FreeDto;
+import ua.mibal.booking.model.dto.FreeApartmentDto;
 import ua.mibal.booking.model.search.Request;
 import ua.mibal.booking.repository.ApartmentRepository;
 
@@ -51,7 +51,7 @@ public class ApartmentService {
                 .orElseThrow(() -> new EntityNotFoundException("Entity Apartment by id=" + id + " not found"));
     }
 
-    public FreeDto isFree(Long id, LocalDate from, LocalDate to) {
+    public FreeApartmentDto isFree(Long id, LocalDate from, LocalDate to) {
         return null;
     }
 }

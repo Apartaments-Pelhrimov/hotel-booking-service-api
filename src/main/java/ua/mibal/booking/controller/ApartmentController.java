@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ua.mibal.booking.model.dto.ApartmentDto;
-import ua.mibal.booking.model.dto.FreeDto;
+import ua.mibal.booking.model.dto.FreeApartmentDto;
 import ua.mibal.booking.model.search.Request;
 import ua.mibal.booking.service.ApartmentService;
 
@@ -55,9 +55,9 @@ public class ApartmentController {
     }
 
     @GetMapping("/apartments/{id}/free")
-    public FreeDto isFree(@PathVariable Long id,
-                          @RequestParam LocalDate from,
-                          @RequestParam LocalDate to) {
+    public FreeApartmentDto isFree(@PathVariable Long id,
+                                   @RequestParam LocalDate from,
+                                   @RequestParam LocalDate to) {
         return apartmentService.isFree(id, from, to);
     }
 }
