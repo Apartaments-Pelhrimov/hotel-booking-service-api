@@ -35,8 +35,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface ValidDateRange {
 
     String message() default
-            "Date range [from=${validatedValue.from}; to=${validatedValue.to}] " +
-            "must be: now() < from < to";
+            "Required request params [from=${validatedValue.from}; to=${validatedValue.to}] " +
+            "must be in range: [now() < from < to]";
 
     Class<?>[] groups() default { };
 
