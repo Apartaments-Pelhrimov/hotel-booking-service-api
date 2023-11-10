@@ -33,7 +33,7 @@ public interface HotelRepository extends JpaRepository<Hotel, Long> {
     @Query("select distinct h from Hotel h " +
            "left join fetch h.photos " +
 
-           "left join h.hotelOptions ho " +
+           "left join h.options ho " +
            "left join h.apartments a " +
            "left join a.apartmentOptions ao " +
            "left join a.reservations r " +
