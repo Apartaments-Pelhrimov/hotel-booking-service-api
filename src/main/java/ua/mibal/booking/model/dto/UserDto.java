@@ -16,9 +16,17 @@
 
 package ua.mibal.booking.model.dto;
 
+import ua.mibal.booking.model.embeddable.NotificationSettings;
+
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
-public record UserDto() {
+public record UserDto(
+        String name,
+        String photo,
+        String phone,
+        String email,
+        NotificationSettings notificationSettings
+) {
 }

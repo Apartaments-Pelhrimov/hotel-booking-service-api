@@ -21,6 +21,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import ua.mibal.booking.model.dto.AuthResponseDto;
 import ua.mibal.booking.model.dto.RegistrationDto;
+import ua.mibal.booking.model.dto.UserDto;
 import ua.mibal.booking.model.entity.User;
 
 /**
@@ -34,4 +35,8 @@ public interface UserMapper {
     User toEntity(RegistrationDto registrationDto, String password);
 
     AuthResponseDto toAuthResponse(User user, String token);
+
+    @Mapping(target = "phone", source = "phone.number")
+    @Mapping(target = "photo", source = "photo.photoLink")
+    UserDto toDto(User user);
 }

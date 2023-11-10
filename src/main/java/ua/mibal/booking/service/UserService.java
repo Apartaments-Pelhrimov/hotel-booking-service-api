@@ -16,10 +16,13 @@
 
 package ua.mibal.booking.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import ua.mibal.booking.mapper.UserMapper;
 import ua.mibal.booking.model.dto.UserDto;
+import ua.mibal.booking.repository.UserRepository;
 
 /**
  * @author Mykhailo Balakhon
@@ -28,8 +31,13 @@ import ua.mibal.booking.model.dto.UserDto;
 @RequiredArgsConstructor
 @Service
 public class UserService {
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     public UserDto getMe(Authentication authentication) {
-        return null;
+        String email = authentication.getName();
+        return userRepository.findByEmail(email)
+                .map(userMapper::toDto)
+                .orElseThrow(() -> new EntityNotFoundException("Entity User by email=" + email + "not found"));
     }
 }
