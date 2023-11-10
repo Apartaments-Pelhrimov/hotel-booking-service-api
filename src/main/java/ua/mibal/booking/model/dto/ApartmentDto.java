@@ -16,12 +16,12 @@
 
 package ua.mibal.booking.model.dto;
 
-import ua.mibal.booking.model.embeddable.AdditionalInfo;
-import ua.mibal.booking.model.embeddable.ApartmentOptions;
-import ua.mibal.booking.model.embeddable.Bed;
-import ua.mibal.booking.model.embeddable.HotelOptions;
-import ua.mibal.booking.model.embeddable.Location;
-import ua.mibal.booking.model.embeddable.Photo;
+import ua.mibal.booking.model.entity.embeddable.AdditionalInfo;
+import ua.mibal.booking.model.entity.embeddable.ApartmentOptions;
+import ua.mibal.booking.model.entity.embeddable.Bed;
+import ua.mibal.booking.model.entity.embeddable.HotelOptions;
+import ua.mibal.booking.model.entity.embeddable.Location;
+import ua.mibal.booking.model.entity.embeddable.Photo;
 
 import java.math.BigDecimal;
 import java.util.List;

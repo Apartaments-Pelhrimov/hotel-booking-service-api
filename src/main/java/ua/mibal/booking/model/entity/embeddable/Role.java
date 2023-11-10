@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.embeddable;
+package ua.mibal.booking.model.entity.embeddable;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

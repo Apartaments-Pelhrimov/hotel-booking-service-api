@@ -16,7 +16,7 @@
 
 package ua.mibal.booking.model.dto;
 
-import ua.mibal.booking.model.embeddable.NotificationSettings;
+import ua.mibal.booking.model.entity.embeddable.NotificationSettings;
 
 /**
  * @author Mykhailo Balakhon

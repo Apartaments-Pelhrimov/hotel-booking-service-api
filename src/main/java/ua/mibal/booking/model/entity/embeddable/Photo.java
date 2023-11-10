@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.embeddable;
+package ua.mibal.booking.model.entity.embeddable;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,10 +31,20 @@ import lombok.Setter;
 @Getter
 @Setter
 @Embeddable
-public class Location {
+public class Photo {
 
-    @Column(nullable = false)
-    private String city;
+    private String photoLink;
 
-    private String locationLink;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Photo photo = (Photo) o;
+        return photoLink != null && photoLink.equals(photo.photoLink);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

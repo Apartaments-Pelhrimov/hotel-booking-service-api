@@ -14,23 +14,44 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.embeddable;
+package ua.mibal.booking.model.entity.embeddable;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Embeddable;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.type.NumericBooleanConverter;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
+@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Embeddable
-public class AdditionalInfo {
-    private String description;
-    private String rules;
-    private String notice;
+public class HotelOptions {
+
+    public static final HotelOptions DEFAULT
+            = new HotelOptions(false, false, false, false);
+
+    @Convert(converter = NumericBooleanConverter.class)
+    @Column(nullable = false)
+    private Boolean pool;
+
+    @Convert(converter = NumericBooleanConverter.class)
+    @Column(nullable = false)
+    private Boolean restaurant;
+
+    @Convert(converter = NumericBooleanConverter.class)
+    @Column(nullable = false)
+    private Boolean publicShower;
+
+    @Convert(converter = NumericBooleanConverter.class)
+    @Column(nullable = false)
+    private Boolean parking;
 }

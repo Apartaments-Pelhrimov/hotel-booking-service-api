@@ -16,8 +16,8 @@
 
 package ua.mibal.booking.model.dto;
 
-import ua.mibal.booking.model.embeddable.Location;
-import ua.mibal.booking.model.embeddable.Photo;
+import ua.mibal.booking.model.entity.embeddable.Location;
+import ua.mibal.booking.model.entity.embeddable.Photo;
 
 import java.math.BigDecimal;
 import java.util.List;

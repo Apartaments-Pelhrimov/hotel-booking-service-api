@@ -39,10 +39,10 @@ import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.type.NumericBooleanConverter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import ua.mibal.booking.model.embeddable.NotificationSettings;
-import ua.mibal.booking.model.embeddable.Phone;
-import ua.mibal.booking.model.embeddable.Photo;
-import ua.mibal.booking.model.embeddable.Role;
+import ua.mibal.booking.model.entity.embeddable.NotificationSettings;
+import ua.mibal.booking.model.entity.embeddable.Phone;
+import ua.mibal.booking.model.entity.embeddable.Photo;
+import ua.mibal.booking.model.entity.embeddable.Role;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -53,9 +53,9 @@ import java.util.Objects;
 import java.util.Set;
 
 import static lombok.AccessLevel.PRIVATE;
-import static ua.mibal.booking.model.embeddable.Role.GLOBAL_MANAGER;
-import static ua.mibal.booking.model.embeddable.Role.LOCAL_MANAGER;
-import static ua.mibal.booking.model.embeddable.Role.USER;
+import static ua.mibal.booking.model.entity.embeddable.Role.GLOBAL_MANAGER;
+import static ua.mibal.booking.model.entity.embeddable.Role.LOCAL_MANAGER;
+import static ua.mibal.booking.model.entity.embeddable.Role.USER;
 
 /**
  * @author Mykhailo Balakhon

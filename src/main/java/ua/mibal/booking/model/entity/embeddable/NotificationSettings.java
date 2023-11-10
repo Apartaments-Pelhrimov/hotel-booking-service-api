@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.embeddable;
+package ua.mibal.booking.model.entity.embeddable;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -34,24 +34,16 @@ import org.hibernate.type.NumericBooleanConverter;
 @Getter
 @Setter
 @Embeddable
-public class HotelOptions {
+public class NotificationSettings {
 
-    public static final HotelOptions DEFAULT
-            = new HotelOptions(false, false, false, false);
-
-    @Convert(converter = NumericBooleanConverter.class)
-    @Column(nullable = false)
-    private Boolean pool;
+    public static final NotificationSettings DEFAULT
+            = new NotificationSettings(false, false);
 
     @Convert(converter = NumericBooleanConverter.class)
     @Column(nullable = false)
-    private Boolean restaurant;
+    private boolean receiveOrderEmails;
 
     @Convert(converter = NumericBooleanConverter.class)
     @Column(nullable = false)
-    private Boolean publicShower;
-
-    @Convert(converter = NumericBooleanConverter.class)
-    @Column(nullable = false)
-    private Boolean parking;
+    private boolean receiveNewsEmails;
 }

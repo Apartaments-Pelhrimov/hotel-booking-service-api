@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.embeddable;
+package ua.mibal.booking.model.entity.embeddable;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.type.NumericBooleanConverter;
 
 /**
  * @author Mykhailo Balakhon
@@ -34,16 +32,8 @@ import org.hibernate.type.NumericBooleanConverter;
 @Getter
 @Setter
 @Embeddable
-public class NotificationSettings {
+public class Phone {
 
-    public static final NotificationSettings DEFAULT
-            = new NotificationSettings(false, false);
-
-    @Convert(converter = NumericBooleanConverter.class)
     @Column(nullable = false)
-    private boolean receiveOrderEmails;
-
-    @Convert(converter = NumericBooleanConverter.class)
-    @Column(nullable = false)
-    private boolean receiveNewsEmails;
+    private String number;
 }

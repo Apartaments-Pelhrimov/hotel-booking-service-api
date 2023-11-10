@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.embeddable;
+package ua.mibal.booking.model.entity.embeddable;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.type.NumericBooleanConverter;
 
 /**
  * @author Mykhailo Balakhon
@@ -34,12 +32,10 @@ import org.hibernate.type.NumericBooleanConverter;
 @Getter
 @Setter
 @Embeddable
-public class Bed {
+public class Location {
 
     @Column(nullable = false)
-    private Integer size;
+    private String city;
 
-    @Convert(converter = NumericBooleanConverter.class)
-    @Column(nullable = false)
-    private Boolean bunk;
+    private String locationLink;
 }

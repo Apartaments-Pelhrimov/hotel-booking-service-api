@@ -33,7 +33,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ua.mibal.booking.model.embeddable.ReservationDetails;
+import ua.mibal.booking.model.entity.embeddable.ReservationDetails;
 
 import java.time.LocalDate;
 

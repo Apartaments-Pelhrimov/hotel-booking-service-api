@@ -16,9 +16,9 @@
 
 package ua.mibal.booking.model.dto;
 
-import ua.mibal.booking.model.embeddable.Location;
-import ua.mibal.booking.model.embeddable.Photo;
-import ua.mibal.booking.model.embeddable.ReservationDetails;
+import ua.mibal.booking.model.entity.embeddable.Location;
+import ua.mibal.booking.model.entity.embeddable.Photo;
+import ua.mibal.booking.model.entity.embeddable.ReservationDetails;
 
 import java.time.LocalDate;
 import java.util.List;

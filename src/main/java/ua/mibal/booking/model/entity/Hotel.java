@@ -37,10 +37,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ua.mibal.booking.exception.IllegalRoleException;
-import ua.mibal.booking.model.embeddable.AdditionalInfo;
-import ua.mibal.booking.model.embeddable.HotelOptions;
-import ua.mibal.booking.model.embeddable.Location;
-import ua.mibal.booking.model.embeddable.Photo;
+import ua.mibal.booking.model.entity.embeddable.AdditionalInfo;
+import ua.mibal.booking.model.entity.embeddable.HotelOptions;
+import ua.mibal.booking.model.entity.embeddable.Location;
+import ua.mibal.booking.model.entity.embeddable.Photo;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -48,8 +48,8 @@ import java.util.List;
 import java.util.Set;
 
 import static lombok.AccessLevel.PRIVATE;
-import static ua.mibal.booking.model.embeddable.Role.GLOBAL_MANAGER;
-import static ua.mibal.booking.model.embeddable.Role.LOCAL_MANAGER;
+import static ua.mibal.booking.model.entity.embeddable.Role.GLOBAL_MANAGER;
+import static ua.mibal.booking.model.entity.embeddable.Role.LOCAL_MANAGER;
 
 /**
  * @author Mykhailo Balakhon

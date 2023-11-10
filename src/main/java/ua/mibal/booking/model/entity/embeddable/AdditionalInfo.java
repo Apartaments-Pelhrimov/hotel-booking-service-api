@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.embeddable;
+package ua.mibal.booking.model.entity.embeddable;
 
 import jakarta.persistence.Embeddable;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,25 +25,12 @@ import lombok.Setter;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Embeddable
-public class Photo {
-
-    private String photoLink;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Photo photo = (Photo) o;
-        return photoLink != null && photoLink.equals(photo.photoLink);
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
+public class AdditionalInfo {
+    private String description;
+    private String rules;
+    private String notice;
 }
