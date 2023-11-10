@@ -37,6 +37,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ua.mibal.booking.exception.IllegalRoleException;
+import ua.mibal.booking.model.embeddable.AdditionalInfo;
 import ua.mibal.booking.model.embeddable.HotelOptions;
 import ua.mibal.booking.model.embeddable.Location;
 import ua.mibal.booking.model.embeddable.Photo;
@@ -74,9 +75,8 @@ public class Hotel {
     @Embedded
     private Location location;
 
-    private String description;
-
-    private String rules;
+    @Embedded
+    private AdditionalInfo info;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
