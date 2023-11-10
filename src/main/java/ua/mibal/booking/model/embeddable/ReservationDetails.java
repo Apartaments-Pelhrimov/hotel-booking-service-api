@@ -44,5 +44,11 @@ public class ReservationDetails {
     private LocalDate reservedTo;
 
     @Column(nullable = false)
-    private BigDecimal currentOneDayCost;
+    private BigDecimal fullCost;
+
+    @Column(nullable = false)
+    private Integer adults;
+
+    @Column(nullable = false)
+    private Integer children;
 }
