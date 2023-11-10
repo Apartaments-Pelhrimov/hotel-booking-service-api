@@ -31,6 +31,7 @@ public record HotelSearchDto(
         List<Photo> photos,
         Location location,
         Float rating,
-        BigDecimal minCost
+        BigDecimal minCost,
+        String money
 ) {
 }
