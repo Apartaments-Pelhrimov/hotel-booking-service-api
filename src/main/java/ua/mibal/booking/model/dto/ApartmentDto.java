@@ -16,9 +16,36 @@
 
 package ua.mibal.booking.model.dto;
 
+import ua.mibal.booking.model.embeddable.AdditionalInfo;
+import ua.mibal.booking.model.embeddable.ApartmentOptions;
+import ua.mibal.booking.model.embeddable.Bed;
+import ua.mibal.booking.model.embeddable.HotelOptions;
+import ua.mibal.booking.model.embeddable.Location;
+import ua.mibal.booking.model.embeddable.Photo;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Set;
+
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
-public record ApartmentDto() {
+public record ApartmentDto(
+        String name,
+        Set<Photo> photos,
+        ApartmentOptions options,
+        ApartmentHotelDto hotel,
+        Float rating,
+        List<Bed> beds,
+        BigDecimal oneDayCost
+) {
+    public record ApartmentHotelDto(
+            String name,
+            HotelOptions options,
+            Location location,
+            AdditionalInfo info,
+            Integer stars
+    ) {
+    }
 }
