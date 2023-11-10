@@ -419,6 +419,40 @@ paths:
 
 
 
+  #  ----------------------------------- RESERVATIONS -----------------------------------
+
+  /users/me/reservations:
+    get:
+      summary: "GET users/me/reservations"
+      operationId: "getMyReservations"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ReservationDto"
+
+
+
+
+  #  ----------------------------------- USERS -----------------------------------
+
+  /users/me:
+    get:
+      summary: "GET users/me"
+      operationId: "getMe"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserDto"
+
+
+
+
 
 
 
@@ -637,3 +671,63 @@ components:
           type: "string"
         body:
           type: "string"
+    ReservationApartmentDto:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        photos:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Photo"
+        hotelName:
+          type: "string"
+        location:
+          $ref: "#/components/schemas/Location"
+    ReservationDetails:
+      type: "object"
+      properties:
+        reservedFrom:
+          type: "string"
+          format: "date"
+        reservedTo:
+          type: "string"
+          format: "date"
+        fullCost:
+          $ref: "#/components/schemas/BigDecimal"
+        adults:
+          type: "integer"
+          format: "int32"
+        children:
+          type: "integer"
+          format: "int32"
+    ReservationDto:
+      type: "object"
+      properties:
+        apartment:
+          $ref: "#/components/schemas/ReservationApartmentDto"
+        details:
+          $ref: "#/components/schemas/ReservationDetails"
+        date:
+          type: "string"
+          format: "date"
+    NotificationSettings:
+      type: "object"
+      properties:
+        receiveOrderEmails:
+          type: "boolean"
+        receiveNewsEmails:
+          type: "boolean"
+    UserDto:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        photo:
+          type: "string"
+        phone:
+          type: "string"
+        email:
+          type: "string"
+        notificationSettings:
+          $ref: "#/components/schemas/NotificationSettings"
