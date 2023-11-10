@@ -58,6 +58,147 @@ paths:
 
 
 
+  #  ----------------------------------- HOTELS -----------------------------------
+
+  /api/hotels:
+    get:
+      summary: "GET api/hotels"
+      operationId: "getAll"
+      parameters:
+        - name: "query"
+          in: query
+          required: false
+          schema:
+            type: "string"
+        - name: "from"
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "2023-12-31"
+            format: "YYYY-MM-DD"
+            description: "Date of start of desired reservation"
+        - name: "to"
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "2023-12-31"
+            format: "YYYY-MM-DD"
+            description: "Date of start of desired reservation"
+        - name: "adult"
+          in: query
+          required: true
+          description: "Number of adults (>0)"
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "child"
+          in: query
+          required: true
+          description: "Number of children (>0)"
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "stars"
+          in: query
+          required: false
+          description: "Filter, default = 0"
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "maxPrice"
+          in: query
+          required: false
+          description: "Filter, default = Integer.MAX_VALUE (2^31-1)"
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "rating"
+          in: query
+          required: false
+          description: "Filter, default = 0.0"
+          schema:
+            type: "number"
+            format: "float"
+        - name: "meals"
+          in: query
+          required: false
+          description: "Filter, default = false"
+          schema:
+            type: "boolean"
+        - name: "kitchen"
+          in: query
+          required: false
+          description: "Filter, default = false"
+          schema:
+            type: "boolean"
+        - name: "bathroom"
+          in: query
+          required: false
+          description: "Filter, default = false"
+          schema:
+            type: "boolean"
+        - name: "wifi"
+          in: query
+          required: false
+          description: "Filter, default = false"
+          schema:
+            type: "boolean"
+        - name: "refrigerator"
+          in: query
+          required: false
+          description: "Filter, default = false"
+          schema:
+            type: "boolean"
+        - name: "pool"
+          in: query
+          required: false
+          description: "Filter, default = false"
+          schema:
+            type: "boolean"
+        - name: "restaurant"
+          in: query
+          required: false
+          description: "Filter, default = false"
+          schema:
+            type: "boolean"
+        - name: "parking"
+          in: query
+          required: false
+          description: "Filter, default = false"
+          schema:
+            type: "boolean"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/HotelSearchDto"
+  /api/hotels/{id}:
+    get:
+      summary: "GET api/hotels/{id}"
+      operationId: "getOne"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/HotelDto"
+
+
+
+
+
   #  ----------------------------------- APARTMENTS -----------------------------------
 
   /api/hotels/{hotelId}/apartments:
@@ -234,146 +375,6 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/FreeApartmentDto"
-
-
-
-
-#  ----------------------------------- HOTELS -----------------------------------
-
-  /api/hotels:
-    get:
-      summary: "GET api/hotels"
-      operationId: "getAll"
-      parameters:
-        - name: "query"
-          in: query
-          required: false
-          schema:
-            type: "string"
-        - name: "from"
-          in: query
-          required: true
-          schema:
-            type: string
-            example: "2023-12-31"
-            format: "YYYY-MM-DD"
-            description: "Date of start of desired reservation"
-        - name: "to"
-          in: query
-          required: true
-          schema:
-            type: string
-            example: "2023-12-31"
-            format: "YYYY-MM-DD"
-            description: "Date of start of desired reservation"
-        - name: "adult"
-          in: query
-          required: true
-          description: "Number of adults (>0)"
-          schema:
-            type: "integer"
-            format: "int64"
-        - name: "child"
-          in: query
-          required: true
-          description: "Number of children (>0)"
-          schema:
-            type: "integer"
-            format: "int64"
-        - name: "stars"
-          in: query
-          required: false
-          description: "Filter, default = 0"
-          schema:
-            type: "integer"
-            format: "int64"
-        - name: "maxPrice"
-          in: query
-          required: false
-          description: "Filter, default = Integer.MAX_VALUE (2^31-1)"
-          schema:
-            type: "integer"
-            format: "int64"
-        - name: "rating"
-          in: query
-          required: false
-          description: "Filter, default = 0.0"
-          schema:
-            type: "number"
-            format: "float"
-        - name: "meals"
-          in: query
-          required: false
-          description: "Filter, default = false"
-          schema:
-            type: "boolean"
-        - name: "kitchen"
-          in: query
-          required: false
-          description: "Filter, default = false"
-          schema:
-            type: "boolean"
-        - name: "bathroom"
-          in: query
-          required: false
-          description: "Filter, default = false"
-          schema:
-            type: "boolean"
-        - name: "wifi"
-          in: query
-          required: false
-          description: "Filter, default = false"
-          schema:
-            type: "boolean"
-        - name: "refrigerator"
-          in: query
-          required: false
-          description: "Filter, default = false"
-          schema:
-            type: "boolean"
-        - name: "pool"
-          in: query
-          required: false
-          description: "Filter, default = false"
-          schema:
-            type: "boolean"
-        - name: "restaurant"
-          in: query
-          required: false
-          description: "Filter, default = false"
-          schema:
-            type: "boolean"
-        - name: "parking"
-          in: query
-          required: false
-          description: "Filter, default = false"
-          schema:
-            type: "boolean"
-      responses:
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/HotelSearchDto"
-  /api/hotels/{id}:
-    get:
-      summary: "GET api/hotels/{id}"
-      operationId: "getOne"
-      parameters:
-        - name: "id"
-          in: "path"
-          required: true
-          schema:
-            type: "integer"
-            format: "int64"
-      responses:
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/HotelDto"
 
 
 
