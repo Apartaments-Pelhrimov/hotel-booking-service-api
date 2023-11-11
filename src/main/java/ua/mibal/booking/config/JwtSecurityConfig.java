@@ -32,7 +32,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
-import ua.mibal.booking.security.RsaProperties;
+import ua.mibal.booking.config.properties.RsaProperties;
 
 /**
  * @author Mykhailo Balakhon

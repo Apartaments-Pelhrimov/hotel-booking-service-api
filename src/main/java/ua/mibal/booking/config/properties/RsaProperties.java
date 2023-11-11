@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.security;
+package ua.mibal.booking.config.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
