@@ -66,5 +66,24 @@ public interface ApartmentRepository extends JpaRepository<Apartment, Long> {
            "ho.pool in(:#{#r.pool}, true) and " +
            "ho.restaurant in(:#{#r.restaurant}, true) and " +
            "ho.parking in(:#{#r.parking}, true)")
-    Page<Apartment> findAllInHotel(@Param("hotelId") Long hotelId, @Param("r") Request request, Pageable pageable);
+    Page<Apartment> findAllInHotelByQuery(@Param("hotelId") Long hotelId, @Param("r") Request request, Pageable pageable);
+
+    @Query("select a from Apartment a " +
+           "left join fetch a.hotel h " +
+           "left join fetch a.photos " +
+           "where " +
+           "lower(a.name) like lower(concat('%', ?1, '%')) or " +
+           "lower(h.name) like lower(concat('%', ?1, '%')) or " +
+           "lower(h.location.city) like lower(concat('%', ?1, '%'))")
+    Page<Apartment> findAllByNameOrCity(String name, Pageable pageable);
+
+    @Query("select a from Apartment a " +
+           "left join fetch a.hotel h " +
+           "left join fetch a.photos " +
+           "where " +
+           "h.id = ?1 and (" +
+           "lower(a.name) like lower(concat('%', ?2, '%')) or " +
+           "lower(h.name) like lower(concat('%', ?2, '%')) or " +
+           "lower(h.location.city) like lower(concat('%', ?2, '%')))")
+    Page<Apartment> findAllInHotelByNameOrCity(Long hotelId, String query, Pageable pageable);
 }

@@ -39,9 +39,14 @@ import ua.mibal.booking.service.HotelService;
 public class HotelController {
     private final HotelService hotelService;
 
-    @GetMapping
-    public Page<HotelSearchDto> getAll(@Valid Request request, Pageable pageable) {
+    @GetMapping("/search")
+    public Page<HotelSearchDto> getAllByQuery(@Valid Request request, Pageable pageable) {
         return hotelService.getAllByQuery(request, pageable);
+    }
+
+    @GetMapping
+    public Page<HotelSearchDto> getAll(Pageable pageable) {
+        return hotelService.getAll(pageable);
     }
 
     @GetMapping("/{id}")

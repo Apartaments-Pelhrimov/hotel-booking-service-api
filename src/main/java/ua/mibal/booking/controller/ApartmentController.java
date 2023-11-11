@@ -23,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ua.mibal.booking.model.dto.ApartmentDto;
 import ua.mibal.booking.model.dto.ApartmentSearchDto;
@@ -30,6 +31,8 @@ import ua.mibal.booking.model.dto.FreeApartmentDto;
 import ua.mibal.booking.model.search.DateRangeRequest;
 import ua.mibal.booking.model.search.Request;
 import ua.mibal.booking.service.ApartmentService;
+
+import java.util.Optional;
 
 /**
  * @author Mykhailo Balakhon
@@ -41,11 +44,20 @@ import ua.mibal.booking.service.ApartmentService;
 public class ApartmentController {
     private final ApartmentService apartmentService;
 
-    @GetMapping("/{hotelId}/apartments")
-    public Page<ApartmentSearchDto> getAllInHotel(@PathVariable Long hotelId,
-                                                  @Valid Request request,
-                                                  Pageable pageable) {
-        return apartmentService.getAllInHotel(hotelId, request, pageable);
+    @GetMapping("/{hotelId}/apartments/search")
+    public Page<ApartmentSearchDto> getAllInHotelByQuery(@PathVariable Long hotelId,
+                                                         @Valid Request request,
+                                                         Pageable pageable) {
+        return apartmentService.getAllInHotelByQuery(hotelId, request, pageable);
+    }
+
+    @GetMapping("/apartments")
+    public Page<ApartmentSearchDto> getAll(@RequestParam(required = false, defaultValue = "") String query,
+                                           @RequestParam(required = false) Long hotelId,
+                                           Pageable pageable) {
+        return Optional.ofNullable(hotelId)
+                .map(hId -> apartmentService.getAllInHotelByName(hId, query, pageable))
+                .orElseGet(() -> apartmentService.getAllByName(query, pageable));
     }
 
     @GetMapping("/apartments/{id}")

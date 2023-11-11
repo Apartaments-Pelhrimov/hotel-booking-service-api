@@ -41,8 +41,8 @@ public class ApartmentService {
     private final ApartmentMapper apartmentMapper;
 
     @Transactional(readOnly = true) // for LAZY Apartment.beds fetch
-    public Page<ApartmentSearchDto> getAllInHotel(Long hotelId, Request request, Pageable pageable) {
-        return apartmentRepository.findAllInHotel(hotelId, request, pageable)
+    public Page<ApartmentSearchDto> getAllInHotelByQuery(Long hotelId, Request request, Pageable pageable) {
+        return apartmentRepository.findAllInHotelByQuery(hotelId, request, pageable)
                 .map(apartment -> apartmentMapper.toSearchDto(apartment, null));
     }
 
@@ -58,5 +58,15 @@ public class ApartmentService {
                 .isFreeForRangeById(id, request.getFrom(), request.getTo())
                 .orElseThrow(() -> new EntityNotFoundException("Entity Apartment by id=" + id + " not found"));
         return apartmentMapper.toFreeDto(free);
+    }
+
+    public Page<ApartmentSearchDto> getAllByName(String query, Pageable pageable) {
+        return apartmentRepository.findAllByNameOrCity(query, pageable)
+                .map(apartment -> apartmentMapper.toSearchDto(apartment, null));
+    }
+
+    public Page<ApartmentSearchDto> getAllInHotelByName(Long hotelId, String query, Pageable pageable) {
+        return apartmentRepository.findAllInHotelByNameOrCity(hotelId, query, pageable)
+                .map(apartment -> apartmentMapper.toSearchDto(apartment, null));
     }
 }
