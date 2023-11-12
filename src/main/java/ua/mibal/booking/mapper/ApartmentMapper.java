@@ -30,9 +30,9 @@ import ua.mibal.booking.model.entity.Apartment;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface ApartmentMapper {
 
-    ApartmentDto toDto(Apartment apartment, Float rating);
+    ApartmentDto toDto(Apartment apartment);
 
     FreeApartmentDto toFreeDto(Boolean free);
 
-    ApartmentSearchDto toSearchDto(Apartment apartment, Float rating);
+    ApartmentSearchDto toSearchDto(Apartment apartment);
 }

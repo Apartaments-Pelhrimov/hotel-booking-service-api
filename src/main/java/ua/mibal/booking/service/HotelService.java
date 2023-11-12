@@ -40,18 +40,18 @@ public class HotelService {
     public Page<HotelSearchDto> getAllByQuery(Request request, Pageable pageable) {
         return hotelRepository.findAllByQuery(request, pageable)
                 .map(hotel -> hotelMapper
-                        .toDto(hotel, null, null));
+                        .toDto(hotel, null));
     }
 
     public HotelDto getOne(Long id) {
         return hotelRepository.findByIdFetchPhotos(id)
-                .map(hotel -> hotelMapper.toDto(hotel, null))
+                .map(hotelMapper::toDto)
                 .orElseThrow(() -> new EntityNotFoundException("Entity Hotel by id=" + id + " not found"));
     }
 
     public Page<HotelSearchDto> getAll(Pageable pageable) {
         return hotelRepository.findAll(pageable)
                 .map(hotel -> hotelMapper
-                        .toDto(hotel, null, null));
+                        .toDto(hotel, null));
     }
 }

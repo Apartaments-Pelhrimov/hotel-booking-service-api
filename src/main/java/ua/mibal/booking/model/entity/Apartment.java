@@ -84,6 +84,9 @@ public class Apartment {
     @Column(nullable = false)
     private Integer size;
 
+    @Column(nullable = false)
+    private Double rating;
+
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(
             name = "hotel_id",

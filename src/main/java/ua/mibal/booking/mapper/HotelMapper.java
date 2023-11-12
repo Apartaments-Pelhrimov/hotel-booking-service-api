@@ -31,7 +31,7 @@ import java.math.BigDecimal;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface HotelMapper {
 
-    HotelSearchDto toDto(Hotel hotel, BigDecimal minCost, Float rating);
+    HotelSearchDto toDto(Hotel hotel, BigDecimal minCost);
 
-    HotelDto toDto(Hotel hotel, Float rating);
+    HotelDto toDto(Hotel hotel);
 }

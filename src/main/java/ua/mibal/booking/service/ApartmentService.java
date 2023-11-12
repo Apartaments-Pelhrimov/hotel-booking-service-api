@@ -43,13 +43,13 @@ public class ApartmentService {
     @Transactional(readOnly = true) // for LAZY Apartment.beds fetch
     public Page<ApartmentSearchDto> getAllInHotelByQuery(Long hotelId, Request request, Pageable pageable) {
         return apartmentRepository.findAllInHotelByQuery(hotelId, request, pageable)
-                .map(apartment -> apartmentMapper.toSearchDto(apartment, null));
+                .map(apartmentMapper::toSearchDto);
     }
 
     @Transactional(readOnly = true) // for LAZY Apartment.beds fetch
     public ApartmentDto getOne(Long id) {
         return apartmentRepository.findByIdFetchPhotosHotel(id)
-                .map(apartment -> apartmentMapper.toDto(apartment, null))
+                .map(apartmentMapper::toDto)
                 .orElseThrow(() -> new EntityNotFoundException("Entity Apartment by id=" + id + " not found"));
     }
 
@@ -63,12 +63,12 @@ public class ApartmentService {
     @Transactional(readOnly = true) // for LAZY Apartment.beds fetch
     public Page<ApartmentSearchDto> getAllByName(String query, Pageable pageable) {
         return apartmentRepository.findAllByNameOrCity(query, pageable)
-                .map(apartment -> apartmentMapper.toSearchDto(apartment, null));
+                .map(apartmentMapper::toSearchDto);
     }
 
     @Transactional(readOnly = true) // for LAZY Apartment.beds fetch
     public Page<ApartmentSearchDto> getAllInHotelByName(Long hotelId, String query, Pageable pageable) {
         return apartmentRepository.findAllInHotelByNameOrCity(hotelId, query, pageable)
-                .map(apartment -> apartmentMapper.toSearchDto(apartment, null));
+                .map(apartmentMapper::toSearchDto);
     }
 }
