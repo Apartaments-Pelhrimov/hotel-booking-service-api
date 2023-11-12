@@ -72,7 +72,7 @@ public class Comment {
     private LocalDateTime creationDateTime = LocalDateTime.now();
 
     @Column(nullable = false)
-    private Float rate;
+    private Double rate;
 
     @Column(nullable = false)
     private String body;
