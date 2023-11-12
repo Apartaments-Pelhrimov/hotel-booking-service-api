@@ -35,6 +35,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.type.NumericBooleanConverter;
 import ua.mibal.booking.model.entity.embeddable.ApartmentOptions;
 import ua.mibal.booking.model.entity.embeddable.Bed;
@@ -106,6 +107,7 @@ public class Apartment {
     private List<Photo> photos = new ArrayList<>();
 
     @ElementCollection
+    @BatchSize(size = 100)
     @CollectionTable(
             name = "apartment_beds",
             joinColumns = @JoinColumn(
