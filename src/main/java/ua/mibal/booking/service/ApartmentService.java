@@ -60,11 +60,13 @@ public class ApartmentService {
         return apartmentMapper.toFreeDto(free);
     }
 
+    @Transactional(readOnly = true) // for LAZY Apartment.beds fetch
     public Page<ApartmentSearchDto> getAllByName(String query, Pageable pageable) {
         return apartmentRepository.findAllByNameOrCity(query, pageable)
                 .map(apartment -> apartmentMapper.toSearchDto(apartment, null));
     }
 
+    @Transactional(readOnly = true) // for LAZY Apartment.beds fetch
     public Page<ApartmentSearchDto> getAllInHotelByName(Long hotelId, String query, Pageable pageable) {
         return apartmentRepository.findAllInHotelByNameOrCity(hotelId, query, pageable)
                 .map(apartment -> apartmentMapper.toSearchDto(apartment, null));
