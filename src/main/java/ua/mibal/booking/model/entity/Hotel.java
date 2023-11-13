@@ -85,7 +85,7 @@ public class Hotel {
     @Embedded
     private HotelOptions options = HotelOptions.DEFAULT;
 
-    @Column(nullable = false)
+    @Column
     private Double rating;
 
     @ElementCollection

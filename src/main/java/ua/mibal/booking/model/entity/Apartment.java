@@ -85,7 +85,7 @@ public class Apartment {
     @Column(nullable = false)
     private Integer size;
 
-    @Column(nullable = false)
+    @Column
     private Double rating;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
