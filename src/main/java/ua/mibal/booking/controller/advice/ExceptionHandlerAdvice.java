@@ -23,6 +23,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ua.mibal.booking.exception.EmailAlreadyExistsException;
+import ua.mibal.booking.exception.IllegalPasswordException;
 
 import java.time.ZonedDateTime;
 import java.util.stream.Collectors;
@@ -52,6 +54,13 @@ public class ExceptionHandlerAdvice {
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ApiError> handleValidationException(EntityNotFoundException e) {
         HttpStatus status = HttpStatus.NOT_FOUND;
+        return ResponseEntity.status(status)
+                .body(new ApiError(status, e));
+    }
+
+    @ExceptionHandler({EmailAlreadyExistsException.class, IllegalPasswordException.class})
+    public ResponseEntity<ApiError> handleEmailAlreadyExistsException(RuntimeException e) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
         return ResponseEntity.status(status)
                 .body(new ApiError(status, e));
     }
