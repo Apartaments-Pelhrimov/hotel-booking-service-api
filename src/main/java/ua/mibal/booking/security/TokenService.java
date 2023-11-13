@@ -48,7 +48,7 @@ public class TokenService {
     }
 
     public String generateToken(User user) {
-        return generateToken(user.getName(), user.getAuthorities());
+        return generateToken(user.getEmail(), user.getAuthorities());
     }
 
     private String generateToken(String name, Collection<? extends GrantedAuthority> grantedAuthorities) {
