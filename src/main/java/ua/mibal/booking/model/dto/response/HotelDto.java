@@ -34,6 +34,6 @@ public record HotelDto(
         Location location,
         AdditionalInfo info,
         Integer stars,
-        Float rating
+        Double rating
 ) {
 }
