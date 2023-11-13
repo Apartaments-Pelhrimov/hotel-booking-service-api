@@ -16,40 +16,36 @@
 
 package ua.mibal.booking.model.entity.embeddable;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
-@Embeddable
-public class Role implements GrantedAuthority {
+public enum Role implements GrantedAuthority {
 
-    public static final Role USER = new Role("ROLE_USER");
-    public static final Role LOCAL_MANAGER = new Role("ROLE_LOCAL_MANAGER");
-    public static final Role GLOBAL_MANAGER = new Role("ROLE_GLOBAL_MANAGER");
+    ROLE_USER("ROLE_USER"),
+    ROLE_LOCAL_MANAGER("ROLE_LOCAL_MANAGER", ROLE_USER),
+    ROLE_GLOBAL_MANAGER("ROLE_GLOBAL_MANAGER", ROLE_LOCAL_MANAGER, ROLE_USER);
 
-    @Column(nullable = false)
-    private String authority;
+    private final String authority;
+    private final List<Role> children;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Role role = (Role) o;
-        return authority != null && authority.equals(role.authority);
+    Role(String authority, Role... children) {
+        this.authority = authority;
+        this.children = Arrays.stream(children).toList();
     }
 
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
+    public Collection<? extends GrantedAuthority> getGrantedAuthorities() {
+        List<Role> roles = new ArrayList<>(children);
+        roles.add(this);
+        return roles;
     }
 }

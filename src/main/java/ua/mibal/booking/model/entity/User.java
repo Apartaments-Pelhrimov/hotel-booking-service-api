@@ -16,17 +16,14 @@
 
 package ua.mibal.booking.model.entity;
 
-import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
-import jakarta.persistence.ForeignKey;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.Index;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -53,9 +50,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import static lombok.AccessLevel.PRIVATE;
-import static ua.mibal.booking.model.entity.embeddable.Role.GLOBAL_MANAGER;
-import static ua.mibal.booking.model.entity.embeddable.Role.LOCAL_MANAGER;
-import static ua.mibal.booking.model.entity.embeddable.Role.USER;
+import static ua.mibal.booking.model.entity.embeddable.Role.ROLE_USER;
 
 /**
  * @author Mykhailo Balakhon
@@ -99,18 +94,9 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private ZonedDateTime creationDateTime = ZonedDateTime.now();
 
-    @ElementCollection
-    @CollectionTable(
-            name = "roles",
-            joinColumns = @JoinColumn(
-                    name = "user_id",
-                    nullable = false,
-                    foreignKey = @ForeignKey(name = "roles_user_id_fk")
-            ),
-            indexes = @Index(name = "roles_user_id_idx", columnList = "user_id")
-    )
-    @Setter(PRIVATE)
-    private Set<Role> roles = new HashSet<>(Set.of(USER));
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role = ROLE_USER;
 
     @ManyToMany(mappedBy = "managers")
     @Setter(PRIVATE)
@@ -123,29 +109,6 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     @Setter(PRIVATE)
     private List<Comment> comments = new ArrayList<>();
-
-    public boolean is(Role role) {
-        return getRoles().contains(role);
-    }
-
-    public void addRole(Role role) {
-        if (role.equals(GLOBAL_MANAGER)) {
-            this.roles.add(LOCAL_MANAGER);
-        }
-        this.roles.add(role);
-    }
-
-    public void deleteRole(Role role) {
-        if (role.equals(USER)) return;
-        if (role.equals(LOCAL_MANAGER)) {
-            if (this.is(GLOBAL_MANAGER)) {
-                this.roles.remove(GLOBAL_MANAGER);
-            }
-            this.hotels.forEach(hotel -> hotel.removeManager(this));
-            this.hotels.clear();
-        }
-        this.roles.remove(role);
-    }
 
     public void addHotel(Hotel hotel) {
         hotel.addManager(this);
@@ -197,7 +160,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles;
+        return role.getGrantedAuthorities();
     }
 
     @Override

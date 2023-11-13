@@ -26,7 +26,7 @@ public class IllegalRoleException extends RuntimeException {
     public IllegalRoleException(User user) {
         super(String.format(
                 "User with id=%d have no access. User's roles=%s",
-                user.getId(), user.getRoles()
+                user.getId(), user.getRole()
         ));
     }
 }

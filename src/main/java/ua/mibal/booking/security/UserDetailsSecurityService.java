@@ -35,7 +35,7 @@ public class UserDetailsSecurityService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository
-                .findByEmailFetchRoles(email)
+                .findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User for email=" + email + " not found"));
     }
 }
