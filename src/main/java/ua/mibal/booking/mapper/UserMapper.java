@@ -19,9 +19,9 @@ package ua.mibal.booking.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
-import ua.mibal.booking.model.dto.AuthResponseDto;
-import ua.mibal.booking.model.dto.RegistrationDto;
-import ua.mibal.booking.model.dto.UserDto;
+import ua.mibal.booking.model.dto.auth.AuthResponseDto;
+import ua.mibal.booking.model.dto.auth.RegistrationDto;
+import ua.mibal.booking.model.dto.response.UserDto;
 import ua.mibal.booking.model.entity.User;
 
 /**

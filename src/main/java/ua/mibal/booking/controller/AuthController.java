@@ -23,8 +23,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ua.mibal.booking.model.dto.AuthResponseDto;
-import ua.mibal.booking.model.dto.RegistrationDto;
+import ua.mibal.booking.model.dto.auth.AuthResponseDto;
+import ua.mibal.booking.model.dto.auth.RegistrationDto;
 import ua.mibal.booking.service.AuthService;
 
 /**

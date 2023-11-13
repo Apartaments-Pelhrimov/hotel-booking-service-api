@@ -18,8 +18,8 @@ package ua.mibal.booking.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
-import ua.mibal.booking.model.dto.HotelDto;
-import ua.mibal.booking.model.dto.HotelSearchDto;
+import ua.mibal.booking.model.dto.response.HotelDto;
+import ua.mibal.booking.model.dto.search.HotelSearchDto;
 import ua.mibal.booking.model.entity.Hotel;
 
 import java.math.BigDecimal;

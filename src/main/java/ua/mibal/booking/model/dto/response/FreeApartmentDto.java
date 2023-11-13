@@ -14,14 +14,11 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.dto;
+package ua.mibal.booking.model.dto.response;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
-public record AuthResponseDto(
-        String name,
-        String token
-) {
+public record FreeApartmentDto(Boolean free) {
 }

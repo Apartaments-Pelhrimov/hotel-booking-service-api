@@ -14,19 +14,14 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.dto;
-
-import java.time.LocalDateTime;
+package ua.mibal.booking.model.dto.auth;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
-public record CommentDto(
-        String userName,
-        LocalDateTime creationDateTime,
-        Float rate,
-        String userPhotoLink,
-        String body
+public record AuthResponseDto(
+        String name,
+        String token
 ) {
 }

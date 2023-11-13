@@ -14,26 +14,19 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.dto;
+package ua.mibal.booking.model.dto.response;
 
-import ua.mibal.booking.model.entity.embeddable.AdditionalInfo;
-import ua.mibal.booking.model.entity.embeddable.HotelOptions;
-import ua.mibal.booking.model.entity.embeddable.Location;
-import ua.mibal.booking.model.entity.embeddable.Photo;
-
-import java.util.List;
+import java.time.LocalDateTime;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
-public record HotelDto(
-        String name,
-        List<Photo> photos,
-        HotelOptions options,
-        Location location,
-        AdditionalInfo info,
-        Integer stars,
-        Float rating
+public record CommentDto(
+        String userName,
+        LocalDateTime creationDateTime,
+        Float rate,
+        String userPhotoLink,
+        String body
 ) {
 }

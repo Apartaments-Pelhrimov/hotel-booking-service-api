@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.dto;
+package ua.mibal.booking.model.dto.response;
 
 import ua.mibal.booking.model.entity.embeddable.NotificationSettings;
 

@@ -22,8 +22,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ua.mibal.booking.mapper.HotelMapper;
-import ua.mibal.booking.model.dto.HotelDto;
-import ua.mibal.booking.model.dto.HotelSearchDto;
+import ua.mibal.booking.model.dto.response.HotelDto;
+import ua.mibal.booking.model.dto.search.HotelSearchDto;
 import ua.mibal.booking.model.search.Request;
 import ua.mibal.booking.repository.HotelRepository;
 

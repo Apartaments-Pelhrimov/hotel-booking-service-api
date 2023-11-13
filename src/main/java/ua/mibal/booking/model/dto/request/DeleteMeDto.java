@@ -14,24 +14,11 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.dto;
-
-import ua.mibal.booking.model.entity.embeddable.Location;
-import ua.mibal.booking.model.entity.embeddable.Photo;
-
-import java.math.BigDecimal;
-import java.util.List;
+package ua.mibal.booking.model.dto.request;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
-public record HotelSearchDto(
-        String name,
-        List<Photo> photos,
-        Location location,
-        Float rating,
-        BigDecimal minCost,
-        String money
-) {
+public record DeleteMeDto(String password) {
 }

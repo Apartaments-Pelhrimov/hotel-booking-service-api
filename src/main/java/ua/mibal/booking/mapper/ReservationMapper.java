@@ -19,7 +19,7 @@ package ua.mibal.booking.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
-import ua.mibal.booking.model.dto.ReservationDto;
+import ua.mibal.booking.model.dto.response.ReservationDto;
 import ua.mibal.booking.model.entity.Reservation;
 
 /**

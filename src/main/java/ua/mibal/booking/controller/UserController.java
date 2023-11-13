@@ -24,8 +24,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ua.mibal.booking.model.dto.DeleteMeDto;
-import ua.mibal.booking.model.dto.UserDto;
+import ua.mibal.booking.model.dto.request.DeleteMeDto;
+import ua.mibal.booking.model.dto.response.UserDto;
 import ua.mibal.booking.service.UserService;
 
 /**

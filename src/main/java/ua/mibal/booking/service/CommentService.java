@@ -21,7 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ua.mibal.booking.mapper.CommentMapper;
-import ua.mibal.booking.model.dto.CommentDto;
+import ua.mibal.booking.model.dto.response.CommentDto;
 import ua.mibal.booking.repository.CommentRepository;
 
 /**

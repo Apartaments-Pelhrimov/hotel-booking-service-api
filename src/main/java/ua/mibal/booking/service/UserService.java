@@ -22,8 +22,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import ua.mibal.booking.exception.IllegalPasswordException;
 import ua.mibal.booking.mapper.UserMapper;
-import ua.mibal.booking.model.dto.DeleteMeDto;
-import ua.mibal.booking.model.dto.UserDto;
+import ua.mibal.booking.model.dto.request.DeleteMeDto;
+import ua.mibal.booking.model.dto.response.UserDto;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.repository.UserRepository;
 

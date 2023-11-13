@@ -18,9 +18,9 @@ package ua.mibal.booking.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
-import ua.mibal.booking.model.dto.ApartmentDto;
-import ua.mibal.booking.model.dto.ApartmentSearchDto;
-import ua.mibal.booking.model.dto.FreeApartmentDto;
+import ua.mibal.booking.model.dto.response.ApartmentDto;
+import ua.mibal.booking.model.dto.search.ApartmentSearchDto;
+import ua.mibal.booking.model.dto.response.FreeApartmentDto;
 import ua.mibal.booking.model.entity.Apartment;
 
 /**
