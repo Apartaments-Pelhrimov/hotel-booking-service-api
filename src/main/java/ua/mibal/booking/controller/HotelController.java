@@ -44,6 +44,11 @@ public class HotelController {
         return hotelService.getAllByQuery(request, pageable);
     }
 
+    @GetMapping
+    public Page<HotelSearchDto> getAll(Pageable pageable) {
+        return hotelService.getAll(pageable);
+    }
+
     @GetMapping("/{id}")
     public HotelDto getOne(@PathVariable Long id) {
         return hotelService.getOne(id);

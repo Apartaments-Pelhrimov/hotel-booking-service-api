@@ -48,4 +48,10 @@ public class HotelService {
                 .map(hotelMapper::toDto)
                 .orElseThrow(() -> new EntityNotFoundException("Entity Hotel by id=" + id + " not found"));
     }
+
+    public Page<HotelSearchDto> getAll(Pageable pageable) {
+        return hotelRepository.findAll(pageable)
+                .map(hotel -> hotelMapper
+                        .toDto(hotel, null));
+    }
 }
