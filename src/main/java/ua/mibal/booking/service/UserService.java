@@ -40,4 +40,8 @@ public class UserService {
                 .map(userMapper::toDto)
                 .orElseThrow(() -> new EntityNotFoundException("Entity User by email=" + email + "not found"));
     }
+
+    public boolean isExistsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
 }

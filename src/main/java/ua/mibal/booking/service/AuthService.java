@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import ua.mibal.booking.exception.EmailAlreadyExistsException;
 import ua.mibal.booking.mapper.UserMapper;
 import ua.mibal.booking.model.dto.AuthResponseDto;
 import ua.mibal.booking.model.dto.RegistrationDto;
@@ -37,6 +38,7 @@ public class AuthService {
     private final TokenService tokenService;
     private final UserMapper userMapper;
     private final UserRepository userRepository;
+    private final UserService userService;
     private final PasswordEncoder passwordEncoder;
 
     public AuthResponseDto getUserToken(Authentication authentication) {
@@ -47,10 +49,21 @@ public class AuthService {
     }
 
     public AuthResponseDto register(RegistrationDto registrationDto) {
-        String encodedPass = passwordEncoder.encode(registrationDto.password());
-        User user = userMapper.toEntity(registrationDto, encodedPass);
+        validateExistsEmail(registrationDto.email());
+        User user = registrationDtoToUser(registrationDto);
         userRepository.save(user);
         String token = tokenService.generateToken(user);
         return userMapper.toAuthResponse(user, token);
+    }
+
+    private void validateExistsEmail(String email) {
+        if (userService.isExistsByEmail(email)) {
+            throw new EmailAlreadyExistsException(email);
+        }
+    }
+
+    private User registrationDtoToUser(RegistrationDto registrationDto) {
+        String encodedPass = passwordEncoder.encode(registrationDto.password());
+        return userMapper.toEntity(registrationDto, encodedPass);
     }
 }
