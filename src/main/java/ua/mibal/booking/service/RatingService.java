@@ -18,6 +18,7 @@ package ua.mibal.booking.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ua.mibal.booking.repository.RatingRepository;
 
 /**
  * @author Mykhailo Balakhon
@@ -26,7 +27,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 public class RatingService {
+    private final RatingRepository ratingRepository;
 
     public void updateRatings() {
+        ratingRepository.updateRatings();
     }
 }
