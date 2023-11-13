@@ -16,6 +16,7 @@
 
 package ua.mibal.booking.controller;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -51,15 +52,6 @@ public class ApartmentController {
         return apartmentService.getAllInHotelBySearchRequest(hotelId, request, pageable);
     }
 
-    @GetMapping("/apartments")
-    public Page<ApartmentSearchDto> getAll(@RequestParam(required = false, defaultValue = "") String query,
-                                           @RequestParam(required = false) Long hotelId,
-                                           Pageable pageable) {
-        return Optional.ofNullable(hotelId)
-                .map(hId -> apartmentService.getAllInHotelByQuery(hId, query, pageable))
-                .orElseGet(() -> apartmentService.getAllByQuery(query, pageable));
-    }
-
     @GetMapping("/apartments/{id}")
     public ApartmentDto getOne(@PathVariable Long id) {
         return apartmentService.getOne(id);
@@ -68,5 +60,15 @@ public class ApartmentController {
     @GetMapping("/apartments/{id}/free")
     public FreeApartmentDto isFree(@PathVariable Long id, @Valid DateRangeRequest request) {
         return apartmentService.isFree(id, request);
+    }
+
+    @RolesAllowed("LOCAL_MANAGER")
+    @GetMapping("/apartments")
+    public Page<ApartmentSearchDto> getAll(@RequestParam(defaultValue = "") String query,
+                                           @RequestParam(required = false) Long hotelId,
+                                           Pageable pageable) {
+        return Optional.ofNullable(hotelId)
+                .map(hId -> apartmentService.getAllInHotelByQuery(hId, query, pageable))
+                .orElseGet(() -> apartmentService.getAllByQuery(query, pageable));
     }
 }
