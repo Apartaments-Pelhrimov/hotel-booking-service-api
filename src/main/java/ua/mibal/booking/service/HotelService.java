@@ -40,7 +40,7 @@ public class HotelService {
     public Page<HotelSearchDto> getAllBySearchRequest(Request request, Pageable pageable) {
         return hotelRepository.findAllByQuery(request, pageable)
                 .map(hotel -> hotelMapper
-                        .toDto(hotel, null));
+                        .toSearchDto(hotel, null));
     }
 
     public HotelDto getOne(Long id) {
@@ -52,6 +52,6 @@ public class HotelService {
     public Page<HotelSearchDto> getAllByQuery(String query, Pageable pageable) {
         return hotelRepository.findAllByNameOrCity(query, pageable)
                 .map(hotel -> hotelMapper
-                        .toDto(hotel, null));
+                        .toSearchDto(hotel, null));
     }
 }
