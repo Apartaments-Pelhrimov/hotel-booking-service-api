@@ -33,12 +33,12 @@ import ua.mibal.booking.service.ReservationService;
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api")
 public class ReservationController {
     private final ReservationService reservationService;
 
     @RolesAllowed("USER")
-    @GetMapping("/me/reservations")
+    @GetMapping("/users/me/reservations")
     public Page<ReservationDto> getMyReservations(Authentication authentication, Pageable pageable) {
         return reservationService.getReservationsByAuthentication(authentication, pageable);
     }
