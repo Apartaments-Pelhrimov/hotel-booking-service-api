@@ -42,7 +42,7 @@ public class HotelController {
     private final HotelService hotelService;
 
     @GetMapping("/search")
-    public Page<HotelSearchDto> getAllByQuery(@Valid Request request, Pageable pageable) {
+    public Page<HotelSearchDto> getAllBySearchRequest(@Valid Request request, Pageable pageable) {
         return hotelService.getAllBySearchRequest(request, pageable);
     }
 
@@ -53,8 +53,8 @@ public class HotelController {
 
     @RolesAllowed("LOCAL_MANAGER")
     @GetMapping
-    public Page<HotelSearchDto> getAll(@RequestParam(defaultValue = "") String query,
-                                       Pageable pageable) {
+    public Page<HotelSearchDto> getAllForManager(@RequestParam(defaultValue = "") String query,
+                                                 Pageable pageable) {
         return hotelService.getAllByQuery(query, pageable);
     }
 }

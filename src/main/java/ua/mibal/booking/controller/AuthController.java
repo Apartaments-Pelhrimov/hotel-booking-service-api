@@ -38,7 +38,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public AuthResponseDto token(Authentication authentication) {
+    public AuthResponseDto login(Authentication authentication) {
         return authService.getUserToken(authentication);
     }
 
