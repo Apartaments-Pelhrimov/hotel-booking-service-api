@@ -19,9 +19,12 @@ package ua.mibal.booking.controller;
 import jakarta.annotation.security.RolesAllowed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ua.mibal.booking.model.dto.DeleteMeDto;
 import ua.mibal.booking.model.dto.UserDto;
 import ua.mibal.booking.service.UserService;
 
@@ -39,5 +42,12 @@ public class UserController {
     @GetMapping("/me")
     public UserDto getMe(Authentication authentication) {
         return userService.getOneByAuthentication(authentication);
+    }
+
+    @RolesAllowed("USER")
+    @DeleteMapping("/me")
+    public void deleteMe(@RequestBody DeleteMeDto deleteMeDto,
+                         Authentication authentication) {
+        userService.deleteMe(deleteMeDto, authentication);
     }
 }

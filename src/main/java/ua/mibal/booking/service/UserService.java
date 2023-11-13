@@ -20,8 +20,11 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import ua.mibal.booking.exception.IllegalPasswordException;
 import ua.mibal.booking.mapper.UserMapper;
+import ua.mibal.booking.model.dto.DeleteMeDto;
 import ua.mibal.booking.model.dto.UserDto;
+import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.repository.UserRepository;
 
 /**
@@ -43,5 +46,20 @@ public class UserService {
 
     public boolean isExistsByEmail(String email) {
         return userRepository.existsByEmail(email);
+    }
+
+    public void deleteMe(DeleteMeDto deleteMeDto, Authentication authentication) {
+        String email = authentication.getName();
+        validatePassword(deleteMeDto.password(), email);
+        userRepository.deleteByEmail(email);
+    }
+
+    private void validatePassword(String password, String email) {
+        String databasePass = userRepository.findByEmail(email)
+                .map(User::getPassword)
+                .orElseThrow(() -> new EntityNotFoundException("Entity User by email=" + email + "not found"));
+        if (!password.equals(databasePass)) {
+            throw new IllegalPasswordException();
+        }
     }
 }

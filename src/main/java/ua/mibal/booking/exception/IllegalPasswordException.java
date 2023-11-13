@@ -14,28 +14,15 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.repository;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import ua.mibal.booking.model.entity.User;
-
-import java.util.Optional;
+package ua.mibal.booking.exception;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
-public interface UserRepository extends JpaRepository<User, Long> {
+public class IllegalPasswordException extends RuntimeException {
 
-    Optional<User> findByEmail(String email);
-
-    @Query("select u from User u " +
-           "left join fetch u.hotels " +
-           "where u.email = ?1")
-    Optional<User> findByEmailFetchHotels(String email);
-
-    boolean existsByEmail(String email);
-
-    void deleteByEmail(String email);
+    public IllegalPasswordException() {
+        super("Illegal password");
+    }
 }
