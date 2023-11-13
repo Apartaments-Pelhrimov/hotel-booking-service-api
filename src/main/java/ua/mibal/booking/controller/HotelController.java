@@ -41,7 +41,7 @@ public class HotelController {
 
     @GetMapping("/search")
     public Page<HotelSearchDto> getAllByQuery(@Valid Request request, Pageable pageable) {
-        return hotelService.getAllByQuery(request, pageable);
+        return hotelService.getAllBySearchRequest(request, pageable);
     }
 
     @GetMapping

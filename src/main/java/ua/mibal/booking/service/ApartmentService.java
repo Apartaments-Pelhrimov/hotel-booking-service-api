@@ -41,7 +41,7 @@ public class ApartmentService {
     private final ApartmentMapper apartmentMapper;
 
     @Transactional(readOnly = true) // for LAZY Apartment.beds fetch
-    public Page<ApartmentSearchDto> getAllInHotelByQuery(Long hotelId, Request request, Pageable pageable) {
+    public Page<ApartmentSearchDto> getAllInHotelBySearchRequest(Long hotelId, Request request, Pageable pageable) {
         return apartmentRepository.findAllInHotelByQuery(hotelId, request, pageable)
                 .map(apartmentMapper::toSearchDto);
     }
@@ -61,13 +61,13 @@ public class ApartmentService {
     }
 
     @Transactional(readOnly = true) // for LAZY Apartment.beds fetch
-    public Page<ApartmentSearchDto> getAllByName(String query, Pageable pageable) {
+    public Page<ApartmentSearchDto> getAllByQuery(String query, Pageable pageable) {
         return apartmentRepository.findAllByNameOrCity(query, pageable)
                 .map(apartmentMapper::toSearchDto);
     }
 
     @Transactional(readOnly = true) // for LAZY Apartment.beds fetch
-    public Page<ApartmentSearchDto> getAllInHotelByName(Long hotelId, String query, Pageable pageable) {
+    public Page<ApartmentSearchDto> getAllInHotelByQuery(Long hotelId, String query, Pageable pageable) {
         return apartmentRepository.findAllInHotelByNameOrCity(hotelId, query, pageable)
                 .map(apartmentMapper::toSearchDto);
     }

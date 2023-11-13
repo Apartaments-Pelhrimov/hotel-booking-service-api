@@ -48,7 +48,7 @@ public class ApartmentController {
     public Page<ApartmentSearchDto> getAllInHotelByQuery(@PathVariable Long hotelId,
                                                          @Valid Request request,
                                                          Pageable pageable) {
-        return apartmentService.getAllInHotelByQuery(hotelId, request, pageable);
+        return apartmentService.getAllInHotelBySearchRequest(hotelId, request, pageable);
     }
 
     @GetMapping("/apartments")
@@ -56,8 +56,8 @@ public class ApartmentController {
                                            @RequestParam(required = false) Long hotelId,
                                            Pageable pageable) {
         return Optional.ofNullable(hotelId)
-                .map(hId -> apartmentService.getAllInHotelByName(hId, query, pageable))
-                .orElseGet(() -> apartmentService.getAllByName(query, pageable));
+                .map(hId -> apartmentService.getAllInHotelByQuery(hId, query, pageable))
+                .orElseGet(() -> apartmentService.getAllByQuery(query, pageable));
     }
 
     @GetMapping("/apartments/{id}")
