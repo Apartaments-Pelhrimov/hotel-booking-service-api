@@ -32,6 +32,7 @@ import ua.mibal.booking.model.entity.User;
 public interface UserMapper {
 
     @Mapping(target = "phone.number", source = "registrationDto.phone")
+    @Mapping(target = "password", source = "password")
     User toEntity(RegistrationDto registrationDto, String password);
 
     AuthResponseDto toAuthResponse(User user, String token);
