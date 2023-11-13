@@ -29,4 +29,9 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByEmail(String email);
+
+    @Query("select u from User u " +
+           "left join fetch u.hotels " +
+           "where u.email = ?1")
+    Optional<User> findByEmailFetchHotels(String email);
 }

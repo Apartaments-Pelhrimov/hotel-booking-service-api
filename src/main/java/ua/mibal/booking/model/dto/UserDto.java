@@ -18,6 +18,8 @@ package ua.mibal.booking.model.dto;
 
 import ua.mibal.booking.model.entity.embeddable.NotificationSettings;
 
+import java.util.List;
+
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
@@ -27,6 +29,13 @@ public record UserDto(
         String photo,
         String phone,
         String email,
+        String role,
+        List<HotelLinkDto> hotels,
         NotificationSettings notificationSettings
 ) {
+    public record HotelLinkDto(
+            Long id,
+            String name
+    ) {
+    }
 }
