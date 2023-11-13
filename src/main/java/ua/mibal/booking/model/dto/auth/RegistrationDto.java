@@ -29,8 +29,12 @@ import jakarta.validation.constraints.Size;
 public record RegistrationDto(
 
         @NotBlank
-        @Size(min = 6, max = 100)
-        String name,
+        @Size(min = 3, max = 50)
+        String firstName,
+
+        @NotBlank
+        @Size(min = 3, max = 50)
+        String lastName,
 
         @NotNull
         @Pattern(regexp = "\\+([0-9]){10,15}$")

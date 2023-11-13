@@ -21,7 +21,8 @@ package ua.mibal.booking.model.dto.auth;
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
 public record AuthResponseDto(
-        String name,
+        String firstName,
+        String lastName,
         String token
 ) {
 }

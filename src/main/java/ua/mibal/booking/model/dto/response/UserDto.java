@@ -25,7 +25,8 @@ import java.util.List;
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
 public record UserDto(
-        String name,
+        String firstName,
+        String lastName,
         String photo,
         String phone,
         String email,

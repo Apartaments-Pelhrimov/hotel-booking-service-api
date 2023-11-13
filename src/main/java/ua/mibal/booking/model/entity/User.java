@@ -69,7 +69,10 @@ public class User implements UserDetails {
     private Long id;
 
     @Column(nullable = false)
-    private String name;
+    private String firstName;
+
+    @Column(nullable = false)
+    private String lastName;
 
     @NaturalId
     @Column(nullable = false, unique = true)

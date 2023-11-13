@@ -23,7 +23,8 @@ import java.time.LocalDateTime;
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
 public record CommentDto(
-        String userName,
+        String firstName,
+        String lastName,
         LocalDateTime creationDateTime,
         Float rate,
         String userPhotoLink,

@@ -29,7 +29,7 @@ import ua.mibal.booking.model.entity.Comment;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface CommentMapper {
 
-    @Mapping(target = "userName", source = "comment.user.name")
+    @Mapping(target = ".", source = "comment.user")
     @Mapping(target = "userPhotoLink", source = "comment.user.photo.photoLink")
     CommentDto toDto(Comment comment);
 }
