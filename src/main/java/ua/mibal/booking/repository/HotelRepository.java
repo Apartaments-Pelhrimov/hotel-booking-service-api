@@ -62,4 +62,11 @@ public interface HotelRepository extends JpaRepository<Hotel, Long> {
            "left join fetch h.photos " +
            "where h.id = ?1")
     Optional<Hotel> findByIdFetchPhotos(Long id);
+
+    @Query("select h from Hotel h " +
+           "left join fetch h.photos " +
+           "where " +
+           "lower(h.name) like lower(concat('%', ?1, '%')) or " +
+           "lower(h.location.city) like lower(concat('%', ?1, '%'))")
+    Page<Hotel> findAllByNameOrCity(String query, Pageable pageable);
 }

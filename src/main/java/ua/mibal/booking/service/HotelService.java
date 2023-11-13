@@ -49,8 +49,8 @@ public class HotelService {
                 .orElseThrow(() -> new EntityNotFoundException("Entity Hotel by id=" + id + " not found"));
     }
 
-    public Page<HotelSearchDto> getAll(Pageable pageable) {
-        return hotelRepository.findAll(pageable)
+    public Page<HotelSearchDto> getAllByQuery(String query, Pageable pageable) {
+        return hotelRepository.findAllByNameOrCity(query, pageable)
                 .map(hotel -> hotelMapper
                         .toDto(hotel, null));
     }
