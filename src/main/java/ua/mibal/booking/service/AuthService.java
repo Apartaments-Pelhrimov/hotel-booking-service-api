@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.model.dto.auth.AuthResponseDto;
 import ua.mibal.booking.model.dto.auth.RegistrationDto;
 import ua.mibal.booking.model.entity.ActivationCode;
@@ -49,6 +50,7 @@ public class AuthService {
         );
     }
 
+    @Transactional
     public AuthResponseDto register(RegistrationDto registrationDto) {
         validateExistsEmail(registrationDto.email());
         User user = saveNewUserByRegistration(registrationDto);
