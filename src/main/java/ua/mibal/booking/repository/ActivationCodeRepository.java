@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.entity;
+package ua.mibal.booking.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import ua.mibal.booking.model.entity.ActivationCode;
 
 import java.util.Optional;
 

@@ -20,8 +20,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.model.entity.ActivationCode;
-import ua.mibal.booking.model.entity.ActivationCodeRepository;
 import ua.mibal.booking.model.entity.User;
+import ua.mibal.booking.repository.ActivationCodeRepository;
 
 /**
  * @author Mykhailo Balakhon
