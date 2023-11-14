@@ -25,7 +25,6 @@ import ua.mibal.booking.model.dto.auth.RegistrationDto;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.exception.EmailAlreadyExistsException;
 import ua.mibal.booking.model.mapper.UserMapper;
-import ua.mibal.booking.repository.UserRepository;
 import ua.mibal.booking.service.security.TokenService;
 
 /**
@@ -37,7 +36,6 @@ import ua.mibal.booking.service.security.TokenService;
 public class AuthService {
     private final TokenService tokenService;
     private final UserMapper userMapper;
-    private final UserRepository userRepository;
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final ActivationCodeService activationCodeService;
@@ -52,7 +50,7 @@ public class AuthService {
     public AuthResponseDto register(RegistrationDto registrationDto) {
         validateExistsEmail(registrationDto.email());
         User user = registrationDtoToUser(registrationDto);
-        userRepository.save(user);
+        userService.save(user);
         String token = tokenService.generateToken(user);
         return userMapper.toAuthResponse(user, token);
     }

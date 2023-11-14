@@ -21,10 +21,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ua.mibal.booking.model.mapper.UserMapper;
 import ua.mibal.booking.model.dto.request.DeleteMeDto;
 import ua.mibal.booking.model.dto.response.UserDto;
+import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.exception.IllegalPasswordException;
+import ua.mibal.booking.model.mapper.UserMapper;
 import ua.mibal.booking.repository.UserRepository;
 
 /**
@@ -62,5 +63,9 @@ public class UserService {
         if (!passwordEncoder.matches(actual, expected)) {
             throw new IllegalPasswordException();
         }
+    }
+
+    public User save(User user) {
+        return userRepository.save(user);
     }
 }
