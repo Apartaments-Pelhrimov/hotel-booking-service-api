@@ -16,6 +16,8 @@
 
 package ua.mibal.booking.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ua.mibal.booking.model.entity.ActivationCode;
 import ua.mibal.booking.model.entity.User;
@@ -26,8 +28,10 @@ import ua.mibal.booking.model.entity.User;
  */
 @Service
 public class ActivationCodeSendingService {
+    private final static Logger log = LoggerFactory.getLogger(ActivationCodeSendingService.class);
 
     public void sendActivationCode(User user, ActivationCode activationCode) {
         // TODO
+        log.info("Sent to email={} activationCode={}", user.getEmail(), activationCode.getCode());
     }
 }
