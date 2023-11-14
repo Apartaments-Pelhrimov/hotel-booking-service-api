@@ -26,7 +26,7 @@ import ua.mibal.booking.model.dto.auth.AuthResponseDto;
 import ua.mibal.booking.model.dto.auth.RegistrationDto;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.repository.UserRepository;
-import ua.mibal.booking.security.TokenService;
+import ua.mibal.booking.service.security.TokenService;
 
 /**
  * @author Mykhailo Balakhon

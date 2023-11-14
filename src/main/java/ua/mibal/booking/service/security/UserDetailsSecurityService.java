@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.security;
+package ua.mibal.booking.service.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
