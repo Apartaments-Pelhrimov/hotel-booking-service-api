@@ -40,6 +40,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final ActivationCodeService activationCodeService;
 
     public AuthResponseDto getUserToken(Authentication authentication) {
         return userMapper.toAuthResponse(
@@ -68,6 +69,6 @@ public class AuthService {
     }
 
     public void activate(String activationCode) {
-        // TODO
+        activationCodeService.activateByCode(activationCode);
     }
 }
