@@ -54,10 +54,10 @@ public class ApartmentService {
     }
 
     public FreeApartmentDto isFree(Long id, DateRangeRequest request) {
-        Boolean free = apartmentRepository
+        return apartmentRepository
                 .isFreeForRangeById(id, request.getFrom(), request.getTo())
+                .map(apartmentMapper::toFreeDto)
                 .orElseThrow(() -> new EntityNotFoundException("Entity Apartment by id=" + id + " not found"));
-        return apartmentMapper.toFreeDto(free);
     }
 
     @Transactional(readOnly = true) // for LAZY Apartment.beds fetch
