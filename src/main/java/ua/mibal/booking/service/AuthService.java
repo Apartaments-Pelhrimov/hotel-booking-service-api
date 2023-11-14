@@ -20,11 +20,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ua.mibal.booking.model.mapper.UserMapper;
 import ua.mibal.booking.model.dto.auth.AuthResponseDto;
 import ua.mibal.booking.model.dto.auth.RegistrationDto;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.exception.EmailAlreadyExistsException;
+import ua.mibal.booking.model.mapper.UserMapper;
 import ua.mibal.booking.repository.UserRepository;
 import ua.mibal.booking.service.security.TokenService;
 
@@ -65,5 +65,9 @@ public class AuthService {
     private User registrationDtoToUser(RegistrationDto registrationDto) {
         String encodedPass = passwordEncoder.encode(registrationDto.password());
         return userMapper.toEntity(registrationDto, encodedPass);
+    }
+
+    public void activate(String activationCode) {
+        // TODO
     }
 }
