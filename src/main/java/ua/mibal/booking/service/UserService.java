@@ -19,12 +19,12 @@ package ua.mibal.booking.service;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ua.mibal.booking.exception.IllegalPasswordException;
 import ua.mibal.booking.mapper.UserMapper;
 import ua.mibal.booking.model.dto.request.DeleteMeDto;
 import ua.mibal.booking.model.dto.response.UserDto;
-import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.repository.UserRepository;
 
 /**
@@ -36,12 +36,13 @@ import ua.mibal.booking.repository.UserRepository;
 public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     public UserDto getOneByAuthentication(Authentication authentication) {
         String email = authentication.getName();
         return userRepository.findByEmailFetchHotels(email)
                 .map(userMapper::toDto)
-                .orElseThrow(() -> new EntityNotFoundException("Entity User by email=" + email + "not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Entity User by email=" + email + " not found"));
     }
 
     public boolean isExistsByEmail(String email) {
@@ -49,16 +50,16 @@ public class UserService {
     }
 
     public void deleteMe(DeleteMeDto deleteMeDto, Authentication authentication) {
+        String password = deleteMeDto.password();
         String email = authentication.getName();
-        validatePassword(deleteMeDto.password(), email);
+        String dbPassword = userRepository.findPasswordByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Entity User by email=" + email + " not found"));
+        validatePassword(password, dbPassword);
         userRepository.deleteByEmail(email);
     }
 
-    private void validatePassword(String password, String email) {
-        String databasePass = userRepository.findByEmail(email)
-                .map(User::getPassword)
-                .orElseThrow(() -> new EntityNotFoundException("Entity User by email=" + email + "not found"));
-        if (!password.equals(databasePass)) {
+    private void validatePassword(String actual, String expected) {
+        if (!passwordEncoder.matches(actual, expected)) {
             throw new IllegalPasswordException();
         }
     }
