@@ -14,30 +14,23 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.mapper;
+package ua.mibal.booking.model.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
-import ua.mibal.booking.model.dto.auth.AuthResponseDto;
-import ua.mibal.booking.model.dto.auth.RegistrationDto;
-import ua.mibal.booking.model.dto.response.UserDto;
-import ua.mibal.booking.model.entity.User;
+import ua.mibal.booking.model.dto.response.ReservationDto;
+import ua.mibal.booking.model.entity.Reservation;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
-public interface UserMapper {
+public interface ReservationMapper {
 
-    @Mapping(target = "phone.number", source = "registrationDto.phone")
-    @Mapping(target = "password", source = "password")
-    User toEntity(RegistrationDto registrationDto, String password);
-
-    AuthResponseDto toAuthResponse(User user, String token);
-
-    @Mapping(target = "phone", source = "phone.number")
-    @Mapping(target = "photo", source = "photo.photoLink")
-    UserDto toDto(User user);
+    @Mapping(target = "date", source = "dateTime")
+    @Mapping(target = "apartment.hotelName", source = "apartment.hotel.name")
+    @Mapping(target = "apartment.location", source = "apartment.hotel.location")
+    ReservationDto toDto(Reservation reservation);
 }

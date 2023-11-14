@@ -14,31 +14,25 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.validation;
+package ua.mibal.booking.model.mapper;
 
-import jakarta.validation.Constraint;
-import jakarta.validation.Payload;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
-
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import org.mapstruct.Mapper;
+import org.mapstruct.MappingConstants;
+import ua.mibal.booking.model.dto.response.ApartmentDto;
+import ua.mibal.booking.model.dto.search.ApartmentSearchDto;
+import ua.mibal.booking.model.dto.response.FreeApartmentDto;
+import ua.mibal.booking.model.entity.Apartment;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
-@Target(TYPE)
-@Retention(RUNTIME)
-@Constraint(validatedBy = DateRangeValidator.class)
-public @interface ValidDateRange {
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+public interface ApartmentMapper {
 
-    String message() default
-            "Required request params [from=${validatedValue.from}; to=${validatedValue.to}] " +
-            "must be in range: [now() < from < to]";
+    ApartmentDto toDto(Apartment apartment);
 
-    Class<?>[] groups() default { };
+    FreeApartmentDto toFreeDto(Boolean free);
 
-    Class<? extends Payload>[] payload() default { };
+    ApartmentSearchDto toSearchDto(Apartment apartment);
 }

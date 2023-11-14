@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.mapper;
+package ua.mibal.booking.model.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;

@@ -21,7 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-import ua.mibal.booking.mapper.ReservationMapper;
+import ua.mibal.booking.model.mapper.ReservationMapper;
 import ua.mibal.booking.model.dto.response.ReservationDto;
 import ua.mibal.booking.repository.ReservationRepository;
 

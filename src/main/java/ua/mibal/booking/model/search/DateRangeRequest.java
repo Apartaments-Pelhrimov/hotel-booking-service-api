@@ -17,7 +17,7 @@
 package ua.mibal.booking.model.search;
 
 import lombok.Data;
-import ua.mibal.booking.validation.ValidDateRange;
+import ua.mibal.booking.model.validation.ValidDateRange;
 
 import java.time.LocalDate;
 

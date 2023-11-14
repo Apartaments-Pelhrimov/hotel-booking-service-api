@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.validation;
+package ua.mibal.booking.model.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

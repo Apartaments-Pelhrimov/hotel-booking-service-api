@@ -14,22 +14,31 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.mapper;
+package ua.mibal.booking.model.validation;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingConstants;
-import ua.mibal.booking.model.dto.response.CommentDto;
-import ua.mibal.booking.model.entity.Comment;
+import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
-@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
-public interface CommentMapper {
+@Target(TYPE)
+@Retention(RUNTIME)
+@Constraint(validatedBy = DateRangeValidator.class)
+public @interface ValidDateRange {
 
-    @Mapping(target = ".", source = "comment.user")
-    @Mapping(target = "userPhotoLink", source = "comment.user.photo.photoLink")
-    CommentDto toDto(Comment comment);
+    String message() default
+            "Required request params [from=${validatedValue.from}; to=${validatedValue.to}] " +
+            "must be in range: [now() < from < to]";
+
+    Class<?>[] groups() default { };
+
+    Class<? extends Payload>[] payload() default { };
 }

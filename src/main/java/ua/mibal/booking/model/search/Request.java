@@ -19,7 +19,7 @@ package ua.mibal.booking.model.search;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
-import ua.mibal.booking.validation.ValidDateRange;
+import ua.mibal.booking.model.validation.ValidDateRange;
 
 import java.time.LocalDate;
 

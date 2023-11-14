@@ -14,25 +14,22 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.mapper;
+package ua.mibal.booking.model.mapper;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
-import ua.mibal.booking.model.dto.response.ApartmentDto;
-import ua.mibal.booking.model.dto.search.ApartmentSearchDto;
-import ua.mibal.booking.model.dto.response.FreeApartmentDto;
-import ua.mibal.booking.model.entity.Apartment;
+import ua.mibal.booking.model.dto.response.CommentDto;
+import ua.mibal.booking.model.entity.Comment;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
-public interface ApartmentMapper {
+public interface CommentMapper {
 
-    ApartmentDto toDto(Apartment apartment);
-
-    FreeApartmentDto toFreeDto(Boolean free);
-
-    ApartmentSearchDto toSearchDto(Apartment apartment);
+    @Mapping(target = ".", source = "comment.user")
+    @Mapping(target = "userPhotoLink", source = "comment.user.photo.photoLink")
+    CommentDto toDto(Comment comment);
 }
