@@ -18,6 +18,7 @@ package ua.mibal.booking.service;
 
 import org.springframework.stereotype.Service;
 import ua.mibal.booking.model.entity.ActivationCode;
+import ua.mibal.booking.model.entity.User;
 
 /**
  * @author Mykhailo Balakhon
@@ -26,7 +27,7 @@ import ua.mibal.booking.model.entity.ActivationCode;
 @Service
 public class ActivationCodeSendingService {
 
-    public void sendActivationCode(ActivationCode activationCode) {
+    public void sendActivationCode(User user, ActivationCode activationCode) {
         // TODO
     }
 }

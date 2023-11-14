@@ -51,9 +51,7 @@ public class AuthService {
 
     public AuthResponseDto register(RegistrationDto registrationDto) {
         validateExistsEmail(registrationDto.email());
-        User user =  userService.save(
-                registrationDtoToUser(registrationDto)
-        );
+        User user = saveNewUserByRegistration(registrationDto);
         String token = tokenService.generateToken(user);
         processActivationCode(user, token);
         return userMapper.toAuthResponse(user, token);
@@ -65,7 +63,7 @@ public class AuthService {
 
     private void processActivationCode(User user, String token) {
         ActivationCode activationCode = activationCodeService.save(user, token);
-        activationCodeSendingService.sendActivationCode(activationCode);
+        activationCodeSendingService.sendActivationCode(user, activationCode);
     }
 
     private void validateExistsEmail(String email) {
@@ -74,8 +72,8 @@ public class AuthService {
         }
     }
 
-    private User registrationDtoToUser(RegistrationDto registrationDto) {
+    private User saveNewUserByRegistration(RegistrationDto registrationDto) {
         String encodedPass = passwordEncoder.encode(registrationDto.password());
-        return userMapper.toEntity(registrationDto, encodedPass);
+        return userService.save(registrationDto, encodedPass);
     }
 }
