@@ -14,15 +14,19 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.exception;
+package ua.mibal.booking.model.exception;
+
+import ua.mibal.booking.model.entity.User;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
-public class EmailAlreadyExistsException extends RuntimeException {
-
-    public EmailAlreadyExistsException(String email) {
-        super("Entered email='" + email + "' already exists");
+public class IllegalRoleException extends RuntimeException {
+    public IllegalRoleException(User user) {
+        super(String.format(
+                "User with id=%d have no access. User's roles=%s",
+                user.getId(), user.getRole()
+        ));
     }
 }

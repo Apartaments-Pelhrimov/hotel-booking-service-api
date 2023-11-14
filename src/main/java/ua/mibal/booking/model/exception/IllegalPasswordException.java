@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.exception;
+package ua.mibal.booking.model.exception;
 
 /**
  * @author Mykhailo Balakhon

@@ -23,8 +23,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ua.mibal.booking.exception.EmailAlreadyExistsException;
-import ua.mibal.booking.exception.IllegalPasswordException;
+import ua.mibal.booking.model.exception.EmailAlreadyExistsException;
+import ua.mibal.booking.model.exception.IllegalPasswordException;
 
 import java.time.ZonedDateTime;
 import java.util.stream.Collectors;

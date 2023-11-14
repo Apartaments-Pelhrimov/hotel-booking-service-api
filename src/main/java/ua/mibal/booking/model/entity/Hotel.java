@@ -36,11 +36,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ua.mibal.booking.exception.IllegalRoleException;
 import ua.mibal.booking.model.entity.embeddable.AdditionalInfo;
 import ua.mibal.booking.model.entity.embeddable.HotelOptions;
 import ua.mibal.booking.model.entity.embeddable.Location;
 import ua.mibal.booking.model.entity.embeddable.Photo;
+import ua.mibal.booking.model.exception.IllegalRoleException;
 
 import java.util.ArrayList;
 import java.util.HashSet;
