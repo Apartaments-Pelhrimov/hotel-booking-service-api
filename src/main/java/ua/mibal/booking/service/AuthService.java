@@ -22,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ua.mibal.booking.model.dto.auth.AuthResponseDto;
 import ua.mibal.booking.model.dto.auth.RegistrationDto;
+import ua.mibal.booking.model.entity.ActivationCode;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.exception.EmailAlreadyExistsException;
 import ua.mibal.booking.model.mapper.UserMapper;
@@ -39,6 +40,7 @@ public class AuthService {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final ActivationCodeService activationCodeService;
+    private final ActivationCodeSendingService activationCodeSendingService;
 
     public AuthResponseDto getUserToken(Authentication authentication) {
         return userMapper.toAuthResponse(
@@ -49,10 +51,21 @@ public class AuthService {
 
     public AuthResponseDto register(RegistrationDto registrationDto) {
         validateExistsEmail(registrationDto.email());
-        User user = registrationDtoToUser(registrationDto);
-        userService.save(user);
+        User user =  userService.save(
+                registrationDtoToUser(registrationDto)
+        );
         String token = tokenService.generateToken(user);
+        processActivationCode(user, token);
         return userMapper.toAuthResponse(user, token);
+    }
+
+    public void activate(String activationCode) {
+        activationCodeService.activateByCode(activationCode);
+    }
+
+    private void processActivationCode(User user, String token) {
+        ActivationCode activationCode = activationCodeService.save(user, token);
+        activationCodeSendingService.sendActivationCode(activationCode);
     }
 
     private void validateExistsEmail(String email) {
@@ -64,9 +77,5 @@ public class AuthService {
     private User registrationDtoToUser(RegistrationDto registrationDto) {
         String encodedPass = passwordEncoder.encode(registrationDto.password());
         return userMapper.toEntity(registrationDto, encodedPass);
-    }
-
-    public void activate(String activationCode) {
-        activationCodeService.activateByCode(activationCode);
     }
 }

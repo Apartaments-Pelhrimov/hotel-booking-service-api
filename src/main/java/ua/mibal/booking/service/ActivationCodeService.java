@@ -19,7 +19,9 @@ package ua.mibal.booking.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ua.mibal.booking.model.entity.ActivationCode;
 import ua.mibal.booking.model.entity.ActivationCodeRepository;
+import ua.mibal.booking.model.entity.User;
 
 /**
  * @author Mykhailo Balakhon
@@ -38,5 +40,13 @@ public class ActivationCodeService {
                     code.getUser().setEnabled(true);
                     activationCodeRepository.delete(code);
                 });
+    }
+
+    public ActivationCode save(User user, String token) {
+        ActivationCode activationCode = ActivationCode.builder()
+                .user(user)
+                .code(token)
+                .build();
+        return activationCodeRepository.save(activationCode);
     }
 }
