@@ -16,10 +16,12 @@
 
 package ua.mibal.booking.repository;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
+import ua.mibal.booking.model.entity.Hotel;
 import ua.mibal.booking.model.search.Request;
 
 import java.math.BigDecimal;
@@ -30,62 +32,42 @@ import java.util.List;
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
 @Repository
-public class PriceRepository {
+public interface PriceRepository extends JpaRepository<Hotel, Long> {
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    @Query("""
+            select min(a.oneDayCost)
+            from Hotel h
+                     left join h.options ho
+                     left join h.apartments a
+                     left join a.options ao
+                     left join a.reservations r
+            where h.id in (?1) and
+                                    
+                  (lower(h.name) like lower(concat('%', :#{#r.query}, '%')) or lower(h.location.city) like lower(concat('%', :#{#r.query}, '%'))) and 
+                  (r = null or (r.state != 'REJECTED' and (r.details.reservedTo < :#{#r.from} or r.details.reservedFrom > :#{#r.to}))) and 
+                  a.size >= :#{#r.adult} and  
+                   
+                  h.stars >= :#{#r.stars} and  
+                  a.oneDayCost <= :#{#r.maxPrice} and  
+                   
+                  ao.mealsIncluded in(:#{#r.meals}, true) and  
+                  ao.kitchen in(:#{#r.kitchen}, true) and  
+                  ao.bathroom in(:#{#r.bathroom}, true) and  
+                  ao.wifi in(:#{#r.wifi}, true) and  
+                  ao.refrigerator in(:#{#r.refrigerator}, true) and  
+                  ho.pool in(:#{#r.pool}, true) and  
+                  ho.restaurant in(:#{#r.restaurant}, true) and  
+                  ho.parking in(:#{#r.parking}, true)
+            group by h.id
+            """)
+    List<BigDecimal> findMinPricePerDayInHotelByRequest(List<Long> ids, @Param("r") Request request, Pageable pageable); // FIX
 
-    @Transactional(readOnly = true)
-    public List<BigDecimal> findMinPricePerDayInHotelByRequest(List<Long> ids, Request request) {
-        return entityManager.createQuery("""
-                        select min(a.oneDayCost)
-                        from Hotel h
-                                 left join h.options ho
-                                 left join h.apartments a
-                                 left join a.options ao
-                                 left join a.reservations r
-                        where h.id in (:ids) and
-                                                
-                               (r = null or r.details.reservedTo < :from or r.details.reservedFrom > :to) and
-                               a.size >= :adult and
-
-                               ao.mealsIncluded in(:meals, true) and
-                               ao.kitchen in(:kitchen, true) and
-                               ao.bathroom in(:bathroom, true) and
-                               ao.wifi in(:wifi, true) and
-                               ao.refrigerator in(:refrigerator, true) and
-                               ho.pool in(:pool, true) and
-                               ho.restaurant in(:restaurant, true) and
-                               ho.parking in(:parking, true)
-                        group by h.id
-                        order by h.id
-                        """, BigDecimal.class)
-                .setParameter("ids", ids)
-                .setParameter("from", request.getFrom())
-                .setParameter("to", request.getTo())
-                .setParameter("adult", request.getAdult())
-                .setParameter("meals", request.getMeals())
-                .setParameter("kitchen", request.getKitchen())
-                .setParameter("bathroom", request.getBathroom())
-                .setParameter("wifi", request.getWifi())
-                .setParameter("refrigerator", request.getRefrigerator())
-                .setParameter("pool", request.getPool())
-                .setParameter("restaurant", request.getRestaurant())
-                .setParameter("parking", request.getParking())
-                .getResultList();
-    }
-
-    @Transactional(readOnly = true)
-    public List<BigDecimal> findMinPricePerDayInHotel(List<Long> ids) {
-        return entityManager.createQuery("""
-                        select min(a.oneDayCost)
-                        from Hotel h
-                                 left join h.apartments a
-                        where h.id in (:ids)
-                        group by h.id
-                        order by h.id
-                        """, BigDecimal.class)
-                .setParameter("ids", ids)
-                .getResultList();
-    }
+    @Query("""
+            select min(a.oneDayCost)
+            from Hotel h
+                     left join h.apartments a
+            where h.id in (?1)
+            group by h.id
+            """)
+    List<BigDecimal> findMinPricePerDayInHotel(List<Long> ids, Pageable pageable);
 }

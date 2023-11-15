@@ -44,7 +44,7 @@ public class HotelService {
 
     public Page<HotelSearchDto> getAllBySearchRequest(Request request, Pageable pageable) {
         Page<Hotel> hotels = hotelRepository.findAllByQuery(request, pageable);
-        List<BigDecimal> costs = costCalculationService.calculateMinInHotelsByRequest(hotels, request); // TODO if sort by cost - calculate cost first
+        List<BigDecimal> costs = costCalculationService.calculateMinInHotelsByRequest(hotels, request, pageable); // TODO if sort by cost - calculate cost first
         return hotelMapper.toHotelSearchDtoPage(hotels, costs);
     }
 
@@ -56,7 +56,7 @@ public class HotelService {
 
     public Page<HotelSearchDto> getAllByQuery(String query, Pageable pageable) {
         Page<Hotel> hotels = hotelRepository.findAllByNameOrCity(query, pageable);
-        List<BigDecimal> costs = costCalculationService.calculateMinInHotels(hotels); // TODO if sort by cost - calculate cost first
+        List<BigDecimal> costs = costCalculationService.calculateMinInHotels(hotels, pageable); // TODO if sort by cost - calculate cost first
         return hotelMapper.toHotelSearchDtoPage(hotels, costs);
     }
 }

@@ -18,6 +18,7 @@ package ua.mibal.booking.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ua.mibal.booking.model.entity.Hotel;
 import ua.mibal.booking.model.search.Request;
@@ -44,18 +45,18 @@ public class CostCalculationService {
         return oneDayCost.multiply(valueOf(days));
     }
 
-    public List<BigDecimal> calculateMinInHotels(Page<Hotel> hotels) {
+    public List<BigDecimal> calculateMinInHotels(Page<Hotel> hotels, Pageable pageable) {
         List<Long> ids = hotels
                 .map(Hotel::getId)
                 .toList();
-        return priceRepository.findMinPricePerDayInHotel(ids); // FIXME order of prices
+        return priceRepository.findMinPricePerDayInHotel(ids, pageable); // FIXME order of prices
     }
 
-    public List<BigDecimal> calculateMinInHotelsByRequest(Page<Hotel> hotels, Request request) {
+    public List<BigDecimal> calculateMinInHotelsByRequest(Page<Hotel> hotels, Request request, Pageable pageable) {
         List<Long> ids = hotels
                 .map(Hotel::getId)
                 .toList();
-        return priceRepository.findMinPricePerDayInHotelByRequest(ids, request) // FIXME order of prices
+        return priceRepository.findMinPricePerDayInHotelByRequest(ids, request, pageable) // FIXME order of prices
                 .stream()
                 .map(cost -> calculate(cost, request.getFrom(), request.getTo()))
                 .toList();
