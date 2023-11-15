@@ -40,7 +40,7 @@ public interface HotelRepository extends JpaRepository<Hotel, Long> {
            "left join a.options ao " +
            "left join a.reservations r " +
            "where " +
-
+           "r.state != 'REJECTED' and " +
            "(lower(h.name) like lower(concat('%', :#{#r.query}, '%')) or lower(h.location.city) like lower(concat('%', :#{#r.query}, '%'))) and " +
            "(r = null or r.details.reservedTo < :#{#r.from} or r.details.reservedFrom > :#{#r.to}) and " +
            "a.size >= :#{#r.adult} and " +
