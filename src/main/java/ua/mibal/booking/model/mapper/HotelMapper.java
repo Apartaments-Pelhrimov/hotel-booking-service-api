@@ -18,20 +18,29 @@ package ua.mibal.booking.model.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
+import org.springframework.data.domain.Page;
 import ua.mibal.booking.model.dto.response.HotelDto;
 import ua.mibal.booking.model.dto.search.HotelSearchDto;
 import ua.mibal.booking.model.entity.Hotel;
 
 import java.math.BigDecimal;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
-public interface HotelMapper {
+public abstract class HotelMapper {
 
-    HotelSearchDto toSearchDto(Hotel hotel, BigDecimal minCost);
+    public abstract HotelSearchDto toSearchDto(Hotel hotel, BigDecimal minCost);
 
-    HotelDto toDto(Hotel hotel);
+    public abstract HotelDto toDto(Hotel hotel);
+
+    public Page<HotelSearchDto> toHotelSearchDtoPage(Page<Hotel> hotels, List<BigDecimal> costs) {
+        if (hotels.getNumberOfElements() != costs.size()) throw new IllegalArgumentException();
+        Iterator<BigDecimal> costIterator = costs.iterator();
+        return hotels.map(hotel -> toSearchDto(hotel, costIterator.next()));
+    }
 }

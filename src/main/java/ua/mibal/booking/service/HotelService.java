@@ -21,11 +21,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ua.mibal.booking.model.mapper.HotelMapper;
 import ua.mibal.booking.model.dto.response.HotelDto;
 import ua.mibal.booking.model.dto.search.HotelSearchDto;
+import ua.mibal.booking.model.entity.Hotel;
+import ua.mibal.booking.model.mapper.HotelMapper;
 import ua.mibal.booking.model.search.Request;
 import ua.mibal.booking.repository.HotelRepository;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author Mykhailo Balakhon
@@ -36,11 +40,12 @@ import ua.mibal.booking.repository.HotelRepository;
 public class HotelService {
     private final HotelRepository hotelRepository;
     private final HotelMapper hotelMapper;
+    private final CostCalculationService costCalculationService;
 
     public Page<HotelSearchDto> getAllBySearchRequest(Request request, Pageable pageable) {
-        return hotelRepository.findAllByQuery(request, pageable)
-                .map(hotel -> hotelMapper
-                        .toSearchDto(hotel, null));
+        Page<Hotel> hotels = hotelRepository.findAllByQuery(request, pageable);
+        List<BigDecimal> costs = costCalculationService.calculateMinInHotelsByRequest(hotels, request); // TODO if sort by cost - calculate cost first
+        return hotelMapper.toHotelSearchDtoPage(hotels, costs);
     }
 
     public HotelDto getOne(Long id) {
@@ -50,8 +55,8 @@ public class HotelService {
     }
 
     public Page<HotelSearchDto> getAllByQuery(String query, Pageable pageable) {
-        return hotelRepository.findAllByNameOrCity(query, pageable)
-                .map(hotel -> hotelMapper
-                        .toSearchDto(hotel, null));
+        Page<Hotel> hotels = hotelRepository.findAllByNameOrCity(query, pageable);
+        List<BigDecimal> costs = costCalculationService.calculateMinInHotels(hotels); // TODO if sort by cost - calculate cost first
+        return hotelMapper.toHotelSearchDtoPage(hotels, costs);
     }
 }
