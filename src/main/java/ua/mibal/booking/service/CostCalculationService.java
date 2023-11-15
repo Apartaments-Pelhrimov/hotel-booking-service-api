@@ -45,7 +45,6 @@ public class CostCalculationService {
     }
 
     public List<BigDecimal> calculateMinInHotels(Page<Hotel> hotels) {
-        System.out.println(hotels);
         List<Long> ids = hotels
                 .map(Hotel::getId)
                 .toList();
