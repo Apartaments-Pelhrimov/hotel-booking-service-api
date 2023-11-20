@@ -34,5 +34,5 @@ public interface ApartmentMapper {
 
     FreeApartmentDto toFreeDto(Boolean free);
 
-    ApartmentCardDto toSearchDto(Apartment apartment);
+    ApartmentCardDto toCardDto(Apartment apartment);
 }

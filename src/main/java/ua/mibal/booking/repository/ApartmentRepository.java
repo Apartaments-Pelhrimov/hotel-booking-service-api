@@ -25,6 +25,7 @@ import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.search.Request;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 public interface ApartmentRepository extends JpaRepository<Apartment, Long> {
@@ -86,4 +87,10 @@ public interface ApartmentRepository extends JpaRepository<Apartment, Long> {
            "lower(h.name) like lower(concat('%', ?2, '%')) or " +
            "lower(h.location.city) like lower(concat('%', ?2, '%')))")
     Page<Apartment> findAllInHotelByNameOrCity(Long hotelId, String query, Pageable pageable);
+
+    @Query("""
+            select a from Apartment a
+            left join fetch a.photos
+            """)
+    List<Apartment> findAllFetchPhotos();
 }

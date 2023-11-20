@@ -18,8 +18,6 @@ package ua.mibal.booking.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.model.dto.response.ApartmentDto;
@@ -28,6 +26,8 @@ import ua.mibal.booking.model.dto.search.ApartmentCardDto;
 import ua.mibal.booking.model.mapper.ApartmentMapper;
 import ua.mibal.booking.model.search.DateRangeRequest;
 import ua.mibal.booking.repository.ApartmentRepository;
+
+import java.util.List;
 
 /**
  * @author Mykhailo Balakhon
@@ -53,8 +53,11 @@ public class ApartmentService {
                 .orElseThrow(() -> new EntityNotFoundException("Entity Apartment by id=" + id + " not found"));
     }
 
-    // TODO
-    public Page<ApartmentCardDto> getAll(Pageable pageable) {
-        return null;
+    @Transactional(readOnly = true) // for LAZY Apartment.beds fetch
+    public List<ApartmentCardDto> getAll() {
+        return apartmentRepository.findAllFetchPhotos()
+                .stream()
+                .map(apartmentMapper::toCardDto)
+                .toList();
     }
 }

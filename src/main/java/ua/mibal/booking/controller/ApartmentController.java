@@ -18,8 +18,6 @@ package ua.mibal.booking.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +27,8 @@ import ua.mibal.booking.model.dto.response.FreeApartmentDto;
 import ua.mibal.booking.model.dto.search.ApartmentCardDto;
 import ua.mibal.booking.model.search.DateRangeRequest;
 import ua.mibal.booking.service.ApartmentService;
+
+import java.util.List;
 
 /**
  * @author Mykhailo Balakhon
@@ -51,7 +51,7 @@ public class ApartmentController {
     }
 
     @GetMapping("/apartments")
-    public Page<ApartmentCardDto> getAll(Pageable pageable) {
-        return apartmentService.getAll(pageable);
+    public List<ApartmentCardDto> getAll() {
+        return apartmentService.getAll();
     }
 }
