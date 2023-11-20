@@ -22,10 +22,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ua.mibal.booking.model.mapper.ApartmentMapper;
 import ua.mibal.booking.model.dto.response.ApartmentDto;
-import ua.mibal.booking.model.dto.search.ApartmentSearchDto;
 import ua.mibal.booking.model.dto.response.FreeApartmentDto;
+import ua.mibal.booking.model.dto.search.ApartmentSearchDto;
+import ua.mibal.booking.model.mapper.ApartmentMapper;
 import ua.mibal.booking.model.search.DateRangeRequest;
 import ua.mibal.booking.model.search.Request;
 import ua.mibal.booking.repository.ApartmentRepository;
@@ -60,15 +60,12 @@ public class ApartmentService {
                 .orElseThrow(() -> new EntityNotFoundException("Entity Apartment by id=" + id + " not found"));
     }
 
-    @Transactional(readOnly = true) // for LAZY Apartment.beds fetch
-    public Page<ApartmentSearchDto> getAllByQuery(String query, Pageable pageable) {
-        return apartmentRepository.findAllByNameOrCity(query, pageable)
-                .map(apartmentMapper::toSearchDto);
+    // TODO
+    public Page<ApartmentSearchDto> getAllInHotel(Long hotelId, Pageable pageable) {
+        return null;
     }
 
-    @Transactional(readOnly = true) // for LAZY Apartment.beds fetch
-    public Page<ApartmentSearchDto> getAllInHotelByQuery(Long hotelId, String query, Pageable pageable) {
-        return apartmentRepository.findAllInHotelByNameOrCity(hotelId, query, pageable)
-                .map(apartmentMapper::toSearchDto);
+    public Page<ApartmentSearchDto> getAll(Pageable pageable) {
+        return null;
     }
 }
