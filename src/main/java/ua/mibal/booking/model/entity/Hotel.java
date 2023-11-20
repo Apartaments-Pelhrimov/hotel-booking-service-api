@@ -36,10 +36,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
 import ua.mibal.booking.model.entity.embeddable.AdditionalInfo;
 import ua.mibal.booking.model.entity.embeddable.HotelOptions;
 import ua.mibal.booking.model.entity.embeddable.Location;
 import ua.mibal.booking.model.entity.embeddable.Photo;
+import ua.mibal.booking.model.entity.embeddable.TurningOffTime;
 import ua.mibal.booking.model.exception.IllegalRoleException;
 
 import java.util.ArrayList;
@@ -102,6 +104,22 @@ public class Hotel {
             ))
     @Setter(PRIVATE)
     private List<Photo> photos = new ArrayList<>();
+
+    @ElementCollection
+    @BatchSize(size = 100)
+    @CollectionTable(
+            name = "hotel_turning_off_times",
+            joinColumns = @JoinColumn(
+                    name = "hotel_id",
+                    nullable = false,
+                    foreignKey = @ForeignKey(name = "hotel_turning_off_times_hotel_id_fk")
+            ),
+            indexes = @Index(
+                    name = "hotel_turning_off_times_hotel_id_idx",
+                    columnList = "hotel_id"
+            ))
+    @Setter(PRIVATE)
+    private List<TurningOffTime> turningOffTimes = new ArrayList<>();
 
     @OneToMany(mappedBy = "hotel")
     @Setter(PRIVATE)

@@ -40,6 +40,7 @@ import org.hibernate.type.NumericBooleanConverter;
 import ua.mibal.booking.model.entity.embeddable.ApartmentOptions;
 import ua.mibal.booking.model.entity.embeddable.Bed;
 import ua.mibal.booking.model.entity.embeddable.Photo;
+import ua.mibal.booking.model.entity.embeddable.TurningOffTime;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -117,6 +118,22 @@ public class Apartment {
             ))
     @Setter(PRIVATE)
     private List<Bed> beds = new ArrayList<>();
+
+    @ElementCollection
+    @BatchSize(size = 100)
+    @CollectionTable(
+            name = "apartment_turning_off_times",
+            joinColumns = @JoinColumn(
+                    name = "apartment_id",
+                    nullable = false,
+                    foreignKey = @ForeignKey(name = "apartment_turning_off_times_apartment_id_fk")
+            ),
+            indexes = @Index(
+                    name = "apartment_turning_off_times_apartment_id_idx",
+                    columnList = "apartment_id"
+            ))
+    @Setter(PRIVATE)
+    private List<TurningOffTime> turningOffTimes = new ArrayList<>();
 
     @OneToMany(mappedBy = "apartment")
     @Setter(PRIVATE)
