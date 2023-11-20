@@ -38,7 +38,7 @@ public record ApartmentDto(
         ApartmentHotelDto hotel,
         Float rating,
         List<Bed> beds,
-        BigDecimal oneDayCost
+        BigDecimal cost
 ) {
     public record ApartmentHotelDto(
             String name,

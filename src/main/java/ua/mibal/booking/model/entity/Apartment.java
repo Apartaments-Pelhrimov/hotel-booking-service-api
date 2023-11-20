@@ -73,7 +73,7 @@ public class Apartment {
     private Integer rooms;
 
     @Column(nullable = false)
-    private BigDecimal oneDayCost;
+    private BigDecimal cost;
 
     @Embedded
     private ApartmentOptions options = ApartmentOptions.DEFAULT;

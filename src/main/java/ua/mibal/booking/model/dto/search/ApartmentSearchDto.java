@@ -33,6 +33,6 @@ public record ApartmentSearchDto(
         ApartmentOptions options,
         Float rating,
         List<Bed> beds,
-        BigDecimal oneDayCost
+        BigDecimal cost
 ) {
 }
