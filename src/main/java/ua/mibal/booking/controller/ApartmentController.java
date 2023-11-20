@@ -50,11 +50,6 @@ public class ApartmentController {
         return apartmentService.isFree(id, request);
     }
 
-    @GetMapping("/{hotelId}/apartments")
-    public Page<ApartmentSearchDto> getAllInHotel(@PathVariable Long hotelId, Pageable pageable) {
-        return apartmentService.getAllInHotel(hotelId, pageable);
-    }
-
     @GetMapping("/apartments")
     public Page<ApartmentSearchDto> getAll(Pageable pageable) {
         return apartmentService.getAll(pageable);

@@ -61,10 +61,6 @@ public class ApartmentService {
     }
 
     // TODO
-    public Page<ApartmentSearchDto> getAllInHotel(Long hotelId, Pageable pageable) {
-        return null;
-    }
-
     public Page<ApartmentSearchDto> getAll(Pageable pageable) {
         return null;
     }
