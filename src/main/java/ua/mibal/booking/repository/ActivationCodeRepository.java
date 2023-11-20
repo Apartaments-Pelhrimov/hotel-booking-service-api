@@ -24,8 +24,10 @@ import java.util.Optional;
 
 public interface ActivationCodeRepository extends JpaRepository<ActivationCode, Long> {
 
-    @Query("select c from ActivationCode c " +
-           "join fetch c.user " +
-           "where c.code = ?1")
+    @Query("""
+            select c from ActivationCode c
+                join fetch c.user
+            where c.code = ?1
+            """)
     Optional<ActivationCode> findByCodeFetchUser(String activationCode);
 }

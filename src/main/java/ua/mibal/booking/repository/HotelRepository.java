@@ -28,8 +28,10 @@ import java.util.Optional;
  */
 public interface HotelRepository extends JpaRepository<Hotel, Long> {
 
-    @Query("select h from Hotel h " +
-           "left join fetch h.photos " +
-           "where h.id = ?1")
+    @Query("""
+            select h from Hotel h
+                left join fetch h.photos
+            where h.id = ?1
+            """)
     Optional<Hotel> findByIdFetchPhotos(Long id);
 }

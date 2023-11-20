@@ -33,16 +33,21 @@ public class RatingRepository {
 
     @Transactional
     public void updateRatings() {
-        entityManager.createQuery("update Apartment a " +
-                                  "SET a.rating = (select avg(c.rate) " +
-                                  "from Comment c " +
-                                  "where c.apartment.id = a.id)")
+        entityManager.createQuery("""
+                        update Apartment a
+                            SET a.rating = (
+                                select avg(c.rate) from Comment c
+                                where c.apartment.id = a.id)
+                        """)
                 .executeUpdate();
-
-        entityManager.createQuery("update Hotel h " +
-                                  "SET h.rating = (select avg(a.rating) " +
-                                  "from Apartment a " +
-                                  "where a.hotel.id = h.id and a.rating != null)")
+        entityManager.createQuery("""
+                        update Hotel h
+                            SET h.rating = (
+                                select avg(a.rating)
+                                from Apartment a
+                                where a.hotel.id = h.id and
+                                a.rating != null)
+                        """)
                 .executeUpdate();
     }
 }

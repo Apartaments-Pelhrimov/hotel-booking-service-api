@@ -24,11 +24,13 @@ import ua.mibal.booking.model.entity.Reservation;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
-    @Query("select r from Reservation r " +
-           "left join fetch r.apartment a " +
-           "left join fetch a.photos " +
-           "left join fetch a.hotel " +
-           "left join fetch r.user u " +
-           "where u.email = ?1")
+    @Query("""
+            select r from Reservation r
+                left join fetch r.apartment a
+                left join fetch a.photos
+                left join fetch a.hotel
+                left join fetch r.user u
+            where u.email = ?1
+            """)
     Page<Reservation> findAllByUserEmail(String email, Pageable pageable);
 }

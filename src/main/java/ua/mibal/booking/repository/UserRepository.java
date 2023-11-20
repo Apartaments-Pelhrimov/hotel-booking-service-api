@@ -31,13 +31,17 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByEmail(String email);
 
-    @Query("select u.password from User u " +
-           "where u.email = ?1")
+    @Query("""
+            select u.password from User u
+            where u.email = ?1
+            """)
     Optional<String> findPasswordByEmail(String email);
 
-    @Query("select u from User u " +
-           "left join fetch u.hotels " +
-           "where u.email = ?1")
+    @Query("""
+            select u from User u
+                left join fetch u.hotels
+            where u.email = ?1
+            """)
     Optional<User> findByEmailFetchHotels(String email);
 
     boolean existsByEmail(String email);
