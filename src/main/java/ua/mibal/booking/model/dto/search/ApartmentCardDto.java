@@ -27,7 +27,7 @@ import java.util.List;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
-public record ApartmentSearchDto(
+public record ApartmentCardDto(
         String name,
         List<Photo> photos,
         ApartmentOptions options,

@@ -19,8 +19,8 @@ package ua.mibal.booking.model.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 import ua.mibal.booking.model.dto.response.ApartmentDto;
-import ua.mibal.booking.model.dto.search.ApartmentSearchDto;
 import ua.mibal.booking.model.dto.response.FreeApartmentDto;
+import ua.mibal.booking.model.dto.search.ApartmentCardDto;
 import ua.mibal.booking.model.entity.Apartment;
 
 /**
@@ -34,5 +34,5 @@ public interface ApartmentMapper {
 
     FreeApartmentDto toFreeDto(Boolean free);
 
-    ApartmentSearchDto toSearchDto(Apartment apartment);
+    ApartmentCardDto toSearchDto(Apartment apartment);
 }

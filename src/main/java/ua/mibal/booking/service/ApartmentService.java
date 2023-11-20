@@ -24,10 +24,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.model.dto.response.ApartmentDto;
 import ua.mibal.booking.model.dto.response.FreeApartmentDto;
-import ua.mibal.booking.model.dto.search.ApartmentSearchDto;
+import ua.mibal.booking.model.dto.search.ApartmentCardDto;
 import ua.mibal.booking.model.mapper.ApartmentMapper;
 import ua.mibal.booking.model.search.DateRangeRequest;
-import ua.mibal.booking.model.search.Request;
 import ua.mibal.booking.repository.ApartmentRepository;
 
 /**
@@ -55,7 +54,7 @@ public class ApartmentService {
     }
 
     // TODO
-    public Page<ApartmentSearchDto> getAll(Pageable pageable) {
+    public Page<ApartmentCardDto> getAll(Pageable pageable) {
         return null;
     }
 }
