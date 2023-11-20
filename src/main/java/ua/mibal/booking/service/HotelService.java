@@ -18,17 +18,10 @@ package ua.mibal.booking.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ua.mibal.booking.model.dto.response.HotelDto;
-import ua.mibal.booking.model.dto.search.HotelSearchDto;
-import ua.mibal.booking.model.entity.Hotel;
 import ua.mibal.booking.model.mapper.HotelMapper;
 import ua.mibal.booking.repository.HotelRepository;
-
-import java.math.BigDecimal;
-import java.util.List;
 
 /**
  * @author Mykhailo Balakhon
@@ -39,17 +32,10 @@ import java.util.List;
 public class HotelService {
     private final HotelRepository hotelRepository;
     private final HotelMapper hotelMapper;
-    private final CostCalculationService costCalculationService;
 
     public HotelDto getOne(Long id) {
         return hotelRepository.findByIdFetchPhotos(id)
                 .map(hotelMapper::toDto)
                 .orElseThrow(() -> new EntityNotFoundException("Entity Hotel by id=" + id + " not found"));
-    }
-
-    public Page<HotelSearchDto> getAllByQuery(String query, Pageable pageable) {
-        Page<Hotel> hotels = hotelRepository.findAllByNameOrCity(query, pageable);
-        List<BigDecimal> costs = costCalculationService.calculateMinInHotels(hotels, pageable); // TODO if sort by cost - calculate cost first
-        return hotelMapper.toHotelSearchDtoPage(hotels, costs);
     }
 }
