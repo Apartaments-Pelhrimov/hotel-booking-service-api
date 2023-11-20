@@ -32,8 +32,7 @@ import java.util.List;
 public enum Role implements GrantedAuthority {
 
     ROLE_USER("ROLE_USER"),
-    ROLE_LOCAL_MANAGER("ROLE_LOCAL_MANAGER", ROLE_USER),
-    ROLE_GLOBAL_MANAGER("ROLE_GLOBAL_MANAGER", ROLE_LOCAL_MANAGER, ROLE_USER);
+    ROLE_MANAGER("ROLE_MANAGER", ROLE_USER);
 
     private final String authority;
     private final List<Role> children;
