@@ -91,6 +91,7 @@ public class Hotel {
     private Double rating;
 
     @ElementCollection
+    @BatchSize(size = 100)
     @CollectionTable(
             name = "hotel_photos",
             joinColumns = @JoinColumn(

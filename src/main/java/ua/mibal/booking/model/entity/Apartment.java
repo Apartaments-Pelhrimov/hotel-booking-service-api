@@ -97,6 +97,7 @@ public class Apartment {
     private Hotel hotel;
 
     @ElementCollection
+    @BatchSize(size = 100)
     @CollectionTable(
             name = "apartment_photos",
             joinColumns = @JoinColumn(
