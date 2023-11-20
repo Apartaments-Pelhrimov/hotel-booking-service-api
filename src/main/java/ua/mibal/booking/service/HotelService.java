@@ -25,7 +25,6 @@ import ua.mibal.booking.model.dto.response.HotelDto;
 import ua.mibal.booking.model.dto.search.HotelSearchDto;
 import ua.mibal.booking.model.entity.Hotel;
 import ua.mibal.booking.model.mapper.HotelMapper;
-import ua.mibal.booking.model.search.Request;
 import ua.mibal.booking.repository.HotelRepository;
 
 import java.math.BigDecimal;
@@ -41,12 +40,6 @@ public class HotelService {
     private final HotelRepository hotelRepository;
     private final HotelMapper hotelMapper;
     private final CostCalculationService costCalculationService;
-
-    public Page<HotelSearchDto> getAllBySearchRequest(Request request, Pageable pageable) {
-        Page<Hotel> hotels = hotelRepository.findAllByQuery(request, pageable);
-        List<BigDecimal> costs = costCalculationService.calculateMinInHotelsByRequest(hotels, request, pageable); // TODO if sort by cost - calculate cost first
-        return hotelMapper.toHotelSearchDtoPage(hotels, costs);
-    }
 
     public HotelDto getOne(Long id) {
         return hotelRepository.findByIdFetchPhotos(id)

@@ -17,7 +17,6 @@
 package ua.mibal.booking.controller;
 
 import jakarta.annotation.security.RolesAllowed;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ua.mibal.booking.model.dto.response.HotelDto;
 import ua.mibal.booking.model.dto.search.HotelSearchDto;
-import ua.mibal.booking.model.search.Request;
 import ua.mibal.booking.service.HotelService;
 
 /**
@@ -40,11 +38,6 @@ import ua.mibal.booking.service.HotelService;
 @RequestMapping("/api/hotels")
 public class HotelController {
     private final HotelService hotelService;
-
-    @GetMapping("/search")
-    public Page<HotelSearchDto> getAllBySearchRequest(@Valid Request request, Pageable pageable) {
-        return hotelService.getAllBySearchRequest(request, pageable);
-    }
 
     @GetMapping("/{id}")
     public HotelDto getOne(@PathVariable Long id) {

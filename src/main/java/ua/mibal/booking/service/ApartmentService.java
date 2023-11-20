@@ -41,12 +41,6 @@ public class ApartmentService {
     private final ApartmentMapper apartmentMapper;
 
     @Transactional(readOnly = true) // for LAZY Apartment.beds fetch
-    public Page<ApartmentSearchDto> getAllInHotelBySearchRequest(Long hotelId, Request request, Pageable pageable) {
-        return apartmentRepository.findAllInHotelByQuery(hotelId, request, pageable)
-                .map(apartmentMapper::toSearchDto);
-    }
-
-    @Transactional(readOnly = true) // for LAZY Apartment.beds fetch
     public ApartmentDto getOne(Long id) {
         return apartmentRepository.findByIdFetchPhotosHotel(id)
                 .map(apartmentMapper::toDto)
