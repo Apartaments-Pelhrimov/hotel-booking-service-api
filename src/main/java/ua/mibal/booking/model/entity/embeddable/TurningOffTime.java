@@ -34,6 +34,6 @@ import java.time.LocalDate;
 @Setter
 @Embeddable
 public class TurningOffTime {
-    private LocalDate from;
-    private LocalDate to;
+    private LocalDate offFrom;
+    private LocalDate offTo;
 }
