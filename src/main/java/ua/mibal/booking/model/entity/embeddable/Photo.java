@@ -16,6 +16,7 @@
 
 package ua.mibal.booking.model.entity.embeddable;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,6 +34,7 @@ import lombok.Setter;
 @Embeddable
 public class Photo {
 
+    @Column(nullable = false, unique = true)
     private String photoLink;
 
     @Override
