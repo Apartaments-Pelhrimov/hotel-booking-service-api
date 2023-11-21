@@ -17,8 +17,7 @@
 package ua.mibal.booking.model.dto.response;
 
 import ua.mibal.booking.model.entity.embeddable.NotificationSettings;
-
-import java.util.List;
+import ua.mibal.booking.model.entity.embeddable.Role;
 
 /**
  * @author Mykhailo Balakhon
@@ -30,13 +29,7 @@ public record UserDto(
         String photo,
         String phone,
         String email,
-        String role,
-        List<HotelLinkDto> hotels,
+        Role role,
         NotificationSettings notificationSettings
 ) {
-    public record HotelLinkDto(
-            Long id,
-            String name
-    ) {
-    }
 }
