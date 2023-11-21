@@ -50,13 +50,13 @@ public class UserController {
     @DeleteMapping("/me")
     public void deleteMe(@RequestBody DeleteMeDto deleteMeDto,
                          Authentication authentication) {
-        userService.deleteMe(deleteMeDto, authentication);
+        userService.deleteByAuthenticaiton(deleteMeDto, authentication);
     }
 
     @RolesAllowed("USER")
     @PutMapping("/me/password")
     public void changePassword(@RequestBody ChangePasswordDto changePasswordDto,
                                Authentication authentication) {
-        userService.changePassword(changePasswordDto, authentication);
+        userService.changePasswordByAuthentication(changePasswordDto, authentication);
     }
 }

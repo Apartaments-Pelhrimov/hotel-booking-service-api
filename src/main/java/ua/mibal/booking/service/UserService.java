@@ -52,7 +52,7 @@ public class UserService {
         return userRepository.existsByEmail(email);
     }
 
-    public void deleteMe(DeleteMeDto deleteMeDto, Authentication authentication) {
+    public void deleteByAuthenticaiton(DeleteMeDto deleteMeDto, Authentication authentication) {
         String password = deleteMeDto.password();
         String email = authentication.getName();
         validatePassword(password, email);
@@ -64,8 +64,8 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public void changePassword(ChangePasswordDto changePasswordDto,
-                               Authentication authentication) {
+    public void changePasswordByAuthentication(ChangePasswordDto changePasswordDto,
+                                               Authentication authentication) {
         String oldPassword = changePasswordDto.oldPassword();
         String email = authentication.getName();
         validatePassword(oldPassword, email);
