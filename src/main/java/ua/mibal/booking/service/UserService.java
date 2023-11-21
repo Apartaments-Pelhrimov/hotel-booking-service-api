@@ -22,6 +22,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ua.mibal.booking.model.dto.auth.RegistrationDto;
+import ua.mibal.booking.model.dto.request.ChangePasswordDto;
 import ua.mibal.booking.model.dto.request.DeleteMeDto;
 import ua.mibal.booking.model.dto.response.UserDto;
 import ua.mibal.booking.model.entity.User;
@@ -54,20 +55,29 @@ public class UserService {
     public void deleteMe(DeleteMeDto deleteMeDto, Authentication authentication) {
         String password = deleteMeDto.password();
         String email = authentication.getName();
-        String dbPassword = userRepository.findPasswordByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("Entity User by email=" + email + " not found"));
-        validatePassword(password, dbPassword);
+        validatePassword(password, email);
         userRepository.deleteByEmail(email);
-    }
-
-    private void validatePassword(String actual, String expected) {
-        if (!passwordEncoder.matches(actual, expected)) {
-            throw new IllegalPasswordException();
-        }
     }
 
     public User save(RegistrationDto registrationDto, String password) {
         User user = userMapper.toEntity(registrationDto, password);
         return userRepository.save(user);
+    }
+
+    public void changePassword(ChangePasswordDto changePasswordDto,
+                               Authentication authentication) {
+        String oldPassword = changePasswordDto.oldPassword();
+        String email = authentication.getName();
+        validatePassword(oldPassword, email);
+        String newEncodedPassword = passwordEncoder.encode(changePasswordDto.newPassword());
+        userRepository.updateUserPasswordByEmail(newEncodedPassword, email);
+    }
+
+    private void validatePassword(String password, String email) {
+        String encodedPassword = userRepository.findPasswordByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Entity User by email=" + email + " not found"));
+        if (!passwordEncoder.matches(password, encodedPassword)) {
+            throw new IllegalPasswordException();
+        }
     }
 }

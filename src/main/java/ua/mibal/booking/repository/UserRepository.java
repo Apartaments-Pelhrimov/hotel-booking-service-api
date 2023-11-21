@@ -17,6 +17,7 @@
 package ua.mibal.booking.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.model.entity.User;
@@ -48,4 +49,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Transactional
     void deleteByEmail(String email);
+
+    @Transactional
+    @Modifying
+    @Query("""
+            update User u
+                set u.password = ?1
+            where u.email = ?2
+            """)
+    void updateUserPasswordByEmail(String newEncodedPassword, String email);
 }

@@ -21,9 +21,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ua.mibal.booking.model.dto.request.ChangePasswordDto;
 import ua.mibal.booking.model.dto.request.DeleteMeDto;
 import ua.mibal.booking.model.dto.response.UserDto;
 import ua.mibal.booking.service.UserService;
@@ -49,5 +51,12 @@ public class UserController {
     public void deleteMe(@RequestBody DeleteMeDto deleteMeDto,
                          Authentication authentication) {
         userService.deleteMe(deleteMeDto, authentication);
+    }
+
+    @RolesAllowed("USER")
+    @PutMapping("/me/password")
+    public void changePassword(@RequestBody ChangePasswordDto changePasswordDto,
+                               Authentication authentication) {
+        userService.changePassword(changePasswordDto, authentication);
     }
 }
