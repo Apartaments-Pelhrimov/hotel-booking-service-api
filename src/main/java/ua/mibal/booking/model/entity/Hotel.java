@@ -50,8 +50,7 @@ import java.util.List;
 import java.util.Set;
 
 import static lombok.AccessLevel.PRIVATE;
-import static ua.mibal.booking.model.entity.embeddable.Role.ROLE_GLOBAL_MANAGER;
-import static ua.mibal.booking.model.entity.embeddable.Role.ROLE_LOCAL_MANAGER;
+import static ua.mibal.booking.model.entity.embeddable.Role.ROLE_MANAGER;
 
 /**
  * @author Mykhailo Balakhon
@@ -179,8 +178,7 @@ public class Hotel {
     }
 
     public void addManager(User user) {
-        if (user.getRole().equals(ROLE_GLOBAL_MANAGER)) return;
-        if (!user.getRole().equals(ROLE_LOCAL_MANAGER)) throw new IllegalRoleException(user);
+        if (!user.getRole().equals(ROLE_MANAGER)) throw new IllegalRoleException(user);
         this.managers.add(user);
         user.getHotels().add(this);
     }
