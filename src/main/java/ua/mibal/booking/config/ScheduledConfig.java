@@ -26,7 +26,7 @@ import ua.mibal.booking.service.RatingService;
 
 import java.util.Date;
 
-import static java.util.concurrent.TimeUnit.HOURS;
+import static java.util.concurrent.TimeUnit.MINUTES;
 
 /**
  * @author Mykhailo Balakhon
@@ -39,7 +39,7 @@ public class ScheduledConfig {
     private static final Logger log = LoggerFactory.getLogger(ScheduledConfig.class);
     private final RatingService ratingService;
 
-    @Scheduled(fixedDelay = 3, timeUnit = HOURS)
+    @Scheduled(fixedDelay = 15, timeUnit = MINUTES)
     public void updateRatings() {
         ratingService.updateRatings();
         log.info("Ratings updated " + new Date());
