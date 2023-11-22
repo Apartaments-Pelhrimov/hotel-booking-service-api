@@ -59,7 +59,7 @@ public class ExceptionHandlerAdvice {
                 .body(new ApiError(status, e));
     }
 
-    @ExceptionHandler({EmailAlreadyExistsException.class, IllegalPasswordException.class, SdkException.class})
+    @ExceptionHandler({IllegalArgumentException.class, EmailAlreadyExistsException.class, IllegalPasswordException.class, SdkException.class})
     public ResponseEntity<ApiError> handleEmailAlreadyExistsException(RuntimeException e) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         return ResponseEntity.status(status)
