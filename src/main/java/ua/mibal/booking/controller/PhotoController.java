@@ -53,14 +53,14 @@ public class PhotoController {
     }
 
     @RolesAllowed("MANAGER")
-    @PostMapping("/hotels/{id}/photos")
+    @PostMapping("/hotels/{id}/photos/upload")
     public String addHotelPhoto(@PathVariable Long id,
                                 @RequestParam("file") MultipartFile file) {
         return photoStorageService.saveHotelPhoto(id, file);
     }
 
     @RolesAllowed("MANAGER")
-    @PostMapping("/hotels/apartments/{id}/photos")
+    @PostMapping("/hotels/apartments/{id}/photos/upload")
     public String addApartmentPhoto(@PathVariable Long id,
                                     @RequestParam("file") MultipartFile file) {
         return photoStorageService.saveApartmentPhoto(id, file);
