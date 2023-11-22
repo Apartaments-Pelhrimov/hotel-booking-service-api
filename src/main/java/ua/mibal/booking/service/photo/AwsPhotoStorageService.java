@@ -47,7 +47,7 @@ public class AwsPhotoStorageService implements PhotoStorageService {
     @Override
     public String setUserPhoto(String email, MultipartFile photo) {
         User user = userRepository.getReferenceByEmail(email);
-        String link = awsSupplier(aws -> aws.upload("users/", email, photo.getBytes()));
+        String link = perform(aws -> aws.upload("users/", email, photo.getBytes()));
         user.setPhoto(new Photo(link));
         return link;
     }
@@ -56,7 +56,7 @@ public class AwsPhotoStorageService implements PhotoStorageService {
     @Override
     public void deleteUserPhoto(String email) {
         User user = userRepository.getReferenceByEmail(email);
-        awsSupplier(aws -> aws.delete("users/", email));
+        perform(aws -> aws.delete("users/", email));
         user.deletePhoto();
     }
 
@@ -65,7 +65,7 @@ public class AwsPhotoStorageService implements PhotoStorageService {
     public String saveHotelPhoto(Long id, MultipartFile photo) {
         Hotel hotel = hotelRepository.getReferenceById(id);
         String name = photo.getName() + "-" + id;
-        String link = awsSupplier(aws -> aws.upload("hotels/", name, photo.getBytes()));
+        String link = perform(aws -> aws.upload("hotels/", name, photo.getBytes()));
         hotel.addPhoto(new Photo(link));
         return link;
     }
@@ -75,7 +75,7 @@ public class AwsPhotoStorageService implements PhotoStorageService {
     public String saveApartmentPhoto(Long id, MultipartFile photo) {
         Apartment apartment = apartmentRepository.getReferenceById(id);
         String name = AwsUrlUtils.generateName(id, photo.getName());
-        String link = awsSupplier(aws -> aws.upload("apartments/", name, photo.getBytes()));
+        String link = perform(aws -> aws.upload("apartments/", name, photo.getBytes()));
         apartment.addPhoto(new Photo(link));
         return link;
     }
@@ -88,7 +88,7 @@ public class AwsPhotoStorageService implements PhotoStorageService {
             throw new IllegalArgumentException(
                     "Hotel with id=" + id + " doesn't contain photo='" + link + "'");
         String name = AwsUrlUtils.getFileName(link);
-        awsSupplier(aws -> aws.delete("hotels/", name));
+        perform(aws -> aws.delete("hotels/", name));
     }
 
     @Transactional
@@ -99,20 +99,20 @@ public class AwsPhotoStorageService implements PhotoStorageService {
             throw new IllegalArgumentException(
                     "Apartment with id=" + id + " doesn't contain photo='" + link + "'");
         String name = AwsUrlUtils.getFileName(link);
-        awsSupplier(aws -> aws.delete("apartments/", name));
+        perform(aws -> aws.delete("apartments/", name));
     }
 
-    private <T> T awsSupplier(AwsWrapper<T> fn) {
+    private <T> T perform(AwsWrapper<T> fn) {
         try {
             return fn.apply(awsStorage);
         } catch (IOException e) {
-            // TODO
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException(e);
         }
     }
 
     @FunctionalInterface
     private interface AwsWrapper<T> {
+
         T apply(AwsStorage awsStorage) throws IOException;
     }
 }
