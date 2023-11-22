@@ -16,6 +16,7 @@
 
 package ua.mibal.booking.service.photo;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,8 +64,8 @@ public class AwsPhotoStorageService implements PhotoStorageService {
     @Transactional
     @Override
     public String saveHotelPhoto(Long id, MultipartFile photo) {
-        Hotel hotel = hotelRepository.getReferenceById(id);
-        String name = photo.getName() + "-" + id;
+        Hotel hotel = getHotelById(id);
+        String name = AwsUrlUtils.generateName(id, photo.getName());
         String link = perform(aws -> aws.upload("hotels/", name, photo.getBytes()));
         hotel.addPhoto(new Photo(link));
         return link;
@@ -73,7 +74,7 @@ public class AwsPhotoStorageService implements PhotoStorageService {
     @Transactional
     @Override
     public String saveApartmentPhoto(Long id, MultipartFile photo) {
-        Apartment apartment = apartmentRepository.getReferenceById(id);
+        Apartment apartment = getApartmentById(id);
         String name = AwsUrlUtils.generateName(id, photo.getName());
         String link = perform(aws -> aws.upload("apartments/", name, photo.getBytes()));
         apartment.addPhoto(new Photo(link));
@@ -83,7 +84,7 @@ public class AwsPhotoStorageService implements PhotoStorageService {
     @Transactional
     @Override
     public void deleteHotelPhoto(Long id, String link) {
-        Hotel hotel = hotelRepository.getReferenceById(id);
+        Hotel hotel = getHotelById(id);
         if (!hotel.deletePhoto(new Photo(link)))
             throw new IllegalArgumentException(
                     "Hotel with id=" + id + " doesn't contain photo='" + link + "'");
@@ -94,12 +95,22 @@ public class AwsPhotoStorageService implements PhotoStorageService {
     @Transactional
     @Override
     public void deleteApartmentPhoto(Long id, String link) {
-        Apartment apartment = apartmentRepository.getReferenceById(id);
+        Apartment apartment = getApartmentById(id);
         if (!apartment.deletePhoto(new Photo(link)))
             throw new IllegalArgumentException(
                     "Apartment with id=" + id + " doesn't contain photo='" + link + "'");
         String name = AwsUrlUtils.getFileName(link);
         perform(aws -> aws.delete("apartments/", name));
+    }
+
+    public Hotel getHotelById(Long id) {
+        return hotelRepository.findByIdFetchPhotos(id)
+                .orElseThrow(() -> new EntityNotFoundException("Entity Hotel by id=" + id + " not found"));
+    }
+
+    public Apartment getApartmentById(Long id) {
+        return apartmentRepository.findByIdFetchPhotos(id)
+                .orElseThrow(() -> new EntityNotFoundException("Entity Apartment by id=" + id + " not found"));
     }
 
     private <T> T perform(AwsWrapper<T> fn) {
