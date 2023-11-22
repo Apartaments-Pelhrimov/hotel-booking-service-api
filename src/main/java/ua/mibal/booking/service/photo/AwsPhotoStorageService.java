@@ -48,7 +48,7 @@ public class AwsPhotoStorageService implements PhotoStorageService {
     @Override
     public String setUserPhoto(String email, MultipartFile photo) {
         User user = userRepository.getReferenceByEmail(email);
-        String link = perform(aws -> aws.upload("users/", email, photo.getBytes()));
+        String link = perform(aws -> aws.uploadImage("users/", email, photo.getBytes()));
         user.setPhoto(new Photo(link));
         return link;
     }
@@ -65,8 +65,8 @@ public class AwsPhotoStorageService implements PhotoStorageService {
     @Override
     public String saveHotelPhoto(Long id, MultipartFile photo) {
         Hotel hotel = getHotelById(id);
-        String name = AwsUrlUtils.generateName(id, photo.getOriginalFilename());
-        String link = perform(aws -> aws.upload("hotels/", name, photo.getBytes()));
+        String name = photo.getOriginalFilename();
+        String link = perform(aws -> aws.uploadImage("hotels/", name, photo.getBytes()));
         hotel.addPhoto(new Photo(link));
         return link;
     }
@@ -75,8 +75,8 @@ public class AwsPhotoStorageService implements PhotoStorageService {
     @Override
     public String saveApartmentPhoto(Long id, MultipartFile photo) {
         Apartment apartment = getApartmentById(id);
-        String name = AwsUrlUtils.generateName(id, photo.getOriginalFilename());
-        String link = perform(aws -> aws.upload("apartments/", name, photo.getBytes()));
+        String name = photo.getOriginalFilename();
+        String link = perform(aws -> aws.uploadImage("apartments/", name, photo.getBytes()));
         apartment.addPhoto(new Photo(link));
         return link;
     }
