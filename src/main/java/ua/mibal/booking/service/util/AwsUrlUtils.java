@@ -22,12 +22,14 @@ package ua.mibal.booking.service.util;
  */
 public class AwsUrlUtils {
 
-    // TODO
+    private static final String FILE_NAME_TEMPLATE = "%s-%s";
+
     public static String generateName(Long entityId, String fileName) {
-        return null;
+        return String.format(FILE_NAME_TEMPLATE, fileName, entityId);
     }
 
     public static String getFileName(String link) {
-        return null;
+        String[] path = link.split("/");
+        return path[path.length - 1];
     }
 }
