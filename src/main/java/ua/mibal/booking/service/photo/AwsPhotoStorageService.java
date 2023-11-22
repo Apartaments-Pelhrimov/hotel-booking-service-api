@@ -48,7 +48,8 @@ public class AwsPhotoStorageService implements PhotoStorageService {
     @Transactional
     @Override
     public String setUserPhoto(String email, MultipartFile photo) {
-        String link = perform(aws -> aws.uploadImage("users/", email, photo.getBytes()));
+        String encodedLink = perform(aws -> aws.uploadImage("users/", email, photo.getBytes()));
+        String link = URLDecoder.decode(encodedLink, StandardCharsets.UTF_8);
         userRepository.updateUserPhotoByEmail(new Photo(link), email);
         return link;
     }
