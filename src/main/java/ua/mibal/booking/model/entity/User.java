@@ -195,4 +195,8 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return enabled;
     }
+
+    public void deletePhoto() {
+        this.photo = null;
+    }
 }

@@ -179,4 +179,12 @@ public class Apartment {
     public int hashCode() {
         return getClass().hashCode();
     }
+
+    public void addPhoto(Photo photo) {
+        this.photos.add(photo);
+    }
+
+    public boolean deletePhoto(Photo photo) {
+        return this.photos.remove(photo);
+    }
 }

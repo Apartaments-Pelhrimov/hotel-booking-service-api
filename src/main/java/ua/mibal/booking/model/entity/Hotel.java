@@ -161,8 +161,8 @@ public class Hotel {
         this.photos.add(photo);
     }
 
-    public void deletePhoto(Photo photo) {
-        this.photos.remove(photo);
+    public boolean deletePhoto(Photo photo) {
+        return this.photos.remove(photo);
     }
 
     public void addApartment(Apartment apartment) {

@@ -58,4 +58,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
             where u.email = ?2
             """)
     void updateUserPasswordByEmail(String newEncodedPassword, String email);
+
+    User getReferenceByEmail(String email);
 }
