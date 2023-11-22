@@ -23,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.entity.Hotel;
-import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.entity.embeddable.Photo;
 import ua.mibal.booking.repository.ApartmentRepository;
 import ua.mibal.booking.repository.HotelRepository;
@@ -47,18 +46,16 @@ public class AwsPhotoStorageService implements PhotoStorageService {
     @Transactional
     @Override
     public String setUserPhoto(String email, MultipartFile photo) {
-        User user = userRepository.getReferenceByEmail(email);
         String link = perform(aws -> aws.uploadImage("users/", email, photo.getBytes()));
-        user.setPhoto(new Photo(link));
+        userRepository.updateUserPhotoByEmail(new Photo(link), email);
         return link;
     }
 
     @Transactional
     @Override
     public void deleteUserPhoto(String email) {
-        User user = userRepository.getReferenceByEmail(email);
         perform(aws -> aws.delete("users/", email));
-        user.deletePhoto();
+        userRepository.deleteUserPhotoByEmail(email);
     }
 
     @Transactional

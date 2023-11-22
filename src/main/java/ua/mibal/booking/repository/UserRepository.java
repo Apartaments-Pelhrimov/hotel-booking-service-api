@@ -21,6 +21,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.model.entity.User;
+import ua.mibal.booking.model.entity.embeddable.Photo;
 
 import java.util.Optional;
 
@@ -59,5 +60,19 @@ public interface UserRepository extends JpaRepository<User, Long> {
             """)
     void updateUserPasswordByEmail(String newEncodedPassword, String email);
 
-    User getReferenceByEmail(String email);
+    @Modifying
+    @Query("""
+            update User u
+                set u.photo = ?1
+            where u.email = ?2
+            """)
+    void updateUserPhotoByEmail(Photo photo, String email);
+
+    @Modifying
+    @Query("""
+            update User u
+                set u.photo = null
+            where u.email = ?1
+            """)
+    void deleteUserPhotoByEmail(String email);
 }
