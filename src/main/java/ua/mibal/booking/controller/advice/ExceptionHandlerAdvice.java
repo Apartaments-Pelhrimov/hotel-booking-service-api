@@ -23,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import software.amazon.awssdk.core.exception.SdkException;
 import ua.mibal.booking.model.exception.EmailAlreadyExistsException;
 import ua.mibal.booking.model.exception.IllegalPasswordException;
 
@@ -58,7 +59,7 @@ public class ExceptionHandlerAdvice {
                 .body(new ApiError(status, e));
     }
 
-    @ExceptionHandler({EmailAlreadyExistsException.class, IllegalPasswordException.class})
+    @ExceptionHandler({EmailAlreadyExistsException.class, IllegalPasswordException.class, SdkException.class})
     public ResponseEntity<ApiError> handleEmailAlreadyExistsException(RuntimeException e) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         return ResponseEntity.status(status)
