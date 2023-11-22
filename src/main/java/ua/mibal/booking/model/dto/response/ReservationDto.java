@@ -21,7 +21,7 @@ import ua.mibal.booking.model.entity.embeddable.Photo;
 import ua.mibal.booking.model.entity.embeddable.ReservationDetails;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Set;
 
 /**
  * @author Mykhailo Balakhon
@@ -34,7 +34,7 @@ public record ReservationDto(
 ) {
     public record ReservationApartmentDto(
             String name,
-            List<Photo> photos,
+            Set<Photo> photos,
             String hotelName,
             Location location
     ) {

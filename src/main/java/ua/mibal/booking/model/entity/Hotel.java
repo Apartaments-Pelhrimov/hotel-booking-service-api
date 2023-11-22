@@ -32,6 +32,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -101,9 +102,12 @@ public class Hotel {
             indexes = @Index(
                     name = "hotel_photos_hotel_id_idx",
                     columnList = "hotel_id"
+            ),
+            uniqueConstraints = @UniqueConstraint(
+                    columnNames = "photoLink"
             ))
     @Setter(PRIVATE)
-    private List<Photo> photos = new ArrayList<>();
+    private Set<Photo> photos = new HashSet<>();
 
     @ElementCollection
     @BatchSize(size = 100)

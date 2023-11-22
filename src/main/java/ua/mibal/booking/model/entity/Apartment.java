@@ -31,6 +31,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -44,7 +45,9 @@ import ua.mibal.booking.model.entity.embeddable.TurningOffTime;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static lombok.AccessLevel.PRIVATE;
 
@@ -104,9 +107,12 @@ public class Apartment {
                     name = "apartment_id",
                     nullable = false,
                     foreignKey = @ForeignKey(name = "apartment_photos_apartment_id_fk")
+            ),
+            uniqueConstraints = @UniqueConstraint(
+                    columnNames = "photoLink"
             ))
     @Setter(PRIVATE)
-    private List<Photo> photos = new ArrayList<>();
+    private Set<Photo> photos = new HashSet<>();
 
     @ElementCollection
     @BatchSize(size = 100)

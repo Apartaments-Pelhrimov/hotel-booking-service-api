@@ -21,7 +21,7 @@ import ua.mibal.booking.model.entity.embeddable.HotelOptions;
 import ua.mibal.booking.model.entity.embeddable.Location;
 import ua.mibal.booking.model.entity.embeddable.Photo;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * @author Mykhailo Balakhon
@@ -29,7 +29,7 @@ import java.util.List;
  */
 public record HotelDto(
         String name,
-        List<Photo> photos,
+        Set<Photo> photos,
         HotelOptions options,
         Location location,
         AdditionalInfo info,
