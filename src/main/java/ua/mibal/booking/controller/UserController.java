@@ -17,6 +17,7 @@
 package ua.mibal.booking.controller;
 
 import jakarta.annotation.security.RolesAllowed;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -55,7 +56,7 @@ public class UserController {
 
     @RolesAllowed("USER")
     @PutMapping("/me/password")
-    public void changePassword(@RequestBody ChangePasswordDto changePasswordDto,
+    public void changePassword(@Valid @RequestBody ChangePasswordDto changePasswordDto,
                                Authentication authentication) {
         userService.changePasswordByAuthentication(changePasswordDto, authentication);
     }
