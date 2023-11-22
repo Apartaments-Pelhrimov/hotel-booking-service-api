@@ -70,16 +70,6 @@ public class AwsPhotoStorageService implements PhotoStorageService {
 
     @Transactional
     @Override
-    public String saveApartmentPhoto(Long id, MultipartFile photo) {
-        Apartment apartment = getApartmentById(id);
-        String name = photo.getOriginalFilename();
-        String link = perform(aws -> aws.uploadImage("apartments/", name, photo.getBytes()));
-        apartment.addPhoto(new Photo(link));
-        return link;
-    }
-
-    @Transactional
-    @Override
     public void deleteHotelPhoto(Long id, String link) {
         Hotel hotel = getHotelById(id);
         if (!hotel.deletePhoto(new Photo(link)))
@@ -87,6 +77,16 @@ public class AwsPhotoStorageService implements PhotoStorageService {
                     "Hotel with id=" + id + " doesn't contain photo='" + link + "'");
         String name = AwsUrlUtils.getFileName(link);
         perform(aws -> aws.delete("hotels/", name));
+    }
+
+    @Transactional
+    @Override
+    public String saveApartmentPhoto(Long id, MultipartFile photo) {
+        Apartment apartment = getApartmentById(id);
+        String name = photo.getOriginalFilename();
+        String link = perform(aws -> aws.uploadImage("apartments/", name, photo.getBytes()));
+        apartment.addPhoto(new Photo(link));
+        return link;
     }
 
     @Transactional
