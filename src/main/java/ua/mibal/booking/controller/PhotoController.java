@@ -43,7 +43,7 @@ public class PhotoController {
     @PutMapping("/users/me/photo")
     public String changeUserPhoto(@RequestParam("file") MultipartFile file,
                                   Authentication authentication) {
-        return photoStorageService.saveUserPhoto(authentication.getName(), file);
+        return photoStorageService.setUserPhoto(authentication.getName(), file);
     }
 
     @RolesAllowed("MANAGER")
@@ -62,15 +62,15 @@ public class PhotoController {
 
     @RolesAllowed("MANAGER")
     @DeleteMapping("/hotels/{id}/photos")
-    public String deleteHotelPhoto(@PathVariable Long id,
-                                   @RequestParam("link") String link) {
-        return photoStorageService.deleteHotelPhoto(id, link);
+    public void deleteHotelPhoto(@PathVariable Long id,
+                                 @RequestParam("link") String link) {
+        photoStorageService.deleteHotelPhoto(id, link);
     }
 
     @RolesAllowed("MANAGER")
     @DeleteMapping("/hotels/apartments/{id}/photos")
-    public String deleteApartmentPhoto(@PathVariable Long id,
-                                       @RequestParam("link") String link) {
-        return photoStorageService.deleteApartmentPhoto(id, link);
+    public void deleteApartmentPhoto(@PathVariable Long id,
+                                     @RequestParam("link") String link) {
+        photoStorageService.deleteApartmentPhoto(id, link);
     }
 }

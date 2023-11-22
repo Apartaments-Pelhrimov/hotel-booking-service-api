@@ -24,13 +24,15 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public interface PhotoStorageService {
 
-    String saveUserPhoto(String email, MultipartFile photo);
+    String setUserPhoto(String email, MultipartFile photo);
+
+    void deleteUserPhoto(String email);
 
     String saveHotelPhoto(Long id, MultipartFile photo);
 
     String saveApartmentPhoto(Long id, MultipartFile photo);
 
-    String deleteHotelPhoto(Long id, String link);
+    void deleteHotelPhoto(Long id, String link);
 
-    String deleteApartmentPhoto(Long id, String link);
+    void deleteApartmentPhoto(Long id, String link);
 }
