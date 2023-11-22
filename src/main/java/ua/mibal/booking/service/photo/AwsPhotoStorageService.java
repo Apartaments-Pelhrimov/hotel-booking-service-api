@@ -30,6 +30,8 @@ import ua.mibal.booking.repository.UserRepository;
 import ua.mibal.booking.service.util.AwsUrlUtils;
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author Mykhailo Balakhon
@@ -63,7 +65,8 @@ public class AwsPhotoStorageService implements PhotoStorageService {
     public String saveHotelPhoto(Long id, MultipartFile photo) {
         Hotel hotel = getHotelById(id);
         String name = photo.getOriginalFilename();
-        String link = perform(aws -> aws.uploadImage("hotels/", name, photo.getBytes()));
+        String encodedLink = perform(aws -> aws.uploadImage("hotels/", name, photo.getBytes()));
+        String link = URLDecoder.decode(encodedLink, StandardCharsets.UTF_8);
         hotel.addPhoto(new Photo(link));
         return link;
     }
@@ -84,7 +87,8 @@ public class AwsPhotoStorageService implements PhotoStorageService {
     public String saveApartmentPhoto(Long id, MultipartFile photo) {
         Apartment apartment = getApartmentById(id);
         String name = photo.getOriginalFilename();
-        String link = perform(aws -> aws.uploadImage("apartments/", name, photo.getBytes()));
+        String encodedLink = perform(aws -> aws.uploadImage("apartments/", name, photo.getBytes()));
+        String link = URLDecoder.decode(encodedLink, StandardCharsets.UTF_8);
         apartment.addPhoto(new Photo(link));
         return link;
     }
