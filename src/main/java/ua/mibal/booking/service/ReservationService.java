@@ -41,8 +41,8 @@ public class ReservationService {
                 .map(reservationMapper::toDto);
     }
 
-    // TODO
     public Page<ReservationDto> getAllReservations(Pageable pageable) {
-        return null;
+        return reservationRepository.findAll(pageable)
+                .map(reservationMapper::toDto);
     }
 }
