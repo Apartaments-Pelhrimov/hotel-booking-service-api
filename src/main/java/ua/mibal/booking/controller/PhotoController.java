@@ -41,9 +41,15 @@ public class PhotoController {
 
     @RolesAllowed("USER")
     @PutMapping("/users/me/photo")
-    public String changeUserPhoto(@RequestParam("file") MultipartFile file,
-                                  Authentication authentication) {
+    public String changeMyPhoto(@RequestParam("file") MultipartFile file,
+                                Authentication authentication) {
         return photoStorageService.setUserPhoto(authentication.getName(), file);
+    }
+
+    @RolesAllowed("USER")
+    @DeleteMapping("/users/me/photo")
+    public void deleteMyPhoto(Authentication authentication) {
+        photoStorageService.deleteUserPhoto(authentication.getName());
     }
 
     @RolesAllowed("MANAGER")
