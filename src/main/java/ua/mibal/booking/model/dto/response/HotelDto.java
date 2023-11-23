@@ -19,7 +19,6 @@ package ua.mibal.booking.model.dto.response;
 import ua.mibal.booking.model.entity.embeddable.AdditionalInfo;
 import ua.mibal.booking.model.entity.embeddable.HotelOptions;
 import ua.mibal.booking.model.entity.embeddable.Location;
-import ua.mibal.booking.model.entity.embeddable.Photo;
 
 import java.util.Set;
 
@@ -29,7 +28,7 @@ import java.util.Set;
  */
 public record HotelDto(
         String name,
-        Set<Photo> photos,
+        Set<String> photos,
         HotelOptions options,
         Location location,
         AdditionalInfo info,

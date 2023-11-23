@@ -21,7 +21,6 @@ import ua.mibal.booking.model.entity.embeddable.ApartmentOptions;
 import ua.mibal.booking.model.entity.embeddable.Bed;
 import ua.mibal.booking.model.entity.embeddable.HotelOptions;
 import ua.mibal.booking.model.entity.embeddable.Location;
-import ua.mibal.booking.model.entity.embeddable.Photo;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -33,7 +32,7 @@ import java.util.Set;
  */
 public record ApartmentDto(
         String name,
-        Set<Photo> photos,
+        Set<String> photos,
         ApartmentOptions options,
         ApartmentHotelDto hotel,
         Float rating,

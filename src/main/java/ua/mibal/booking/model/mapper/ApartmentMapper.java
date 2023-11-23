@@ -27,7 +27,8 @@ import ua.mibal.booking.model.entity.Apartment;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
-@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+@Mapper(uses = PhotoMapper.class,
+        componentModel = MappingConstants.ComponentModel.SPRING)
 public interface ApartmentMapper {
 
     ApartmentDto toDto(Apartment apartment);
