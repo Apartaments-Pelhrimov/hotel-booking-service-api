@@ -37,24 +37,22 @@ import ua.mibal.booking.service.UserService;
  */
 @RequiredArgsConstructor
 @RestController
+@RolesAllowed("USER")
 @RequestMapping("/api/users")
 public class UserController {
     private final UserService userService;
 
-    @RolesAllowed("USER")
     @GetMapping("/me")
     public UserDto getMe(Authentication authentication) {
         return userService.getOneByAuthentication(authentication);
     }
 
-    @RolesAllowed("USER")
     @DeleteMapping("/me")
     public void deleteMe(@RequestBody DeleteMeDto deleteMeDto,
                          Authentication authentication) {
         userService.deleteByAuthenticaiton(deleteMeDto, authentication);
     }
 
-    @RolesAllowed("USER")
     @PutMapping("/me/password")
     public void changePassword(@Valid @RequestBody ChangePasswordDto changePasswordDto,
                                Authentication authentication) {
