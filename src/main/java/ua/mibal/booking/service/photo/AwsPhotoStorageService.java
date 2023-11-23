@@ -28,11 +28,12 @@ import ua.mibal.booking.repository.ApartmentRepository;
 import ua.mibal.booking.repository.HotelRepository;
 import ua.mibal.booking.repository.UserRepository;
 import ua.mibal.booking.service.util.AwsUrlUtils;
-import ua.mibal.booking.service.util.FileNameUtils;
 
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+
+import static ua.mibal.booking.service.util.FileNameUtils.getPhotoExtension;
 
 /**
  * @author Mykhailo Balakhon
@@ -49,8 +50,12 @@ public class AwsPhotoStorageService implements PhotoStorageService {
     @Transactional
     @Override
     public String setUserPhoto(String email, MultipartFile photo) {
-        PhotoExtension photoExtension = FileNameUtils.getPhotoExtension(photo.getOriginalFilename());
-        String encodedLink = perform(aws -> aws.uploadImage("users/", email, photo.getBytes(), photoExtension));
+        String encodedLink = perform(aws -> aws.uploadImage(
+                "users/",
+                email,
+                photo.getBytes(),
+                getPhotoExtension(photo.getOriginalFilename())
+        ));
         String link = URLDecoder.decode(encodedLink, StandardCharsets.UTF_8);
         userRepository.updateUserPhotoByEmail(new Photo(link), email);
         return link;
@@ -66,10 +71,14 @@ public class AwsPhotoStorageService implements PhotoStorageService {
     @Transactional
     @Override
     public String saveHotelPhoto(Long id, MultipartFile photo) {
-        String fileName = photo.getOriginalFilename();
-        PhotoExtension photoExtension = FileNameUtils.getPhotoExtension(fileName);
         Hotel hotel = getHotelById(id);
-        String encodedLink = perform(aws -> aws.uploadImage("hotels/", fileName, photo.getBytes(), photoExtension));
+        String fileName = photo.getOriginalFilename();
+        String encodedLink = perform(aws -> aws.uploadImage(
+                "hotels/",
+                fileName,
+                photo.getBytes(),
+                getPhotoExtension(fileName)
+        ));
         String link = URLDecoder.decode(encodedLink, StandardCharsets.UTF_8);
         hotel.addPhoto(new Photo(link));
         return link;
@@ -89,10 +98,14 @@ public class AwsPhotoStorageService implements PhotoStorageService {
     @Transactional
     @Override
     public String saveApartmentPhoto(Long id, MultipartFile photo) {
-        String fileName = photo.getOriginalFilename();
-        PhotoExtension photoExtension = FileNameUtils.getPhotoExtension(fileName);
         Apartment apartment = getApartmentById(id);
-        String encodedLink = perform(aws -> aws.uploadImage("apartments/", fileName, photo.getBytes(), photoExtension));
+        String fileName = photo.getOriginalFilename();
+        String encodedLink = perform(aws -> aws.uploadImage(
+                "apartments/",
+                fileName,
+                photo.getBytes(),
+                getPhotoExtension(fileName)
+        ));
         String link = URLDecoder.decode(encodedLink, StandardCharsets.UTF_8);
         apartment.addPhoto(new Photo(link));
         return link;
