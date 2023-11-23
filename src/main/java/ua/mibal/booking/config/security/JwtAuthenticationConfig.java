@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.config;
+package ua.mibal.booking.config.security;
 
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
@@ -41,7 +41,7 @@ import ua.mibal.booking.config.properties.RsaProperties;
 @RequiredArgsConstructor
 @Configuration
 @EnableConfigurationProperties(RsaProperties.class)
-public class JwtSecurityConfig {
+public class JwtAuthenticationConfig {
     private final RsaProperties rsaProperties;
 
     @Bean
