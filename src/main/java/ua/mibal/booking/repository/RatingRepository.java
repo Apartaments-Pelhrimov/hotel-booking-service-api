@@ -34,17 +34,17 @@ public class RatingRepository {
     @Transactional
     public void updateRatings() {
         entityManager.createQuery("""
-                        update Apartment a
+                        update ApartmentType a
                             SET a.rating = (
                                 select avg(c.rate) from Comment c
-                                where c.apartment.id = a.id)
+                                where c.apartmentType.id = a.id)
                         """)
                 .executeUpdate();
         entityManager.createQuery("""
                         update Hotel h
                             SET h.rating = (
                                 select avg(a.rating)
-                                from Apartment a
+                                from ApartmentType a
                                 where a.hotel.id = h.id and
                                 a.rating != null)
                         """)

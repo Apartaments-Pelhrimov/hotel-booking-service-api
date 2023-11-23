@@ -18,40 +18,40 @@ package ua.mibal.booking.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import ua.mibal.booking.model.entity.Apartment;
+import ua.mibal.booking.model.entity.ApartmentType;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-public interface ApartmentRepository extends JpaRepository<Apartment, Long> {
+public interface ApartmentRepository extends JpaRepository<ApartmentType, Long> {
 
     @Query("""
-            select a from Apartment a
+            select a from ApartmentType a
                 left join fetch a.hotel
                 left join fetch a.photos
             where a.id = ?1
             """)
-    Optional<Apartment> findByIdFetchPhotosHotel(Long id);
+    Optional<ApartmentType> findByIdFetchPhotosHotel(Long id);
 
     @Query("""
             select (r = null or r.details.reservedTo < ?2 or r.details.reservedFrom > ?3)
-            from Apartment a
+            from ApartmentType a
                 left join a.reservations r
             where a.id = ?1
             """)
     Optional<Boolean> isFreeForRangeById(Long id, LocalDate from, LocalDate to);
 
     @Query("""
-            select a from Apartment a
+            select a from ApartmentType a
                 left join fetch a.photos
             """)
-    List<Apartment> findAllFetchPhotos();
+    List<ApartmentType> findAllFetchPhotos();
 
     @Query("""
-            select a from Apartment a
+            select a from ApartmentType a
                 left join fetch a.photos
             where a.id = ?1
             """)
-    Optional<Apartment> findByIdFetchPhotos(Long id);
+    Optional<ApartmentType> findByIdFetchPhotos(Long id);
 }

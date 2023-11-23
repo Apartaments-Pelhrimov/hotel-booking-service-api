@@ -127,7 +127,7 @@ public class Hotel {
 
     @OneToMany(mappedBy = "hotel")
     @Setter(PRIVATE)
-    private List<Apartment> apartments = new ArrayList<>();
+    private List<ApartmentType> apartmentTypes = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(
@@ -169,15 +169,15 @@ public class Hotel {
         return this.photos.remove(photo);
     }
 
-    public void addApartment(Apartment apartment) {
-        apartment.setHotel(this);
-        this.apartments.add(apartment);
+    public void addApartmentType(ApartmentType apartmentType) {
+        apartmentType.setHotel(this);
+        this.apartmentTypes.add(apartmentType);
     }
 
-    public void deleteApartment(Apartment apartment) {
-        if (this.apartments.contains(apartment)) {
-            this.apartments.remove(apartment);
-            apartment.setHotel(null);
+    public void deleteApartmentType(ApartmentType apartmentType) {
+        if (this.apartmentTypes.contains(apartmentType)) {
+            this.apartmentTypes.remove(apartmentType);
+            apartmentType.setHotel(null);
         }
     }
 

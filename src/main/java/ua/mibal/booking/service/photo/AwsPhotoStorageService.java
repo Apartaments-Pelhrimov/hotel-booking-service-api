@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import ua.mibal.booking.model.entity.Apartment;
+import ua.mibal.booking.model.entity.ApartmentType;
 import ua.mibal.booking.model.entity.Hotel;
 import ua.mibal.booking.model.entity.embeddable.Photo;
 import ua.mibal.booking.repository.ApartmentRepository;
@@ -98,7 +98,7 @@ public class AwsPhotoStorageService implements PhotoStorageService {
     @Transactional
     @Override
     public String saveApartmentPhoto(Long id, MultipartFile photo) {
-        Apartment apartment = getApartmentById(id);
+        ApartmentType apartmentType = getApartmentById(id);
         String fileName = photo.getOriginalFilename();
         String encodedLink = perform(aws -> aws.uploadImage(
                 "apartments/",
@@ -107,15 +107,15 @@ public class AwsPhotoStorageService implements PhotoStorageService {
                 getPhotoExtension(fileName)
         ));
         String link = URLDecoder.decode(encodedLink, StandardCharsets.UTF_8);
-        apartment.addPhoto(new Photo(link));
+        apartmentType.addPhoto(new Photo(link));
         return link;
     }
 
     @Transactional
     @Override
     public void deleteApartmentPhoto(Long id, String link) {
-        Apartment apartment = getApartmentById(id);
-        if (!apartment.deletePhoto(new Photo(link)))
+        ApartmentType apartmentType = getApartmentById(id);
+        if (!apartmentType.deletePhoto(new Photo(link)))
             throw new IllegalArgumentException(
                     "Apartment with id=" + id + " doesn't contain photo='" + link + "'");
         String name = AwsUrlUtils.getFileName(link);
@@ -127,7 +127,7 @@ public class AwsPhotoStorageService implements PhotoStorageService {
                 .orElseThrow(() -> new EntityNotFoundException("Entity Hotel by id=" + id + " not found"));
     }
 
-    private Apartment getApartmentById(Long id) {
+    private ApartmentType getApartmentById(Long id) {
         return apartmentRepository.findByIdFetchPhotos(id)
                 .orElseThrow(() -> new EntityNotFoundException("Entity Apartment by id=" + id + " not found"));
     }

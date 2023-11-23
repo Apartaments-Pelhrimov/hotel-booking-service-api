@@ -61,10 +61,10 @@ import static lombok.AccessLevel.PRIVATE;
 @Setter
 @Entity
 @Table(
-        name = "apartments",
-        indexes = @Index(name = "apartments_hotel_id_idx", columnList = "hotel_id")
+        name = "apartment_types",
+        indexes = @Index(name = "apartment_types_hotel_id_idx", columnList = "hotel_id")
 )
-public class Apartment {
+public class ApartmentType {
 
     @Id
     @GeneratedValue
@@ -96,17 +96,17 @@ public class Apartment {
     @JoinColumn(
             name = "hotel_id",
             nullable = false,
-            foreignKey = @ForeignKey(name = "apartments_hotel_id_fk"))
+            foreignKey = @ForeignKey(name = "apartment_types_hotel_id_fk"))
     private Hotel hotel;
 
     @ElementCollection
     @BatchSize(size = 100)
     @CollectionTable(
-            name = "apartment_photos",
+            name = "apartment_type_photos",
             joinColumns = @JoinColumn(
-                    name = "apartment_id",
+                    name = "apartment_type_id",
                     nullable = false,
-                    foreignKey = @ForeignKey(name = "apartment_photos_apartment_id_fk")
+                    foreignKey = @ForeignKey(name = "apartment_type_photos_apartment_type_id_fk")
             ),
             uniqueConstraints = @UniqueConstraint(
                     columnNames = "photoLink"
@@ -117,11 +117,11 @@ public class Apartment {
     @ElementCollection
     @BatchSize(size = 100)
     @CollectionTable(
-            name = "apartment_beds",
+            name = "apartment_type_beds",
             joinColumns = @JoinColumn(
-                    name = "apartment_id",
+                    name = "apartment_type_id",
                     nullable = false,
-                    foreignKey = @ForeignKey(name = "apartment_beds_apartment_id_fk")
+                    foreignKey = @ForeignKey(name = "apartment_type_beds_apartment_type_id_fk")
             ))
     @Setter(PRIVATE)
     private List<Bed> beds = new ArrayList<>();
@@ -129,55 +129,55 @@ public class Apartment {
     @ElementCollection
     @BatchSize(size = 100)
     @CollectionTable(
-            name = "apartment_turning_off_times",
+            name = "apartment_type_turning_off_times",
             joinColumns = @JoinColumn(
-                    name = "apartment_id",
+                    name = "apartment_type_id",
                     nullable = false,
-                    foreignKey = @ForeignKey(name = "apartment_turning_off_times_apartment_id_fk")
+                    foreignKey = @ForeignKey(name = "apartment_type_turning_off_times_apartment_type_id_fk")
             ),
             indexes = @Index(
-                    name = "apartment_turning_off_times_apartment_id_idx",
-                    columnList = "apartment_id"
+                    name = "apartment_type_turning_off_times_apartment_type_id_idx",
+                    columnList = "apartment_type_id"
             ))
     @Setter(PRIVATE)
     private List<TurningOffTime> turningOffTimes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "apartment")
+    @OneToMany(mappedBy = "apartmentType")
     @Setter(PRIVATE)
     private List<Reservation> reservations = new ArrayList<>();
 
-    @OneToMany(mappedBy = "apartment")
+    @OneToMany(mappedBy = "apartmentType")
     @Setter(PRIVATE)
     private List<Comment> comments = new ArrayList<>();
 
     public void addReservation(Reservation reservation) {
-        reservation.setApartment(this);
+        reservation.setApartmentType(this);
         this.reservations.add(reservation);
     }
 
     public void removeReservation(Reservation reservation) {
         if (this.reservations.contains(reservation)) {
             this.reservations.remove(reservation);
-            reservation.setApartment(null);
+            reservation.setApartmentType(null);
         }
     }
 
     public void addComment(Comment comment) {
-        comment.setApartment(this);
+        comment.setApartmentType(this);
         this.comments.add(comment);
     }
 
     public void removeComment(Comment comment) {
         if (this.comments.contains(comment)) {
             this.comments.remove(comment);
-            comment.setApartment(null);
+            comment.setApartmentType(null);
         }
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Apartment that)) return false;
+        if (!(o instanceof ApartmentType that)) return false;
         return id != null && id.equals(that.id);
     }
 
