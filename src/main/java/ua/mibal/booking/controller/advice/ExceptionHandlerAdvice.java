@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import software.amazon.awssdk.core.exception.SdkException;
 import ua.mibal.booking.model.exception.EmailAlreadyExistsException;
 import ua.mibal.booking.model.exception.IllegalPasswordException;
+import ua.mibal.booking.model.exception.IllegalPhotoFormatException;
 
 import java.time.ZonedDateTime;
 import java.util.stream.Collectors;
@@ -59,7 +60,13 @@ public class ExceptionHandlerAdvice {
                 .body(new ApiError(status, e));
     }
 
-    @ExceptionHandler({IllegalArgumentException.class, EmailAlreadyExistsException.class, IllegalPasswordException.class, SdkException.class})
+    @ExceptionHandler({
+            IllegalArgumentException.class,
+            EmailAlreadyExistsException.class,
+            IllegalPasswordException.class,
+            IllegalPhotoFormatException.class,
+            SdkException.class
+    })
     public ResponseEntity<ApiError> handleEmailAlreadyExistsException(RuntimeException e) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         return ResponseEntity.status(status)

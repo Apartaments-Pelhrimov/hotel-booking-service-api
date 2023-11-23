@@ -40,16 +40,16 @@ public class AwsStorage {
         this.bucketName = awsProps.bucketName();
     }
 
-    public String uploadImage(String folder, String name, byte[] image) {
-        uploadPngImage(folder, name, image);
+    public String uploadImage(String folder, String name, byte[] image, PhotoExtension photoExtension) {
+        upload(folder, name, image, photoExtension);
         return getLink(folder, name);
     }
 
-    private void uploadPngImage(String folder, String name, byte[] file) {
+    private void upload(String folder, String name, byte[] file, PhotoExtension photoExtension) {
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
                 .key(folder + name)
-                .contentType("image/png")
+                .contentType("image/" + photoExtension.getExtension())
                 .build();
         s3Client.putObject(putObjectRequest, fromBytes(file));
     }

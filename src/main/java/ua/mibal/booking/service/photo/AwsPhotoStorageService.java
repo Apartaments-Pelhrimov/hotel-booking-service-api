@@ -28,6 +28,7 @@ import ua.mibal.booking.repository.ApartmentRepository;
 import ua.mibal.booking.repository.HotelRepository;
 import ua.mibal.booking.repository.UserRepository;
 import ua.mibal.booking.service.util.AwsUrlUtils;
+import ua.mibal.booking.service.util.FileNameUtils;
 
 import java.io.IOException;
 import java.net.URLDecoder;
@@ -48,7 +49,8 @@ public class AwsPhotoStorageService implements PhotoStorageService {
     @Transactional
     @Override
     public String setUserPhoto(String email, MultipartFile photo) {
-        String encodedLink = perform(aws -> aws.uploadImage("users/", email, photo.getBytes()));
+        PhotoExtension photoExtension = FileNameUtils.getPhotoExtension(photo.getOriginalFilename());
+        String encodedLink = perform(aws -> aws.uploadImage("users/", email, photo.getBytes(), photoExtension));
         String link = URLDecoder.decode(encodedLink, StandardCharsets.UTF_8);
         userRepository.updateUserPhotoByEmail(new Photo(link), email);
         return link;
@@ -64,9 +66,10 @@ public class AwsPhotoStorageService implements PhotoStorageService {
     @Transactional
     @Override
     public String saveHotelPhoto(Long id, MultipartFile photo) {
+        String fileName = photo.getOriginalFilename();
+        PhotoExtension photoExtension = FileNameUtils.getPhotoExtension(fileName);
         Hotel hotel = getHotelById(id);
-        String name = photo.getOriginalFilename();
-        String encodedLink = perform(aws -> aws.uploadImage("hotels/", name, photo.getBytes()));
+        String encodedLink = perform(aws -> aws.uploadImage("hotels/", fileName, photo.getBytes(), photoExtension));
         String link = URLDecoder.decode(encodedLink, StandardCharsets.UTF_8);
         hotel.addPhoto(new Photo(link));
         return link;
@@ -86,9 +89,10 @@ public class AwsPhotoStorageService implements PhotoStorageService {
     @Transactional
     @Override
     public String saveApartmentPhoto(Long id, MultipartFile photo) {
+        String fileName = photo.getOriginalFilename();
+        PhotoExtension photoExtension = FileNameUtils.getPhotoExtension(fileName);
         Apartment apartment = getApartmentById(id);
-        String name = photo.getOriginalFilename();
-        String encodedLink = perform(aws -> aws.uploadImage("apartments/", name, photo.getBytes()));
+        String encodedLink = perform(aws -> aws.uploadImage("apartments/", fileName, photo.getBytes(), photoExtension));
         String link = URLDecoder.decode(encodedLink, StandardCharsets.UTF_8);
         apartment.addPhoto(new Photo(link));
         return link;
