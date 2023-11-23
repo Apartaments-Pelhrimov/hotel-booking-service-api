@@ -39,7 +39,6 @@ import lombok.Setter;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.type.NumericBooleanConverter;
 import ua.mibal.booking.model.entity.embeddable.ApartmentOptions;
-import ua.mibal.booking.model.entity.embeddable.Bed;
 import ua.mibal.booking.model.entity.embeddable.Photo;
 import ua.mibal.booking.model.entity.embeddable.TurningOffTime;
 
@@ -74,9 +73,6 @@ public class ApartmentType {
     private String name;
 
     @Column(nullable = false)
-    private Integer rooms;
-
-    @Column(nullable = false)
     private BigDecimal cost;
 
     @Embedded
@@ -85,9 +81,6 @@ public class ApartmentType {
     @Convert(converter = NumericBooleanConverter.class)
     @Column(nullable = false)
     private Boolean published = false;
-
-    @Column(nullable = false)
-    private Integer size;
 
     @Column
     private Double rating;
@@ -114,17 +107,9 @@ public class ApartmentType {
     @Setter(PRIVATE)
     private Set<Photo> photos = new HashSet<>();
 
-    @ElementCollection
-    @BatchSize(size = 100)
-    @CollectionTable(
-            name = "apartment_type_beds",
-            joinColumns = @JoinColumn(
-                    name = "apartment_type_id",
-                    nullable = false,
-                    foreignKey = @ForeignKey(name = "apartment_type_beds_apartment_type_id_fk")
-            ))
+    @OneToMany(mappedBy = "apartmentType")
     @Setter(PRIVATE)
-    private List<Bed> beds = new ArrayList<>();
+    private List<Room> rooms = new ArrayList<>();
 
     @ElementCollection
     @BatchSize(size = 100)

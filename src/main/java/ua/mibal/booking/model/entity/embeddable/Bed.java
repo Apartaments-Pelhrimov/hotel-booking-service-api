@@ -17,13 +17,13 @@
 package ua.mibal.booking.model.entity.embeddable;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.type.NumericBooleanConverter;
 
 /**
  * @author Mykhailo Balakhon
@@ -39,7 +39,11 @@ public class Bed {
     @Column(nullable = false)
     private Integer size;
 
-    @Convert(converter = NumericBooleanConverter.class)
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Boolean bunk;
+    private BedType type;
+
+    public enum BedType {
+        BUNK, CONNECTED, TRANSFORMER
+    }
 }
