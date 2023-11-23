@@ -109,12 +109,12 @@ public class AwsPhotoStorageService implements PhotoStorageService {
         perform(aws -> aws.delete("apartments/", name));
     }
 
-    public Hotel getHotelById(Long id) {
+    private Hotel getHotelById(Long id) {
         return hotelRepository.findByIdFetchPhotos(id)
                 .orElseThrow(() -> new EntityNotFoundException("Entity Hotel by id=" + id + " not found"));
     }
 
-    public Apartment getApartmentById(Long id) {
+    private Apartment getApartmentById(Long id) {
         return apartmentRepository.findByIdFetchPhotos(id)
                 .orElseThrow(() -> new EntityNotFoundException("Entity Apartment by id=" + id + " not found"));
     }
