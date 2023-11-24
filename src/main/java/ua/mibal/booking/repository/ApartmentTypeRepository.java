@@ -35,14 +35,6 @@ public interface ApartmentRepository extends JpaRepository<ApartmentType, Long> 
     Optional<ApartmentType> findByIdFetchPhotosHotel(Long id);
 
     @Query("""
-            select (r = null or r.details.reservedTo < ?2 or r.details.reservedFrom > ?3)
-            from ApartmentType a
-                left join a.reservations r
-            where a.id = ?1
-            """)
-    Optional<Boolean> isFreeForRangeById(Long id, LocalDate from, LocalDate to);
-
-    @Query("""
             select a from ApartmentType a
                 left join fetch a.photos
             """)

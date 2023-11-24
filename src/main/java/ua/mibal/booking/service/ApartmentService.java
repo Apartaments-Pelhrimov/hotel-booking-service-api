@@ -46,13 +46,6 @@ public class ApartmentService {
                 .orElseThrow(() -> new EntityNotFoundException("Entity Apartment by id=" + id + " not found"));
     }
 
-    public FreeApartmentDto isFree(Long id, DateRangeRequest request) {
-        return apartmentRepository
-                .isFreeForRangeById(id, request.getFrom(), request.getTo())
-                .map(apartmentMapper::toFreeDto)
-                .orElseThrow(() -> new EntityNotFoundException("Entity Apartment by id=" + id + " not found"));
-    }
-
     @Transactional(readOnly = true) // for LAZY Apartment.beds fetch
     public List<ApartmentCardDto> getAll() {
         return apartmentRepository.findAllFetchPhotos()
