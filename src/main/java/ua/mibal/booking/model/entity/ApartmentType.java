@@ -41,7 +41,6 @@ import org.hibernate.type.NumericBooleanConverter;
 import ua.mibal.booking.model.entity.embeddable.ApartmentOptions;
 import ua.mibal.booking.model.entity.embeddable.Photo;
 import ua.mibal.booking.model.entity.embeddable.Price;
-import ua.mibal.booking.model.entity.embeddable.TurningOffTime;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -129,39 +128,23 @@ public class ApartmentType {
     @Setter(PRIVATE)
     private List<Room> rooms = new ArrayList<>();
 
-    @ElementCollection
-    @BatchSize(size = 100)
-    @CollectionTable(
-            name = "apartment_type_turning_off_times",
-            joinColumns = @JoinColumn(
-                    name = "apartment_type_id",
-                    nullable = false,
-                    foreignKey = @ForeignKey(name = "apartment_type_turning_off_times_apartment_type_id_fk")
-            ),
-            indexes = @Index(
-                    name = "apartment_type_turning_off_times_apartment_type_id_idx",
-                    columnList = "apartment_type_id"
-            ))
-    @Setter(PRIVATE)
-    private List<TurningOffTime> turningOffTimes = new ArrayList<>();
-
     @OneToMany(mappedBy = "apartmentType")
     @Setter(PRIVATE)
-    private List<Reservation> reservations = new ArrayList<>();
+    private List<Apartment> apartments = new ArrayList<>();
 
     @OneToMany(mappedBy = "apartmentType")
     @Setter(PRIVATE)
     private List<Comment> comments = new ArrayList<>();
 
-    public void addReservation(Reservation reservation) {
-        reservation.setApartmentType(this);
-        this.reservations.add(reservation);
+    public void addApartment(Apartment apartment) {
+        apartment.setApartmentType(this);
+        this.apartments.add(apartment);
     }
 
-    public void removeReservation(Reservation reservation) {
-        if (this.reservations.contains(reservation)) {
-            this.reservations.remove(reservation);
-            reservation.setApartmentType(null);
+    public void removeApartment(Apartment apartment) {
+        if (this.apartments.contains(apartment)) {
+            this.apartments.remove(apartment);
+            apartment.setApartmentType(null);
         }
     }
 

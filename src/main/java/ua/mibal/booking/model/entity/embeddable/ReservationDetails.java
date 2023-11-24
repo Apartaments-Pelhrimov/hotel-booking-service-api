@@ -18,6 +18,7 @@ package ua.mibal.booking.model.entity.embeddable;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.Embedded;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -46,9 +47,6 @@ public class ReservationDetails {
     @Column(nullable = false)
     private BigDecimal fullCost;
 
-    @Column(nullable = false)
-    private Integer adults;
-
-    @Column(nullable = false)
-    private Integer children;
+    @Embedded
+    private Price price;
 }
