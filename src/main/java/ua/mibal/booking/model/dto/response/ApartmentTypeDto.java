@@ -14,25 +14,37 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.dto.search;
+package ua.mibal.booking.model.dto.response;
 
+import ua.mibal.booking.model.entity.embeddable.AdditionalInfo;
 import ua.mibal.booking.model.entity.embeddable.ApartmentOptions;
 import ua.mibal.booking.model.entity.embeddable.Bed;
-import ua.mibal.booking.model.entity.embeddable.Photo;
+import ua.mibal.booking.model.entity.embeddable.HotelOptions;
+import ua.mibal.booking.model.entity.embeddable.Location;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
-public record ApartmentCardDto(
+public record ApartmentTypeDto(
         String name,
-        List<Photo> photos,
+        Set<String> photos,
         ApartmentOptions options,
-        Double rating,
+        ApartmentHotelDto hotel,
+        Float rating,
         List<Bed> beds,
         BigDecimal cost
 ) {
+    public record ApartmentHotelDto(
+            String name,
+            HotelOptions options,
+            Location location,
+            AdditionalInfo info,
+            Integer stars
+    ) {
+    }
 }

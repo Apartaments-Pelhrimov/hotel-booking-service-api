@@ -24,7 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ua.mibal.booking.model.entity.ApartmentType;
 import ua.mibal.booking.model.entity.Hotel;
 import ua.mibal.booking.model.entity.embeddable.Photo;
-import ua.mibal.booking.repository.ApartmentRepository;
+import ua.mibal.booking.repository.ApartmentTypeRepository;
 import ua.mibal.booking.repository.HotelRepository;
 import ua.mibal.booking.repository.UserRepository;
 import ua.mibal.booking.service.util.AwsUrlUtils;
@@ -44,7 +44,7 @@ import static ua.mibal.booking.service.util.FileNameUtils.getPhotoExtension;
 public class AwsPhotoStorageService implements PhotoStorageService {
     private final UserRepository userRepository;
     private final HotelRepository hotelRepository;
-    private final ApartmentRepository apartmentRepository;
+    private final ApartmentTypeRepository apartmentTypeRepository;
     private final AwsStorage awsStorage;
 
     @Transactional
@@ -128,7 +128,7 @@ public class AwsPhotoStorageService implements PhotoStorageService {
     }
 
     private ApartmentType getApartmentById(Long id) {
-        return apartmentRepository.findByIdFetchPhotos(id)
+        return apartmentTypeRepository.findByIdFetchPhotos(id)
                 .orElseThrow(() -> new EntityNotFoundException("Entity Apartment by id=" + id + " not found"));
     }
 

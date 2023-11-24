@@ -18,9 +18,8 @@ package ua.mibal.booking.model.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
-import ua.mibal.booking.model.dto.response.ApartmentDto;
-import ua.mibal.booking.model.dto.response.FreeApartmentDto;
-import ua.mibal.booking.model.dto.search.ApartmentCardDto;
+import ua.mibal.booking.model.dto.response.ApartmentTypeDto;
+import ua.mibal.booking.model.dto.search.ApartmentTypeCardDto;
 import ua.mibal.booking.model.entity.ApartmentType;
 
 /**
@@ -31,9 +30,7 @@ import ua.mibal.booking.model.entity.ApartmentType;
         componentModel = MappingConstants.ComponentModel.SPRING)
 public interface ApartmentMapper {
 
-    ApartmentDto toDto(ApartmentType apartmentType);
+    ApartmentTypeDto toDto(ApartmentType apartmentType);
 
-    FreeApartmentDto toFreeDto(Boolean free);
-
-    ApartmentCardDto toCardDto(ApartmentType apartmentType);
+    ApartmentTypeCardDto toCardDto(ApartmentType apartmentType);
 }
