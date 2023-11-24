@@ -20,11 +20,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ua.mibal.booking.model.entity.ApartmentType;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-public interface ApartmentRepository extends JpaRepository<ApartmentType, Long> {
+public interface ApartmentTypeRepository extends JpaRepository<ApartmentType, Long> {
 
     @Query("""
             select a from ApartmentType a

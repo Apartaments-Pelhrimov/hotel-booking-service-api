@@ -21,11 +21,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.model.dto.response.ApartmentDto;
-import ua.mibal.booking.model.dto.response.FreeApartmentDto;
 import ua.mibal.booking.model.dto.search.ApartmentCardDto;
 import ua.mibal.booking.model.mapper.ApartmentMapper;
-import ua.mibal.booking.model.search.DateRangeRequest;
-import ua.mibal.booking.repository.ApartmentRepository;
+import ua.mibal.booking.repository.ApartmentTypeRepository;
 
 import java.util.List;
 
@@ -36,19 +34,19 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class ApartmentService {
-    private final ApartmentRepository apartmentRepository;
+    private final ApartmentTypeRepository apartmentTypeRepository;
     private final ApartmentMapper apartmentMapper;
 
     @Transactional(readOnly = true) // for LAZY Apartment.beds fetch
     public ApartmentDto getOne(Long id) {
-        return apartmentRepository.findByIdFetchPhotosHotel(id)
+        return apartmentTypeRepository.findByIdFetchPhotosHotel(id)
                 .map(apartmentMapper::toDto)
                 .orElseThrow(() -> new EntityNotFoundException("Entity Apartment by id=" + id + " not found"));
     }
 
     @Transactional(readOnly = true) // for LAZY Apartment.beds fetch
     public List<ApartmentCardDto> getAll() {
-        return apartmentRepository.findAllFetchPhotos()
+        return apartmentTypeRepository.findAllFetchPhotos()
                 .stream()
                 .map(apartmentMapper::toCardDto)
                 .toList();
