@@ -60,6 +60,6 @@ public class ActivationCode {
     private User user;
 
     @NaturalId
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 511)
     private String code;
 }
