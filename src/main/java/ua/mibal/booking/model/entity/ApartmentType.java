@@ -119,6 +119,7 @@ public class ApartmentType {
                     foreignKey = @ForeignKey(name = "apartment_type_photos_apartment_type_id_fk")
             ),
             uniqueConstraints = @UniqueConstraint(
+                    name = "apartment_type_photos_photo_link_uq",
                     columnNames = "photoLink"
             ))
     @Setter(PRIVATE)

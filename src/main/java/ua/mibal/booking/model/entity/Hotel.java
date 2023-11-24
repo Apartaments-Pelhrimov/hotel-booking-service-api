@@ -104,6 +104,7 @@ public class Hotel {
                     columnList = "hotel_id"
             ),
             uniqueConstraints = @UniqueConstraint(
+                    name = "hotel_photos_photo_link_uq",
                     columnNames = "photoLink"
             ))
     @Setter(PRIVATE)
