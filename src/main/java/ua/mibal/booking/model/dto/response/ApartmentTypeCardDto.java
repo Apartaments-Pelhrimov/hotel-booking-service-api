@@ -18,10 +18,10 @@ package ua.mibal.booking.model.dto.response;
 
 import ua.mibal.booking.model.entity.embeddable.ApartmentOptions;
 import ua.mibal.booking.model.entity.embeddable.Bed;
-import ua.mibal.booking.model.entity.embeddable.Photo;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Mykhailo Balakhon
@@ -29,7 +29,7 @@ import java.util.List;
  */
 public record ApartmentTypeCardDto(
         String name,
-        List<Photo> photos,
+        Set<String> photos,
         ApartmentOptions options,
         Double rating,
         List<Bed> beds,
