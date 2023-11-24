@@ -63,7 +63,7 @@ public class PhotoController {
     @PostMapping("/hotels/apartments/{id}/photos/upload")
     public String addApartmentPhoto(@PathVariable Long id,
                                     @RequestParam("file") MultipartFile file) {
-        return photoStorageService.saveApartmentPhoto(id, file);
+        return photoStorageService.saveApartmentTypePhoto(id, file);
     }
 
     @RolesAllowed("MANAGER")
@@ -77,6 +77,6 @@ public class PhotoController {
     @DeleteMapping("/hotels/apartments/{id}/photos")
     public void deleteApartmentPhoto(@PathVariable Long id,
                                      @RequestParam("link") String link) {
-        photoStorageService.deleteApartmentPhoto(id, link);
+        photoStorageService.deleteApartmentTypePhoto(id, link);
     }
 }

@@ -97,8 +97,8 @@ public class AwsPhotoStorageService implements PhotoStorageService {
 
     @Transactional
     @Override
-    public String saveApartmentPhoto(Long id, MultipartFile photo) {
-        ApartmentType apartmentType = getApartmentById(id);
+    public String saveApartmentTypePhoto(Long id, MultipartFile photo) {
+        ApartmentType apartmentType = getApartmentTypeById(id);
         String fileName = photo.getOriginalFilename();
         String encodedLink = perform(aws -> aws.uploadImage(
                 "apartments/",
@@ -113,8 +113,8 @@ public class AwsPhotoStorageService implements PhotoStorageService {
 
     @Transactional
     @Override
-    public void deleteApartmentPhoto(Long id, String link) {
-        ApartmentType apartmentType = getApartmentById(id);
+    public void deleteApartmentTypePhoto(Long id, String link) {
+        ApartmentType apartmentType = getApartmentTypeById(id);
         if (!apartmentType.deletePhoto(new Photo(link)))
             throw new IllegalArgumentException(
                     "Apartment with id=" + id + " doesn't contain photo='" + link + "'");
@@ -127,7 +127,7 @@ public class AwsPhotoStorageService implements PhotoStorageService {
                 .orElseThrow(() -> new EntityNotFoundException("Entity Hotel by id=" + id + " not found"));
     }
 
-    private ApartmentType getApartmentById(Long id) {
+    private ApartmentType getApartmentTypeById(Long id) {
         return apartmentTypeRepository.findByIdFetchPhotos(id)
                 .orElseThrow(() -> new EntityNotFoundException("Entity Apartment by id=" + id + " not found"));
     }

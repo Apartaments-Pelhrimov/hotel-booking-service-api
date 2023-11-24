@@ -30,9 +30,9 @@ public interface PhotoStorageService {
 
     String saveHotelPhoto(Long id, MultipartFile photo);
 
-    String saveApartmentPhoto(Long id, MultipartFile photo);
+    String saveApartmentTypePhoto(Long id, MultipartFile photo);
 
     void deleteHotelPhoto(Long id, String link);
 
-    void deleteApartmentPhoto(Long id, String link);
+    void deleteApartmentTypePhoto(Long id, String link);
 }
