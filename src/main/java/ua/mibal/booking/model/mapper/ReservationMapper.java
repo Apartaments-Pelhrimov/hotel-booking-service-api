@@ -31,7 +31,7 @@ import ua.mibal.booking.model.entity.Reservation;
 public interface ReservationMapper {
 
     @Mapping(target = "date", source = "dateTime")
-    @Mapping(target = "apartment.hotelName", source = "apartmentType.hotel.name")
-    @Mapping(target = "apartment.location", source = "apartmentType.hotel.location")
+    @Mapping(target = "apartment.hotelName", source = "apartment.apartmentType.hotel.name")
+    @Mapping(target = "apartment.location", source = "apartment.apartmentType.hotel.location")
     ReservationDto toDto(Reservation reservation);
 }
