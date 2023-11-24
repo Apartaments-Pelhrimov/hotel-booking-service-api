@@ -18,8 +18,8 @@ package ua.mibal.booking.model.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
+import ua.mibal.booking.model.dto.response.ApartmentTypeCardDto;
 import ua.mibal.booking.model.dto.response.ApartmentTypeDto;
-import ua.mibal.booking.model.dto.search.ApartmentTypeCardDto;
 import ua.mibal.booking.model.entity.ApartmentType;
 
 /**

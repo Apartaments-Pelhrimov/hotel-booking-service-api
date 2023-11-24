@@ -21,8 +21,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ua.mibal.booking.model.dto.response.ApartmentTypeCardDto;
 import ua.mibal.booking.model.dto.response.ApartmentTypeDto;
-import ua.mibal.booking.model.dto.search.ApartmentTypeCardDto;
 import ua.mibal.booking.service.ApartmentService;
 
 import java.util.List;

@@ -16,9 +16,23 @@
 
 package ua.mibal.booking.model.dto.response;
 
+import ua.mibal.booking.model.entity.embeddable.ApartmentOptions;
+import ua.mibal.booking.model.entity.embeddable.Bed;
+import ua.mibal.booking.model.entity.embeddable.Photo;
+
+import java.math.BigDecimal;
+import java.util.List;
+
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
-public record FreeApartmentDto(Boolean free) {
+public record ApartmentTypeCardDto(
+        String name,
+        List<Photo> photos,
+        ApartmentOptions options,
+        Double rating,
+        List<Bed> beds,
+        BigDecimal cost
+) {
 }

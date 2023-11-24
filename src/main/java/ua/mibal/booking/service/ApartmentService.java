@@ -20,8 +20,8 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ua.mibal.booking.model.dto.response.ApartmentTypeCardDto;
 import ua.mibal.booking.model.dto.response.ApartmentTypeDto;
-import ua.mibal.booking.model.dto.search.ApartmentTypeCardDto;
 import ua.mibal.booking.model.mapper.ApartmentMapper;
 import ua.mibal.booking.repository.ApartmentTypeRepository;
 
