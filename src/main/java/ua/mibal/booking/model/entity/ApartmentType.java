@@ -40,11 +40,12 @@ import org.hibernate.annotations.BatchSize;
 import org.hibernate.type.NumericBooleanConverter;
 import ua.mibal.booking.model.entity.embeddable.ApartmentOptions;
 import ua.mibal.booking.model.entity.embeddable.Photo;
+import ua.mibal.booking.model.entity.embeddable.Price;
 import ua.mibal.booking.model.entity.embeddable.TurningOffTime;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -72,8 +73,24 @@ public class ApartmentType {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
-    private BigDecimal cost;
+    @ElementCollection
+    @BatchSize(size = 100)
+    @CollectionTable(
+            name = "prices",
+            joinColumns = @JoinColumn(
+                    name = "apartment_type_id",
+                    nullable = false,
+                    foreignKey = @ForeignKey(name = "prices_apartment_type_id_fk")
+            ),
+            indexes = @Index(
+                    name = "prices_apartment_type_id_idx",
+                    columnList = "apartment_type_id"
+            ),
+            uniqueConstraints = @UniqueConstraint(
+                    name = "prices_apartment_type_id_and_person_uq",
+                    columnNames = {"apartment_type_id", "person"}
+            ))
+    private List<Price> prices = new LinkedList<>();
 
     @Embedded
     private ApartmentOptions options = ApartmentOptions.DEFAULT;
