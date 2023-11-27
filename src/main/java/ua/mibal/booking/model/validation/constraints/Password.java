@@ -20,15 +20,17 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
 @Pattern(
-        regexp = "^\\S{8,50}",
-        message = "must be longer than 8 and without space character"
+        regexp = "^(?=.*\\S)(?=.*\\d)[\\S\\d]{8,}$",
+        message = "must be longer than 8, without space character " +
+                  "and contain at least one letter and number"
 )
 @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
 @Retention(RUNTIME)
 @Constraint(validatedBy = {})
 public @interface Password {
 
-    String message() default "must be longer than 8 and without space character";
+    String message() default "must be longer than 8, without space character " +
+                             "and contain at least one letter and number";
 
     Class<?>[] groups() default {};
 
