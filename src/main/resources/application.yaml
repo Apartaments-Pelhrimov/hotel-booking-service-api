@@ -9,7 +9,7 @@ spring:
     open-in-view: false
     show-sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
 
 rsa:
   private-key: classpath:certs/private.pem
@@ -24,6 +24,6 @@ aws:
   region:
 
   bucket:
-    apartments-folder:
     name:
     users-folder:
+    apartments-folder:
