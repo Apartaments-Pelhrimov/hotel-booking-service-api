@@ -1,4 +1,4 @@
-package ua.mibal.booking.model.dto.request;
+package ua.mibal.booking.model.dto.auth;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
