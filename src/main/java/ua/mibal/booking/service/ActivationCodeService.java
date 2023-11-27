@@ -23,6 +23,8 @@ import ua.mibal.booking.model.entity.ActivationCode;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.repository.ActivationCodeRepository;
 
+import java.util.function.Consumer;
+
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
@@ -34,12 +36,10 @@ public class ActivationCodeService {
 
     @Transactional
     public void activateByCode(String activationCode) {
-        activationCodeRepository
-                .findByCodeFetchUser(activationCode)
-                .ifPresent(code -> {
-                    code.getUser().setEnabled(true);
-                    activationCodeRepository.delete(code);
-                });
+        performIfPresentByCode(activationCode, code -> {
+            code.getUser().setEnabled(true);
+            activationCodeRepository.delete(code);
+        });
     }
 
     public ActivationCode save(User user, String token) {
@@ -48,5 +48,19 @@ public class ActivationCodeService {
                 .code(token)
                 .build();
         return activationCodeRepository.save(activationCode);
+    }
+
+    @Transactional
+    public void changePasswordByCode(String activationCode, String password) {
+        performIfPresentByCode(activationCode, code -> {
+            code.getUser().setPassword(password);
+            activationCodeRepository.delete(code);
+        });
+    }
+
+    private void performIfPresentByCode(String activationCode, Consumer<ActivationCode> action) {
+        activationCodeRepository
+                .findByCodeFetchUser(activationCode)
+                .ifPresent(action::accept);
     }
 }

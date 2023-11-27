@@ -27,11 +27,15 @@ import ua.mibal.booking.model.entity.User;
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
 @Service
-public class ActivationCodeSendingService {
-    private final static Logger log = LoggerFactory.getLogger(ActivationCodeSendingService.class);
+public class EmailSendingService {
+    private final static Logger log = LoggerFactory.getLogger(EmailSendingService.class);
 
     public void sendActivationCode(User user, ActivationCode activationCode) {
         // TODO
-        log.info("Sent to email={} activationCode={}", user.getEmail(), activationCode.getCode());
+        log.info("Sent ActivationCode to email={} code={}", user.getEmail(), activationCode.getCode());
+    }
+
+    public void sendPasswordChangingCode(User user, ActivationCode activationCode) {
+        log.info("Sent PasswordChangingCode to email={} code={}", user.getEmail(), activationCode.getCode());
     }
 }

@@ -48,6 +48,11 @@ public class UserService {
                 .orElseThrow(() -> new EntityNotFoundException("Entity User by email=" + email + " not found"));
     }
 
+    public User getOneByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Entity User by email=" + email + " not found"));
+    }
+
     public boolean isExistsByEmail(String email) {
         return userRepository.existsByEmail(email);
     }

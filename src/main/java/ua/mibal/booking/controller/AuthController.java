@@ -19,6 +19,7 @@ package ua.mibal.booking.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ua.mibal.booking.model.dto.auth.AuthResponseDto;
 import ua.mibal.booking.model.dto.auth.RegistrationDto;
+import ua.mibal.booking.model.dto.request.ForgetPasswordDto;
 import ua.mibal.booking.service.AuthService;
 
 /**
@@ -51,5 +53,16 @@ public class AuthController {
     @PostMapping("/activate")
     public void activate(@RequestParam("code") String activationCode) {
         authService.activate(activationCode);
+    }
+
+    @GetMapping("/forget")
+    public void resetPassword(@RequestParam("email") String email) {
+        authService.restore(email);
+    }
+
+    @PostMapping("/forget/new")
+    public void newPassword(@RequestParam("code") String activationCode,
+                            @Valid @RequestBody ForgetPasswordDto forgetPasswordDto) {
+        authService.newPassword(activationCode, forgetPasswordDto);
     }
 }
