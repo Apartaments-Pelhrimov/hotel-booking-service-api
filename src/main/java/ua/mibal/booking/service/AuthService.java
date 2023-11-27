@@ -56,9 +56,9 @@ public class AuthService {
     public AuthResponseDto register(RegistrationDto registrationDto) {
         validateExistsEmail(registrationDto.email());
         User user = saveNewUserByRegistration(registrationDto);
-        String token = tokenService.generateToken(user);
-        ActivationCode activationCode = activationCodeService.save(user, token);
+        ActivationCode activationCode = activationCodeService.generateAndSaveCodeForUser(user);
         emailSendingService.sendActivationCode(user, activationCode);
+        String token = tokenService.generateToken(user);
         return userMapper.toAuthResponse(user, token);
     }
 
@@ -70,8 +70,7 @@ public class AuthService {
     public void restore(String email) {
         try {
             User user = userService.getOneByEmail(email);
-            String token = tokenService.generateToken(user);
-            ActivationCode activationCode = activationCodeService.save(user, token);
+            ActivationCode activationCode = activationCodeService.generateAndSaveCodeForUser(user);
             emailSendingService.sendPasswordChangingCode(user, activationCode);
         } catch (EntityNotFoundException ignored) {
         }

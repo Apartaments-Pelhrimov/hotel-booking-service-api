@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.model.entity.ActivationCode;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.repository.ActivationCodeRepository;
+import ua.mibal.booking.service.security.CodeGenerationService;
 
 import java.util.function.Consumer;
 
@@ -33,6 +34,7 @@ import java.util.function.Consumer;
 @Service
 public class ActivationCodeService {
     private final ActivationCodeRepository activationCodeRepository;
+    private final CodeGenerationService codeGenerationService;
 
     @Transactional
     public void activateByCode(String activationCode) {
@@ -40,14 +42,6 @@ public class ActivationCodeService {
             code.getUser().setEnabled(true);
             activationCodeRepository.delete(code);
         });
-    }
-
-    public ActivationCode save(User user, String token) {
-        ActivationCode activationCode = ActivationCode.builder()
-                .user(user)
-                .code(token)
-                .build();
-        return activationCodeRepository.save(activationCode);
     }
 
     @Transactional
@@ -62,5 +56,14 @@ public class ActivationCodeService {
         activationCodeRepository
                 .findByCodeFetchUser(activationCode)
                 .ifPresent(action::accept);
+    }
+
+    public ActivationCode generateAndSaveCodeForUser(User user) {
+        String code = codeGenerationService.generateCode();
+        ActivationCode activationCode = ActivationCode.builder()
+                .user(user)
+                .code(code)
+                .build();
+        return activationCodeRepository.save(activationCode);
     }
 }
