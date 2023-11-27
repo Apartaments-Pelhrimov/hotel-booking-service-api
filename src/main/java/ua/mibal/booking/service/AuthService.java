@@ -53,13 +53,11 @@ public class AuthService {
     }
 
     @Transactional
-    public AuthResponseDto register(RegistrationDto registrationDto) {
+    public void register(RegistrationDto registrationDto) {
         validateExistsEmail(registrationDto.email());
         User user = saveNewUserByRegistration(registrationDto);
         ActivationCode activationCode = activationCodeService.generateAndSaveCodeForUser(user);
         emailSendingService.sendActivationCode(user, activationCode);
-        String token = tokenService.generateToken(user);
-        return userMapper.toAuthResponse(user, token);
     }
 
     public void activate(String activationCode) {
