@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.validation;
+package ua.mibal.booking.model.validation.constraints;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
+import ua.mibal.booking.model.validation.DateRangeValidator;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
