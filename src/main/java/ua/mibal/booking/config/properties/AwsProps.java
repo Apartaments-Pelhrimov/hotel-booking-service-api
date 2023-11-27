@@ -28,6 +28,13 @@ public record AwsProps(
         String accessKeyId,
         String secretAccessKey,
         Region region,
-        String bucketName
+        AwsBucketProps bucket
 ) {
+    @ConfigurationProperties(prefix = "aws.bucket")
+    public record AwsBucketProps(
+            String name,
+            String usersFolder,
+            String apartmentsFolder
+    ) {
+    }
 }

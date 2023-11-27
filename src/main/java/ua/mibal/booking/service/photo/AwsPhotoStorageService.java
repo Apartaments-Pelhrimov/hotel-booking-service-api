@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import ua.mibal.booking.config.properties.AwsProps.AwsBucketProps;
 import ua.mibal.booking.model.entity.ApartmentType;
 import ua.mibal.booking.model.entity.embeddable.Photo;
 import ua.mibal.booking.repository.ApartmentTypeRepository;
@@ -43,12 +44,13 @@ public class AwsPhotoStorageService implements PhotoStorageService {
     private final UserRepository userRepository;
     private final ApartmentTypeRepository apartmentTypeRepository;
     private final AwsStorage awsStorage;
+    private final AwsBucketProps awsBucketProps;
 
     @Transactional
     @Override
     public String setUserPhoto(String email, MultipartFile photo) {
         String encodedLink = perform(aws -> aws.uploadImage(
-                "users/",
+                awsBucketProps.usersFolder(),
                 email,
                 photo.getBytes(),
                 getPhotoExtension(photo.getOriginalFilename())
@@ -61,7 +63,7 @@ public class AwsPhotoStorageService implements PhotoStorageService {
     @Transactional
     @Override
     public void deleteUserPhoto(String email) {
-        perform(aws -> aws.delete("users/", email));
+        perform(aws -> aws.delete(awsBucketProps.usersFolder(), email));
         userRepository.deleteUserPhotoByEmail(email);
     }
 
@@ -71,7 +73,7 @@ public class AwsPhotoStorageService implements PhotoStorageService {
         ApartmentType apartmentType = getApartmentTypeById(id);
         String fileName = photo.getOriginalFilename();
         String encodedLink = perform(aws -> aws.uploadImage(
-                "apartments/",
+                awsBucketProps.apartmentsFolder(),
                 fileName,
                 photo.getBytes(),
                 getPhotoExtension(fileName)
@@ -89,7 +91,7 @@ public class AwsPhotoStorageService implements PhotoStorageService {
             throw new IllegalArgumentException(
                     "Apartment with id=" + id + " doesn't contain photo='" + link + "'");
         String name = AwsUrlUtils.getFileName(link);
-        perform(aws -> aws.delete("apartments/", name));
+        perform(aws -> aws.delete(awsBucketProps.apartmentsFolder(), name));
     }
 
     private ApartmentType getApartmentTypeById(Long id) {

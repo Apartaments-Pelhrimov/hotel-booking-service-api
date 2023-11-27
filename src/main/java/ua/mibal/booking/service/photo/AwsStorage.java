@@ -16,13 +16,14 @@
 
 package ua.mibal.booking.service.photo;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.core.exception.SdkException;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetUrlRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-import ua.mibal.booking.config.properties.AwsProps;
+import ua.mibal.booking.config.properties.AwsProps.AwsBucketProps;
 
 import static software.amazon.awssdk.core.sync.RequestBody.fromBytes;
 
@@ -30,24 +31,26 @@ import static software.amazon.awssdk.core.sync.RequestBody.fromBytes;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
+@RequiredArgsConstructor
 @Service
 public class AwsStorage {
     private final S3Client s3Client;
-    private final String bucketName;
+    private final AwsBucketProps awsBucketProps;
 
-    public AwsStorage(S3Client s3Client, AwsProps awsProps) {
-        this.s3Client = s3Client;
-        this.bucketName = awsProps.bucketName();
-    }
-
-    public String uploadImage(String folder, String name, byte[] image, PhotoExtension photoExtension) {
+    public String uploadImage(String folder,
+                              String name,
+                              byte[] image,
+                              PhotoExtension photoExtension) {
         upload(folder, name, image, photoExtension);
         return getLink(folder, name);
     }
 
-    private void upload(String folder, String name, byte[] file, PhotoExtension photoExtension) {
+    private void upload(String folder,
+                        String name,
+                        byte[] file,
+                        PhotoExtension photoExtension) {
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-                .bucket(bucketName)
+                .bucket(awsBucketProps.name())
                 .key(folder + name)
                 .contentType("image/" + photoExtension.getExtension())
                 .build();
@@ -56,7 +59,7 @@ public class AwsStorage {
 
     private String getLink(String folder, String name) {
         GetUrlRequest getUrlRequest = GetUrlRequest.builder()
-                .bucket(bucketName)
+                .bucket(awsBucketProps.name())
                 .key(folder + name)
                 .build();
         return s3Client.utilities()
@@ -66,7 +69,7 @@ public class AwsStorage {
 
     public boolean delete(String folder, String name) {
         DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
-                .bucket(bucketName)
+                .bucket(awsBucketProps.name())
                 .key(folder + name)
                 .build();
         try {

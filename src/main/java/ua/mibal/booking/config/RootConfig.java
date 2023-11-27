@@ -30,7 +30,7 @@ import ua.mibal.booking.config.properties.AwsProps;
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
 @RequiredArgsConstructor
-@EnableConfigurationProperties(AwsProps.class)
+@EnableConfigurationProperties({AwsProps.class, AwsProps.AwsBucketProps.class})
 @Configuration
 public class RootConfig {
     private final AwsProps awsProps;
