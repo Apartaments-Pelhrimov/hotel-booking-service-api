@@ -28,17 +28,23 @@ import jakarta.validation.constraints.Size;
  */
 public record RegistrationDto(
 
-        @NotBlank
-        @Size(min = 3, max = 50)
-        String firstName,
-
-        @NotBlank
-        @Size(min = 3, max = 50)
-        String lastName,
+        @NotNull
+        @Pattern(
+                regexp = "^(\\p{L}){3,50}",
+                message = "must be legal name and should be longer than 3"
+        ) String firstName,
 
         @NotNull
-        @Pattern(regexp = "\\+([0-9]){10,15}$")
-        String phone,
+        @Pattern(
+                regexp = "^(\\p{L}){3,50}",
+                message = "must be legal name and should be longer than 3"
+        ) String lastName,
+
+        @NotNull
+        @Pattern(
+                regexp = "^\\+([0-9]){10,15}",
+                message = "must be valid phone"
+        ) String phone,
 
         @NotNull
         @Email
