@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ua.mibal.booking.model.dto.request.ChangeNotificationSettingsDto;
 import ua.mibal.booking.model.dto.request.ChangePasswordDto;
 import ua.mibal.booking.model.dto.request.ChangeUserDetailsDto;
 import ua.mibal.booking.model.dto.request.DeleteMeDto;
@@ -64,5 +65,11 @@ public class UserController {
     public void changeDetails(@Valid @RequestBody ChangeUserDetailsDto changeUserDetailsDto,
                               Authentication authentication) {
         userService.changeDetails(changeUserDetailsDto, authentication);
+    }
+
+    @PutMapping("/me/notifications")
+    public void changeNotificationSettings(@RequestBody ChangeNotificationSettingsDto changeNotificationSettingsDto,
+                                           Authentication authentication) {
+        userService.changeNotificationSettingsByAuthentication(changeNotificationSettingsDto, authentication);
     }
 }

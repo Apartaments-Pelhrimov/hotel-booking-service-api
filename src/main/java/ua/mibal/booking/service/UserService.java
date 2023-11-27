@@ -23,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.model.dto.auth.RegistrationDto;
+import ua.mibal.booking.model.dto.request.ChangeNotificationSettingsDto;
 import ua.mibal.booking.model.dto.request.ChangePasswordDto;
 import ua.mibal.booking.model.dto.request.ChangeUserDetailsDto;
 import ua.mibal.booking.model.dto.request.DeleteMeDto;
@@ -100,21 +101,26 @@ public class UserService {
     public void changeDetails(ChangeUserDetailsDto changeUserDetailsDto,
                               Authentication authentication) {
         User user = getOneByEmail(authentication.getName());
-        updatePartially(user, changeUserDetailsDto);
-    }
-
-    private void updatePartially(User user, ChangeUserDetailsDto changeUserDetailsDto) {
-        updateIfNotNull(of(
-                changeUserDetailsDto::firstName, user::setFirstName,
+        performIfNotNull(of(
+                (Supplier<String>) changeUserDetailsDto::firstName, user::setFirstName,
                 changeUserDetailsDto::lastName, user::setLastName,
                 changeUserDetailsDto::phone, phone -> user.setPhone(new Phone(phone))
         ));
     }
 
-    private void updateIfNotNull(Map<Supplier<String>, Consumer<String>> fieldsMap) {
+    @Transactional
+    public void changeNotificationSettingsByAuthentication(ChangeNotificationSettingsDto changeNotificationSettingsDto,
+                                                           Authentication authentication) {
+        User user = getOneByEmail(authentication.getName());
+        performIfNotNull(of(
+                (Supplier<Boolean>) changeNotificationSettingsDto::receiveOrderEmails, user.getNotificationSettings()::setReceiveOrderEmails,
+                changeNotificationSettingsDto::receiveNewsEmails, user.getNotificationSettings()::setReceiveNewsEmails
+        ));
+    }
+
+    private <T> void performIfNotNull(Map<Supplier<T>, Consumer<T>> fieldsMap) {
         fieldsMap.forEach((sup, con) ->
-                Optional.ofNullable(sup.get())
-                        .ifPresent(con)
+                Optional.ofNullable(sup.get()).ifPresent(con)
         );
     }
 }
