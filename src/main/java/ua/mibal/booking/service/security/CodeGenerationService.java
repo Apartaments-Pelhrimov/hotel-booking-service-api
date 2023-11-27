@@ -14,14 +14,10 @@ import java.util.Random;
 public class CodeGenerationService {
 
     private final static int CODE_LENGTH = 30;
-    private final static String ALLOWED_CHARS;
-
-    static {
-        ALLOWED_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
-                        "abcdefghijklmnopqrstuvwxyz" +
-                        "0123456789" +
-                        "-._~:/?#[]@!$&'()*+,;=";
-    }
+    private final static String ALLOWED_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+                                                "abcdefghijklmnopqrstuvwxyz" +
+                                                "0123456789" +
+                                                "-._~:/?#[]@!$&'()*+,;=";
 
     public String generateCode() {
         StringBuilder stringBuilder = new StringBuilder();

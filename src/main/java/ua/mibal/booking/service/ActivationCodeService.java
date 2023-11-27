@@ -55,7 +55,7 @@ public class ActivationCodeService {
     private void performIfPresentByCode(String activationCode, Consumer<ActivationCode> action) {
         activationCodeRepository
                 .findByCodeFetchUser(activationCode)
-                .ifPresent(action::accept);
+                .ifPresent(action);
     }
 
     public ActivationCode generateAndSaveCodeForUser(User user) {
