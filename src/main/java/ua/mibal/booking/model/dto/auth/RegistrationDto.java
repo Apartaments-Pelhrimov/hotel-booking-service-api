@@ -17,10 +17,8 @@
 package ua.mibal.booking.model.dto.auth;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 
 /**
  * @author Mykhailo Balakhon
@@ -50,8 +48,9 @@ public record RegistrationDto(
         @Email
         String email,
 
-        @NotBlank
-        @Size(min = 8, max = 100)
-        String password
+        @Pattern(
+                regexp = "^\\S{8,50}",
+                message = "must be longer than 8 and without space character"
+        ) String password
 ) {
 }

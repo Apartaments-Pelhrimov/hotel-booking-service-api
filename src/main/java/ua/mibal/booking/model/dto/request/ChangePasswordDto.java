@@ -16,8 +16,7 @@
 
 package ua.mibal.booking.model.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Pattern;
 
 /**
  * @author Mykhailo Balakhon
@@ -25,9 +24,10 @@ import jakarta.validation.constraints.Size;
  */
 public record ChangePasswordDto(
 
-        @NotBlank
-        @Size(min = 8, max = 100)
-        String newPassword,
+        @Pattern(
+                regexp = "^\\S{8,50}",
+                message = "must be longer than 8 and without space character"
+        ) String newPassword,
 
         String oldPassword
 ) {
