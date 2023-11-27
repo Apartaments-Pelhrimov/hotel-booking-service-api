@@ -8,6 +8,8 @@ servers:
 paths:
   /api/auth/login:
     post:
+      security:
+        - basicAuth: [ ]
       summary: "POST api/auth/login"
       operationId: "login"
       responses:
@@ -76,6 +78,10 @@ paths:
         "200":
           description: "OK"
 components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
   schemas:
     AuthResponseDto:
       type: "object"
