@@ -80,7 +80,7 @@ public class Reservation {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private State state = State.IN_PROGRESS;
+    private State state = State.PROCESSED;
 
     @Override
     public boolean equals(Object o) {
@@ -95,6 +95,6 @@ public class Reservation {
     }
 
     public enum State {
-        IN_PROGRESS, PROCESSED, REJECTED
+        PROCESSED, REJECTED
     }
 }
