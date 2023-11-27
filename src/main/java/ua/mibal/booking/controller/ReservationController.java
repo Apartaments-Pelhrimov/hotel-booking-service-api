@@ -44,7 +44,7 @@ public class ReservationController {
     }
 
     @RolesAllowed("MANAGER")
-    @GetMapping("/hotels/reservations")
+    @GetMapping("/reservations")
     public Page<ReservationDto> getAllReservations(Pageable pageable) {
         return reservationService.getAllReservations(pageable);
     }

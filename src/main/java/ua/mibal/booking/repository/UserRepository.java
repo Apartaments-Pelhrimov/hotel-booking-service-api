@@ -39,13 +39,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
             """)
     Optional<String> findPasswordByEmail(String email);
 
-    @Query("""
-            select u from User u
-                left join fetch u.hotels
-            where u.email = ?1
-            """)
-    Optional<User> findByEmailFetchHotels(String email);
-
     boolean existsByEmail(String email);
 
     @Transactional

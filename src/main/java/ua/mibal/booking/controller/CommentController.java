@@ -32,16 +32,11 @@ import ua.mibal.booking.service.CommentService;
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/hotels")
+@RequestMapping("/api")
 public class CommentController {
     private final CommentService commentService;
 
-    @GetMapping("/{hotelId}/comments")
-    public Page<CommentDto> getCommentsForHotel(@PathVariable Long hotelId, Pageable pageable) {
-        return commentService.getCommentsInHotel(hotelId, pageable);
-    }
-
-    @GetMapping("apartments/{apartmentId}/comments")
+    @GetMapping("/apartments/{apartmentId}/comments")
     public Page<CommentDto> getCommentsForApartment(@PathVariable Long apartmentId, Pageable pageable) {
         return commentService.getCommentsInApartment(apartmentId, pageable);
     }

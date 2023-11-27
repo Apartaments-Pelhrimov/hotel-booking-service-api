@@ -40,14 +40,5 @@ public class RatingRepository {
                                 where c.apartmentType.id = a.id)
                         """)
                 .executeUpdate();
-        entityManager.createQuery("""
-                        update Hotel h
-                            SET h.rating = (
-                                select avg(a.rating)
-                                from ApartmentType a
-                                where a.hotel.id = h.id and
-                                a.rating != null)
-                        """)
-                .executeUpdate();
     }
 }

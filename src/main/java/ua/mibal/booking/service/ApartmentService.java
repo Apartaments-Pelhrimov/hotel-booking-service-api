@@ -39,7 +39,7 @@ public class ApartmentService {
 
     @Transactional(readOnly = true) // for LAZY Apartment.beds fetch
     public ApartmentTypeDto getOne(Long id) {
-        return apartmentTypeRepository.findByIdFetchPhotosHotel(id)
+        return apartmentTypeRepository.findByIdFetchPhotos(id)
                 .map(apartmentMapper::toDto)
                 .orElseThrow(() -> new EntityNotFoundException("Entity Apartment by id=" + id + " not found"));
     }

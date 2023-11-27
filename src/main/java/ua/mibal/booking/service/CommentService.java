@@ -20,8 +20,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ua.mibal.booking.model.mapper.CommentMapper;
 import ua.mibal.booking.model.dto.response.CommentDto;
+import ua.mibal.booking.model.mapper.CommentMapper;
 import ua.mibal.booking.repository.CommentRepository;
 
 /**
@@ -33,11 +33,6 @@ import ua.mibal.booking.repository.CommentRepository;
 public class CommentService {
     private final CommentRepository commentRepository;
     private final CommentMapper commentMapper;
-
-    public Page<CommentDto> getCommentsInHotel(Long hotelId, Pageable pageable) {
-        return commentRepository.findByHotelIdFetchUser(hotelId, pageable)
-                .map(commentMapper::toDto);
-    }
 
     public Page<CommentDto> getCommentsInApartment(Long apartmentId, Pageable pageable) {
         return commentRepository.findByApartmentIdFetchUser(apartmentId, pageable)

@@ -33,7 +33,7 @@ import java.util.List;
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/hotels")
+@RequestMapping("/api")
 public class ApartmentController {
     private final ApartmentService apartmentService;
 

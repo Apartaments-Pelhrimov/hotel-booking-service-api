@@ -22,10 +22,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ua.mibal.booking.model.entity.ApartmentType;
-import ua.mibal.booking.model.entity.Hotel;
 import ua.mibal.booking.model.entity.embeddable.Photo;
 import ua.mibal.booking.repository.ApartmentTypeRepository;
-import ua.mibal.booking.repository.HotelRepository;
 import ua.mibal.booking.repository.UserRepository;
 import ua.mibal.booking.service.util.AwsUrlUtils;
 
@@ -43,7 +41,6 @@ import static ua.mibal.booking.service.util.FileNameUtils.getPhotoExtension;
 @Service
 public class AwsPhotoStorageService implements PhotoStorageService {
     private final UserRepository userRepository;
-    private final HotelRepository hotelRepository;
     private final ApartmentTypeRepository apartmentTypeRepository;
     private final AwsStorage awsStorage;
 
@@ -66,33 +63,6 @@ public class AwsPhotoStorageService implements PhotoStorageService {
     public void deleteUserPhoto(String email) {
         perform(aws -> aws.delete("users/", email));
         userRepository.deleteUserPhotoByEmail(email);
-    }
-
-    @Transactional
-    @Override
-    public String saveHotelPhoto(Long id, MultipartFile photo) {
-        Hotel hotel = getHotelById(id);
-        String fileName = photo.getOriginalFilename();
-        String encodedLink = perform(aws -> aws.uploadImage(
-                "hotels/",
-                fileName,
-                photo.getBytes(),
-                getPhotoExtension(fileName)
-        ));
-        String link = URLDecoder.decode(encodedLink, StandardCharsets.UTF_8);
-        hotel.addPhoto(new Photo(link));
-        return link;
-    }
-
-    @Transactional
-    @Override
-    public void deleteHotelPhoto(Long id, String link) {
-        Hotel hotel = getHotelById(id);
-        if (!hotel.deletePhoto(new Photo(link)))
-            throw new IllegalArgumentException(
-                    "Hotel with id=" + id + " doesn't contain photo='" + link + "'");
-        String name = AwsUrlUtils.getFileName(link);
-        perform(aws -> aws.delete("hotels/", name));
     }
 
     @Transactional
@@ -120,11 +90,6 @@ public class AwsPhotoStorageService implements PhotoStorageService {
                     "Apartment with id=" + id + " doesn't contain photo='" + link + "'");
         String name = AwsUrlUtils.getFileName(link);
         perform(aws -> aws.delete("apartments/", name));
-    }
-
-    private Hotel getHotelById(Long id) {
-        return hotelRepository.findByIdFetchPhotos(id)
-                .orElseThrow(() -> new EntityNotFoundException("Entity Hotel by id=" + id + " not found"));
     }
 
     private ApartmentType getApartmentTypeById(Long id) {

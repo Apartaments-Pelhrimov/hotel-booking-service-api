@@ -22,13 +22,11 @@ import jakarta.persistence.Convert;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -59,10 +57,7 @@ import static lombok.AccessLevel.PRIVATE;
 @Getter
 @Setter
 @Entity
-@Table(
-        name = "apartment_types",
-        indexes = @Index(name = "apartment_types_hotel_id_idx", columnList = "hotel_id")
-)
+@Table(name = "apartment_types")
 public class ApartmentType {
 
     @Id
@@ -100,13 +95,6 @@ public class ApartmentType {
 
     @Column
     private Double rating;
-
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "hotel_id",
-            nullable = false,
-            foreignKey = @ForeignKey(name = "apartment_types_hotel_id_fk"))
-    private Hotel hotel;
 
     @ElementCollection
     @BatchSize(size = 100)

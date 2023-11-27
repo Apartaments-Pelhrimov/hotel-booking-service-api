@@ -31,13 +31,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Query("""
             select c from Comment c
                 join fetch c.user
-            where c.apartmentType.hotel.id = ?1
-            """)
-    Page<Comment> findByHotelIdFetchUser(Long hotelId, Pageable pageable);
-
-    @Query("""
-            select c from Comment c
-                join fetch c.user
             where c.apartmentType.id = ?1
              """)
     Page<Comment> findByApartmentIdFetchUser(Long apartmentId, Pageable pageable);

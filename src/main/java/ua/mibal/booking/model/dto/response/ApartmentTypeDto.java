@@ -16,11 +16,8 @@
 
 package ua.mibal.booking.model.dto.response;
 
-import ua.mibal.booking.model.entity.embeddable.AdditionalInfo;
 import ua.mibal.booking.model.entity.embeddable.ApartmentOptions;
 import ua.mibal.booking.model.entity.embeddable.Bed;
-import ua.mibal.booking.model.entity.embeddable.HotelOptions;
-import ua.mibal.booking.model.entity.embeddable.Location;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -34,17 +31,8 @@ public record ApartmentTypeDto(
         String name,
         Set<String> photos,
         ApartmentOptions options,
-        ApartmentHotelDto hotel,
         Float rating,
         List<Bed> beds,
         BigDecimal cost
 ) {
-    public record ApartmentHotelDto(
-            String name,
-            HotelOptions options,
-            Location location,
-            AdditionalInfo info,
-            Integer stars
-    ) {
-    }
 }

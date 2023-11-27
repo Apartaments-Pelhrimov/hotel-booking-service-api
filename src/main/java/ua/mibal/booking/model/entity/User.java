@@ -24,7 +24,6 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -44,10 +43,8 @@ import ua.mibal.booking.model.entity.embeddable.Role;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 import static lombok.AccessLevel.PRIVATE;
 import static ua.mibal.booking.model.entity.embeddable.Role.ROLE_USER;
@@ -101,10 +98,6 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private Role role = ROLE_USER;
 
-    @ManyToMany(mappedBy = "managers")
-    @Setter(PRIVATE)
-    private Set<Hotel> hotels = new HashSet<>();
-
     @OneToMany(mappedBy = "user")
     @Setter(PRIVATE)
     private List<Reservation> reservations = new ArrayList<>();
@@ -112,14 +105,6 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     @Setter(PRIVATE)
     private List<Comment> comments = new ArrayList<>();
-
-    public void addHotel(Hotel hotel) {
-        hotel.addManager(this);
-    }
-
-    public void removeHotel(Hotel hotel) {
-        hotel.removeManager(this);
-    }
 
     public void addReservation(Reservation reservation) {
         reservation.setUser(this);

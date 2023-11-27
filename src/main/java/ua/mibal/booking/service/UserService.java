@@ -43,7 +43,7 @@ public class UserService {
 
     public UserDto getOneByAuthentication(Authentication authentication) {
         String email = authentication.getName();
-        return userRepository.findByEmailFetchHotels(email)
+        return userRepository.findByEmail(email)
                 .map(userMapper::toDto)
                 .orElseThrow(() -> new EntityNotFoundException("Entity User by email=" + email + " not found"));
     }

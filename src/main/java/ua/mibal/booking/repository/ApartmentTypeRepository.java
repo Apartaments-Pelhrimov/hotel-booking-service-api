@@ -27,22 +27,14 @@ public interface ApartmentTypeRepository extends JpaRepository<ApartmentType, Lo
 
     @Query("""
             select a from ApartmentType a
-                left join fetch a.hotel
                 left join fetch a.photos
             where a.id = ?1
             """)
-    Optional<ApartmentType> findByIdFetchPhotosHotel(Long id);
+    Optional<ApartmentType> findByIdFetchPhotos(Long id);
 
     @Query("""
             select a from ApartmentType a
                 left join fetch a.photos
             """)
     List<ApartmentType> findAllFetchPhotos();
-
-    @Query("""
-            select a from ApartmentType a
-                left join fetch a.photos
-            where a.id = ?1
-            """)
-    Optional<ApartmentType> findByIdFetchPhotos(Long id);
 }
