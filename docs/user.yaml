@@ -1,0 +1,85 @@
+openapi: "3.0.3"
+info:
+  title: "hotel_booking_service API"
+  description: "hotel_booking_service API"
+  version: "1.0.0"
+servers:
+  - url: "https://hotel_booking_service"
+paths:
+  /api/users/me:
+    get:
+      summary: "GET api/users/me"
+      operationId: "getMe"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserDto"
+    delete:
+      summary: "DELETE api/users/me"
+      operationId: "deleteMe"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeleteMeDto"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+  /api/users/me/password:
+    put:
+      summary: "PUT api/users/me/password"
+      operationId: "changePassword"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangePasswordDto"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+components:
+  schemas:
+    NotificationSettings:
+      type: "object"
+      properties:
+        receiveOrderEmails:
+          type: "boolean"
+        receiveNewsEmails:
+          type: "boolean"
+    UserDto:
+      type: "object"
+      properties:
+        firstName:
+          type: "string"
+        lastName:
+          type: "string"
+        photo:
+          type: "string"
+        phone:
+          type: "string"
+        email:
+          type: "string"
+        role:
+          type: "string"
+          enum:
+            - "ROLE_USER"
+            - "ROLE_MANAGER"
+        notificationSettings:
+          $ref: "#/components/schemas/NotificationSettings"
+    DeleteMeDto:
+      type: "object"
+      properties:
+        password:
+          type: "string"
+    ChangePasswordDto:
+      type: "object"
+      properties:
+        newPassword:
+          type: "string"
+        oldPassword:
+          type: "string"

@@ -1,0 +1,106 @@
+openapi: "3.0.3"
+info:
+  title: "hotel_booking_service API"
+  description: "hotel_booking_service API"
+  version: "1.0.0"
+servers:
+  - url: "https://hotel_booking_service"
+paths:
+  /api/auth/login:
+    post:
+      summary: "POST api/auth/login"
+      operationId: "login"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/AuthResponseDto"
+  /api/auth/register:
+    post:
+      summary: "POST api/auth/register"
+      operationId: "register"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegistrationDto"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+  /api/auth/activate:
+    post:
+      summary: "POST api/auth/activate"
+      operationId: "activate"
+      parameters:
+        - name: "code"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+  /api/auth/forget:
+    get:
+      summary: "GET api/auth/forget"
+      operationId: "resetPassword"
+      parameters:
+        - name: "email"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+  /api/auth/forget/new:
+    post:
+      summary: "POST api/auth/forget/new"
+      operationId: "newPassword"
+      parameters:
+        - name: "code"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ForgetPasswordDto"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+components:
+  schemas:
+    AuthResponseDto:
+      type: "object"
+      properties:
+        firstName:
+          type: "string"
+        lastName:
+          type: "string"
+        token:
+          type: "string"
+    RegistrationDto:
+      type: "object"
+      properties:
+        firstName:
+          type: "string"
+        lastName:
+          type: "string"
+        phone:
+          type: "string"
+        email:
+          type: "string"
+        password:
+          type: "string"
+    ForgetPasswordDto:
+      type: "object"
+      properties:
+        password:
+          type: "string"
