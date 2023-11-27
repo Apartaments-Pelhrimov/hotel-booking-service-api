@@ -57,7 +57,7 @@ public class UserService {
         return userRepository.existsByEmail(email);
     }
 
-    public void deleteByAuthenticaiton(DeleteMeDto deleteMeDto, Authentication authentication) {
+    public void deleteByAuthentication(DeleteMeDto deleteMeDto, Authentication authentication) {
         String password = deleteMeDto.password();
         String email = authentication.getName();
         validatePassword(password, email);

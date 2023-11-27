@@ -50,7 +50,7 @@ public class UserController {
     @DeleteMapping("/me")
     public void deleteMe(@RequestBody DeleteMeDto deleteMeDto,
                          Authentication authentication) {
-        userService.deleteByAuthenticaiton(deleteMeDto, authentication);
+        userService.deleteByAuthentication(deleteMeDto, authentication);
     }
 
     @PutMapping("/me/password")
