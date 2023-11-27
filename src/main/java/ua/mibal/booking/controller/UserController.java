@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ua.mibal.booking.model.dto.request.ChangePasswordDto;
+import ua.mibal.booking.model.dto.request.ChangeUserDetailsDto;
 import ua.mibal.booking.model.dto.request.DeleteMeDto;
 import ua.mibal.booking.model.dto.response.UserDto;
 import ua.mibal.booking.service.UserService;
@@ -57,5 +58,11 @@ public class UserController {
     public void changePassword(@Valid @RequestBody ChangePasswordDto changePasswordDto,
                                Authentication authentication) {
         userService.changePasswordByAuthentication(changePasswordDto, authentication);
+    }
+
+    @PutMapping("/me")
+    public void changeDetails(@Valid @RequestBody ChangeUserDetailsDto changeUserDetailsDto,
+                              Authentication authentication) {
+        userService.changeDetails(changeUserDetailsDto, authentication);
     }
 }

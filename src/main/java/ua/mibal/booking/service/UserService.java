@@ -21,14 +21,24 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.model.dto.auth.RegistrationDto;
 import ua.mibal.booking.model.dto.request.ChangePasswordDto;
+import ua.mibal.booking.model.dto.request.ChangeUserDetailsDto;
 import ua.mibal.booking.model.dto.request.DeleteMeDto;
 import ua.mibal.booking.model.dto.response.UserDto;
 import ua.mibal.booking.model.entity.User;
+import ua.mibal.booking.model.entity.embeddable.Phone;
 import ua.mibal.booking.model.exception.IllegalPasswordException;
 import ua.mibal.booking.model.mapper.UserMapper;
 import ua.mibal.booking.repository.UserRepository;
+
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+import static java.util.Map.of;
 
 /**
  * @author Mykhailo Balakhon
@@ -84,5 +94,27 @@ public class UserService {
         if (!passwordEncoder.matches(password, encodedPassword)) {
             throw new IllegalPasswordException();
         }
+    }
+
+    @Transactional
+    public void changeDetails(ChangeUserDetailsDto changeUserDetailsDto,
+                              Authentication authentication) {
+        User user = getOneByEmail(authentication.getName());
+        updatePartially(user, changeUserDetailsDto);
+    }
+
+    private void updatePartially(User user, ChangeUserDetailsDto changeUserDetailsDto) {
+        updateIfNotNull(of(
+                changeUserDetailsDto::firstName, user::setFirstName,
+                changeUserDetailsDto::lastName, user::setLastName,
+                changeUserDetailsDto::phone, phone -> user.setPhone(new Phone(phone))
+        ));
+    }
+
+    private void updateIfNotNull(Map<Supplier<String>, Consumer<String>> fieldsMap) {
+        fieldsMap.forEach((sup, con) ->
+                Optional.ofNullable(sup.get())
+                        .ifPresent(con)
+        );
     }
 }
