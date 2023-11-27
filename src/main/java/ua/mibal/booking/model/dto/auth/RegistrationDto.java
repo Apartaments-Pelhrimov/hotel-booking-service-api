@@ -18,7 +18,9 @@ package ua.mibal.booking.model.dto.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
+import ua.mibal.booking.model.validation.constraints.Name;
+import ua.mibal.booking.model.validation.constraints.Password;
+import ua.mibal.booking.model.validation.constraints.Phone;
 
 /**
  * @author Mykhailo Balakhon
@@ -27,30 +29,23 @@ import jakarta.validation.constraints.Pattern;
 public record RegistrationDto(
 
         @NotNull
-        @Pattern(
-                regexp = "^(\\p{L}){3,50}",
-                message = "must be legal name and should be longer than 3"
-        ) String firstName,
+        @Name
+        String firstName,
 
         @NotNull
-        @Pattern(
-                regexp = "^(\\p{L}){3,50}",
-                message = "must be legal name and should be longer than 3"
-        ) String lastName,
+        @Name
+        String lastName,
 
         @NotNull
-        @Pattern(
-                regexp = "^\\+([0-9]){10,15}",
-                message = "must be valid phone"
-        ) String phone,
+        @Phone
+        String phone,
 
         @NotNull
         @Email
         String email,
 
-        @Pattern(
-                regexp = "^\\S{8,50}",
-                message = "must be longer than 8 and without space character"
-        ) String password
+        @NotNull
+        @Password
+        String password
 ) {
 }

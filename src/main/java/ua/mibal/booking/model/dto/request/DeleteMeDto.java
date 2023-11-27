@@ -16,9 +16,11 @@
 
 package ua.mibal.booking.model.dto.request;
 
+import jakarta.validation.constraints.NotNull;
+
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
-public record DeleteMeDto(String password) {
+public record DeleteMeDto(@NotNull String password) {
 }
