@@ -94,6 +94,10 @@ public class Reservation {
         return getClass().hashCode();
     }
 
+    public void reject() {
+        this.state = State.REJECTED;
+    }
+
     public enum State {
         PROCESSED, REJECTED
     }

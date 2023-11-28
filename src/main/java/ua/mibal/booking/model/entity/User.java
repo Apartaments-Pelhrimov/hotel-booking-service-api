@@ -130,6 +130,10 @@ public class User implements UserDetails {
         }
     }
 
+    public boolean is(Role role) {
+        return getRole().equals(role);
+    }
+
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;

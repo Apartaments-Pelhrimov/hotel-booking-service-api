@@ -22,6 +22,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ua.mibal.booking.model.entity.Reservation;
 
+import java.util.Optional;
+
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
     @Query("""
@@ -33,4 +35,11 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             where u.email = ?1
             """)
     Page<Reservation> findAllByUserEmail(String email, Pageable pageable);
+
+    @Query("""
+            select r from Reservation r
+                left join fetch r.user u
+            where r.id = ?1
+            """)
+    Optional<Reservation> findByIdFetchUser(Long id);
 }
