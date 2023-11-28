@@ -44,7 +44,7 @@ public class ExceptionHandlerAdvice {
         String objErrors = e.getGlobalErrors().stream()
                 .map(err -> err.getDefaultMessage() + ".")
                 .collect(Collectors.joining(" "));
-        String template = "Field %s=%s %s.";
+        String template = "Field %s='%s' %s.";
         String fieldErrors = e.getBindingResult()
                 .getFieldErrors().stream()
                 .map(er -> String.format(template, er.getField(), er.getRejectedValue(), er.getDefaultMessage()))

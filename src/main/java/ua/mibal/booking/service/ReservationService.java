@@ -62,7 +62,7 @@ public class ReservationService {
         if (user.is(Role.ROLE_USER) &&
             !reservation.getUser().equals(user)) {
             throw new IllegalArgumentException("Reservation with id=" + id + "was not created " +
-                                               "by User with email=" + authentication.getName());
+                                               "by User with email='" + authentication.getName() + "'");
         }
         rejectReservation(reservation, user, reservationRejectingFormDto.reason());
     }
