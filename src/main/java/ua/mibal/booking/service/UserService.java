@@ -16,7 +16,6 @@
 
 package ua.mibal.booking.service;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,6 +30,7 @@ import ua.mibal.booking.model.dto.response.UserDto;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.entity.embeddable.Phone;
 import ua.mibal.booking.model.exception.IllegalPasswordException;
+import ua.mibal.booking.model.exception.entity.UserNotFoundException;
 import ua.mibal.booking.model.mapper.UserMapper;
 import ua.mibal.booking.repository.UserRepository;
 
@@ -56,12 +56,12 @@ public class UserService {
         String email = authentication.getName();
         return userRepository.findByEmail(email)
                 .map(userMapper::toDto)
-                .orElseThrow(() -> new EntityNotFoundException("Entity User by email=" + email + " not found"));
+                .orElseThrow(() -> new UserNotFoundException(email));
     }
 
     public User getOneByEmail(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("Entity User by email=" + email + " not found"));
+                .orElseThrow(() -> new UserNotFoundException(email));
     }
 
     public boolean isExistsByEmail(String email) {
@@ -91,7 +91,7 @@ public class UserService {
 
     private void validatePassword(String password, String email) {
         String encodedPassword = userRepository.findPasswordByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("Entity User by email=" + email + " not found"));
+                .orElseThrow(() -> new UserNotFoundException(email));
         if (!passwordEncoder.matches(password, encodedPassword)) {
             throw new IllegalPasswordException();
         }

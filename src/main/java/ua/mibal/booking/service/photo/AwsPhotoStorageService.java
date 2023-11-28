@@ -16,7 +16,6 @@
 
 package ua.mibal.booking.service.photo;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ua.mibal.booking.config.properties.AwsProps.AwsBucketProps;
 import ua.mibal.booking.model.entity.ApartmentType;
 import ua.mibal.booking.model.entity.embeddable.Photo;
+import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.repository.ApartmentTypeRepository;
 import ua.mibal.booking.repository.UserRepository;
 import ua.mibal.booking.service.util.AwsUrlUtils;
@@ -96,7 +96,7 @@ public class AwsPhotoStorageService implements PhotoStorageService {
 
     private ApartmentType getApartmentTypeById(Long id) {
         return apartmentTypeRepository.findByIdFetchPhotos(id)
-                .orElseThrow(() -> new EntityNotFoundException("Entity Apartment by id=" + id + " not found"));
+                .orElseThrow(() -> new ApartmentNotFoundException(id));
     }
 
     private <T> T perform(AwsWrapper<T> fn) {

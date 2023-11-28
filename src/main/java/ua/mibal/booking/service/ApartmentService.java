@@ -16,12 +16,12 @@
 
 package ua.mibal.booking.service;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.model.dto.response.ApartmentTypeCardDto;
 import ua.mibal.booking.model.dto.response.ApartmentTypeDto;
+import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.model.mapper.ApartmentMapper;
 import ua.mibal.booking.repository.ApartmentTypeRepository;
 
@@ -41,7 +41,7 @@ public class ApartmentService {
     public ApartmentTypeDto getOne(Long id) {
         return apartmentTypeRepository.findByIdFetchPhotos(id)
                 .map(apartmentMapper::toDto)
-                .orElseThrow(() -> new EntityNotFoundException("Entity Apartment by id=" + id + " not found"));
+                .orElseThrow(() -> new ApartmentNotFoundException(id));
     }
 
     @Transactional(readOnly = true) // for LAZY Apartment.beds fetch

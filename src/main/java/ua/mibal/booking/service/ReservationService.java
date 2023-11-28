@@ -16,7 +16,6 @@
 
 package ua.mibal.booking.service;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +27,7 @@ import ua.mibal.booking.model.dto.response.ReservationDto;
 import ua.mibal.booking.model.entity.Reservation;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.entity.embeddable.Role;
+import ua.mibal.booking.model.exception.entity.ReservationNotFoundException;
 import ua.mibal.booking.model.mapper.ReservationMapper;
 import ua.mibal.booking.repository.ReservationRepository;
 
@@ -69,7 +69,7 @@ public class ReservationService {
 
     public Reservation getOneById(Long id) {
         return reservationRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Entity Reservation by id=" + id + " not found"));
+                .orElseThrow(() -> new ReservationNotFoundException(id));
     }
 
     private void rejectReservation(Reservation reservation, User user, String reason) {
