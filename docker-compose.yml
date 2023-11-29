@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  booking-app:
+    build: .
+    container_name: booking-app
+    depends_on:
+      - booking-db
+    ports:
+      - target: 443
+        published: 443
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://booking-db:5432/hotel_booking_service
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+  booking-db:
+    image: postgres
+    container_name: booking-db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
