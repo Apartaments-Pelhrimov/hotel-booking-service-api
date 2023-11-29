@@ -18,6 +18,7 @@ package ua.mibal.booking.controller;
 
 import jakarta.annotation.security.RolesAllowed;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import ua.mibal.booking.service.photo.PhotoStorageService;
@@ -41,6 +43,7 @@ public class PhotoController {
 
     @RolesAllowed("USER")
     @PutMapping("/users/me/photo")
+    @ResponseStatus(HttpStatus.CREATED)
     public String changeMyPhoto(@RequestParam("file") MultipartFile file,
                                 Authentication authentication) {
         return photoStorageService.setUserPhoto(authentication.getName(), file);
@@ -54,6 +57,7 @@ public class PhotoController {
 
     @RolesAllowed("MANAGER")
     @PostMapping("/apartments/{id}/photos/upload")
+    @ResponseStatus(HttpStatus.CREATED)
     public String addApartmentPhoto(@PathVariable Long id,
                                     @RequestParam("file") MultipartFile file) {
         return photoStorageService.saveApartmentTypePhoto(id, file);
