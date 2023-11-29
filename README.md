@@ -1,8 +1,11 @@
 # Hotel booking service Project
 
-The **Hotel booking service** project serves as the back-end component of a hotel and hostel reservation system, developed using Java Spring technologies. It provides an API for managing reservations, hotel rooms, clients, and other aspects of accommodation booking.
+The **Hotel booking service** project serves as the back-end component of a hotel and hostel reservation system,
+developed using Java Spring technologies. It provides an API for managing reservations, hotel rooms, clients, and other
+aspects of accommodation booking.
 
 ## Technologies Used in the Project
+
 - **Spring Boot:** for rapid creation and configuration of Spring applications, simplifying development and deployment.
 - **Spring Web:** allows for creating RESTful APIs for data exchange with the system's clients.
 - **Spring Data:** used for working with databases, including the use of Hibernate ORM for data access.
@@ -13,10 +16,26 @@ The **Hotel booking service** project serves as the back-end component of a hote
 - **Maven:** used for managing project dependencies and building.
 
 ## Key Features
+
 - Creation, updating, and deletion of hotels and apartments.
 - Reservation of apartments by users.
 - User authentication and authorization.
 - Viewing reservation history and other hotel-related information.
 - Testing using JUnit and Mockito to ensure the application's reliability and security.
 
-This back-end Java Spring project allows for the management and utilization of information related to hotels and rooms, making it convenient for users to book and enjoy their accommodations.
+This back-end Java Spring project allows for the management and utilization of information related to hotels and rooms,
+making it convenient for users to book and enjoy their accommodations.
+
+## Run configuration
+
+To build executable `.jar` file
+```shell
+mvn package spring-boot:repackage
+```
+To build and run Docker composite container with db:
+```shell
+mvn package spring-boot:repackage
+```
+```shell
+docker compose up
+```
