@@ -39,7 +39,7 @@ public class ApartmentController {
 
     @GetMapping("/apartments/{id}")
     public ApartmentTypeDto getOne(@PathVariable Long id) {
-        return apartmentService.getOne(id);
+        return apartmentService.getOneDto(id);
     }
 
     @GetMapping("/apartments")

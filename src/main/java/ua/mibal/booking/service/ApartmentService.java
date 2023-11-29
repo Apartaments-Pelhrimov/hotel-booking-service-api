@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.model.dto.response.ApartmentTypeCardDto;
 import ua.mibal.booking.model.dto.response.ApartmentTypeDto;
+import ua.mibal.booking.model.entity.ApartmentType;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.model.mapper.ApartmentMapper;
 import ua.mibal.booking.repository.ApartmentTypeRepository;
@@ -38,9 +39,14 @@ public class ApartmentService {
     private final ApartmentMapper apartmentMapper;
 
     @Transactional(readOnly = true) // for LAZY Apartment.beds fetch
-    public ApartmentTypeDto getOne(Long id) {
+    public ApartmentTypeDto getOneDto(Long id) {
         return apartmentTypeRepository.findByIdFetchPhotos(id)
                 .map(apartmentMapper::toDto)
+                .orElseThrow(() -> new ApartmentNotFoundException(id));
+    }
+
+    public ApartmentType getOne(Long id) {
+        return apartmentTypeRepository.findByIdFetchPhotos(id)
                 .orElseThrow(() -> new ApartmentNotFoundException(id));
     }
 

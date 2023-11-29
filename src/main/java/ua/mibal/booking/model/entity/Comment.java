@@ -77,6 +77,14 @@ public class Comment {
     @Column(nullable = false)
     private String body;
 
+    public Comment(User user, ApartmentType apartmentType, Double rate, String body) {
+        this.user = user;
+        this.apartmentType = apartmentType;
+        this.rate = rate;
+        this.body = body;
+        this.creationDateTime = LocalDateTime.now();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
