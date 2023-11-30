@@ -18,7 +18,6 @@ package ua.mibal.booking.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,11 +44,12 @@ public class AuthService {
     private final ActivationCodeService activationCodeService;
     private final EmailSendingService emailSendingService;
 
-    public AuthResponseDto getUserToken(Authentication authentication) {
-        return userMapper.toAuthResponse(
-                (User) authentication.getPrincipal(),
-                tokenService.generateToken(authentication)
+    public AuthResponseDto token(User user) {
+        String token = tokenService.generateToken(
+                user.getEmail(),
+                user.getAuthorities()
         );
+        return userMapper.toAuthResponse(user, token);
     }
 
     @Transactional

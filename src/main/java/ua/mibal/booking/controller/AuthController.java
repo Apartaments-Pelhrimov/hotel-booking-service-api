@@ -18,7 +18,7 @@ package ua.mibal.booking.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ua.mibal.booking.model.dto.auth.AuthResponseDto;
 import ua.mibal.booking.model.dto.auth.ForgetPasswordDto;
 import ua.mibal.booking.model.dto.auth.RegistrationDto;
+import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.service.AuthService;
 
 /**
@@ -41,8 +42,8 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public AuthResponseDto login(Authentication authentication) {
-        return authService.getUserToken(authentication);
+    public AuthResponseDto login(@AuthenticationPrincipal User user) {
+        return authService.token(user);
     }
 
     @PostMapping("/register")
