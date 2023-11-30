@@ -87,10 +87,13 @@ class AuthService_UnitTest {
         when(userService.isExistsByEmail(existingEmail))
                 .thenReturn(true);
 
-        assertThrows(
+        EmailAlreadyExistsException e = assertThrows(
                 EmailAlreadyExistsException.class,
-                () -> authService.register(registrationDtoWithEmail(existingEmail)),
-                new EmailAlreadyExistsException(existingEmail).getMessage() + " dflksdajfklsajfsa"
+                () -> authService.register(registrationDtoWithEmail(existingEmail))
+        );
+        assertEquals(
+                new EmailAlreadyExistsException(existingEmail).getMessage(),
+                e.getMessage()
         );
     }
 
