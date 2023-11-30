@@ -17,6 +17,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import ua.mibal.booking.model.dto.auth.AuthResponseDto;
 import ua.mibal.booking.model.dto.auth.RegistrationDto;
 import ua.mibal.booking.service.AuthService;
 import ua.mibal.booking.testUtils.RegistrationDtoArgumentConverter;
@@ -24,8 +25,10 @@ import ua.mibal.booking.testUtils.RegistrationDtoArgumentConverter;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -55,9 +58,14 @@ class AuthController_UnitTest {
 
     @Test
     void login_should_handle_call_AuthService() throws Exception {
+        AuthResponseDto expectedResponse = new AuthResponseDto("first", "last", "token");
+        when(authService.token(any()))
+                .thenReturn(expectedResponse);
+
         mvc.perform(post("/api/auth/login")
                         .with(httpBasic("username", "password")))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(expectedResponse)));
         verify(authService, times(1))
                 .token(any());
     }
