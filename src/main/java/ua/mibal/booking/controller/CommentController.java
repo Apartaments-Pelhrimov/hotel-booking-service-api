@@ -55,6 +55,6 @@ public class CommentController {
     public void addComment(@PathVariable Long apartmentId,
                            @Valid @RequestBody CreateCommentDto createCommentDto,
                            Authentication authentication) {
-        commentService.addCommentByAuthenticationToApartment(createCommentDto, authentication, apartmentId);
+        commentService.addCommentToApartment(createCommentDto, authentication.getName(), apartmentId);
     }
 }

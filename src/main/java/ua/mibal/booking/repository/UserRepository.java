@@ -22,6 +22,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.entity.embeddable.Photo;
+import ua.mibal.booking.repository.custom.CustomUserRepository;
 
 import java.util.Optional;
 
@@ -29,7 +30,7 @@ import java.util.Optional;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Long>, CustomUserRepository {
 
     Optional<User> findByEmail(String email);
 
