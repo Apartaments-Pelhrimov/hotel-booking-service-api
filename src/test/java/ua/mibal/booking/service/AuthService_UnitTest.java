@@ -108,7 +108,7 @@ class AuthService_UnitTest {
     }
 
     @Test
-    void register_should_save_user() {
+    void register_should_delegate_user_saving_to_UserService() {
         RegistrationDto registrationDto = registrationDtoWithEmail("email");
         when(userService.isExistsByEmail(registrationDto.email()))
                 .thenReturn(false);
@@ -123,7 +123,7 @@ class AuthService_UnitTest {
     }
 
     @Test
-    void register_should_save_ActivationCode_and_send_email() {
+    void register_should_delegate_ActivationCode_saving_and_email_sending() {
         RegistrationDto registrationDto = registrationDtoWithEmail("email");
         when(userService.isExistsByEmail(registrationDto.email()))
                 .thenReturn(false);
