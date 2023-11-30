@@ -12,17 +12,23 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import ua.mibal.booking.model.dto.auth.AuthResponseDto;
+import ua.mibal.booking.model.dto.auth.ForgetPasswordDto;
 import ua.mibal.booking.model.dto.auth.RegistrationDto;
 import ua.mibal.booking.model.entity.ActivationCode;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.exception.EmailAlreadyExistsException;
+import ua.mibal.booking.model.exception.entity.UserNotFoundException;
 import ua.mibal.booking.model.mapper.UserMapper;
 import ua.mibal.booking.service.security.TokenService;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 /**
@@ -32,8 +38,8 @@ import static org.mockito.Mockito.when;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = AuthService.class)
 @AutoConfigureMockMvc
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @TestPropertySource(locations = "classpath:application.yaml")
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class AuthService_UnitTest {
 
     private final static User testUser = new User() {{
@@ -152,10 +158,45 @@ class AuthService_UnitTest {
     }
 
     @Test
-    void restore() {
+    void restore_should_not_throw_exception_if_user_not_found() {
+        String email = "email";
+        when(userService.getOneByEmail(email))
+                .thenThrow(new UserNotFoundException(email));
+        verifyNoMoreInteractions(userService);
+
+        assertDoesNotThrow(() -> authService.restore(email));
+        verify(userService, times(1))
+                .getOneByEmail(email);
+        verifyNoInteractions(activationCodeService, emailSendingService);
     }
 
     @Test
-    void newPassword() {
+    void restore_should_call_ActivationCodeService_to_save_ActivationCode_and_EmailSendingService_to_send_ActivationCode() {
+        String email = "email";
+        ActivationCode activationCode = new ActivationCode(null, testUser, email);
+        when(userService.getOneByEmail(email))
+                .thenReturn(testUser);
+        when(activationCodeService.generateAndSaveCodeForUser(testUser))
+                .thenReturn(activationCode);
+
+        assertDoesNotThrow(() -> authService.restore(email));
+        verify(emailSendingService, times(1))
+                .sendPasswordChangingCode(testUser, activationCode);
+    }
+
+    @Test
+    void newPassword_should_encode_password_and_call_ActivationCodeService_to_change_user_password_by_ActivationCode() {
+        String code = "code";
+        ForgetPasswordDto forgetPasswordDto = new ForgetPasswordDto("password");
+        when(passwordEncoder.encode(forgetPasswordDto.password()))
+                .thenReturn("encoded_password");
+
+        authService.newPassword(code, forgetPasswordDto);
+
+        verify(activationCodeService, times(1))
+                .changePasswordByCode(code, "encoded_password");
+        verify(activationCodeService, never())
+                .changePasswordByCode(code, forgetPasswordDto.password());
+
     }
 }
