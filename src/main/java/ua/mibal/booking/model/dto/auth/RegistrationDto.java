@@ -16,8 +16,8 @@
 
 package ua.mibal.booking.model.dto.auth;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
+import ua.mibal.booking.model.validation.constraints.Email;
 import ua.mibal.booking.model.validation.constraints.Name;
 import ua.mibal.booking.model.validation.constraints.Password;
 import ua.mibal.booking.model.validation.constraints.Phone;
