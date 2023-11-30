@@ -18,13 +18,11 @@ package ua.mibal.booking.service.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
-import ua.mibal.booking.model.entity.User;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -43,15 +41,7 @@ public class TokenService {
     @Value(value = "${jwt-token.expiring-days}")
     private Integer tokenExpiresInDays = 10;
 
-    public String generateToken(Authentication authentication) {
-        return generateToken(authentication.getName(), authentication.getAuthorities());
-    }
-
-    public String generateToken(User user) {
-        return generateToken(user.getEmail(), user.getAuthorities());
-    }
-
-    private String generateToken(String name, Collection<? extends GrantedAuthority> grantedAuthorities) {
+    public String generateToken(String name, Collection<? extends GrantedAuthority> grantedAuthorities) {
         Instant now = Instant.now();
         String scope = grantedAuthorities.stream()
                 .map(GrantedAuthority::getAuthority)
