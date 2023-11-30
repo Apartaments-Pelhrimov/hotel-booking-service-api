@@ -17,7 +17,6 @@
 package ua.mibal.booking.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,11 +51,8 @@ public class UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
-    public UserDto getOneByAuthentication(Authentication authentication) {
-        String email = authentication.getName();
-        return userRepository.findByEmail(email)
-                .map(userMapper::toDto)
-                .orElseThrow(() -> new UserNotFoundException(email));
+    public UserDto getOneByEmailDto(String email) {
+        return userMapper.toDto(getOneByEmail(email));
     }
 
     public User getOneByEmail(String email) {
@@ -68,9 +64,8 @@ public class UserService {
         return userRepository.existsByEmail(email);
     }
 
-    public void deleteByAuthentication(DeleteMeDto deleteMeDto, Authentication authentication) {
+    public void delete(DeleteMeDto deleteMeDto, String email) {
         String password = deleteMeDto.password();
-        String email = authentication.getName();
         validatePassword(password, email);
         userRepository.deleteByEmail(email);
     }
@@ -80,10 +75,9 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public void changePasswordByAuthentication(ChangePasswordDto changePasswordDto,
-                                               Authentication authentication) {
+    public void changePassword(ChangePasswordDto changePasswordDto,
+                               String email) {
         String oldPassword = changePasswordDto.oldPassword();
-        String email = authentication.getName();
         validatePassword(oldPassword, email);
         String newEncodedPassword = passwordEncoder.encode(changePasswordDto.newPassword());
         userRepository.updateUserPasswordByEmail(newEncodedPassword, email);
@@ -99,8 +93,8 @@ public class UserService {
 
     @Transactional
     public void changeDetails(ChangeUserDetailsDto changeUserDetailsDto,
-                              Authentication authentication) {
-        User user = getOneByEmail(authentication.getName());
+                              String email) {
+        User user = getOneByEmail(email);
         performIfNotNull(of(
                 (Supplier<String>) changeUserDetailsDto::firstName, user::setFirstName,
                 changeUserDetailsDto::lastName, user::setLastName,
@@ -109,9 +103,9 @@ public class UserService {
     }
 
     @Transactional
-    public void changeNotificationSettingsByAuthentication(ChangeNotificationSettingsDto changeNotificationSettingsDto,
-                                                           Authentication authentication) {
-        User user = getOneByEmail(authentication.getName());
+    public void changeNotificationSettings(ChangeNotificationSettingsDto changeNotificationSettingsDto,
+                                           String email) {
+        User user = getOneByEmail(email);
         performIfNotNull(of(
                 (Supplier<Boolean>) changeNotificationSettingsDto::receiveOrderEmails, user.getNotificationSettings()::setReceiveOrderEmails,
                 changeNotificationSettingsDto::receiveNewsEmails, user.getNotificationSettings()::setReceiveNewsEmails

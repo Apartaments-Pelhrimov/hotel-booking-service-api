@@ -46,30 +46,30 @@ public class UserController {
 
     @GetMapping("/me")
     public UserDto getMe(Authentication authentication) {
-        return userService.getOneByAuthentication(authentication);
+        return userService.getOneByEmailDto(authentication.getName());
     }
 
     @DeleteMapping("/me")
     public void deleteMe(@RequestBody DeleteMeDto deleteMeDto,
                          Authentication authentication) {
-        userService.deleteByAuthentication(deleteMeDto, authentication);
+        userService.delete(deleteMeDto, authentication.getName());
     }
 
     @PutMapping("/me/password")
     public void changePassword(@Valid @RequestBody ChangePasswordDto changePasswordDto,
                                Authentication authentication) {
-        userService.changePasswordByAuthentication(changePasswordDto, authentication);
+        userService.changePassword(changePasswordDto, authentication.getName());
     }
 
     @PutMapping("/me")
     public void changeDetails(@Valid @RequestBody ChangeUserDetailsDto changeUserDetailsDto,
                               Authentication authentication) {
-        userService.changeDetails(changeUserDetailsDto, authentication);
+        userService.changeDetails(changeUserDetailsDto, authentication.getName());
     }
 
     @PutMapping("/me/notifications")
     public void changeNotificationSettings(@RequestBody ChangeNotificationSettingsDto changeNotificationSettingsDto,
                                            Authentication authentication) {
-        userService.changeNotificationSettingsByAuthentication(changeNotificationSettingsDto, authentication);
+        userService.changeNotificationSettings(changeNotificationSettingsDto, authentication.getName());
     }
 }
