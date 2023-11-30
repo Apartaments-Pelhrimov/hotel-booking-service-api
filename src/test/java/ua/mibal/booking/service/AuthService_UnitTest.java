@@ -60,11 +60,7 @@ class AuthService_UnitTest {
 
     @Test
     void token_should_return_correct_AuthDto() {
-        AuthResponseDto expectedAuthDto = new AuthResponseDto(
-                testUser.getFirstName(),
-                testUser.getLastName(),
-                "test_token"
-        );
+        AuthResponseDto expectedAuthDto = generateAuthResponseDtoWithToken("test_token");
         when(tokenService.generateToken(testUser.getEmail(), testUser.getAuthorities()))
                 .thenReturn("test_token");
         when(userMapper.toAuthResponse(testUser, "test_token"))
@@ -75,6 +71,14 @@ class AuthService_UnitTest {
                 .generateToken(testUser.getEmail(), testUser.getAuthorities());
         verify(userMapper, times(1))
                 .toAuthResponse(testUser, "test_token");
+    }
+
+    private AuthResponseDto generateAuthResponseDtoWithToken(String token) {
+        return new AuthResponseDto(
+                testUser.getFirstName(),
+                testUser.getLastName(),
+                token
+        );
     }
 
     @Test
