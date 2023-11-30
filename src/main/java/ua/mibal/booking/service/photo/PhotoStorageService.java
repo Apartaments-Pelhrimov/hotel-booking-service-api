@@ -28,7 +28,7 @@ public interface PhotoStorageService {
 
     void deleteUserPhoto(String email);
 
-    String saveApartmentTypePhoto(Long id, MultipartFile photo);
+    String addApartmentTypePhoto(Long id, MultipartFile photo);
 
     void deleteApartmentTypePhoto(Long id, String link);
 }

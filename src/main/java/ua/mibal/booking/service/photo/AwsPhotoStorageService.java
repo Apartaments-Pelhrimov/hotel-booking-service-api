@@ -69,7 +69,7 @@ public class AwsPhotoStorageService implements PhotoStorageService {
 
     @Transactional
     @Override
-    public String saveApartmentTypePhoto(Long id, MultipartFile photo) {
+    public String addApartmentTypePhoto(Long id, MultipartFile photo) {
         ApartmentType apartmentType = getApartmentTypeById(id);
         String fileName = photo.getOriginalFilename();
         String encodedLink = perform(aws -> aws.uploadImage(

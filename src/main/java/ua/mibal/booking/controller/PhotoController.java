@@ -60,7 +60,7 @@ public class PhotoController {
     @ResponseStatus(HttpStatus.CREATED)
     public String addApartmentPhoto(@PathVariable Long id,
                                     @RequestParam("file") MultipartFile file) {
-        return photoStorageService.saveApartmentTypePhoto(id, file);
+        return photoStorageService.addApartmentTypePhoto(id, file);
     }
 
     @RolesAllowed("MANAGER")
