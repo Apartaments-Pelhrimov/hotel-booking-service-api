@@ -19,17 +19,15 @@ package ua.mibal.booking.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.model.dto.request.ReservationRejectingFormDto;
 import ua.mibal.booking.model.dto.response.ReservationDto;
 import ua.mibal.booking.model.entity.Reservation;
-import ua.mibal.booking.model.entity.User;
-import ua.mibal.booking.model.entity.embeddable.Role;
 import ua.mibal.booking.model.exception.entity.ReservationNotFoundException;
 import ua.mibal.booking.model.mapper.ReservationMapper;
 import ua.mibal.booking.repository.ReservationRepository;
+import ua.mibal.booking.repository.UserRepository;
 
 /**
  * @author Mykhailo Balakhon
@@ -40,10 +38,9 @@ import ua.mibal.booking.repository.ReservationRepository;
 public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final ReservationMapper reservationMapper;
-    private final UserService userService;
+    private final UserRepository userRepository;
 
-    public Page<ReservationDto> getReservationsByAuthentication(Authentication authentication, Pageable pageable) {
-        String email = authentication.getName();
+    public Page<ReservationDto> getReservationsByUser(String email, Pageable pageable) {
         return reservationRepository.findAllByUserEmail(email, pageable)
                 .map(reservationMapper::toDto);
     }
@@ -54,17 +51,15 @@ public class ReservationService {
     }
 
     @Transactional
-    public void reject(Long id,
-                       ReservationRejectingFormDto reservationRejectingFormDto,
-                       Authentication authentication) {
-        User user = userService.getOneByEmail(authentication.getName());
+    public void rejectByUser(Long id,
+                             ReservationRejectingFormDto reservationRejectingFormDto,
+                             String email) {
         Reservation reservation = getOneById(id);
-        if (user.is(Role.ROLE_USER) &&
-            !reservation.getUser().equals(user)) {
-            throw new IllegalArgumentException("Reservation with id=" + id + "was not created " +
-                                               "by User with email='" + authentication.getName() + "'");
+        if (!reservation.getUser().getEmail().equals(email)) {
+            throw new IllegalArgumentException("Reservation with id=" + id + " was not created " +
+                                               "by User with email='" + email + "'");
         }
-        rejectReservation(reservation, user, reservationRejectingFormDto.reason());
+        rejectReservation(reservation, email, reservationRejectingFormDto.reason());
     }
 
     public Reservation getOneById(Long id) {
@@ -72,12 +67,13 @@ public class ReservationService {
                 .orElseThrow(() -> new ReservationNotFoundException(id));
     }
 
-    private void rejectReservation(Reservation reservation, User user, String reason) {
+    private void rejectReservation(Reservation reservation, String email, String reason) {
         // TODO add ReservationRejection entity
         validateReservationToReject(reservation);
         reservation.reject();
+//        User userReference = userRepository.getReferenceByEmail(email);
 //        reservationRejectionRepository.save(new ReservationRejection(
-//                user,
+//                userReference,
 //                reservation,
 //                reason
 //        ));

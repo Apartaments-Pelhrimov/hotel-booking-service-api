@@ -45,7 +45,7 @@ public class ReservationController {
     @RolesAllowed("USER")
     @GetMapping("/users/me/reservations")
     public Page<ReservationDto> getMyReservations(Authentication authentication, Pageable pageable) {
-        return reservationService.getReservationsByAuthentication(authentication, pageable);
+        return reservationService.getReservationsByUser(authentication.getName(), pageable);
     }
 
     @RolesAllowed("USER")
@@ -53,7 +53,7 @@ public class ReservationController {
     public void cancelReservation(@PathVariable("id") Long id,
                                   @Valid @RequestBody ReservationRejectingFormDto reservationRejectingFormDto,
                                   Authentication authentication) {
-        reservationService.reject(id, reservationRejectingFormDto, authentication);
+        reservationService.rejectByUser(id, reservationRejectingFormDto, authentication.getName());
     }
 
     @RolesAllowed("MANAGER")
