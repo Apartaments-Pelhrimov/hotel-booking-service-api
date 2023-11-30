@@ -69,4 +69,13 @@ public interface UserRepository extends JpaRepository<User, Long>, CustomUserRep
             where u.email = ?1
             """)
     void deleteUserPhotoByEmail(String email);
+
+    @Query("""
+            select count(a.id) >= 1 from User u
+                left join u.reservations r
+                left join r.apartment a
+                right join a.apartmentType at
+            where u.email = ?2 and at.id = ?1
+            """)
+    boolean userHasReservationWithApartment(String email, Long apartmentId);
 }

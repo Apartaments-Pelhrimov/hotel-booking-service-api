@@ -53,7 +53,7 @@ public class CommentService {
     public void addCommentToApartment(CreateCommentDto createCommentDto,
                                       String userEmail,
                                       Long apartmentId) {
-        validateApartmentId(apartmentId);
+        validate(apartmentId, userEmail);
         ApartmentType apartmentTypeReference = apartmentTypeRepository.getReferenceById(apartmentId);
         User userReference = userRepository.getReferenceByEmail(userEmail);
         Comment comment = new Comment(
@@ -65,8 +65,11 @@ public class CommentService {
         commentRepository.save(comment);
     }
 
-    private void validateApartmentId(Long apartmentId) {
+    private void validate(Long apartmentId, String userEmail) {
         if (!apartmentTypeRepository.existsById(apartmentId))
             throw new ApartmentNotFoundException(apartmentId);
+        if (!userRepository.userHasReservationWithApartment(userEmail, apartmentId))
+            throw new IllegalArgumentException("User with email='" + userEmail + "' does not " +
+                                               "have access to comments for Apartment with id=");
     }
 }
