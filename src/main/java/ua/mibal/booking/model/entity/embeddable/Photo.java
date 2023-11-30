@@ -47,6 +47,8 @@ public class Photo {
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        return photoLink != null
+                ? photoLink.hashCode()
+                : getClass().hashCode();
     }
 }
