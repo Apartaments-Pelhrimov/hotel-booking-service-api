@@ -73,8 +73,7 @@ class AuthService_UnitTest {
                 .thenReturn(expectedAuthDto);
 
         assertEquals(expectedAuthDto, authService.token(testUser));
-        verify(tokenService, times(1))
-                .generateToken(testUser.getEmail(), testUser.getAuthorities());
+
         verify(userMapper, times(1))
                 .toAuthResponse(testUser, "test_token");
     }
@@ -92,6 +91,7 @@ class AuthService_UnitTest {
         String existingEmail = "existing_email";
         when(userService.isExistsByEmail(existingEmail))
                 .thenReturn(true);
+        verifyNoMoreInteractions(userService);
 
         EmailAlreadyExistsException e = assertThrows(
                 EmailAlreadyExistsException.class,
@@ -101,6 +101,7 @@ class AuthService_UnitTest {
                 new EmailAlreadyExistsException(existingEmail).getMessage(),
                 e.getMessage()
         );
+        verifyNoInteractions(passwordEncoder, activationCodeService, emailSendingService);
     }
 
     private RegistrationDto registrationDtoWithEmail(String email) {
@@ -124,6 +125,7 @@ class AuthService_UnitTest {
                 .thenReturn(testUser);
 
         authService.register(registrationDto);
+
         verify(userService, times(1))
                 .save(registrationDto, registrationDto.password());
     }
@@ -142,8 +144,7 @@ class AuthService_UnitTest {
                 .thenReturn(expectedActivationCode);
 
         authService.register(registrationDto);
-        verify(activationCodeService, times(1))
-                .generateAndSaveCodeForUser(testUser);
+
         verify(emailSendingService, times(1))
                 .sendActivationCode(testUser, expectedActivationCode);
     }
@@ -153,6 +154,7 @@ class AuthService_UnitTest {
         String activationCode = "CODE";
 
         authService.activate(activationCode);
+
         verify(activationCodeService, times(1))
                 .activateByCode(activationCode);
     }
