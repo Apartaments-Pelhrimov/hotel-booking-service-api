@@ -30,6 +30,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderColumn;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
@@ -43,10 +44,8 @@ import ua.mibal.booking.model.entity.embeddable.Photo;
 import ua.mibal.booking.model.entity.embeddable.Price;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import static lombok.AccessLevel.PRIVATE;
 
@@ -111,12 +110,14 @@ public class ApartmentType {
                     nullable = false,
                     foreignKey = @ForeignKey(name = "apartment_type_photos_apartment_type_id_fk")
             ),
-            uniqueConstraints = @UniqueConstraint(
-                    name = "apartment_type_photos_photo_link_uq",
-                    columnNames = "photoLink"
+            indexes = @Index(
+                    name = "apartment_type_photos_photo_link_idx",
+                    columnList = "photo_link",
+                    unique = true
             ))
+    @OrderColumn
     @Setter(PRIVATE)
-    private Set<Photo> photos = new HashSet<>();
+    private List<Photo> photos = new ArrayList<>();
 
     @OneToMany(mappedBy = "apartmentType")
     @Setter(PRIVATE)
