@@ -24,9 +24,9 @@ import ua.mibal.booking.service.AuthService;
 import ua.mibal.booking.testUtils.RegistrationDtoArgumentConverter;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -69,8 +69,6 @@ class AuthController_UnitTest {
                         .with(httpBasic("username", "password")))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(expectedResponse)));
-        verify(authService, times(1))
-                .token(any());
     }
 
     @ParameterizedTest(name = "[{index}] {arguments}")
@@ -103,6 +101,8 @@ class AuthController_UnitTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(registrationDto)))
                 .andExpect(status().isBadRequest());
+
+        verifyNoInteractions(authService);
     }
 
     @ParameterizedTest
@@ -113,6 +113,7 @@ class AuthController_UnitTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(registrationDto)))
                 .andExpect(status().isOk());
+
         verify(authService, times(1))
                 .register(registrationDto);
     }
@@ -123,6 +124,7 @@ class AuthController_UnitTest {
         mvc.perform(post("/api/auth/activate")
                         .param("code", code))
                 .andExpect(status().isOk());
+
         verify(authService, times(1))
                 .activate(code);
     }
@@ -131,16 +133,16 @@ class AuthController_UnitTest {
     void activate_should_throw_exception_if_code_was_not_passed() throws Exception {
         mvc.perform(post("/api/auth/activate"))
                 .andExpect(status().isBadRequest());
-        verify(authService, never())
-                .activate(any());
+
+        verifyNoInteractions(authService);
     }
 
     @Test
     void resetPassword_should_throw_exception_if_code_was_not_passed() throws Exception {
         mvc.perform(get("/api/auth/forget"))
                 .andExpect(status().isBadRequest());
-        verify(authService, never())
-                .restore(any());
+
+        verifyNoInteractions(authService);
     }
 
     @Test
@@ -148,6 +150,7 @@ class AuthController_UnitTest {
         mvc.perform(get("/api/auth/forget")
                         .param("email", "email"))
                 .andExpect(status().isOk());
+
         verify(authService, times(1))
                 .restore("email");
     }
@@ -156,8 +159,8 @@ class AuthController_UnitTest {
     void newPassword_should_throw_exception_if_code_was_not_passed() throws Exception {
         mvc.perform(post("/api/auth/forget/new"))
                 .andExpect(status().isBadRequest());
-        verify(authService, never())
-                .newPassword(any(), any());
+
+        verifyNoInteractions(authService);
     }
 
     @Test
@@ -165,8 +168,8 @@ class AuthController_UnitTest {
         mvc.perform(post("/api/auth/forget/new")
                         .param("code", "code"))
                 .andExpect(status().isBadRequest());
-        verify(authService, never())
-                .newPassword(any(), any());
+
+        verifyNoInteractions(authService);
     }
 
     @Test
@@ -178,6 +181,7 @@ class AuthController_UnitTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(forgetPasswordDto)))
                 .andExpect(status().isOk());
+
         verify(authService, times(1))
                 .newPassword("code", forgetPasswordDto);
     }
@@ -192,14 +196,12 @@ class AuthController_UnitTest {
             "code, aaa123"
     }, nullValues = "null")
     void newPassword_should_throw_ValidationException_while_pass_incorrect_ForgetPasswordDto(String code, String password) throws Exception {
-        ForgetPasswordDto forgetPasswordDto = new ForgetPasswordDto(password);
-
         mvc.perform(post("/api/auth/forget/new")
                         .param("code", code)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(forgetPasswordDto)))
+                        .content(objectMapper.writeValueAsString(new ForgetPasswordDto(password))))
                 .andExpect(status().isBadRequest());
-        verify(authService, never())
-                .newPassword(code, forgetPasswordDto);
+
+        verifyNoInteractions(authService);
     }
 }
