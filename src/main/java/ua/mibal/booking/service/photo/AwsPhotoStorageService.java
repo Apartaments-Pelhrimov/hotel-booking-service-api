@@ -71,7 +71,7 @@ public class AwsPhotoStorageService implements PhotoStorageService {
     @Override
     public String addApartmentTypePhoto(Long id, MultipartFile photo) {
         ApartmentType apartmentType = getApartmentTypeById(id);
-        String fileName = photo.getOriginalFilename();
+        String fileName = generateName(id, photo);
         String encodedLink = perform(aws -> aws.uploadImage(
                 awsBucketProps.apartmentsFolder(),
                 fileName,
@@ -97,6 +97,10 @@ public class AwsPhotoStorageService implements PhotoStorageService {
     private ApartmentType getApartmentTypeById(Long id) {
         return apartmentTypeRepository.findByIdFetchPhotos(id)
                 .orElseThrow(() -> new ApartmentNotFoundException(id));
+    }
+
+    private String generateName(Long id, MultipartFile photo) {
+        return id + "_" + photo.hashCode() + "_" + photo.getOriginalFilename();
     }
 
     private <T> T perform(AwsWrapper<T> fn) {
