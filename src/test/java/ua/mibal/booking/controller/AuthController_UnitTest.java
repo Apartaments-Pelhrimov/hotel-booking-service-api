@@ -90,9 +90,9 @@ class AuthController_UnitTest {
             "Test Test +380951234567 example@g.com password1",
             "Test Test +380951234567 @g.com password1",
             // password
-            "Test Test +380951234567 example@exacom password",
-            "Test Test +380951234567 example@exacom pa1",
-            "Test Test +380951234567 example@exacom 23424242" // FIXME
+            "Test Test +380951234567 example@example.com password",
+            "Test Test +380951234567 example@example.com pa1",
+            "Test Test +380951234567 example@example.com 23424242"
     })
     void register_should_throw_ValidationException_while_pass_incorrect_RegistrationDto(@ConvertWith(RegistrationDtoArgumentConverter.class)
                                                                                         RegistrationDto registrationDto) throws Exception {
