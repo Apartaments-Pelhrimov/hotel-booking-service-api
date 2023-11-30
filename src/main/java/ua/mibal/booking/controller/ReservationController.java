@@ -49,11 +49,19 @@ public class ReservationController {
     }
 
     @RolesAllowed("USER")
-    @PutMapping("/reservations/{id}/reject")
-    public void cancelReservation(@PathVariable("id") Long id,
-                                  @Valid @RequestBody ReservationRejectingFormDto reservationRejectingFormDto,
-                                  Authentication authentication) {
+    @PutMapping("/users/me/reservations/{id}/reject")
+    public void rejectByUser(@PathVariable("id") Long id,
+                             @Valid @RequestBody ReservationRejectingFormDto reservationRejectingFormDto,
+                             Authentication authentication) {
         reservationService.rejectByUser(id, reservationRejectingFormDto, authentication.getName());
+    }
+
+    @RolesAllowed("MANAGER")
+    @PutMapping("/reservations/{id}/reject")
+    public void rejectByManager(@PathVariable("id") Long id,
+                                @Valid @RequestBody ReservationRejectingFormDto reservationRejectingFormDto,
+                                Authentication authentication) {
+        reservationService.rejectByManager(id, reservationRejectingFormDto, authentication.getName());
     }
 
     @RolesAllowed("MANAGER")

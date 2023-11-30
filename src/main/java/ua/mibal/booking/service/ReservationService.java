@@ -62,6 +62,14 @@ public class ReservationService {
         rejectReservation(reservation, email, reservationRejectingFormDto.reason());
     }
 
+    @Transactional
+    public void rejectByManager(Long id,
+                                ReservationRejectingFormDto reservationRejectingFormDto,
+                                String email) {
+        Reservation reservation = getOneById(id);
+        rejectReservation(reservation, email, reservationRejectingFormDto.reason());
+    }
+
     public Reservation getOneById(Long id) {
         return reservationRepository.findById(id)
                 .orElseThrow(() -> new ReservationNotFoundException(id));
