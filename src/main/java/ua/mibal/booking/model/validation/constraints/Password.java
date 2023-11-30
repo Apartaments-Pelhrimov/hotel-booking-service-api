@@ -20,7 +20,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * @link <a href="mailto:9mohapx9@gmail.com">email</a>
  */
 @Pattern(
-        regexp = "^(?=.*\\S)(?=.*\\d)[\\S\\d]{8,}$",
+        regexp = "^(?=.*[0-9])(?=.*[a-z])(?=\\S+$).{8,}$",
         message = "must be longer than 8, without space character " +
                   "and contain at least one letter and number"
 )
