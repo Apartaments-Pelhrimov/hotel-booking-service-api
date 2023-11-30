@@ -143,7 +143,12 @@ class AuthService_UnitTest {
     }
 
     @Test
-    void activate() {
+    void activate_should_delegate_activation_to_ActivationCodeService() {
+        String activationCode = "CODE";
+
+        authService.activate(activationCode);
+        verify(activationCodeService, times(1))
+                .activateByCode(activationCode);
     }
 
     @Test
