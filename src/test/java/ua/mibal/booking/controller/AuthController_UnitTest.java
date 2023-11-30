@@ -85,7 +85,10 @@ class AuthController_UnitTest {
             "Test Test 38095 1234567 example@example.com password1",
             "Test Test +38095123456774187987348978937984 example@example.com password1",
             // mail
-            "Test Test +380951234567 example@exacom password1", // FIXME
+            "Test Test +380951234567 example@exacom password1",
+            "Test Test +380951234567 exampleexacom password1",
+            "Test Test +380951234567 example@g.com password1",
+            "Test Test +380951234567 @g.com password1",
             // password
             "Test Test +380951234567 example@exacom password",
             "Test Test +380951234567 example@exacom pa1",
