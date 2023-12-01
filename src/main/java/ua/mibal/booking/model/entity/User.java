@@ -51,7 +51,7 @@ import static ua.mibal.booking.model.entity.embeddable.Role.ROLE_USER;
 
 /**
  * @author Mykhailo Balakhon
- * @link <a href="mailto:9mohapx9@gmail.com">email</a>
+ * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @NoArgsConstructor
 @AllArgsConstructor

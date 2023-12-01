@@ -27,7 +27,7 @@ import org.hibernate.type.NumericBooleanConverter;
 
 /**
  * @author Mykhailo Balakhon
- * @link <a href="mailto:9mohapx9@gmail.com">email</a>
+ * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @AllArgsConstructor
 @NoArgsConstructor

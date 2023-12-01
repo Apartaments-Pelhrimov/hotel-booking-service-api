@@ -27,7 +27,7 @@ import static lombok.AccessLevel.PRIVATE;
 
 /**
  * @author Mykhailo Balakhon
- * @link <a href="mailto:9mohapx9@gmail.com">email</a>
+ * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @NoArgsConstructor
 @AllArgsConstructor

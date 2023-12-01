@@ -16,7 +16,7 @@ import static org.mockito.Mockito.verify;
 
 /**
  * @author Mykhailo Balakhon
- * @link <a href="mailto:9mohapx9@gmail.com">email</a>
+ * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = RatingService.class)

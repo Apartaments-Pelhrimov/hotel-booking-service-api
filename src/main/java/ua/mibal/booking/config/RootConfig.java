@@ -27,7 +27,7 @@ import ua.mibal.booking.config.properties.AwsProps;
 
 /**
  * @author Mykhailo Balakhon
- * @link <a href="mailto:9mohapx9@gmail.com">email</a>
+ * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @RequiredArgsConstructor
 @EnableConfigurationProperties({AwsProps.class, AwsProps.AwsBucketProps.class})

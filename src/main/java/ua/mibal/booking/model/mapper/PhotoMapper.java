@@ -6,7 +6,7 @@ import ua.mibal.booking.model.entity.embeddable.Photo;
 
 /**
  * @author Mykhailo Balakhon
- * @link <a href="mailto:9mohapx9@gmail.com">email</a>
+ * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public class PhotoMapper {
