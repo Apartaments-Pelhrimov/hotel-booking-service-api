@@ -54,7 +54,7 @@ class UserDetailsSecurityService_UnitTest {
     @Test
     void loadUserByUsername_should_throw_UsernameNotFoundException() {
         when(userRepository.findByEmail("example@company.com"))
-                .thenReturn(Optional.of(user));
+                .thenReturn(Optional.empty());
 
         UsernameNotFoundException e = assertThrows(
                 UsernameNotFoundException.class,
@@ -62,6 +62,5 @@ class UserDetailsSecurityService_UnitTest {
         );
 
         assertTrue(e.getMessage().contains("example@company.com"));
-
     }
 }
