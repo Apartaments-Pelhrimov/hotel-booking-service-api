@@ -18,12 +18,15 @@ package ua.mibal.booking.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ua.mibal.booking.model.dto.auth.AuthResponseDto;
 import ua.mibal.booking.model.dto.auth.ForgetPasswordDto;
@@ -41,29 +44,33 @@ import ua.mibal.booking.service.AuthService;
 public class AuthController {
     private final AuthService authService;
 
-    @PostMapping("/login")
+    @GetMapping("/login")
     public AuthResponseDto login(@AuthenticationPrincipal User user) {
         return authService.token(user);
     }
 
     @PostMapping("/register")
+    @ResponseStatus(HttpStatus.CREATED)
     public void register(@Valid @RequestBody RegistrationDto registrationDto) {
         authService.register(registrationDto);
     }
 
     @PostMapping("/activate")
-    public void activate(@RequestParam("code") String activationCode) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void activateAccountRegistration(@RequestParam("code") String activationCode) {
         authService.activate(activationCode);
     }
 
     @GetMapping("/forget")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void resetPassword(@RequestParam("email") String email) {
         authService.restore(email);
     }
 
-    @PostMapping("/forget/new")
-    public void newPassword(@RequestParam("code") String activationCode,
-                            @Valid @RequestBody ForgetPasswordDto forgetPasswordDto) {
+    @PutMapping("/forget/password")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void setNewPassword(@RequestParam("code") String activationCode,
+                               @Valid @RequestBody ForgetPasswordDto forgetPasswordDto) {
         authService.newPassword(activationCode, forgetPasswordDto);
     }
 }
