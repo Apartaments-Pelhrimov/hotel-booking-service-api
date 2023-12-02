@@ -51,6 +51,7 @@ public class PhotoController {
 
     @RolesAllowed("USER")
     @DeleteMapping("/users/me/photo")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteMyPhoto(Authentication authentication) {
         photoStorageService.deleteUserPhoto(authentication.getName());
     }
@@ -65,6 +66,7 @@ public class PhotoController {
 
     @RolesAllowed("MANAGER")
     @DeleteMapping("/apartments/{id}/photos")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteApartmentPhoto(@PathVariable Long id,
                                      @RequestParam("link") String link) {
         photoStorageService.deleteApartmentTypePhoto(id, link);

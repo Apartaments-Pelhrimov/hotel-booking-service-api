@@ -19,12 +19,15 @@ package ua.mibal.booking.controller;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ua.mibal.booking.model.dto.request.ChangeNotificationSettingsDto;
 import ua.mibal.booking.model.dto.request.ChangePasswordDto;
@@ -50,24 +53,28 @@ public class UserController {
     }
 
     @DeleteMapping("/me")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteMe(@RequestBody DeleteMeDto deleteMeDto,
                          Authentication authentication) {
         userService.delete(deleteMeDto, authentication.getName());
     }
 
     @PutMapping("/me/password")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void changePassword(@Valid @RequestBody ChangePasswordDto changePasswordDto,
                                Authentication authentication) {
         userService.changePassword(changePasswordDto, authentication.getName());
     }
 
-    @PutMapping("/me")
+    @PatchMapping("/me")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void changeDetails(@Valid @RequestBody ChangeUserDetailsDto changeUserDetailsDto,
                               Authentication authentication) {
         userService.changeDetails(changeUserDetailsDto, authentication.getName());
     }
 
-    @PutMapping("/me/notifications")
+    @PatchMapping("/me/notifications")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void changeNotificationSettings(@RequestBody ChangeNotificationSettingsDto changeNotificationSettingsDto,
                                            Authentication authentication) {
         userService.changeNotificationSettings(changeNotificationSettingsDto, authentication.getName());
