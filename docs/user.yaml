@@ -4,7 +4,7 @@ info:
   description: "hotel_booking_service API"
   version: "1.0.0"
 servers:
-  - url: "https://hotel_booking_service"
+  - url: "https://localhost"
 paths:
   /api/users/me:
     get:
@@ -31,8 +31,22 @@ paths:
               $ref: "#/components/schemas/DeleteMeDto"
         required: true
       responses:
-        "200":
-          description: "OK"
+        "204":
+          description: "No Content"
+    patch:
+      security:
+        - bearer: [ ]
+      summary: "PATCH api/users/me"
+      operationId: "changeDetails"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangeUserDetailsDto"
+        required: true
+      responses:
+        "204":
+          description: "No Content"
   /api/users/me/password:
     put:
       security:
@@ -46,8 +60,23 @@ paths:
               $ref: "#/components/schemas/ChangePasswordDto"
         required: true
       responses:
-        "200":
-          description: "OK"
+        "204":
+          description: "No Content"
+  /api/users/me/notifications:
+    patch:
+      security:
+        - bearer: [ ]
+      summary: "PATCH api/users/me/notifications"
+      operationId: "changeNotificationSettings"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangeNotificationSettingsDto"
+        required: true
+      responses:
+        "204":
+          description: "No Content"
 components:
   securitySchemes:
     bearer:
@@ -94,3 +123,19 @@ components:
           type: "string"
         oldPassword:
           type: "string"
+    ChangeUserDetailsDto:
+      type: "object"
+      properties:
+        firstName:
+          type: "string"
+        lastName:
+          type: "string"
+        phone:
+          type: "string"
+    ChangeNotificationSettingsDto:
+      type: "object"
+      properties:
+        receiveOrderEmails:
+          type: "boolean"
+        receiveNewsEmails:
+          type: "boolean"

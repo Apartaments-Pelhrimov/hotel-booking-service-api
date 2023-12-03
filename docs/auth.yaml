@@ -4,13 +4,13 @@ info:
   description: "hotel_booking_service API"
   version: "1.0.0"
 servers:
-  - url: "https://hotel_booking_service"
+  - url: "https://localhost"
 paths:
   /api/auth/login:
-    post:
+    get:
       security:
-        - basicAuth: [ ]
-      summary: "POST api/auth/login"
+        - basic: [ ]
+      summary: "GET api/auth/login"
       operationId: "login"
       responses:
         "200":
@@ -30,12 +30,12 @@ paths:
               $ref: "#/components/schemas/RegistrationDto"
         required: true
       responses:
-        "200":
-          description: "OK"
+        "201":
+          description: "Created"
   /api/auth/activate:
     post:
       summary: "POST api/auth/activate"
-      operationId: "activate"
+      operationId: "activateAccountRegistration"
       parameters:
         - name: "code"
           in: "query"
@@ -43,8 +43,8 @@ paths:
           schema:
             type: "string"
       responses:
-        "200":
-          description: "OK"
+        "204":
+          description: "No Content"
   /api/auth/forget:
     get:
       summary: "GET api/auth/forget"
@@ -56,12 +56,12 @@ paths:
           schema:
             type: "string"
       responses:
-        "200":
-          description: "OK"
-  /api/auth/forget/new:
-    post:
-      summary: "POST api/auth/forget/new"
-      operationId: "newPassword"
+        "204":
+          description: "No Content"
+  /api/auth/forget/password:
+    put:
+      summary: "PUT api/auth/forget/password"
+      operationId: "setNewPassword"
       parameters:
         - name: "code"
           in: "query"
@@ -75,11 +75,11 @@ paths:
               $ref: "#/components/schemas/ForgetPasswordDto"
         required: true
       responses:
-        "200":
-          description: "OK"
+        "204":
+          description: "No Content"
 components:
   securitySchemes:
-    basicAuth:
+    basic:
       type: http
       scheme: basic
   schemas:
