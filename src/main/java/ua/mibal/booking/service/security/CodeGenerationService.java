@@ -16,8 +16,7 @@ public class CodeGenerationService {
     private final static int CODE_LENGTH = 30;
     private final static String ALLOWED_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
                                                 "abcdefghijklmnopqrstuvwxyz" +
-                                                "0123456789" +
-                                                "-._~:/?#[]@!$&'()*+,;=";
+                                                "0123456789";
 
     public String generateCode() {
         StringBuilder stringBuilder = new StringBuilder();
