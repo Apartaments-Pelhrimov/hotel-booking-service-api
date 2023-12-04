@@ -28,9 +28,9 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     @Query("""
             select r from Reservation r
-                left join fetch r.apartment a
-                left join fetch a.apartmentType at
-                left join fetch at.photos
+                left join fetch r.apartmentInstance ai
+                left join fetch ai.apartment a
+                left join fetch a.photos
                 left join fetch r.user u
             where u.email = ?1
             """)

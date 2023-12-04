@@ -23,12 +23,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.model.dto.request.CreateCommentDto;
 import ua.mibal.booking.model.dto.response.CommentDto;
-import ua.mibal.booking.model.entity.ApartmentType;
+import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.entity.Comment;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.model.mapper.CommentMapper;
-import ua.mibal.booking.repository.ApartmentTypeRepository;
+import ua.mibal.booking.repository.ApartmentRepository;
 import ua.mibal.booking.repository.CommentRepository;
 import ua.mibal.booking.repository.UserRepository;
 
@@ -42,7 +42,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final CommentMapper commentMapper;
     private final UserRepository userRepository;
-    private final ApartmentTypeRepository apartmentTypeRepository;
+    private final ApartmentRepository apartmentRepository;
 
     public Page<CommentDto> getCommentsInApartment(Long apartmentId, Pageable pageable) {
         return commentRepository.findByApartmentIdFetchUser(apartmentId, pageable)
@@ -54,11 +54,11 @@ public class CommentService {
                                       String userEmail,
                                       Long apartmentId) {
         validate(apartmentId, userEmail);
-        ApartmentType apartmentTypeReference = apartmentTypeRepository.getReferenceById(apartmentId);
+        Apartment apartmentReference = apartmentRepository.getReferenceById(apartmentId);
         User userReference = userRepository.getReferenceByEmail(userEmail);
         Comment comment = new Comment(
                 userReference,
-                apartmentTypeReference,
+                apartmentReference,
                 createCommentDto.rate(),
                 createCommentDto.body()
         );
@@ -66,10 +66,10 @@ public class CommentService {
     }
 
     private void validate(Long apartmentId, String userEmail) {
-        if (!apartmentTypeRepository.existsById(apartmentId))
+        if (!apartmentRepository.existsById(apartmentId))
             throw new ApartmentNotFoundException(apartmentId);
         if (!userRepository.userHasReservationWithApartment(userEmail, apartmentId))
             throw new IllegalArgumentException("User with email='" + userEmail + "' does not " +
-                                               "have access to comments for Apartment with id=");
+                                               "have access to comments for Apartment with id=" + apartmentId);
     }
 }

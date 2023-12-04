@@ -27,7 +27,7 @@ import java.util.Set;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public record ApartmentTypeDto(
+public record ApartmentDto(
         String name,
         Set<String> photos,
         ApartmentOptions options,

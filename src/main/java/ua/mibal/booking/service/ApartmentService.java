@@ -19,12 +19,12 @@ package ua.mibal.booking.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ua.mibal.booking.model.dto.response.ApartmentTypeCardDto;
-import ua.mibal.booking.model.dto.response.ApartmentTypeDto;
-import ua.mibal.booking.model.entity.ApartmentType;
+import ua.mibal.booking.model.dto.response.ApartmentCardDto;
+import ua.mibal.booking.model.dto.response.ApartmentDto;
+import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.model.mapper.ApartmentMapper;
-import ua.mibal.booking.repository.ApartmentTypeRepository;
+import ua.mibal.booking.repository.ApartmentRepository;
 
 import java.util.List;
 
@@ -35,24 +35,24 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class ApartmentService {
-    private final ApartmentTypeRepository apartmentTypeRepository;
+    private final ApartmentRepository apartmentRepository;
     private final ApartmentMapper apartmentMapper;
 
     @Transactional(readOnly = true) // for LAZY Apartment.beds fetch
-    public ApartmentTypeDto getOneDto(Long id) {
-        return apartmentTypeRepository.findByIdFetchPhotos(id)
+    public ApartmentDto getOneDto(Long id) {
+        return apartmentRepository.findByIdFetchPhotos(id)
                 .map(apartmentMapper::toDto)
                 .orElseThrow(() -> new ApartmentNotFoundException(id));
     }
 
-    public ApartmentType getOne(Long id) {
-        return apartmentTypeRepository.findByIdFetchPhotos(id)
+    public Apartment getOne(Long id) {
+        return apartmentRepository.findByIdFetchPhotos(id)
                 .orElseThrow(() -> new ApartmentNotFoundException(id));
     }
 
     @Transactional(readOnly = true) // for LAZY Apartment.beds fetch
-    public List<ApartmentTypeCardDto> getAll() {
-        return apartmentTypeRepository.findAllFetchPhotos()
+    public List<ApartmentCardDto> getAll() {
+        return apartmentRepository.findAllFetchPhotos()
                 .stream()
                 .map(apartmentMapper::toCardDto)
                 .toList();

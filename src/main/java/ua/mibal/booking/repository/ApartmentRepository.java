@@ -14,25 +14,27 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.dto.response;
+package ua.mibal.booking.repository;
 
-import ua.mibal.booking.model.entity.embeddable.ApartmentOptions;
-import ua.mibal.booking.model.entity.embeddable.Bed;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import ua.mibal.booking.model.entity.Apartment;
 
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 
-/**
- * @author Mykhailo Balakhon
- * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
- */
-public record ApartmentTypeCardDto(
-        String name,
-        Set<String> photos,
-        ApartmentOptions options,
-        Double rating,
-        List<Bed> beds,
-        BigDecimal cost
-) {
+public interface ApartmentRepository extends JpaRepository<Apartment, Long> {
+
+    @Query("""
+            select a from Apartment a
+                left join fetch a.photos
+            where a.id = ?1
+            """)
+    Optional<Apartment> findByIdFetchPhotos(Long id);
+
+    @Query("""
+            select a from Apartment a
+                left join fetch a.photos
+            """)
+    List<Apartment> findAllFetchPhotos();
 }

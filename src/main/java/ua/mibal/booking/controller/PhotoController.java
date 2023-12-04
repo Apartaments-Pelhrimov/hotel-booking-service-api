@@ -61,7 +61,7 @@ public class PhotoController {
     @ResponseStatus(HttpStatus.CREATED)
     public String addApartmentPhoto(@PathVariable Long id,
                                     @RequestParam("file") MultipartFile file) {
-        return photoStorageService.addApartmentTypePhoto(id, file);
+        return photoStorageService.addApartmentPhoto(id, file);
     }
 
     @RolesAllowed("MANAGER")
@@ -69,6 +69,6 @@ public class PhotoController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteApartmentPhoto(@PathVariable Long id,
                                      @RequestParam("link") String link) {
-        photoStorageService.deleteApartmentTypePhoto(id, link);
+        photoStorageService.deleteApartmentPhoto(id, link);
     }
 }

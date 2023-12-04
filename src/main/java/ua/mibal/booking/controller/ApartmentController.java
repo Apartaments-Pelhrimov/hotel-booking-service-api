@@ -21,8 +21,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ua.mibal.booking.model.dto.response.ApartmentTypeCardDto;
-import ua.mibal.booking.model.dto.response.ApartmentTypeDto;
+import ua.mibal.booking.model.dto.response.ApartmentCardDto;
+import ua.mibal.booking.model.dto.response.ApartmentDto;
 import ua.mibal.booking.service.ApartmentService;
 
 import java.util.List;
@@ -38,12 +38,12 @@ public class ApartmentController {
     private final ApartmentService apartmentService;
 
     @GetMapping("/apartments/{id}")
-    public ApartmentTypeDto getOne(@PathVariable Long id) {
+    public ApartmentDto getOne(@PathVariable Long id) {
         return apartmentService.getOneDto(id);
     }
 
     @GetMapping("/apartments")
-    public List<ApartmentTypeCardDto> getAll() {
+    public List<ApartmentCardDto> getAll() {
         return apartmentService.getAll();
     }
 }

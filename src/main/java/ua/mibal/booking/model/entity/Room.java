@@ -62,11 +62,11 @@ public class Room {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(
-            name = "apartment_type_id",
+            name = "apartment_id",
             nullable = false,
-            foreignKey = @ForeignKey(name = "rooms_apartment_type_id_fk")
+            foreignKey = @ForeignKey(name = "rooms_apartment_id_fk")
     )
-    private ApartmentType apartmentType;
+    private Apartment apartment;
 
     public enum RoomType {
         BEDROOM, LIVING_ROOM, MEETING_ROOM

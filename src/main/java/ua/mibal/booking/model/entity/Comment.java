@@ -44,7 +44,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "comments", indexes = {
         @Index(name = "comments_user_id_idx", columnList = "user_id"),
-        @Index(name = "comments_apartment_type_id_idx", columnList = "apartment_type_id")
+        @Index(name = "comments_apartment_id_idx", columnList = "apartment_id")
 })
 public class Comment {
 
@@ -62,11 +62,11 @@ public class Comment {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(
-            name = "apartment_type_id",
+            name = "apartment_id",
             nullable = false,
-            foreignKey = @ForeignKey(name = "comments_apartment_type_id_fk")
+            foreignKey = @ForeignKey(name = "comments_apartment_id_fk")
     )
-    private ApartmentType apartmentType;
+    private Apartment apartment;
 
     @Column(nullable = false)
     private LocalDateTime creationDateTime = LocalDateTime.now();
@@ -77,9 +77,9 @@ public class Comment {
     @Column(nullable = false)
     private String body;
 
-    public Comment(User user, ApartmentType apartmentType, Double rate, String body) {
+    public Comment(User user, Apartment apartment, Double rate, String body) {
         this.user = user;
-        this.apartmentType = apartmentType;
+        this.apartment = apartment;
         this.rate = rate;
         this.body = body;
         this.creationDateTime = LocalDateTime.now();

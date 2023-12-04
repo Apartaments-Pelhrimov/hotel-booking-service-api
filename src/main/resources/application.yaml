@@ -1,15 +1,13 @@
 spring:
-
   datasource:
-    url:
-    username:
-    password:
-
+    url: jdbc:postgresql://localhost:5432/hotel_booking_service
+    username: postgres
+    password: 210605
   jpa:
     open-in-view: false
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
 
 rsa:
   private-key: classpath:certs/private.pem
@@ -19,14 +17,13 @@ jwt-token:
   expiring-days: 30
 
 aws:
-  access-key-id:
-  secret-access-key:
-  region:
-
+  access-key-id: AKIA2VXUQKUE74F2Z57O
+  secret-access-key: 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
+  region: eu-north-1
   bucket:
-    name:
-    users-folder:
-    apartments-folder:
+    name: hotel-booking-service-dev
+    users-folder: users/
+    apartments-folder: apartments/
 
 server:
   port: 443
@@ -34,6 +31,5 @@ server:
     enabled: true
     key-store-type: PKCS12
     key-store: classpath:keystore/hotel-booking-service.p12
-    key-store-password:
-    key-alias:
-
+    key-store-password: 210605
+    key-alias: hotel-booking-service

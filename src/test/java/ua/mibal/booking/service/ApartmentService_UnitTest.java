@@ -10,12 +10,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
-import ua.mibal.booking.model.dto.response.ApartmentTypeCardDto;
-import ua.mibal.booking.model.dto.response.ApartmentTypeDto;
-import ua.mibal.booking.model.entity.ApartmentType;
+import ua.mibal.booking.model.dto.response.ApartmentCardDto;
+import ua.mibal.booking.model.dto.response.ApartmentDto;
+import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.model.mapper.ApartmentMapper;
-import ua.mibal.booking.repository.ApartmentTypeRepository;
+import ua.mibal.booking.repository.ApartmentRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,34 +40,34 @@ class ApartmentService_UnitTest {
     private ApartmentService service;
 
     @MockBean
-    private ApartmentTypeRepository apartmentTypeRepository;
+    private ApartmentRepository apartmentRepository;
     @MockBean
     private ApartmentMapper apartmentMapper;
 
     @Mock
-    private ApartmentType apartmentType;
+    private Apartment apartment;
     @Mock
-    private ApartmentTypeDto apartmentTypeDto;
+    private ApartmentDto apartmentDto;
     @Mock
-    private ApartmentTypeCardDto apartmentTypeCardDto;
+    private ApartmentCardDto apartmentCardDto;
 
     @Test
     void getOneDto() {
-        when(apartmentTypeRepository.findByIdFetchPhotos(1L))
-                .thenReturn(Optional.of(apartmentType));
-        when(apartmentMapper.toDto(apartmentType))
-                .thenReturn(apartmentTypeDto);
+        when(apartmentRepository.findByIdFetchPhotos(1L))
+                .thenReturn(Optional.of(apartment));
+        when(apartmentMapper.toDto(apartment))
+                .thenReturn(apartmentDto);
 
-        ApartmentTypeDto actual = assertDoesNotThrow(
+        ApartmentDto actual = assertDoesNotThrow(
                 () -> service.getOneDto(1L)
         );
 
-        assertEquals(apartmentTypeDto, actual);
+        assertEquals(apartmentDto, actual);
     }
 
     @Test
     void getOneDto_should_throw_ApartmentNotFoundException() {
-        when(apartmentTypeRepository.findByIdFetchPhotos(1L))
+        when(apartmentRepository.findByIdFetchPhotos(1L))
                 .thenReturn(Optional.empty());
 
         ApartmentNotFoundException e = assertThrows(
@@ -85,19 +85,19 @@ class ApartmentService_UnitTest {
 
     @Test
     void getOne() {
-        when(apartmentTypeRepository.findByIdFetchPhotos(1L))
-                .thenReturn(Optional.of(apartmentType));
+        when(apartmentRepository.findByIdFetchPhotos(1L))
+                .thenReturn(Optional.of(apartment));
 
-        ApartmentType actual = assertDoesNotThrow(
+        Apartment actual = assertDoesNotThrow(
                 () -> service.getOne(1L)
         );
 
-        assertEquals(apartmentType, actual);
+        assertEquals(apartment, actual);
     }
 
     @Test
     void getOne_should_throw_ApartmentNotFoundException() {
-        when(apartmentTypeRepository.findByIdFetchPhotos(1L))
+        when(apartmentRepository.findByIdFetchPhotos(1L))
                 .thenReturn(Optional.empty());
 
         ApartmentNotFoundException e = assertThrows(
@@ -114,15 +114,15 @@ class ApartmentService_UnitTest {
 
     @Test
     void getAll() {
-        when(apartmentTypeRepository.findAllFetchPhotos())
-                .thenReturn(List.of(apartmentType, apartmentType));
-        when(apartmentMapper.toCardDto(apartmentType))
-                .thenReturn(apartmentTypeCardDto);
+        when(apartmentRepository.findAllFetchPhotos())
+                .thenReturn(List.of(apartment, apartment));
+        when(apartmentMapper.toCardDto(apartment))
+                .thenReturn(apartmentCardDto);
 
-        List<ApartmentTypeCardDto> actual = service.getAll();
+        List<ApartmentCardDto> actual = service.getAll();
 
         assertEquals(
-                List.of(apartmentTypeCardDto, apartmentTypeCardDto),
+                List.of(apartmentCardDto, apartmentCardDto),
                 actual
         );
     }

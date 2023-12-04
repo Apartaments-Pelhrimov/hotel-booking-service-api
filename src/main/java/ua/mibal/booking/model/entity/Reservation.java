@@ -48,7 +48,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "reservations", indexes = {
         @Index(name = "reservations_user_id_idx", columnList = "user_id"),
-        @Index(name = "reservations_apartment_id_idx", columnList = "apartment_id")
+        @Index(name = "reservations_apartment_instance_id_idx", columnList = "apartment_instance_id")
 })
 public class Reservation {
 
@@ -69,11 +69,11 @@ public class Reservation {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(
-            name = "apartment_id",
+            name = "apartment_instance_id",
             nullable = false,
-            foreignKey = @ForeignKey(name = "reservations_apartment_id_fk")
+            foreignKey = @ForeignKey(name = "reservations_apartment_instance_id_fk")
     )
-    private Apartment apartment;
+    private ApartmentInstance apartmentInstance;
 
     @Embedded
     private ReservationDetails details;

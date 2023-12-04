@@ -21,10 +21,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ua.mibal.booking.config.properties.AwsProps.AwsBucketProps;
-import ua.mibal.booking.model.entity.ApartmentType;
+import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.entity.embeddable.Photo;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
-import ua.mibal.booking.repository.ApartmentTypeRepository;
+import ua.mibal.booking.repository.ApartmentRepository;
 import ua.mibal.booking.repository.UserRepository;
 import ua.mibal.booking.service.util.AwsUrlUtils;
 
@@ -42,7 +42,7 @@ import static ua.mibal.booking.service.util.FileNameUtils.getPhotoExtension;
 @Service
 public class AwsPhotoStorageService implements PhotoStorageService {
     private final UserRepository userRepository;
-    private final ApartmentTypeRepository apartmentTypeRepository;
+    private final ApartmentRepository apartmentRepository;
     private final AwsStorage awsStorage;
     private final AwsBucketProps awsBucketProps;
 
@@ -69,8 +69,8 @@ public class AwsPhotoStorageService implements PhotoStorageService {
 
     @Transactional
     @Override
-    public String addApartmentTypePhoto(Long id, MultipartFile photo) {
-        ApartmentType apartmentType = getApartmentTypeById(id);
+    public String addApartmentPhoto(Long id, MultipartFile photo) {
+        Apartment apartment = getApartmentById(id);
         String fileName = generateName(id, photo);
         String encodedLink = perform(aws -> aws.uploadImage(
                 awsBucketProps.apartmentsFolder(),
@@ -79,23 +79,23 @@ public class AwsPhotoStorageService implements PhotoStorageService {
                 getPhotoExtension(fileName)
         ));
         String link = URLDecoder.decode(encodedLink, StandardCharsets.UTF_8);
-        apartmentType.addPhoto(new Photo(link));
+        apartment.addPhoto(new Photo(link));
         return link;
     }
 
     @Transactional
     @Override
-    public void deleteApartmentTypePhoto(Long id, String link) {
-        ApartmentType apartmentType = getApartmentTypeById(id);
-        if (!apartmentType.deletePhoto(new Photo(link)))
+    public void deleteApartmentPhoto(Long id, String link) {
+        Apartment apartment = getApartmentById(id);
+        if (!apartment.deletePhoto(new Photo(link)))
             throw new IllegalArgumentException(
                     "Apartment with id=" + id + " doesn't contain photo='" + link + "'");
         String name = AwsUrlUtils.getFileName(link);
         perform(aws -> aws.delete(awsBucketProps.apartmentsFolder(), name));
     }
 
-    private ApartmentType getApartmentTypeById(Long id) {
-        return apartmentTypeRepository.findByIdFetchPhotos(id)
+    private Apartment getApartmentById(Long id) {
+        return apartmentRepository.findByIdFetchPhotos(id)
                 .orElseThrow(() -> new ApartmentNotFoundException(id));
     }
 

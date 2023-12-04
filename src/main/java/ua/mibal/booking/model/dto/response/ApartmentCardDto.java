@@ -14,23 +14,25 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.mapper;
+package ua.mibal.booking.model.dto.response;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.MappingConstants;
-import ua.mibal.booking.model.dto.response.ApartmentCardDto;
-import ua.mibal.booking.model.dto.response.ApartmentDto;
-import ua.mibal.booking.model.entity.Apartment;
+import ua.mibal.booking.model.entity.embeddable.ApartmentOptions;
+import ua.mibal.booking.model.entity.embeddable.Bed;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Mapper(uses = PhotoMapper.class,
-        componentModel = MappingConstants.ComponentModel.SPRING)
-public interface ApartmentMapper {
-
-    ApartmentDto toDto(Apartment apartment);
-
-    ApartmentCardDto toCardDto(Apartment apartment);
+public record ApartmentCardDto(
+        String name,
+        Set<String> photos,
+        ApartmentOptions options,
+        Double rating,
+        List<Bed> beds,
+        BigDecimal cost
+) {
 }
