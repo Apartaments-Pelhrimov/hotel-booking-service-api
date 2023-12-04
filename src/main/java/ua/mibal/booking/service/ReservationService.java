@@ -33,6 +33,7 @@ import ua.mibal.booking.model.entity.embeddable.ReservationDetails;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.model.exception.entity.PriceForPeopleCountNotFoundException;
 import ua.mibal.booking.model.exception.entity.ReservationNotFoundException;
+import ua.mibal.booking.model.exception.entity.UserNotFoundException;
 import ua.mibal.booking.model.mapper.ReservationMapper;
 import ua.mibal.booking.repository.ApartmentRepository;
 import ua.mibal.booking.repository.ReservationRepository;
@@ -146,6 +147,11 @@ public class ReservationService {
     }
 
     private void validateApartmentAndUserExists(Long apartmentId, String userEmail) {
-        // TODO
+        if (!apartmentRepository.existsById(apartmentId)) {
+            throw new ApartmentNotFoundException(apartmentId);
+        }
+        if (!userRepository.existsByEmail(userEmail)) {
+            throw new UserNotFoundException(userEmail);
+        }
     }
 }
