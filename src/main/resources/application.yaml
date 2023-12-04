@@ -7,7 +7,7 @@ spring:
     open-in-view: false
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate
 
 rsa:
   private-key: classpath:certs/private.pem
@@ -33,3 +33,7 @@ server:
     key-store: classpath:keystore/hotel-booking-service.p12
     key-store-password: 210605
     key-alias: hotel-booking-service
+
+reservation-hours:
+  start: 15
+  end: 11
