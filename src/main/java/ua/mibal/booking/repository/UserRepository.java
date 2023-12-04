@@ -71,8 +71,8 @@ public interface UserRepository extends JpaRepository<User, Long>, CustomUserRep
     void deleteUserPhotoByEmail(String email);
 
     @Query("""
-            select count(a.id) >= 1 from User u
-                left join u.reservations r
+            select count(r.id) >= 1 from Reservation r
+                left join r.user u
                 left join r.apartmentInstance ai
                 right join ai.apartment a
             where u.email = ?2 and a.id = ?1
