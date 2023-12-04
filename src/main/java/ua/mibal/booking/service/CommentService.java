@@ -66,6 +66,7 @@ public class CommentService {
                 .body(createCommentDto.body())
                 .build();
         commentRepository.save(comment);
+        commentRepository.refreshRatingForApartment(apartmentId);
     }
 
     private void validate(Long apartmentId, String userEmail) {

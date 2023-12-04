@@ -19,6 +19,7 @@ package ua.mibal.booking.repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import ua.mibal.booking.model.entity.Comment;
 
@@ -34,4 +35,15 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             where c.apartment.id = ?1
              """)
     Page<Comment> findByApartmentIdFetchUser(Long apartmentId, Pageable pageable);
+
+    @Modifying
+    @Query("""
+            update Apartment a
+                SET a.rating = (
+                    select avg(c.rate) from Comment c
+                    where c.apartment.id = a.id
+                )
+            where a.id = ?1
+            """)
+    void refreshRatingForApartment(Long apartmentId);
 }
