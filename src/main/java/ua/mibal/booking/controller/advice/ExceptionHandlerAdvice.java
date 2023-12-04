@@ -24,9 +24,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import software.amazon.awssdk.core.exception.SdkException;
-import ua.mibal.booking.model.exception.EmailAlreadyExistsException;
-import ua.mibal.booking.model.exception.IllegalPasswordException;
-import ua.mibal.booking.model.exception.IllegalPhotoFormatException;
+import ua.mibal.booking.model.exception.NotFoundException;
 
 import java.time.ZonedDateTime;
 import java.util.stream.Collectors;
@@ -53,8 +51,11 @@ public class ExceptionHandlerAdvice {
                 .body(new ApiError(status, e, (objErrors + " " + fieldErrors).trim()));
     }
 
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<ApiError> handleValidationException(EntityNotFoundException e) {
+    @ExceptionHandler({
+            EntityNotFoundException.class,
+            NotFoundException.class
+    })
+    public ResponseEntity<ApiError> handleValidationException(Exception e) {
         HttpStatus status = HttpStatus.NOT_FOUND;
         return ResponseEntity.status(status)
                 .body(new ApiError(status, e));
@@ -62,12 +63,9 @@ public class ExceptionHandlerAdvice {
 
     @ExceptionHandler({
             IllegalArgumentException.class,
-            EmailAlreadyExistsException.class,
-            IllegalPasswordException.class,
-            IllegalPhotoFormatException.class,
             SdkException.class
     })
-    public ResponseEntity<ApiError> handleEmailAlreadyExistsException(RuntimeException e) {
+    public ResponseEntity<ApiError> handleEmailAlreadyExistsException(Exception e) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         return ResponseEntity.status(status)
                 .body(new ApiError(status, e));
