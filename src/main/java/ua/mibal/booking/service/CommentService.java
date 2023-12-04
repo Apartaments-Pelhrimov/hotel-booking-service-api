@@ -31,6 +31,7 @@ import ua.mibal.booking.model.mapper.CommentMapper;
 import ua.mibal.booking.repository.ApartmentRepository;
 import ua.mibal.booking.repository.CommentRepository;
 import ua.mibal.booking.repository.UserRepository;
+import ua.mibal.booking.service.util.DateUtils;
 
 /**
  * @author Mykhailo Balakhon
@@ -43,6 +44,7 @@ public class CommentService {
     private final CommentMapper commentMapper;
     private final UserRepository userRepository;
     private final ApartmentRepository apartmentRepository;
+    private final DateUtils dateUtils;
 
     public Page<CommentDto> getCommentsInApartment(Long apartmentId, Pageable pageable) {
         return commentRepository.findByApartmentIdFetchUser(apartmentId, pageable)
@@ -59,6 +61,7 @@ public class CommentService {
         Comment comment = new Comment(
                 userReference,
                 apartmentReference,
+                dateUtils.now(),
                 createCommentDto.rate(),
                 createCommentDto.body()
         );

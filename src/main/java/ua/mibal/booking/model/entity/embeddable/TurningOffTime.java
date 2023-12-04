@@ -22,7 +22,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 
 /**
  * @author Mykhailo Balakhon
@@ -34,6 +34,6 @@ import java.time.LocalDate;
 @Setter
 @Embeddable
 public class TurningOffTime {
-    private LocalDate offFrom;
-    private LocalDate offTo;
+    private ZonedDateTime offFrom;
+    private ZonedDateTime offTo;
 }

@@ -24,13 +24,16 @@ import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.services.s3.S3Client;
 import ua.mibal.booking.config.properties.AwsProps;
+import ua.mibal.booking.config.properties.DateTimeProps;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @RequiredArgsConstructor
-@EnableConfigurationProperties({AwsProps.class, AwsProps.AwsBucketProps.class})
+@EnableConfigurationProperties({
+        AwsProps.class, AwsProps.AwsBucketProps.class, DateTimeProps.class
+})
 @Configuration
 public class RootConfig {
     private final AwsProps awsProps;

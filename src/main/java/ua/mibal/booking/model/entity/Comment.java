@@ -31,7 +31,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * @author Mykhailo Balakhon
@@ -69,7 +69,7 @@ public class Comment {
     private Apartment apartment;
 
     @Column(nullable = false)
-    private LocalDateTime creationDateTime = LocalDateTime.now();
+    private ZonedDateTime creationDateTime;
 
     @Column(nullable = false)
     private Double rate;
@@ -77,12 +77,12 @@ public class Comment {
     @Column(nullable = false)
     private String body;
 
-    public Comment(User user, Apartment apartment, Double rate, String body) {
+    public Comment(User user, Apartment apartment, ZonedDateTime creationDateTime, Double rate, String body) {
         this.user = user;
         this.apartment = apartment;
+        this.creationDateTime = creationDateTime;
         this.rate = rate;
         this.body = body;
-        this.creationDateTime = LocalDateTime.now();
     }
 
     @Override

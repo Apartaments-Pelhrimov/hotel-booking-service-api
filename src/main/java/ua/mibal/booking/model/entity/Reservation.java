@@ -40,7 +40,7 @@ import lombok.Setter;
 import ua.mibal.booking.model.entity.embeddable.Rejection;
 import ua.mibal.booking.model.entity.embeddable.ReservationDetails;
 
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,7 +64,7 @@ public class Reservation {
     private Long id;
 
     @Column(nullable = false)
-    private LocalDate dateTime = LocalDate.now();
+    private ZonedDateTime dateTime;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(
