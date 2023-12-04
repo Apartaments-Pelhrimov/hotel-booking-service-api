@@ -23,11 +23,14 @@ import ua.mibal.booking.model.dto.response.ApartmentCardDto;
 import ua.mibal.booking.model.dto.response.ApartmentDto;
 import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.entity.ApartmentInstance;
+import ua.mibal.booking.model.exception.FreeApartmentsForDateNotFoundException;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.model.mapper.ApartmentMapper;
 import ua.mibal.booking.repository.ApartmentRepository;
+import ua.mibal.booking.service.util.DateTimeUtils;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -39,6 +42,7 @@ import java.util.List;
 public class ApartmentService {
     private final ApartmentRepository apartmentRepository;
     private final ApartmentMapper apartmentMapper;
+    private final DateTimeUtils dateTimeUtils;
 
     @Transactional(readOnly = true) // for LAZY Apartment.beds fetch
     public ApartmentDto getOneDto(Long id) {
@@ -60,8 +64,10 @@ public class ApartmentService {
                 .toList();
     }
 
-    public ApartmentInstance getFreeApartmentInstanceByApartmentId(Long apartmentId, LocalDate from, LocalDate to) {
-        // TODO
-        return null;
+    public ApartmentInstance getFreeApartmentInstanceByApartmentId(Long apartmentId, LocalDate dateFrom, LocalDate dateTo) {
+        LocalDateTime from = dateTimeUtils.reserveFrom(dateFrom);
+        LocalDateTime to = dateTimeUtils.reserveTo(dateTo);
+        return apartmentRepository.findFreeApartmentInstanceByApartmentIdAndDates(apartmentId, from, to)
+                .orElseThrow(() -> new FreeApartmentsForDateNotFoundException(from, to, apartmentId));
     }
 }

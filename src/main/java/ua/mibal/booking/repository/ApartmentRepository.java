@@ -19,7 +19,9 @@ package ua.mibal.booking.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ua.mibal.booking.model.entity.Apartment;
+import ua.mibal.booking.model.entity.ApartmentInstance;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,4 +46,17 @@ public interface ApartmentRepository extends JpaRepository<Apartment, Long> {
             where a.id = ?1
             """)
     Optional<Apartment> findByIdFetchPrices(Long id);
+
+    // TODO add hotel turn off time validation
+    @Query("""
+            select ai from ApartmentInstance ai
+                left join ai.apartment a
+                left join ai.reservations r
+                left join ai.turningOffTimes to
+            where
+                a.id = ?1 and
+                (r = null or (r.state != 'REJECTED' and (r.details.reservedTo < ?2 or r.details.reservedFrom > ?3))) and
+                (to = null or to.offTo < ?2 or to.offFrom > ?3)
+            """)
+    Optional<ApartmentInstance> findFreeApartmentInstanceByApartmentIdAndDates(Long id, LocalDateTime from, LocalDateTime to);
 }
