@@ -42,4 +42,11 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             where r.id = ?1
             """)
     Optional<Reservation> findByIdFetchUser(Long id);
+
+    @Query("""
+            select r from Reservation r
+                left join fetch r.rejections rr
+            where r.id = ?1
+            """)
+    Optional<Reservation> findByIdFetchRejections(Long id);
 }

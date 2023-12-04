@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.model.dto.request.ReservationRejectingFormDto;
 import ua.mibal.booking.model.dto.response.ReservationDto;
 import ua.mibal.booking.model.entity.Reservation;
+import ua.mibal.booking.model.entity.User;
+import ua.mibal.booking.model.entity.embeddable.Rejection;
 import ua.mibal.booking.model.exception.entity.ReservationNotFoundException;
 import ua.mibal.booking.model.mapper.ReservationMapper;
 import ua.mibal.booking.repository.ReservationRepository;
@@ -54,7 +56,7 @@ public class ReservationService {
     public void rejectByUser(Long id,
                              ReservationRejectingFormDto reservationRejectingFormDto,
                              String email) {
-        Reservation reservation = getOneById(id);
+        Reservation reservation = getOneByIdFetchRejections(id);
         if (!reservation.getUser().getEmail().equals(email)) {
             throw new IllegalArgumentException("Reservation with id=" + id + " was not created " +
                                                "by User with email='" + email + "'");
@@ -66,7 +68,7 @@ public class ReservationService {
     public void rejectByManager(Long id,
                                 ReservationRejectingFormDto reservationRejectingFormDto,
                                 String email) {
-        Reservation reservation = getOneById(id);
+        Reservation reservation = getOneByIdFetchRejections(id);
         rejectReservation(reservation, email, reservationRejectingFormDto.reason());
     }
 
@@ -75,16 +77,18 @@ public class ReservationService {
                 .orElseThrow(() -> new ReservationNotFoundException(id));
     }
 
+    private Reservation getOneByIdFetchRejections(Long id) {
+        return reservationRepository.findByIdFetchRejections(id)
+                .orElseThrow(() -> new ReservationNotFoundException(id));
+    }
+
     private void rejectReservation(Reservation reservation, String email, String reason) {
-        // TODO add ReservationRejection entity
         validateReservationToReject(reservation);
-        reservation.reject();
-//        User userReference = userRepository.getReferenceByEmail(email);
-//        reservationRejectionRepository.save(new ReservationRejection(
-//                userReference,
-//                reservation,
-//                reason
-//        ));
+        User userReference = userRepository.getReferenceByEmail(email);
+        reservation.reject(new Rejection(
+                userReference,
+                reason
+        ));
     }
 
     private void validateReservationToReject(Reservation reservation) {

@@ -117,8 +117,9 @@ public class Reservation {
         return getClass().hashCode();
     }
 
-    public void reject() {
+    public void reject(Rejection rejection) {
         this.state = State.REJECTED;
+        this.rejections.add(rejection);
     }
 
     public enum State {
