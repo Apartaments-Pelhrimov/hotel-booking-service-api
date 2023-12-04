@@ -75,7 +75,7 @@ public interface UserRepository extends JpaRepository<User, Long>, CustomUserRep
                 left join r.user u
                 left join r.apartmentInstance ai
                 right join ai.apartment a
-            where u.email = ?2 and a.id = ?1
+            where u.email = ?1 and a.id = ?2
             """)
     boolean userHasReservationWithApartment(String email, Long apartmentId);
 }
