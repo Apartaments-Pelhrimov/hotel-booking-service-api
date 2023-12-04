@@ -41,8 +41,8 @@ import ua.mibal.booking.repository.UserRepository;
 import ua.mibal.booking.service.util.DateUtils;
 
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * @author Mykhailo Balakhon
@@ -113,13 +113,13 @@ public class ReservationService {
     }
 
     @Transactional
-    public void reserveApartment(Long apartmentId, String userEmail, Date from, Date to, Integer people) {
+    public void reserveApartment(Long apartmentId, String userEmail, LocalDate from, LocalDate to, Integer people) {
         validateApartmentAndUserExists(apartmentId, userEmail);
         Reservation reservation = reservationOf(apartmentId, userEmail, from, to, people);
         reservationRepository.save(reservation);
     }
 
-    private Reservation reservationOf(Long apartmentId, String userEmail, Date from, Date to, Integer people) {
+    private Reservation reservationOf(Long apartmentId, String userEmail, LocalDate from, LocalDate to, Integer people) {
         User userReference = userRepository.getReferenceByEmail(userEmail);
         ApartmentInstance apartmentInstance = apartmentService
                 .getFreeApartmentInstanceByApartmentId(apartmentId, from, to);
@@ -127,20 +127,20 @@ public class ReservationService {
         return Reservation.builder()
                 .user(userReference)
                 .apartmentInstance(apartmentInstance)
-                .dateTime(dateUtils.now())
+                .dateTime(LocalDateTime.now())
                 .details(reservationDetails)
                 .build();
     }
 
-    private ReservationDetails reservationDetailsOf(Long apartmentId, Date fromDate, Date toDate, Integer people) {
+    private ReservationDetails reservationDetailsOf(Long apartmentId, LocalDate dateFrom, LocalDate dateTo, Integer people) {
         Apartment apartment = apartmentRepository.findByIdFetchPrices(apartmentId)
                 .orElseThrow(() -> new ApartmentNotFoundException(apartmentId));
         Price price = apartment.getPriceForPeople(people)
                 .orElseThrow(() -> new PriceForPeopleCountNotFoundException(apartmentId, people));
         BigDecimal fullCost = costCalculationService
-                .calculateFullPriceForDays(price.getCost(), fromDate, toDate);
-        ZonedDateTime from = dateUtils.reservationFrom(fromDate);
-        ZonedDateTime to = dateUtils.reservationTo(fromDate);
+                .calculateFullPriceForDays(price.getCost(), dateFrom, dateTo);
+        LocalDateTime from = dateUtils.reserveFrom(dateFrom);
+        LocalDateTime to = dateUtils.reserveTo(dateTo);
         return new ReservationDetails(
                 from, to, fullCost, price
         );

@@ -3,7 +3,7 @@ package ua.mibal.booking.service;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * @author Mykhailo Balakhon
@@ -12,7 +12,7 @@ import java.util.Date;
 @Service
 public class CostCalculationService {
 
-    public BigDecimal calculateFullPriceForDays(BigDecimal cost, Date fromDate, Date toDate) {
+    public BigDecimal calculateFullPriceForDays(BigDecimal cost, LocalDate from, LocalDate to) {
         // TODO
         return null;
     }

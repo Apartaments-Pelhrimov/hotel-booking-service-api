@@ -31,7 +31,8 @@ import ua.mibal.booking.model.mapper.CommentMapper;
 import ua.mibal.booking.repository.ApartmentRepository;
 import ua.mibal.booking.repository.CommentRepository;
 import ua.mibal.booking.repository.UserRepository;
-import ua.mibal.booking.service.util.DateUtils;
+
+import java.time.LocalDateTime;
 
 /**
  * @author Mykhailo Balakhon
@@ -44,7 +45,6 @@ public class CommentService {
     private final CommentMapper commentMapper;
     private final UserRepository userRepository;
     private final ApartmentRepository apartmentRepository;
-    private final DateUtils dateUtils;
 
     public Page<CommentDto> getCommentsInApartment(Long apartmentId, Pageable pageable) {
         return commentRepository.findByApartmentIdFetchUser(apartmentId, pageable)
@@ -58,13 +58,13 @@ public class CommentService {
         validate(apartmentId, userEmail);
         Apartment apartmentReference = apartmentRepository.getReferenceById(apartmentId);
         User userReference = userRepository.getReferenceByEmail(userEmail);
-        Comment comment = new Comment(
-                userReference,
-                apartmentReference,
-                dateUtils.now(),
-                createCommentDto.rate(),
-                createCommentDto.body()
-        );
+        Comment comment = Comment.builder()
+                .apartment(apartmentReference)
+                .user(userReference)
+                .creationDateTime(LocalDateTime.now())
+                .rate(createCommentDto.rate())
+                .body(createCommentDto.body())
+                .build();
         commentRepository.save(comment);
     }
 

@@ -20,17 +20,19 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -39,10 +41,10 @@ import java.time.ZonedDateTime;
 public class ReservationDetails {
 
     @Column(nullable = false)
-    private ZonedDateTime reservedFrom;
+    private LocalDateTime reservedFrom;
 
     @Column(nullable = false)
-    private ZonedDateTime reservedTo;
+    private LocalDateTime reservedTo;
 
     @Column(nullable = false)
     private BigDecimal fullCost;

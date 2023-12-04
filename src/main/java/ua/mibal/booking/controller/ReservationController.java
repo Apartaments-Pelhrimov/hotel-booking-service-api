@@ -36,7 +36,7 @@ import ua.mibal.booking.model.dto.request.ReservationRejectingFormDto;
 import ua.mibal.booking.model.dto.response.ReservationDto;
 import ua.mibal.booking.service.ReservationService;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
@@ -54,8 +54,8 @@ public class ReservationController {
     @PostMapping("/apartments/{id}/reservations")
     @ResponseStatus(HttpStatus.CREATED)
     public void createReservation(@PathVariable Long id,
-                                  @DateTimeFormat(iso = DATE) Date from,
-                                  @DateTimeFormat(iso = DATE) Date to,
+                                  @DateTimeFormat(iso = DATE) LocalDate from,
+                                  @DateTimeFormat(iso = DATE) LocalDate to,
                                   Integer people,
                                   Authentication authentication) {
         reservationService.reserveApartment(id, authentication.getName(), from, to, people);

@@ -27,16 +27,18 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -69,21 +71,13 @@ public class Comment {
     private Apartment apartment;
 
     @Column(nullable = false)
-    private ZonedDateTime creationDateTime;
+    private LocalDateTime creationDateTime;
 
     @Column(nullable = false)
     private Double rate;
 
     @Column(nullable = false)
     private String body;
-
-    public Comment(User user, Apartment apartment, ZonedDateTime creationDateTime, Double rate, String body) {
-        this.user = user;
-        this.apartment = apartment;
-        this.creationDateTime = creationDateTime;
-        this.rate = rate;
-        this.body = body;
-    }
 
     @Override
     public boolean equals(Object o) {

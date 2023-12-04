@@ -27,7 +27,7 @@ import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.model.mapper.ApartmentMapper;
 import ua.mibal.booking.repository.ApartmentRepository;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -60,7 +60,7 @@ public class ApartmentService {
                 .toList();
     }
 
-    public ApartmentInstance getFreeApartmentInstanceByApartmentId(Long apartmentId, Date from, Date to) {
+    public ApartmentInstance getFreeApartmentInstanceByApartmentId(Long apartmentId, LocalDate from, LocalDate to) {
         // TODO
         return null;
     }

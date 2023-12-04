@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 
 /**
  * @author Mykhailo Balakhon
@@ -29,8 +29,8 @@ public class HotelTurningOffTime {
     private Long id;
 
     @Column(nullable = false)
-    private ZonedDateTime from;
+    private LocalDate from;
 
     @Column(nullable = false)
-    private ZonedDateTime to;
+    private LocalDate to;
 }

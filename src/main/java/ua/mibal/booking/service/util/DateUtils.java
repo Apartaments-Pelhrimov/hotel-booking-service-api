@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ua.mibal.booking.config.properties.DateTimeProps;
 
-import java.time.ZonedDateTime;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * @author Mykhailo Balakhon
@@ -17,15 +17,11 @@ public class DateUtils {
     private final DateTimeProps dateTimeProps;
     // TODO
 
-    public ZonedDateTime now() {
+    public LocalDateTime reserveFrom(LocalDate from) {
         return null;
     }
 
-    public ZonedDateTime reservationFrom(Date fromDate) {
-        return null;
-    }
-
-    public ZonedDateTime reservationTo(Date fromDate) {
+    public LocalDateTime reserveTo(LocalDate to) {
         return null;
     }
 }
