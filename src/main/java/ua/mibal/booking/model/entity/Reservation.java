@@ -16,7 +16,9 @@
 
 package ua.mibal.booking.model.entity;
 
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -28,14 +30,19 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OrderColumn;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ua.mibal.booking.model.entity.embeddable.Rejection;
 import ua.mibal.booking.model.entity.embeddable.ReservationDetails;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Mykhailo Balakhon
@@ -74,6 +81,22 @@ public class Reservation {
             foreignKey = @ForeignKey(name = "reservations_apartment_instance_id_fk")
     )
     private ApartmentInstance apartmentInstance;
+
+    @ElementCollection
+    @CollectionTable(
+            name = "reservation_rejections",
+            joinColumns = @JoinColumn(
+                    name = "reservation_id",
+                    nullable = false,
+                    foreignKey = @ForeignKey(name = "reservation_rejections_reservation_id_fk")
+            ),
+            indexes = @Index(
+                    name = "reservation_rejections_reservation_id_idx",
+                    columnList = "reservation_id"
+            ))
+    @OrderColumn
+    @Setter(AccessLevel.PRIVATE)
+    private List<Rejection> rejections = new ArrayList<>();
 
     @Embedded
     private ReservationDetails details;
