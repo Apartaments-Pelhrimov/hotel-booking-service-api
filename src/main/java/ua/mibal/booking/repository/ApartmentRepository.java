@@ -70,4 +70,20 @@ public interface ApartmentRepository extends JpaRepository<Apartment, Long> {
                 (r = null or (r.details.reservedFrom < ?3 and r.details.reservedTo > ?2))
             """)
     List<ApartmentInstance> findByApartmentIdBetween(Long id, LocalDateTime start, LocalDateTime end);
+
+    // TODO add hotel turn off time
+    @Query("""
+            select ai from ApartmentInstance ai
+                left join fetch ai.reservations r
+            where
+                ai.id = ?1 and
+                (r = null or (r.details.reservedFrom < ?3 and r.details.reservedTo > ?2))
+            """)
+    ApartmentInstance findByApartmentInstanceIdBetween(Long apartmentInstanceId, LocalDateTime start, LocalDateTime end);
+
+    @Query("""
+            select count(ai.id) = 1 from ApartmentInstance ai
+            where ai.id = ?1
+            """)
+    boolean instanceExistsById(Long apartmentInstanceId);
 }

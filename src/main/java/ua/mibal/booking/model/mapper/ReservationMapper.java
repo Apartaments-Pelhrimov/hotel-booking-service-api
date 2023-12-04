@@ -45,7 +45,7 @@ public abstract class ReservationMapper {
                 .toList();
     }
 
-    private Calendar toCalendar(ApartmentInstance apartmentInstance) {
+    public Calendar toCalendar(ApartmentInstance apartmentInstance) {
         List<Calendar.Range> ranges = apartmentInstance.getReservations().stream()
                 .map(this::reservationToRange)
                 .toList();

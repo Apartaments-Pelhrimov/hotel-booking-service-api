@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ua.mibal.booking.model.dto.response.Calendar;
 import ua.mibal.booking.model.entity.ApartmentInstance;
+import ua.mibal.booking.model.exception.entity.ApartmentInstanceNotFoundException;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.model.mapper.ReservationMapper;
 import ua.mibal.booking.repository.ApartmentRepository;
@@ -23,7 +24,7 @@ public class CalendarService {
     private final ApartmentRepository apartmentRepository;
 
     public List<Calendar> getCalendarsForApartment(Long apartmentId, YearMonth yearMonth) {
-        validate(apartmentId);
+        validateApartmentId(apartmentId);
         LocalDateTime start = yearMonth.atDay(1).atStartOfDay();
         LocalDateTime end = yearMonth.atEndOfMonth().atTime(23, 59);
         List<ApartmentInstance> apartmentInstances =
@@ -31,8 +32,22 @@ public class CalendarService {
         return reservationMapper.toCalendarList(apartmentInstances);
     }
 
-    private void validate(Long apartmentId) {
+    public Calendar getCalendarForApartmentInstance(Long apartmentInstanceId, YearMonth yearMonth) {
+        validateApartmentInstanceId(apartmentInstanceId);
+        LocalDateTime start = yearMonth.atDay(1).atStartOfDay();
+        LocalDateTime end = yearMonth.atEndOfMonth().atTime(23, 59);
+        ApartmentInstance apartmentInstance =
+                apartmentRepository.findByApartmentInstanceIdBetween(apartmentInstanceId, start, end);
+        return reservationMapper.toCalendar(apartmentInstance);
+    }
+
+    private void validateApartmentId(Long apartmentId) {
         if (!apartmentRepository.existsById(apartmentId))
             throw new ApartmentNotFoundException(apartmentId);
+    }
+
+    private void validateApartmentInstanceId(Long apartmentInstanceId) {
+        if (!apartmentRepository.instanceExistsById(apartmentInstanceId))
+            throw new ApartmentInstanceNotFoundException(apartmentInstanceId);
     }
 }

@@ -28,4 +28,10 @@ public class CalendarController {
                                                   @RequestParam @DateTimeFormat(pattern = "yyyy-MM") YearMonth month) {
         return calendarService.getCalendarsForApartment(id, month);
     }
+
+    @GetMapping("/instances/{id}/calendar")
+    public Calendar getCalendarForApartmentInstance(@PathVariable Long id,
+                                                    @RequestParam @DateTimeFormat(pattern = "yyyy-MM") YearMonth month) {
+        return calendarService.getCalendarForApartmentInstance(id, month);
+    }
 }
