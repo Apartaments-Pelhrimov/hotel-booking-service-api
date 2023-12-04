@@ -38,7 +38,7 @@ import ua.mibal.booking.model.mapper.ReservationMapper;
 import ua.mibal.booking.repository.ApartmentRepository;
 import ua.mibal.booking.repository.ReservationRepository;
 import ua.mibal.booking.repository.UserRepository;
-import ua.mibal.booking.service.util.DateUtils;
+import ua.mibal.booking.service.util.DateTimeUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -56,7 +56,7 @@ public class ReservationService {
     private final UserRepository userRepository;
     private final ApartmentRepository apartmentRepository;
     private final ApartmentService apartmentService;
-    private final DateUtils dateUtils;
+    private final DateTimeUtils dateTimeUtils;
     private final CostCalculationService costCalculationService;
 
     public Page<ReservationDto> getReservationsByUser(String email, Pageable pageable) {
@@ -139,8 +139,8 @@ public class ReservationService {
                 .orElseThrow(() -> new PriceForPeopleCountNotFoundException(apartmentId, people));
         BigDecimal fullCost = costCalculationService
                 .calculateFullPriceForDays(price.getCost(), dateFrom, dateTo);
-        LocalDateTime from = dateUtils.reserveFrom(dateFrom);
-        LocalDateTime to = dateUtils.reserveTo(dateTo);
+        LocalDateTime from = dateTimeUtils.reserveFrom(dateFrom);
+        LocalDateTime to = dateTimeUtils.reserveTo(dateTo);
         return new ReservationDetails(
                 from, to, fullCost, price
         );
