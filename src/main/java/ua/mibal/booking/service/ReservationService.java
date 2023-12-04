@@ -129,6 +129,7 @@ public class ReservationService {
                 .apartmentInstance(apartmentInstance)
                 .dateTime(LocalDateTime.now())
                 .details(reservationDetails)
+                .state(Reservation.State.PROCESSED)
                 .build();
     }
 
