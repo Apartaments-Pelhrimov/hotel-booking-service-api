@@ -30,16 +30,16 @@ public class CalendarService {
         LocalDateTime start = yearMonth.atDay(1).atStartOfDay();
         LocalDateTime end = yearMonth.atEndOfMonth().atTime(23, 59);
         List<ApartmentInstance> apartmentInstances =
-                apartmentRepository.findByApartmentIdBetween(apartmentId, start, end);
+                apartmentRepository.findByApartmentIdBetweenFetchReservations(apartmentId, start, end);
         return reservationMapper.toCalendarList(apartmentInstances);
     }
 
     public Calendar getCalendarForApartmentInstance(Long apartmentInstanceId, YearMonth yearMonth) {
-        validateApartmentInstanceId(apartmentInstanceId);
         LocalDateTime start = yearMonth.atDay(1).atStartOfDay();
         LocalDateTime end = yearMonth.atEndOfMonth().atTime(23, 59);
         ApartmentInstance apartmentInstance =
-                apartmentRepository.findByApartmentInstanceIdBetween(apartmentInstanceId, start, end);
+                apartmentRepository.findByApartmentInstanceIdBetweenFetchReservations(apartmentInstanceId, start, end)
+                        .orElseThrow(() -> new ApartmentInstanceNotFoundException(apartmentInstanceId));
         return reservationMapper.toCalendar(apartmentInstance);
     }
 
