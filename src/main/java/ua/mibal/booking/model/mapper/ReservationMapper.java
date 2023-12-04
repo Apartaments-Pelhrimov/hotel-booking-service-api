@@ -19,8 +19,11 @@ package ua.mibal.booking.model.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
+import ua.mibal.booking.model.dto.response.Calendar;
 import ua.mibal.booking.model.dto.response.ReservationDto;
 import ua.mibal.booking.model.entity.Reservation;
+
+import java.util.List;
 
 /**
  * @author Mykhailo Balakhon
@@ -28,8 +31,20 @@ import ua.mibal.booking.model.entity.Reservation;
  */
 @Mapper(uses = PhotoMapper.class,
         componentModel = MappingConstants.ComponentModel.SPRING)
-public interface ReservationMapper {
+public abstract class ReservationMapper {
 
     @Mapping(target = "date", source = "dateTime")
-    ReservationDto toDto(Reservation reservation);
+    public abstract ReservationDto toDto(Reservation reservation);
+
+    public Calendar toCalendar(List<Reservation> reservations) {
+        List<List<Integer>> dayRanges = reservations
+                .stream()
+                .map(r -> {
+                    int start = r.getDetails().getReservedFrom().getDayOfMonth();
+                    int end = r.getDetails().getReservedTo().getDayOfMonth() - 1;
+                    return List.of(start, end);
+                })
+                .toList();
+        return new Calendar(dayRanges);
+    }
 }

@@ -22,6 +22,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ua.mibal.booking.model.entity.Reservation;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
@@ -49,4 +51,13 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             where r.id = ?1
             """)
     Optional<Reservation> findByIdFetchRejections(Long id);
+
+    @Query("""
+            select r from Reservation r
+                left join r.apartmentInstance.apartment a
+            where
+                a.id = ?1 and
+                r.details.reservedFrom < ?3 and r.details.reservedTo > ?2
+            """)
+    List<Reservation> findByIdBetween(Long id, LocalDateTime start, LocalDateTime end);
 }
