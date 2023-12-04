@@ -21,9 +21,12 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import ua.mibal.booking.model.dto.response.Calendar;
 import ua.mibal.booking.model.dto.response.ReservationDto;
+import ua.mibal.booking.model.entity.ApartmentInstance;
 import ua.mibal.booking.model.entity.Reservation;
 
 import java.util.List;
+
+import static java.util.List.of;
 
 /**
  * @author Mykhailo Balakhon
@@ -36,15 +39,26 @@ public abstract class ReservationMapper {
     @Mapping(target = "date", source = "dateTime")
     public abstract ReservationDto toDto(Reservation reservation);
 
-    public Calendar toCalendar(List<Reservation> reservations) {
-        List<List<Integer>> dayRanges = reservations
-                .stream()
-                .map(r -> {
-                    int start = r.getDetails().getReservedFrom().getDayOfMonth();
-                    int end = r.getDetails().getReservedTo().getDayOfMonth() - 1;
-                    return List.of(start, end);
-                })
+    public List<Calendar> toCalendarList(List<ApartmentInstance> apartmentInstances) {
+        return apartmentInstances.stream()
+                .map(this::toCalendar)
                 .toList();
-        return new Calendar(dayRanges);
+    }
+
+    private Calendar toCalendar(ApartmentInstance apartmentInstance) {
+        List<Calendar.Range> ranges = apartmentInstance.getReservations().stream()
+                .map(this::reservationToRange)
+                .toList();
+        return new Calendar(apartmentInstance.getId(), ranges);
+    }
+
+    private Calendar.Range reservationToRange(Reservation reservation) {
+        int start = reservation.getDetails()
+                .getReservedFrom()
+                .getDayOfMonth();
+        int end = reservation.getDetails()
+                          .getReservedTo()
+                          .getDayOfMonth() - 1;
+        return new Calendar.Range(of(start, end));
     }
 }

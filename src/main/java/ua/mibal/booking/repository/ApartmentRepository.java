@@ -59,4 +59,15 @@ public interface ApartmentRepository extends JpaRepository<Apartment, Long> {
                 (to = null or to.to < ?2 or to.from > ?3)
             """)
     Optional<ApartmentInstance> findFreeApartmentInstanceByApartmentIdAndDates(Long id, LocalDateTime from, LocalDateTime to);
+
+    // TODO add hotel turn off time
+    @Query("""
+            select ai from ApartmentInstance ai
+                left join ai.apartment a
+                left join fetch ai.reservations r
+            where
+                a.id = ?1 and
+                (r = null or (r.details.reservedFrom < ?3 and r.details.reservedTo > ?2))
+            """)
+    List<ApartmentInstance> findByApartmentIdBetween(Long id, LocalDateTime start, LocalDateTime end);
 }

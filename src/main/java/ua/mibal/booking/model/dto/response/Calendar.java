@@ -1,15 +1,27 @@
 package ua.mibal.booking.model.dto.response;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class Calendar extends ArrayList<List<Integer>> {
+@Getter
+@Setter
+@AllArgsConstructor
+public class Calendar {
+    private Long id;
+    private List<Range> ranges;
 
-    public Calendar(List<List<Integer>> dayRange) {
-        super(dayRange);
+    public static class Range extends ArrayList<Integer> {
+        public Range(Collection<? extends Integer> c) {
+            super(c);
+        }
     }
 }
