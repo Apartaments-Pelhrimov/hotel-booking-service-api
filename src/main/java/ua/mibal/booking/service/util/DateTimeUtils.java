@@ -2,7 +2,7 @@ package ua.mibal.booking.service.util;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ua.mibal.booking.config.properties.ReservationDateTimeProps;
+import ua.mibal.booking.config.properties.CalendarProps.ReservationDateTimeProps;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

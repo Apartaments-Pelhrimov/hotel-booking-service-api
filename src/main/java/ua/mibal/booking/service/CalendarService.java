@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ua.mibal.booking.model.dto.response.Calendar;
 import ua.mibal.booking.model.entity.ApartmentInstance;
+import ua.mibal.booking.model.entity.Reservation;
 import ua.mibal.booking.model.exception.entity.ApartmentInstanceNotFoundException;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.model.mapper.ReservationMapper;
@@ -22,6 +23,7 @@ import java.util.List;
 public class CalendarService {
     private final ReservationMapper reservationMapper;
     private final ApartmentRepository apartmentRepository;
+    private final ICalService iCalService;
 
     public List<Calendar> getCalendarsForApartment(Long apartmentId, YearMonth yearMonth) {
         validateApartmentId(apartmentId);
@@ -46,8 +48,12 @@ public class CalendarService {
             throw new ApartmentNotFoundException(apartmentId);
     }
 
-    private void validateApartmentInstanceId(Long apartmentInstanceId) {
-        if (!apartmentRepository.instanceExistsById(apartmentInstanceId))
-            throw new ApartmentInstanceNotFoundException(apartmentInstanceId);
+    public String getICalForApartmentInstance(Long apartmentInstanceId) {
+        List<Reservation> reservations = apartmentRepository
+                .findByApartmentInstanceIdFetchReservations(apartmentInstanceId)
+                .map(ApartmentInstance::getReservations)
+                .orElseThrow(() -> new ApartmentInstanceNotFoundException(apartmentInstanceId));
+        return iCalService.calendarFromReservations(reservations)
+                .toString();
     }
 }

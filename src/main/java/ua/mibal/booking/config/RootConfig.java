@@ -24,7 +24,7 @@ import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.services.s3.S3Client;
 import ua.mibal.booking.config.properties.AwsProps;
-import ua.mibal.booking.config.properties.ReservationDateTimeProps;
+import ua.mibal.booking.config.properties.CalendarProps;
 
 /**
  * @author Mykhailo Balakhon
@@ -32,7 +32,10 @@ import ua.mibal.booking.config.properties.ReservationDateTimeProps;
  */
 @RequiredArgsConstructor
 @EnableConfigurationProperties({
-        AwsProps.class, AwsProps.AwsBucketProps.class, ReservationDateTimeProps.class
+        AwsProps.class,
+        AwsProps.AwsBucketProps.class,
+        CalendarProps.class,
+        CalendarProps.ReservationDateTimeProps.class
 })
 @Configuration
 public class RootConfig {
