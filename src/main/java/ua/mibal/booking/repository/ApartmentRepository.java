@@ -56,7 +56,7 @@ public interface ApartmentRepository extends JpaRepository<Apartment, Long> {
             where
                 a.id = ?1 and
                 (r = null or (r.state != 'REJECTED' and (r.details.reservedTo < ?2 or r.details.reservedFrom > ?3))) and
-                (to = null or to.offTo < ?2 or to.offFrom > ?3)
+                (to = null or to.to < ?2 or to.from > ?3)
             """)
     Optional<ApartmentInstance> findFreeApartmentInstanceByApartmentIdAndDates(Long id, LocalDateTime from, LocalDateTime to);
 }

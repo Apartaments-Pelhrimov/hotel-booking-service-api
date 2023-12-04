@@ -28,9 +28,9 @@ public class HotelTurningOffTime {
     @GeneratedValue
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "\"from\"")
     private LocalDate from;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "\"to\"")
     private LocalDate to;
 }

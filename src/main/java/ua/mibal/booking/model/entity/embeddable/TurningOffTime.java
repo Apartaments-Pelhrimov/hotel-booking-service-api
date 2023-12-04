@@ -16,6 +16,7 @@
 
 package ua.mibal.booking.model.entity.embeddable;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,6 +35,10 @@ import java.time.LocalDateTime;
 @Setter
 @Embeddable
 public class TurningOffTime {
-    private LocalDateTime offFrom;
-    private LocalDateTime offTo;
+
+    @Column(nullable = false, name = "\"from\"")
+    private LocalDateTime from;
+
+    @Column(nullable = false, name = "\"to\"")
+    private LocalDateTime to;
 }
