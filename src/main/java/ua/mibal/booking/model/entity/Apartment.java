@@ -46,6 +46,7 @@ import ua.mibal.booking.model.entity.embeddable.Price;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 import static lombok.AccessLevel.PRIVATE;
 
@@ -173,6 +174,12 @@ public class Apartment {
 
     public boolean deletePhoto(Photo photo) {
         return this.photos.remove(photo);
+    }
+
+    public Optional<Price> getPriceForPeople(Integer people) {
+        return getPrices().stream()
+                .filter(pr -> people.equals(pr.getPerson()))
+                .findFirst();
     }
 
     public enum ApartmentClass {

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import ua.mibal.booking.config.properties.DateTimeProps;
 
 import java.time.ZonedDateTime;
+import java.util.Date;
 
 /**
  * @author Mykhailo Balakhon
@@ -14,8 +15,17 @@ import java.time.ZonedDateTime;
 @Component
 public class DateUtils {
     private final DateTimeProps dateTimeProps;
+    // TODO
 
     public ZonedDateTime now() {
+        return null;
+    }
+
+    public ZonedDateTime reservationFrom(Date fromDate) {
+        return null;
+    }
+
+    public ZonedDateTime reservationTo(Date fromDate) {
         return null;
     }
 }

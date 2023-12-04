@@ -37,4 +37,11 @@ public interface ApartmentRepository extends JpaRepository<Apartment, Long> {
                 left join fetch a.photos
             """)
     List<Apartment> findAllFetchPhotos();
+
+    @Query("""
+            select a from Apartment a
+                left join fetch a.prices
+            where a.id = ?1
+            """)
+    Optional<Apartment> findByIdFetchPrices(Long id);
 }

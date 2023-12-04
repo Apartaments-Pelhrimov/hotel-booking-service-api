@@ -22,10 +22,12 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.model.dto.response.ApartmentCardDto;
 import ua.mibal.booking.model.dto.response.ApartmentDto;
 import ua.mibal.booking.model.entity.Apartment;
+import ua.mibal.booking.model.entity.ApartmentInstance;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.model.mapper.ApartmentMapper;
 import ua.mibal.booking.repository.ApartmentRepository;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -56,5 +58,10 @@ public class ApartmentService {
                 .stream()
                 .map(apartmentMapper::toCardDto)
                 .toList();
+    }
+
+    public ApartmentInstance getFreeApartmentInstanceByApartmentId(Long apartmentId, Date from, Date to) {
+        // TODO
+        return null;
     }
 }
