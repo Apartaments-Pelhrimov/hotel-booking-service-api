@@ -16,6 +16,7 @@
 
 package ua.mibal.booking.model.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Embedded;
@@ -25,6 +26,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -105,6 +107,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     @Setter(PRIVATE)
     private List<Comment> comments = new ArrayList<>();
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private ActivationCode activationCode;
 
     public void addReservation(Reservation reservation) {
         reservation.setUser(this);

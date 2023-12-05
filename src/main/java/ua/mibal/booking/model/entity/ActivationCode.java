@@ -55,6 +55,7 @@ public class ActivationCode {
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(
             name = "user_id",
+            nullable = false,
             foreignKey = @ForeignKey(name = "activation_codes_user_id_fk")
     )
     private User user;
