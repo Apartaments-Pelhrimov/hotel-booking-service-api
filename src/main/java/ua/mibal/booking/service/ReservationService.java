@@ -35,13 +35,13 @@ import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.model.exception.entity.ReservationNotFoundException;
 import ua.mibal.booking.model.exception.entity.UserNotFoundException;
 import ua.mibal.booking.model.mapper.ReservationMapper;
+import ua.mibal.booking.model.request.ReservationFormRequest;
 import ua.mibal.booking.repository.ApartmentRepository;
 import ua.mibal.booking.repository.ReservationRepository;
 import ua.mibal.booking.repository.UserRepository;
 import ua.mibal.booking.service.util.DateTimeUtils;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -113,17 +113,17 @@ public class ReservationService {
     }
 
     @Transactional
-    public void reserveApartment(Long apartmentId, String userEmail, LocalDate from, LocalDate to, Integer people) {
+    public void reserveApartment(Long apartmentId, String userEmail, ReservationFormRequest request) {
         validateApartmentAndUserExists(apartmentId, userEmail);
-        Reservation reservation = reservationOf(apartmentId, userEmail, from, to, people);
+        Reservation reservation = reservationOf(apartmentId, userEmail, request);
         reservationRepository.save(reservation);
     }
 
-    private Reservation reservationOf(Long apartmentId, String userEmail, LocalDate from, LocalDate to, Integer people) {
+    private Reservation reservationOf(Long apartmentId, String userEmail, ReservationFormRequest request) {
         User userReference = userRepository.getReferenceByEmail(userEmail);
         ApartmentInstance apartmentInstance = apartmentService
-                .getFreeApartmentInstanceByApartmentId(apartmentId, from, to);
-        ReservationDetails reservationDetails = reservationDetailsOf(apartmentId, from, to, people);
+                .getFreeApartmentInstanceByApartmentId(apartmentId, request);
+        ReservationDetails reservationDetails = reservationDetailsOf(apartmentId, request);
         return Reservation.builder()
                 .user(userReference)
                 .apartmentInstance(apartmentInstance)
@@ -133,15 +133,15 @@ public class ReservationService {
                 .build();
     }
 
-    private ReservationDetails reservationDetailsOf(Long apartmentId, LocalDate dateFrom, LocalDate dateTo, Integer people) {
+    private ReservationDetails reservationDetailsOf(Long apartmentId, ReservationFormRequest request) {
         Apartment apartment = apartmentRepository.findByIdFetchPrices(apartmentId)
                 .orElseThrow(() -> new ApartmentNotFoundException(apartmentId));
-        Price price = apartment.getPriceForPeople(people)
-                .orElseThrow(() -> new PriceForPeopleCountNotFoundException(apartmentId, people));
+        Price price = apartment.getPriceForPeople(request.people())
+                .orElseThrow(() -> new PriceForPeopleCountNotFoundException(apartmentId, request.people()));
         BigDecimal fullCost = costCalculationService
-                .calculateFullPriceForDays(price.getCost(), dateFrom, dateTo);
-        LocalDateTime from = dateTimeUtils.reserveFrom(dateFrom);
-        LocalDateTime to = dateTimeUtils.reserveTo(dateTo);
+                .calculateFullPriceForDays(price.getCost(), request.from(), request.to());
+        LocalDateTime from = dateTimeUtils.reserveFrom(request.from());
+        LocalDateTime to = dateTimeUtils.reserveTo(request.to());
         return new ReservationDetails(
                 from, to, fullCost, price
         );

@@ -26,10 +26,10 @@ import ua.mibal.booking.model.entity.ApartmentInstance;
 import ua.mibal.booking.model.exception.FreeApartmentsForDateNotFoundException;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.model.mapper.ApartmentMapper;
+import ua.mibal.booking.model.request.ReservationFormRequest;
 import ua.mibal.booking.repository.ApartmentRepository;
 import ua.mibal.booking.service.util.DateTimeUtils;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -64,9 +64,9 @@ public class ApartmentService {
                 .toList();
     }
 
-    public ApartmentInstance getFreeApartmentInstanceByApartmentId(Long apartmentId, LocalDate dateFrom, LocalDate dateTo) {
-        LocalDateTime from = dateTimeUtils.reserveFrom(dateFrom);
-        LocalDateTime to = dateTimeUtils.reserveTo(dateTo);
+    public ApartmentInstance getFreeApartmentInstanceByApartmentId(Long apartmentId, ReservationFormRequest request) {
+        LocalDateTime from = dateTimeUtils.reserveFrom(request.from());
+        LocalDateTime to = dateTimeUtils.reserveTo(request.to());
         return apartmentRepository.findFreeApartmentInstanceByApartmentIdAndDates(apartmentId, from, to)
                 .orElseThrow(() -> new FreeApartmentsForDateNotFoundException(from, to, apartmentId));
     }

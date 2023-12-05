@@ -51,10 +51,7 @@ public class ReservationController {
     public void createReservation(@PathVariable Long id,
                                   @Valid ReservationFormRequest request,
                                   Authentication authentication) {
-        reservationService.reserveApartment(
-                id, authentication.getName(),
-                request.from(), request.to(), request.people()
-        );
+        reservationService.reserveApartment(id, authentication.getName(), request);
     }
 
     @RolesAllowed("USER")
