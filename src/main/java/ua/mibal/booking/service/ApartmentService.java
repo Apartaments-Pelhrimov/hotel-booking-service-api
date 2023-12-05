@@ -67,7 +67,15 @@ public class ApartmentService {
     public ApartmentInstance getFreeApartmentInstanceByApartmentId(Long apartmentId, ReservationFormRequest request) {
         LocalDateTime from = dateTimeUtils.reserveFrom(request.from());
         LocalDateTime to = dateTimeUtils.reserveTo(request.to());
-        return apartmentRepository.findFreeApartmentInstanceByApartmentIdAndDates(apartmentId, from, to)
-                .orElseThrow(() -> new FreeApartmentsForDateNotFoundException(from, to, apartmentId));
+        List<ApartmentInstance> apartments = apartmentRepository
+                        .findFreeApartmentInstanceByApartmentIdAndDates(apartmentId, from, to);
+        return selectMostSuitableApartmentInstance(apartments, apartmentId, from, to);
+    }
+
+    private ApartmentInstance selectMostSuitableApartmentInstance(List<ApartmentInstance> apartments, Long apartmentId, LocalDateTime from, LocalDateTime to) {
+        if (apartments.isEmpty()) throw new FreeApartmentsForDateNotFoundException(from, to, apartmentId);
+        if (apartments.size() == 1) return apartments.get(0);
+        // TODO implement logic
+        return apartments.get(0);
     }
 }
