@@ -16,6 +16,9 @@ rsa:
 jwt-token:
   expiring-days: 30
 
+activation-code:
+  length: 60
+
 aws:
   access-key-id: AKIA2VXUQKUE74F2Z57O
   secret-access-key: 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
