@@ -22,7 +22,8 @@ import ua.mibal.booking.model.entity.User;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class IllegalRoleException extends RuntimeException {
+public class IllegalRoleException extends BadRequestException {
+
     public IllegalRoleException(User user) {
         super(String.format(
                 "User with id=%d have no access. User's roles=%s",

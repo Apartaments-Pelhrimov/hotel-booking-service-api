@@ -23,7 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import software.amazon.awssdk.core.exception.SdkException;
+import ua.mibal.booking.model.exception.BadRequestException;
 import ua.mibal.booking.model.exception.NotFoundException;
 
 import java.time.ZonedDateTime;
@@ -61,10 +61,7 @@ public class ExceptionHandlerAdvice {
                 .body(new ApiError(status, e));
     }
 
-    @ExceptionHandler({
-            IllegalArgumentException.class,
-            SdkException.class
-    })
+    @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ApiError> handleEmailAlreadyExistsException(Exception e) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         return ResponseEntity.status(status)
