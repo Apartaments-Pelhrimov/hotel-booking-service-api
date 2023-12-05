@@ -78,7 +78,7 @@ public interface ApartmentRepository extends JpaRepository<Apartment, Long> {
                 left join fetch ai.reservations r
             where
                 a.id = ?1 and
-                (r = null or (r.details.reservedFrom < ?3 and r.details.reservedTo > ?2))
+                (r = null or r.details.reservedFrom < ?3 or r.details.reservedTo > ?2)
             """)
     List<ApartmentInstance> findByApartmentIdBetweenFetchReservations(Long id, LocalDateTime start, LocalDateTime end);
 
