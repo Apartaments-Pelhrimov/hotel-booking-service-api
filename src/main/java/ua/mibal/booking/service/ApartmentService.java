@@ -68,7 +68,7 @@ public class ApartmentService {
         LocalDateTime from = dateTimeUtils.reserveFrom(request.from());
         LocalDateTime to = dateTimeUtils.reserveTo(request.to());
         List<ApartmentInstance> apartments = apartmentRepository
-                        .findFreeApartmentInstanceByApartmentIdAndDates(apartmentId, from, to);
+                        .findFreeApartmentInstanceByApartmentIdAndDates(apartmentId, from, to, request.people());
         return selectMostSuitableApartmentInstance(apartments, apartmentId, from, to);
     }
 

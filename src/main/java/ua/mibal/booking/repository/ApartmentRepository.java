@@ -47,18 +47,29 @@ public interface ApartmentRepository extends JpaRepository<Apartment, Long> {
             """)
     Optional<Apartment> findByIdFetchPrices(Long id);
 
-    // TODO add hotel turn off time validation
     @Query("""
-            select ai from ApartmentInstance ai
-                left join ai.apartment a
-                left join ai.reservations r
-                left join ai.turningOffTimes to
+            select ai
+                from ApartmentInstance ai
             where
-                a.id = ?1 and
-                (r = null or (r.state != 'REJECTED' and (r.details.reservedTo < ?2 or r.details.reservedFrom > ?3))) and
-                (to = null or to.to < ?2 or to.from > ?3)
+                ai.apartment.id = ?1
+                and (select (count(r.id) = 0)
+                        from Reservation r
+                        where r.apartmentInstance.id = ai.id
+                            and not (r.state = 'REJECTED' or r.details.reservedTo < ?2 or r.details.reservedFrom > ?3))
+                and (select (count(distinct tot) = 0)
+                        from ApartmentInstance ai
+                            left join ai.turningOffTimes tot
+                        where not (tot.to < ?2 or tot.from > ?3))
+                and (select (count(htot.id) = 0)
+                        from HotelTurningOffTime htot
+                        where not (htot.to < ?2 or htot.from > ?3))
+                and (select (count(a.id) > 0)
+                        from Apartment a
+                            left join a.prices p
+                        where a.id = ?1
+                            and p.person = ?4)
             """)
-    List<ApartmentInstance> findFreeApartmentInstanceByApartmentIdAndDates(Long id, LocalDateTime from, LocalDateTime to);
+    List<ApartmentInstance> findFreeApartmentInstanceByApartmentIdAndDates(Long id, LocalDateTime from, LocalDateTime to, int people);
 
     // TODO add hotel turn off time
     @Query("""
