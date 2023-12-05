@@ -58,13 +58,13 @@ public class ApartmentInstance {
     @CollectionTable(
             name = "apartment_instances_turning_off_times",
             joinColumns = @JoinColumn(
-                    name = "apartment_id",
+                    name = "apartment_instance_id",
                     nullable = false,
-                    foreignKey = @ForeignKey(name = "apartment_instances_turning_off_times_apartment_id_fk")
+                    foreignKey = @ForeignKey(name = "apartment_instances_turning_off_times_apartment_instance_id_fk")
             ),
             indexes = @Index(
-                    name = "apartment_instances_turning_off_times_apartment_id_idx",
-                    columnList = "apartment_id"
+                    name = "apartment_instances_turning_off_times_apartment_instance_id_idx",
+                    columnList = "apartment_instance_id"
             ))
     @Setter(PRIVATE)
     private List<TurningOffTime> turningOffTimes = new ArrayList<>();
