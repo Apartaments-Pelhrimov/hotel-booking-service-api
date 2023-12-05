@@ -54,7 +54,7 @@ public class UserController {
 
     @DeleteMapping("/me")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteMe(@RequestBody DeleteMeDto deleteMeDto,
+    public void deleteMe(@Valid @RequestBody DeleteMeDto deleteMeDto,
                          Authentication authentication) {
         userService.delete(deleteMeDto, authentication.getName());
     }
