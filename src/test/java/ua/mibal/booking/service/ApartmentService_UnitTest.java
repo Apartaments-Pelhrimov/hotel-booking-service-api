@@ -13,13 +13,19 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ua.mibal.booking.model.dto.response.ApartmentCardDto;
 import ua.mibal.booking.model.dto.response.ApartmentDto;
 import ua.mibal.booking.model.entity.Apartment;
+import ua.mibal.booking.model.entity.ApartmentInstance;
+import ua.mibal.booking.model.exception.FreeApartmentsForDateNotFoundException;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.model.mapper.ApartmentMapper;
 import ua.mibal.booking.repository.ApartmentRepository;
+import ua.mibal.booking.service.util.DateTimeUtils;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import static java.time.LocalDateTime.MAX;
+import static java.time.LocalDateTime.MIN;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -43,6 +49,8 @@ class ApartmentService_UnitTest {
     private ApartmentRepository apartmentRepository;
     @MockBean
     private ApartmentMapper apartmentMapper;
+    @MockBean
+    private DateTimeUtils dateTimeUtils;
 
     @Mock
     private Apartment apartment;
@@ -50,6 +58,12 @@ class ApartmentService_UnitTest {
     private ApartmentDto apartmentDto;
     @Mock
     private ApartmentCardDto apartmentCardDto;
+    @Mock
+    private ApartmentInstance apartmentInstance;
+    @Mock
+    private LocalDate dateFrom;
+    @Mock
+    private LocalDate dateTo;
 
     @Test
     void getOneDto() {
@@ -124,6 +138,36 @@ class ApartmentService_UnitTest {
         assertEquals(
                 List.of(apartmentCardDto, apartmentCardDto),
                 actual
+        );
+    }
+
+    @Test
+    public void getFreeApartmentInstanceByApartmentId() {
+        when(dateTimeUtils.reserveFrom(dateFrom)).thenReturn(MIN);
+        when(dateTimeUtils.reserveTo(dateTo)).thenReturn(MAX);
+        when(apartmentRepository.findFreeApartmentInstanceByApartmentIdAndDates(1L, MIN, MAX))
+                .thenReturn(Optional.of(apartmentInstance));
+
+        ApartmentInstance actual = service.getFreeApartmentInstanceByApartmentId(1L, dateFrom, dateTo);
+
+        assertEquals(apartmentInstance, actual);
+    }
+
+    @Test
+    public void getFreeApartmentInstanceByApartmentId_should_throw_FreeApartmentsForDateNotFoundException() {
+        when(dateTimeUtils.reserveFrom(dateFrom)).thenReturn(MIN);
+        when(dateTimeUtils.reserveTo(dateTo)).thenReturn(MAX);
+        when(apartmentRepository.findFreeApartmentInstanceByApartmentIdAndDates(1L, MIN, MAX))
+                .thenReturn(Optional.empty());
+
+        FreeApartmentsForDateNotFoundException e = assertThrows(
+                FreeApartmentsForDateNotFoundException.class,
+                () -> service.getFreeApartmentInstanceByApartmentId(1L, dateFrom, dateTo)
+        );
+
+        assertEquals(
+                new FreeApartmentsForDateNotFoundException(MIN, MAX, 1L).getMessage(),
+                e.getMessage()
         );
     }
 }
