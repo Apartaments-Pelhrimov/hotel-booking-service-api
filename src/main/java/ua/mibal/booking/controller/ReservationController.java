@@ -21,24 +21,19 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ua.mibal.booking.model.dto.request.ReservationRejectingFormDto;
 import ua.mibal.booking.model.dto.response.ReservationDto;
+import ua.mibal.booking.model.request.ReservationFormRequest;
 import ua.mibal.booking.service.ReservationService;
-
-import java.time.LocalDate;
-
-import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
 /**
  * @author Mykhailo Balakhon
@@ -51,14 +46,15 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @RolesAllowed("USER")
-    @PostMapping("/apartments/{id}/reservations")
+    @PatchMapping("/apartments/{id}/reserve")
     @ResponseStatus(HttpStatus.CREATED)
     public void createReservation(@PathVariable Long id,
-                                  @DateTimeFormat(iso = DATE) LocalDate from,
-                                  @DateTimeFormat(iso = DATE) LocalDate to,
-                                  Integer people,
+                                  @Valid ReservationFormRequest request,
                                   Authentication authentication) {
-        reservationService.reserveApartment(id, authentication.getName(), from, to, people);
+        reservationService.reserveApartment(
+                id, authentication.getName(),
+                request.from(), request.to(), request.people()
+        );
     }
 
     @RolesAllowed("USER")
