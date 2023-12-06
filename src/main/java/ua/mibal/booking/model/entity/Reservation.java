@@ -59,7 +59,7 @@ import java.util.List;
         @Index(name = "reservations_user_id_idx", columnList = "user_id"),
         @Index(name = "reservations_apartment_instance_id_idx", columnList = "apartment_instance_id")
 })
-public class Reservation {
+public class Reservation implements Event {
 
     @Id
     @GeneratedValue
@@ -122,6 +122,21 @@ public class Reservation {
     public void reject(Rejection rejection) {
         this.state = State.REJECTED;
         this.rejections.add(rejection);
+    }
+
+    @Override
+    public LocalDateTime getStart() {
+        return details.getReservedFrom();
+    }
+
+    @Override
+    public LocalDateTime getEnd() {
+        return details.getReservedTo();
+    }
+
+    @Override
+    public String getEventName() {
+        return apartmentInstance.getName() + " reservation";
     }
 
     public enum State {

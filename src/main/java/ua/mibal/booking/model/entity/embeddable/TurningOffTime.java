@@ -22,6 +22,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Parent;
+import ua.mibal.booking.model.entity.ApartmentInstance;
+import ua.mibal.booking.model.entity.Event;
 
 import java.time.LocalDateTime;
 
@@ -34,11 +37,29 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Embeddable
-public class TurningOffTime {
+public class TurningOffTime implements Event {
 
     @Column(nullable = false, name = "\"from\"")
     private LocalDateTime from;
 
     @Column(nullable = false, name = "\"to\"")
     private LocalDateTime to;
+
+    @Parent
+    private ApartmentInstance apartmentInstance;
+
+    @Override
+    public LocalDateTime getStart() {
+        return from;
+    }
+
+    @Override
+    public LocalDateTime getEnd() {
+        return to;
+    }
+
+    @Override
+    public String getEventName() {
+        return apartmentInstance.getName() + " turned off";
+    }
 }

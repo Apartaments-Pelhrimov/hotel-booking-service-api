@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 /**
  * @author Mykhailo Balakhon
@@ -22,7 +24,7 @@ import java.time.LocalDate;
 @Setter
 @Entity
 @Table(name = "hotel_turning_off_times")
-public class HotelTurningOffTime {
+public class HotelTurningOffTime implements Event {
 
     @Id
     @GeneratedValue
@@ -33,4 +35,22 @@ public class HotelTurningOffTime {
 
     @Column(nullable = false, name = "\"to\"")
     private LocalDate to;
+
+    @Column
+    private String name;
+
+    @Override
+    public LocalDateTime getStart() {
+        return from.atStartOfDay();
+    }
+
+    @Override
+    public LocalDateTime getEnd() {
+        return to.atTime(23, 59);
+    }
+
+    @Override
+    public String getEventName() {
+        return "Hotel turned off. Reason: " + Optional.ofNullable(name).orElse("");
+    }
 }
