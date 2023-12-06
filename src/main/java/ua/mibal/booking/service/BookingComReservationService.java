@@ -2,6 +2,10 @@ package ua.mibal.booking.service;
 
 import org.springframework.stereotype.Service;
 import ua.mibal.booking.model.entity.ApartmentInstance;
+import ua.mibal.booking.model.entity.Event;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author Mykhailo Balakhon
@@ -11,7 +15,11 @@ import ua.mibal.booking.model.entity.ApartmentInstance;
 public class BookingComReservationService {
 
     // TODO
-    public boolean isFree(ApartmentInstance apartmentInstance) {
+    public boolean isFree(ApartmentInstance apartmentInstance, LocalDateTime from, LocalDateTime to) {
         return true;
+    }
+
+    public List<Event> getEventsForApartmentInstance(ApartmentInstance apartmentInstance) {
+        return List.of();
     }
 }

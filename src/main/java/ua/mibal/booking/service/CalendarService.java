@@ -39,6 +39,7 @@ public class CalendarService {
     private final HotelTurningOffRepository hotelTurningOffRepository;
     private final ReservationRepository reservationRepository;
     private final ICalService iCalService;
+    private final BookingComReservationService bookingComReservationService;
     private final DateTimeUtils dateTimeUtils;
 
     @Transactional(readOnly = true)
@@ -120,12 +121,19 @@ public class CalendarService {
     }
 
     private Collection<Event> apartmentEvents(ApartmentInstance apartmentInstance) {
-        List<Reservation> reservations = apartmentInstance
+        Collection<Event> reservations = apartmentReservations(apartmentInstance);
+        List<TurningOffTime> turningOffTimes = apartmentInstance.getTurningOffTimes();
+        return union(reservations, turningOffTimes);
+    }
+
+    private Collection<Event> apartmentReservations(ApartmentInstance apartmentInstance) {
+        List<Reservation> localReservations = apartmentInstance
                 .getReservations().stream()
                 .filter(Reservation::notRejected)
                 .toList();
-        List<TurningOffTime> turningOffTimes = apartmentInstance.getTurningOffTimes();
-        return union(reservations, turningOffTimes);
+        List<Event> bookingComApartmentReservations = bookingComReservationService
+                .getEventsForApartmentInstance(apartmentInstance);
+        return union(localReservations, bookingComApartmentReservations);
     }
 
     private List<HotelTurningOffTime> hotelTurningOffTimes(YearMonth yearMonth) {

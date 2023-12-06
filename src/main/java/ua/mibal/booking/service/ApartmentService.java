@@ -71,12 +71,15 @@ public class ApartmentService {
         List<ApartmentInstance> apartments = apartmentRepository
                 .findFreeApartmentInstanceByApartmentIdAndDates(apartmentId, from, to, request.people())
                 .stream()
-                .filter(bookingComReservationService::isFree)
+                .filter(in -> bookingComReservationService.isFree(in, from, to))
                 .toList();
         return selectMostSuitableApartmentInstance(apartments, apartmentId, from, to);
     }
 
-    private ApartmentInstance selectMostSuitableApartmentInstance(List<ApartmentInstance> apartments, Long apartmentId, LocalDateTime from, LocalDateTime to) {
+    private ApartmentInstance selectMostSuitableApartmentInstance(List<ApartmentInstance> apartments,
+                                                                  Long apartmentId,
+                                                                  LocalDateTime from,
+                                                                  LocalDateTime to) {
         if (apartments.isEmpty()) throw new ApartmentIsNotAvialableForReservation(from, to, apartmentId);
         if (apartments.size() == 1) return apartments.get(0);
         // TODO implement logic
