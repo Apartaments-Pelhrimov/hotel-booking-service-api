@@ -94,7 +94,7 @@ public class CalendarService {
                                                           LocalDateTime start,
                                                           LocalDateTime end) {
         return apartmentEvents(apartmentInstance).stream()
-                .filter(ev -> ev.getEnd().isAfter(start) ||
+                .filter(ev -> ev.getEnd().isAfter(start) &&
                               ev.getStart().isBefore(end))
                 .toList();
     }

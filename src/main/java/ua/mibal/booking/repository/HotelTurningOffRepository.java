@@ -17,7 +17,7 @@ public interface HotelTurningOffRepository extends JpaRepository<HotelTurningOff
             select htot
                 from HotelTurningOffTime htot
             where
-                htot.from < ?2 or htot.to > ?1
+                htot.from < ?2 and htot.to > ?1
             """)
     List<HotelTurningOffTime> findBetween(LocalDate start, LocalDate end);
 
