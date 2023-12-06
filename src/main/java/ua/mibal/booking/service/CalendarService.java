@@ -108,8 +108,8 @@ public class CalendarService {
 
     private List<HotelTurningOffTime> hotelTurningOffTimes(YearMonth yearMonth) {
         return hotelTurningOffRepository.findBetween(
-                dateTimeUtils.monthStart(yearMonth),
-                dateTimeUtils.monthEnd(yearMonth)
+                dateTimeUtils.monthStartWithTime(yearMonth),
+                dateTimeUtils.monthEndWithTime(yearMonth)
         );
     }
 

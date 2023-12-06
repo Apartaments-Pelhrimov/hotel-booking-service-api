@@ -10,7 +10,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -31,22 +30,22 @@ public class HotelTurningOffTime implements Event {
     private Long id;
 
     @Column(nullable = false, name = "\"from\"")
-    private LocalDate from;
+    private LocalDateTime from;
 
     @Column(nullable = false, name = "\"to\"")
-    private LocalDate to;
+    private LocalDateTime to;
 
     @Column
     private String name;
 
     @Override
     public LocalDateTime getStart() {
-        return from.atStartOfDay();
+        return from;
     }
 
     @Override
     public LocalDateTime getEnd() {
-        return to.atTime(23, 59);
+        return to;
     }
 
     @Override

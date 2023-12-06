@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ua.mibal.booking.model.entity.HotelTurningOffTime;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -19,7 +19,7 @@ public interface HotelTurningOffRepository extends JpaRepository<HotelTurningOff
             where
                 htot.from < ?2 and htot.to > ?1
             """)
-    List<HotelTurningOffTime> findBetween(LocalDate start, LocalDate end);
+    List<HotelTurningOffTime> findBetween(LocalDateTime start, LocalDateTime end);
 
     @Query("""
             select htot

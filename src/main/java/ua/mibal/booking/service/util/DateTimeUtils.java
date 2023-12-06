@@ -26,18 +26,10 @@ public class DateTimeUtils {
     }
 
     public LocalDateTime monthStartWithTime(YearMonth yearMonth) {
-        return monthStart(yearMonth).atStartOfDay();
-    }
-
-    public LocalDate monthStart(YearMonth yearMonth) {
-        return yearMonth.atDay(1);
+        return yearMonth.atDay(1).atStartOfDay();
     }
 
     public LocalDateTime monthEndWithTime(YearMonth yearMonth) {
-        return monthEnd(yearMonth).atTime(23, 59);
-    }
-
-    public LocalDate monthEnd(YearMonth yearMonth) {
-        return yearMonth.atEndOfMonth();
+        return yearMonth.atEndOfMonth().atTime(23, 59);
     }
 }
