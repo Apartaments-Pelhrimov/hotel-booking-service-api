@@ -120,7 +120,10 @@ public class CalendarService {
     }
 
     private Collection<Event> apartmentEvents(ApartmentInstance apartmentInstance) {
-        List<Reservation> reservations = apartmentInstance.getReservations();
+        List<Reservation> reservations = apartmentInstance
+                .getReservations().stream()
+                .filter(Reservation::notRejected)
+                .toList();
         List<TurningOffTime> turningOffTimes = apartmentInstance.getTurningOffTimes();
         return union(reservations, turningOffTimes);
     }
@@ -156,7 +159,8 @@ public class CalendarService {
                                                          LocalDateTime start,
                                                          LocalDateTime end) {
         Predicate<Reservation> intersectsWithRangeCondition =
-                r -> r.getDetails().getReservedTo().isAfter(start) &&
+                r -> r.notRejected() &&
+                     r.getDetails().getReservedTo().isAfter(start) &&
                      r.getDetails().getReservedFrom().isBefore(end);
         if (instance.getReservations().stream()
                 .anyMatch(intersectsWithRangeCondition))

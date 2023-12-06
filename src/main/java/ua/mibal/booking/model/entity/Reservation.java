@@ -139,6 +139,10 @@ public class Reservation implements Event {
         return apartmentInstance.getName() + " reservation";
     }
 
+    public boolean notRejected() {
+        return state != State.REJECTED;
+    }
+
     public enum State {
         PROCESSED, REJECTED
     }
