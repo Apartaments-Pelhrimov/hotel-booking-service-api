@@ -9,11 +9,11 @@ import net.fortuna.ical4j.model.property.ProdId;
 import net.fortuna.ical4j.model.property.Version;
 import org.springframework.stereotype.Service;
 import ua.mibal.booking.config.properties.CalendarProps;
-import ua.mibal.booking.model.entity.Reservation;
-import ua.mibal.booking.model.entity.embeddable.ReservationDetails;
+import ua.mibal.booking.model.entity.Event;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -25,16 +25,16 @@ import java.util.List;
 public class ICalService {
     private final CalendarProps calendarProps;
 
-    public Calendar calendarFromReservations(List<Reservation> reservations) {
+    public Calendar calendarFromEvents(Collection<Event> events) {
         Calendar calendar = initCalendar();
-        List<VEvent> events = reservationsToEvents(reservations);
-        calendar.getComponents().addAll(events);
+        List<VEvent> vEvents = eventsToVEvents(events);
+        calendar.getComponents().addAll(vEvents);
         return calendar;
     }
 
-    private List<VEvent> reservationsToEvents(List<Reservation> reservations) {
-        return reservations.stream()
-                .map(this::toEvent)
+    private List<VEvent> eventsToVEvents(Collection<Event> events) {
+        return events.stream()
+                .map(this::toVEvent)
                 .toList();
     }
 
@@ -46,14 +46,13 @@ public class ICalService {
         return calendar;
     }
 
-    private VEvent toEvent(Reservation reservation) {
-        ReservationDetails details = reservation.getDetails();
-        java.util.Date from = dateFromLocalDateTime(details.getReservedFrom());
-        java.util.Date to = dateFromLocalDateTime(details.getReservedTo());
+    private VEvent toVEvent(Event event) {
+        java.util.Date from = dateFromLocalDateTime(event.getStart());
+        java.util.Date to = dateFromLocalDateTime(event.getEnd());
         return new VEvent(
                 new DateTime(from),
                 new DateTime(to),
-                reservation.getApartmentInstance().getName() + " reservation"
+                event.getEventName()
         );
     }
 

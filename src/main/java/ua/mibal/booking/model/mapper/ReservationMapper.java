@@ -20,13 +20,17 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import ua.mibal.booking.model.dto.response.Calendar;
+import ua.mibal.booking.model.dto.response.Calendar.Range;
 import ua.mibal.booking.model.dto.response.ReservationDto;
 import ua.mibal.booking.model.entity.ApartmentInstance;
+import ua.mibal.booking.model.entity.Event;
+import ua.mibal.booking.model.entity.HotelTurningOffTime;
 import ua.mibal.booking.model.entity.Reservation;
 
+import java.util.Collection;
 import java.util.List;
 
-import static java.util.List.of;
+import static org.apache.commons.collections4.CollectionUtils.union;
 
 /**
  * @author Mykhailo Balakhon
@@ -39,26 +43,39 @@ public abstract class ReservationMapper {
     @Mapping(target = "date", source = "dateTime")
     public abstract ReservationDto toDto(Reservation reservation);
 
-    public List<Calendar> toCalendarList(List<ApartmentInstance> apartmentInstances) {
+    public List<Calendar> toCalendarList(List<ApartmentInstance> apartmentInstances,
+                                         List<HotelTurningOffTime> hotelTurningOffTimes) {
         return apartmentInstances.stream()
-                .map(this::toCalendar)
+                .map(ai -> toCalendar(ai, hotelTurningOffTimes))
                 .toList();
     }
 
-    public Calendar toCalendar(ApartmentInstance apartmentInstance) {
-        List<Calendar.Range> ranges = apartmentInstance.getReservations().stream()
-                .map(this::reservationToRange)
-                .toList();
+    public Calendar toCalendar(ApartmentInstance apartmentInstance,
+                               List<HotelTurningOffTime> hotelTurningOffTimes) {
+        Collection<Event> events = eventsFromEntities(apartmentInstance, hotelTurningOffTimes);
+        List<Range> ranges = rangesFromEvents(events);
         return new Calendar(apartmentInstance.getId(), ranges);
     }
 
-    private Calendar.Range reservationToRange(Reservation reservation) {
-        int start = reservation.getDetails()
-                .getReservedFrom()
+    private Collection<Event> eventsFromEntities(ApartmentInstance apartmentInstance, List<HotelTurningOffTime> hotelTurningOffTimes) {
+        Collection<Event> apartmentEvents = union(
+                apartmentInstance.getReservations(),
+                apartmentInstance.getTurningOffTimes()
+        );
+        return union(apartmentEvents, hotelTurningOffTimes);
+    }
+
+    private List<Range> rangesFromEvents(Collection<Event> events) {
+        return events.stream()
+                .map(this::eventToRange)
+                .toList();
+    }
+
+    private Range eventToRange(Event event) {
+        int start = event.getStart()
                 .getDayOfMonth();
-        int end = reservation.getDetails()
-                          .getReservedTo()
-                          .getDayOfMonth() - 1;
-        return new Calendar.Range(of(start, end));
+        int end = event.getStart()
+                .getDayOfMonth();
+        return Range.of(start, end - 1);
     }
 }

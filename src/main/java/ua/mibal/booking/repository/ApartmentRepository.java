@@ -71,31 +71,29 @@ public interface ApartmentRepository extends JpaRepository<Apartment, Long> {
             """)
     List<ApartmentInstance> findFreeApartmentInstanceByApartmentIdAndDates(Long id, LocalDateTime from, LocalDateTime to, int people);
 
-    // TODO add hotel turn off time
-    @Query("""
-            select ai from ApartmentInstance ai
-                left join ai.apartment a
-                left join fetch ai.reservations r
-            where
-                a.id = ?1 and
-                (r = null or r.details.reservedFrom < ?3 or r.details.reservedTo > ?2)
-            """)
-    List<ApartmentInstance> findByApartmentIdBetweenFetchReservations(Long id, LocalDateTime start, LocalDateTime end);
-
-    // TODO add hotel turn off time
     @Query("""
             select ai from ApartmentInstance ai
                 left join fetch ai.reservations r
             where
                 ai.id = ?1 and
-                (r = null or (r.details.reservedFrom < ?3 and r.details.reservedTo > ?2))
+                (r = null or r.details.reservedFrom < ?3 or r.details.reservedTo > ?2)
             """)
     Optional<ApartmentInstance> findByApartmentInstanceIdBetweenFetchReservations(Long apartmentInstanceId, LocalDateTime start, LocalDateTime end);
 
     @Query("""
-            select ai from ApartmentInstance ai
+            select a from Apartment a
+                left join fetch a.apartmentInstances ai
                 left join fetch ai.reservations r
+            where
+                a.id = ?1 and
+                (r = null or r.details.reservedFrom < ?3 or r.details.reservedTo > ?2)
+            """)
+    Optional<Apartment> findByIdBetweenFetchInstancesAndReservations(Long apartmentId, LocalDateTime start, LocalDateTime end);
+
+    @Query("""
+            select count(ai) = 1
+                from ApartmentInstance ai
             where ai.id = ?1
             """)
-    Optional<ApartmentInstance> findByApartmentInstanceIdFetchReservations(Long apartmentInstanceId);
+    boolean instanceExistsById(Long instanceId);
 }

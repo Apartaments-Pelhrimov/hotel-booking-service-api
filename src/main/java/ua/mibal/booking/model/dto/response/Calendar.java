@@ -20,8 +20,12 @@ public class Calendar {
     private List<Range> ranges;
 
     public static class Range extends ArrayList<Integer> {
-        public Range(Collection<? extends Integer> c) {
+        private Range(Collection<? extends Integer> c) {
             super(c);
+        }
+
+        public static Range of(int start, int end) {
+            return new Range(List.of(start, end));
         }
     }
 }
