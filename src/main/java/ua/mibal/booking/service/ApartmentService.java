@@ -43,6 +43,7 @@ public class ApartmentService {
     private final ApartmentRepository apartmentRepository;
     private final ApartmentMapper apartmentMapper;
     private final DateTimeUtils dateTimeUtils;
+    private final BookingComReservationService bookingComReservationService;
 
     @Transactional(readOnly = true) // for LAZY Apartment.beds fetch
     public ApartmentDto getOneDto(Long id) {
@@ -68,7 +69,10 @@ public class ApartmentService {
         LocalDateTime from = dateTimeUtils.reserveFrom(request.from());
         LocalDateTime to = dateTimeUtils.reserveTo(request.to());
         List<ApartmentInstance> apartments = apartmentRepository
-                        .findFreeApartmentInstanceByApartmentIdAndDates(apartmentId, from, to, request.people());
+                .findFreeApartmentInstanceByApartmentIdAndDates(apartmentId, from, to, request.people())
+                .stream()
+                .filter(bookingComReservationService::isFree)
+                .toList();
         return selectMostSuitableApartmentInstance(apartments, apartmentId, from, to);
     }
 
