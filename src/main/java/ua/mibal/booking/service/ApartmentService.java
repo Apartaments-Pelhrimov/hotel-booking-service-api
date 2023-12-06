@@ -23,7 +23,7 @@ import ua.mibal.booking.model.dto.response.ApartmentCardDto;
 import ua.mibal.booking.model.dto.response.ApartmentDto;
 import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.entity.ApartmentInstance;
-import ua.mibal.booking.model.exception.FreeApartmentsForDateNotFoundException;
+import ua.mibal.booking.model.exception.ApartmentIsNotAvialableForReservation;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.model.mapper.ApartmentMapper;
 import ua.mibal.booking.model.request.ReservationFormRequest;
@@ -77,7 +77,7 @@ public class ApartmentService {
     }
 
     private ApartmentInstance selectMostSuitableApartmentInstance(List<ApartmentInstance> apartments, Long apartmentId, LocalDateTime from, LocalDateTime to) {
-        if (apartments.isEmpty()) throw new FreeApartmentsForDateNotFoundException(from, to, apartmentId);
+        if (apartments.isEmpty()) throw new ApartmentIsNotAvialableForReservation(from, to, apartmentId);
         if (apartments.size() == 1) return apartments.get(0);
         // TODO implement logic
         return apartments.get(0);
