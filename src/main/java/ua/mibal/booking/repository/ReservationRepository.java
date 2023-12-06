@@ -22,6 +22,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ua.mibal.booking.model.entity.Reservation;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,4 +60,13 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
                 and r.details.reservedTo >= now()
             """)
     List<Reservation> findAllByApartmentInstanceIdForNowFetchApartmentInstance(Long apartmentInstanceId);
+
+    @Query("""
+            select count(r.id) > 0
+                from Reservation r
+            where
+                r.state != 'REJECTED'
+                and r.details.reservedTo > ?1 and r.details.reservedFrom < ?2
+            """)
+    boolean existsReservationThatIntersectRange(LocalDateTime start, LocalDateTime end);
 }

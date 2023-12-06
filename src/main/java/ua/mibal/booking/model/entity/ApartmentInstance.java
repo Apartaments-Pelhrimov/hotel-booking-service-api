@@ -84,4 +84,9 @@ public class ApartmentInstance {
             reservation.setApartmentInstance(null);
         }
     }
+
+    public void addTurningOffTime(TurningOffTime turningOffTime) {
+        turningOffTime.setApartmentInstance(this);
+        this.turningOffTimes.add(turningOffTime);
+    }
 }

@@ -3,23 +3,26 @@ package ua.mibal.booking.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ua.mibal.booking.model.dto.request.TurnOffDto;
 import ua.mibal.booking.model.dto.response.calendar.Calendar;
 import ua.mibal.booking.model.entity.ApartmentInstance;
 import ua.mibal.booking.model.entity.Event;
 import ua.mibal.booking.model.entity.HotelTurningOffTime;
 import ua.mibal.booking.model.entity.Reservation;
 import ua.mibal.booking.model.entity.embeddable.TurningOffTime;
+import ua.mibal.booking.model.exception.IllegalTurningOffTimeException;
 import ua.mibal.booking.model.exception.entity.ApartmentInstanceNotFoundException;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
-import ua.mibal.booking.model.request.TurnOffDatesDto;
 import ua.mibal.booking.repository.ApartmentRepository;
 import ua.mibal.booking.repository.HotelTurningOffRepository;
+import ua.mibal.booking.repository.ReservationRepository;
 import ua.mibal.booking.service.util.DateTimeUtils;
 
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Predicate;
 
 import static java.time.LocalDateTime.MAX;
 import static java.time.LocalDateTime.now;
@@ -34,6 +37,7 @@ import static org.apache.commons.collections4.CollectionUtils.union;
 public class CalendarService {
     private final ApartmentRepository apartmentRepository;
     private final HotelTurningOffRepository hotelTurningOffRepository;
+    private final ReservationRepository reservationRepository;
     private final ICalService iCalService;
     private final DateTimeUtils dateTimeUtils;
 
@@ -60,6 +64,21 @@ public class CalendarService {
                 .orElseThrow(() -> new ApartmentInstanceNotFoundException(instanceId));
         List<? extends Event> hotelEvents = hotelTurningOffRepository.findFromNow();
         return instanceToICal(apartmentInstance, hotelEvents);
+    }
+
+    public void turnOffHotel(TurnOffDto turnOffDto) {
+        validateRangeToTurnOffHotel(turnOffDto.from(), turnOffDto.to());
+        HotelTurningOffTime turningOffTime = hotelTurningOffFromDto(turnOffDto);
+        hotelTurningOffRepository.save(turningOffTime);
+    }
+
+    @Transactional
+    public void turnOffApartmentInstance(Long id, TurnOffDto turnOffDto) {
+        ApartmentInstance instance = apartmentRepository.findInstanceByIdFetchReservations(id)
+                .orElseThrow(() -> new ApartmentInstanceNotFoundException(id));
+        validateRangeToTurnOffApartmentInstance(instance, turnOffDto.from(), turnOffDto.to());
+        TurningOffTime turningOffTime = turningOffTimeFromDto(turnOffDto);
+        instance.addTurningOffTime(turningOffTime);
     }
 
     private List<Calendar> instancesToCalendars(List<ApartmentInstance> instances,
@@ -118,11 +137,34 @@ public class CalendarService {
             throw new ApartmentNotFoundException(apartmentId);
     }
 
-    public void turnOffHotel(TurnOffDatesDto turnOffDatesDto) {
-
+    private HotelTurningOffTime hotelTurningOffFromDto(TurnOffDto turnOffDto) {
+        return HotelTurningOffTime.builder()
+                .from(turnOffDto.from())
+                .to(turnOffDto.to())
+                .event(turnOffDto.event())
+                .build();
     }
 
-    public void turnOffApartmentInstance(Long id, TurnOffDatesDto turnOffDatesDto) {
+    private TurningOffTime turningOffTimeFromDto(TurnOffDto turnOffDto) {
+        return TurningOffTime.builder()
+                .from(turnOffDto.from())
+                .to(turnOffDto.to())
+                .build();
+    }
 
+    private void validateRangeToTurnOffApartmentInstance(ApartmentInstance instance,
+                                                         LocalDateTime start,
+                                                         LocalDateTime end) {
+        Predicate<Reservation> intersectsWithRangeCondition =
+                r -> r.getDetails().getReservedTo().isAfter(start) &&
+                     r.getDetails().getReservedFrom().isBefore(end);
+        if (instance.getReservations().stream()
+                .anyMatch(intersectsWithRangeCondition))
+            throw new IllegalTurningOffTimeException(start, end);
+    }
+
+    private void validateRangeToTurnOffHotel(LocalDateTime start, LocalDateTime end) {
+        if (reservationRepository.existsReservationThatIntersectRange(start, end))
+            throw new IllegalTurningOffTimeException(start, end);
     }
 }

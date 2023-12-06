@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ua.mibal.booking.model.dto.request.TurnOffDto;
 import ua.mibal.booking.model.dto.response.calendar.Calendar;
-import ua.mibal.booking.model.request.TurnOffDatesDto;
 import ua.mibal.booking.service.CalendarService;
 
 import java.time.YearMonth;
@@ -50,14 +50,14 @@ public class CalendarController {
 
     @RolesAllowed("MANAGER")
     @PatchMapping("/hotel/off")
-    public void turnOffHotel(@Valid @RequestBody TurnOffDatesDto turnOffDatesDto) {
-        calendarService.turnOffHotel(turnOffDatesDto);
+    public void turnOffHotel(@Valid @RequestBody TurnOffDto turnOffDto) {
+        calendarService.turnOffHotel(turnOffDto);
     }
 
     @RolesAllowed("MANAGER")
     @PatchMapping("/apartments/instances/{id}/off")
     public void turnOffApartmentInstance(@PathVariable Long id,
-                                         @Valid @RequestBody TurnOffDatesDto turnOffDatesDto) {
-        calendarService.turnOffApartmentInstance(id, turnOffDatesDto);
+                                         @Valid @RequestBody TurnOffDto turnOffDto) {
+        calendarService.turnOffApartmentInstance(id, turnOffDto);
     }
 }

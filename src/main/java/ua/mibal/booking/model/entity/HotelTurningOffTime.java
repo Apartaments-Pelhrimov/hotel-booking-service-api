@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,6 +18,7 @@ import java.util.Optional;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -36,7 +38,7 @@ public class HotelTurningOffTime implements Event {
     private LocalDateTime to;
 
     @Column
-    private String name;
+    private String event;
 
     @Override
     public LocalDateTime getStart() {
@@ -50,6 +52,6 @@ public class HotelTurningOffTime implements Event {
 
     @Override
     public String getEventName() {
-        return "Hotel turned off. Reason: " + Optional.ofNullable(name).orElse("");
+        return "Hotel turned off. Reason: " + Optional.ofNullable(event).orElse("");
     }
 }
