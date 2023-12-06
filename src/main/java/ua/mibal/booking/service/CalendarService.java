@@ -3,7 +3,7 @@ package ua.mibal.booking.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ua.mibal.booking.model.dto.response.Calendar;
+import ua.mibal.booking.model.dto.response.calendar.Calendar;
 import ua.mibal.booking.model.entity.ApartmentInstance;
 import ua.mibal.booking.model.entity.Event;
 import ua.mibal.booking.model.entity.HotelTurningOffTime;
