@@ -104,4 +104,13 @@ public interface ApartmentRepository extends JpaRepository<Apartment, Long> {
             where ai.id = ?1
             """)
     Optional<ApartmentInstance> findInstanceByIdFetchReservations(Long id);
+
+    @Query("""
+            select ai
+                from ApartmentInstance ai
+                left join fetch ai.reservations
+            where ai.apartment.id = ?1
+                order by ai.id
+            """)
+    List<ApartmentInstance> findInstancesByApartmentIdFetchReservations(Long apartmentId);
 }
