@@ -23,7 +23,6 @@ import org.springframework.data.jpa.repository.Query;
 import ua.mibal.booking.model.entity.Reservation;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
@@ -40,26 +39,10 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     @Query("""
             select r from Reservation r
-                left join fetch r.user u
-            where r.id = ?1
-            """)
-    Optional<Reservation> findByIdFetchUser(Long id);
-
-    @Query("""
-            select r from Reservation r
                 left join fetch r.rejections rr
             where r.id = ?1
             """)
     Optional<Reservation> findByIdFetchRejections(Long id);
-
-    @Query("""
-            select r
-                from Reservation r
-                left join fetch r.apartmentInstance ai
-            where ai.id = ?1
-                and r.details.reservedTo >= now()
-            """)
-    List<Reservation> findAllByApartmentInstanceIdForNowFetchApartmentInstance(Long apartmentInstanceId);
 
     @Query("""
             select count(r.id) > 0

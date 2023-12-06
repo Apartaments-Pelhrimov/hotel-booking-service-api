@@ -72,32 +72,6 @@ public interface ApartmentRepository extends JpaRepository<Apartment, Long> {
     List<ApartmentInstance> findFreeApartmentInstanceByApartmentIdAndDates(Long id, LocalDateTime from, LocalDateTime to, int people);
 
     @Query("""
-            select ai from ApartmentInstance ai
-                left join fetch ai.reservations r
-            where
-                ai.id = ?1 and
-                (r = null or r.details.reservedFrom < ?3 or r.details.reservedTo > ?2)
-            """)
-    Optional<ApartmentInstance> findByApartmentInstanceIdBetweenFetchReservations(Long apartmentInstanceId, LocalDateTime start, LocalDateTime end);
-
-    @Query("""
-            select a from Apartment a
-                left join fetch a.apartmentInstances ai
-                left join fetch ai.reservations r
-            where
-                a.id = ?1 and
-                (r = null or r.details.reservedFrom < ?3 or r.details.reservedTo > ?2)
-            """)
-    Optional<Apartment> findByIdBetweenFetchInstancesAndReservations(Long apartmentId, LocalDateTime start, LocalDateTime end);
-
-    @Query("""
-            select count(ai) = 1
-                from ApartmentInstance ai
-            where ai.id = ?1
-            """)
-    boolean instanceExistsById(Long instanceId);
-
-    @Query("""
             select ai
                 from ApartmentInstance ai
                 left join fetch ai.reservations
