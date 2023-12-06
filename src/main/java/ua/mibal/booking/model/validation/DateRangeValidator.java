@@ -18,25 +18,25 @@ package ua.mibal.booking.model.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import ua.mibal.booking.model.search.DateRangeRequestInterface;
+import ua.mibal.booking.model.dto.request.TurnOffDto;
 import ua.mibal.booking.model.validation.constraints.ValidDateRange;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
-import static java.time.LocalDate.now;
+import static java.time.LocalDateTime.now;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class DateRangeValidator implements ConstraintValidator<ValidDateRange, DateRangeRequestInterface> {
+public class DateRangeValidator implements ConstraintValidator<ValidDateRange, TurnOffDto> {
 
     @Override
-    public boolean isValid(DateRangeRequestInterface request, ConstraintValidatorContext context) {
-        LocalDate from = request.getFrom();
-        LocalDate to = request.getTo();
+    public boolean isValid(TurnOffDto turnOffDto, ConstraintValidatorContext context) {
+        LocalDateTime from = turnOffDto.from();
+        LocalDateTime to = turnOffDto.to();
         return !Objects.isNull(from) && !Objects.isNull(to) &&
-               from.isBefore(to) && from.isAfter(now().minusDays(1));
+               from.isBefore(to) && from.isAfter(now());
     }
 }
