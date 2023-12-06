@@ -11,6 +11,7 @@ import ua.mibal.booking.model.entity.Reservation;
 import ua.mibal.booking.model.entity.embeddable.TurningOffTime;
 import ua.mibal.booking.model.exception.entity.ApartmentInstanceNotFoundException;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
+import ua.mibal.booking.model.request.TurnOffDatesDto;
 import ua.mibal.booking.repository.ApartmentRepository;
 import ua.mibal.booking.repository.HotelTurningOffRepository;
 import ua.mibal.booking.service.util.DateTimeUtils;
@@ -115,5 +116,13 @@ public class CalendarService {
     private void validateApartmentExists(Long apartmentId) {
         if (!apartmentRepository.existsById(apartmentId))
             throw new ApartmentNotFoundException(apartmentId);
+    }
+
+    public void turnOffHotel(TurnOffDatesDto turnOffDatesDto) {
+
+    }
+
+    public void turnOffApartmentInstance(Long id, TurnOffDatesDto turnOffDatesDto) {
+
     }
 }
