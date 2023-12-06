@@ -1,6 +1,7 @@
 package ua.mibal.booking.model.entity;
 
 import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -44,6 +45,9 @@ public class ApartmentInstance {
     private Long id;
 
     private String name;
+
+    @Column(unique = true)
+    private String bookingIcalId;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(
