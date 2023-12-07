@@ -19,8 +19,10 @@ import ua.mibal.booking.config.properties.BookingICalProps;
 import ua.mibal.booking.model.entity.ApartmentInstance;
 import ua.mibal.booking.model.entity.Event;
 import ua.mibal.booking.model.exception.NotFoundException;
-import ua.mibal.booking.testUtils.ICalUtil;
 
+import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,26 +47,27 @@ class BookingComReservationService_UnitTest {
 
     @MockBean
     private BookingICalProps bookingICalProps;
+    @MockBean
+    private ICalService iCalService;
 
     @Mock
     private ApartmentInstance apartmentInstance;
+    @Mock
+    private Event event;
 
-    @ParameterizedTest
+    @Test
     @Order(1)
-    @CsvSource({
-            "file:/Users/admin/Downloads/Calendar.ics",
-    })
-    void getEventsForApartmentInstance() {
+    void getEventsForApartmentInstance() throws URISyntaxException {
         String calendarUri = "file:/Users/admin/IdeaProjects/hotel-booking-service/" +
                              "src/test/resources/correct.ics";
         when(apartmentInstance.getBookingIcalId()).thenReturn(Optional.of(""));
         when(bookingICalProps.baseUrl()).thenReturn(calendarUri);
-
-        List<Event> expected = ICalUtil.writeTestEventsIntoCalendar(calendarUri);
+        when(iCalService.eventsFromFile(new File(new URI(calendarUri))))
+                .thenReturn(List.of(event));
 
         List<Event> actual = service.getEventsForApartmentInstance(apartmentInstance);
 
-        assertEquals(expected, actual);
+        assertEquals(List.of(event), actual);
     }
 
     @Test
@@ -87,7 +90,6 @@ class BookingComReservationService_UnitTest {
             "./valid_url/,                   is not absolute",
             "//valid_url/,                   is not absolute",
             "~/valid_url/,                   is not absolute",
-            "file:/notexists/notExists.file, filenotfoundexception",
     })
     void getEventsForApartmentInstance_should_throw_IllegalArgumentException_if_uri_is_invalid(String uri, String message) {
         when(apartmentInstance.getBookingIcalId()).thenReturn(Optional.of("id"));
@@ -98,21 +100,6 @@ class BookingComReservationService_UnitTest {
                 () -> service.getEventsForApartmentInstance(apartmentInstance)
         );
         assertTrue(e.getMessage().toLowerCase().contains(message));
-    }
-
-    @Test
-    @Order(4)
-    void getEventsForApartmentInstance_should_throw_IllegalArgumentException_if_file_format_is_invalid() {
-        when(apartmentInstance.getBookingIcalId()).thenReturn(Optional.of(""));
-        when(bookingICalProps.baseUrl()).thenReturn(
-                "file:/Users/admin/IdeaProjects/hotel-booking-service/" +
-                "src/test/resources/incorrect.ics");
-
-        IllegalArgumentException e = assertThrows(
-                IllegalArgumentException.class,
-                () -> service.getEventsForApartmentInstance(apartmentInstance)
-        );
-        assertTrue(e.getMessage().contains("ParserException"));
     }
 
     @Test
