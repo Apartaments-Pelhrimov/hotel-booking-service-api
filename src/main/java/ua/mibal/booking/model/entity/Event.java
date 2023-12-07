@@ -1,5 +1,7 @@
 package ua.mibal.booking.model.entity;
 
+import ua.mibal.booking.model.dto.response.SimpleEvent;
+
 import java.time.LocalDateTime;
 
 /**
@@ -13,4 +15,8 @@ public interface Event {
     LocalDateTime getEnd();
 
     String getEventName();
+
+    static Event from(LocalDateTime from, LocalDateTime to, String eventName) {
+        return new SimpleEvent(from, to, eventName);
+    }
 }
