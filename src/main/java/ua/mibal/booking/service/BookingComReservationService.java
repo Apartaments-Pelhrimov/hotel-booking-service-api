@@ -17,12 +17,12 @@ import java.util.function.Predicate;
 @Service
 public class BookingComReservationService {
 
-    public boolean isFree(ApartmentInstance apartmentInstance, LocalDateTime from, LocalDateTime to) {
+    public boolean isFree(ApartmentInstance apartmentInstance, LocalDateTime start, LocalDateTime end) {
         List<Event> events = getEventsForApartmentInstance(apartmentInstance);
-        Predicate<Event> intersectsWithRangeCondition =
-                ev -> ev.getEnd().isAfter(from) &&
-                      ev.getStart().isBefore(to);
-        return events.stream().anyMatch(intersectsWithRangeCondition);
+        Predicate<Event> intersectsWithRange =
+                ev -> ev.getEnd().isAfter(start) &&
+                      ev.getStart().isBefore(end);
+        return events.stream().anyMatch(intersectsWithRange);
     }
 
     public List<Event> getEventsForApartmentInstance(ApartmentInstance apartmentInstance) {
