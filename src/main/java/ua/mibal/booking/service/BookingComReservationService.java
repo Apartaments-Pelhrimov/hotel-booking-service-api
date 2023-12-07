@@ -1,14 +1,20 @@
 package ua.mibal.booking.service;
 
 import lombok.RequiredArgsConstructor;
+import net.fortuna.ical4j.data.CalendarBuilder;
+import net.fortuna.ical4j.data.ParserException;
+import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.component.VEvent;
-import net.fortuna.ical4j.model.property.Url;
 import org.springframework.stereotype.Service;
 import ua.mibal.booking.config.properties.BookingICalProps;
 import ua.mibal.booking.model.entity.ApartmentInstance;
 import ua.mibal.booking.model.entity.Event;
 import ua.mibal.booking.model.exception.NotFoundException;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
@@ -34,8 +40,8 @@ public class BookingComReservationService {
     }
 
     public List<Event> getEventsForApartmentInstance(ApartmentInstance apartmentInstance) {
-        Url url = iCalUrlByApartmentInstance(apartmentInstance);
-        List<VEvent> vEvents = vEventsByUrl(url);
+        URI uri = iCalUrlByApartmentInstance(apartmentInstance);
+        List<VEvent> vEvents = vEventsByUri(uri);
         return eventsFromVEvents(vEvents);
     }
 
@@ -44,19 +50,20 @@ public class BookingComReservationService {
         return null;
     }
 
-    private List<VEvent> vEventsByUrl(Url url) {
-        return null;
+    private List<VEvent> vEventsByUri(URI uri) {
+        try (FileInputStream inputStream = new FileInputStream(new File(uri))) {
+            Calendar calendar = new CalendarBuilder().build(inputStream);
+            return calendar.getComponents(Component.VEVENT);
+        } catch (IOException | ParserException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 
-    private Url iCalUrlByApartmentInstance(ApartmentInstance apartmentInstance) {
-        String iCalId = apartmentInstance.getBookingIcalId()
-                .orElseThrow(() -> new NotFoundException(
-                        "Apartment instance has not id for booking iCal system"));
-        return new Url(bookingICalUriById(iCalId));
-    }
-
-    private URI bookingICalUriById(String iCalId) {
+    private URI iCalUrlByApartmentInstance(ApartmentInstance apartmentInstance) {
         try {
+            String iCalId = apartmentInstance.getBookingIcalId()
+                    .orElseThrow(() -> new NotFoundException(
+                            "Apartment instance has not id for booking iCal system"));
             return new URI(bookingICalProps.baseUrl() + iCalId);
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException(e);

@@ -6,6 +6,8 @@ import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import ua.mibal.booking.config.properties.BookingICalProps;
 import ua.mibal.booking.model.entity.ApartmentInstance;
 import ua.mibal.booking.model.entity.Event;
 import ua.mibal.booking.model.exception.NotFoundException;
+import ua.mibal.booking.model.mapper.EventMapper;
 
 import java.util.List;
 import java.util.Optional;
@@ -45,11 +48,18 @@ class BookingComReservationService_UnitTest {
     @Mock
     private ApartmentInstance apartmentInstance;
 
-    @Test
+    @ParameterizedTest
     @Order(1)
-    void getEventsForApartmentInstance() {
-        // TODO
-        List<Event> actual = service.getEventsForApartmentInstance(apartmentInstance);
+    @CsvSource({
+            "file:/Users/admin/Downloads/Calendar.ics",
+    })
+    void getEventsForApartmentInstance(String uri) {
+        when(apartmentInstance.getBookingIcalId()).thenReturn(Optional.of(""));
+        when(bookingICalProps.baseUrl()).thenReturn("test/file.ics");
+
+        List<? extends Event> actual = service.getEventsForApartmentInstance(apartmentInstance);
+
+
     }
 
     @Test
@@ -64,21 +74,43 @@ class BookingComReservationService_UnitTest {
         assertTrue(e.getMessage().toLowerCase().contains("ical"));
     }
 
-    @Test
+    @ParameterizedTest
     @Order(3)
-    void getEventsForApartmentInstance_should_throw_IllegalArgumentException() {
+    @CsvSource({
+            "invalid_url\",                  urisyntaxexception",
+            "valid_url,                      is not absolute",
+            "./valid_url/,                   is not absolute",
+            "//valid_url/,                   is not absolute",
+            "~/valid_url/,                   is not absolute",
+            "file:/notexists/notExists.file, filenotfoundexception",
+    })
+    void getEventsForApartmentInstance_should_throw_IllegalArgumentException_if_uri_is_invalid(String uri, String message) {
         when(apartmentInstance.getBookingIcalId()).thenReturn(Optional.of("id"));
-        when(bookingICalProps.baseUrl()).thenReturn("invalid_url\"");
+        when(bookingICalProps.baseUrl()).thenReturn(uri);
 
         IllegalArgumentException e = assertThrows(
                 IllegalArgumentException.class,
                 () -> service.getEventsForApartmentInstance(apartmentInstance)
         );
-        assertTrue(e.getMessage().contains("url"));
+        assertTrue(e.getMessage().toLowerCase().contains(message));
     }
 
     @Test
     @Order(4)
+    void getEventsForApartmentInstance_should_throw_IllegalArgumentException_if_file_format_is_invalid() {
+        when(apartmentInstance.getBookingIcalId()).thenReturn(Optional.of(""));
+        when(bookingICalProps.baseUrl()).thenReturn(
+                "file:/Users/admin/IdeaProjects/hotel-booking-service/" +
+                "src/test/resources/incorrectCalendar.ics");
+
+        IllegalArgumentException e = assertThrows(
+                IllegalArgumentException.class,
+                () -> service.getEventsForApartmentInstance(apartmentInstance)
+        );
+        assertTrue(e.getMessage().contains("ParserException"));
+    }
+
+    @Test
     void isFree() {
 
     }
