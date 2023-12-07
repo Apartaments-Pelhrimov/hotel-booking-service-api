@@ -25,11 +25,11 @@ import java.util.List;
 public class ICalService {
     private final CalendarProps calendarProps;
 
-    public Calendar calendarFromEvents(Collection<Event> events) {
+    public String calendarFromEvents(Collection<Event> events) {
         Calendar calendar = initCalendar();
         List<VEvent> vEvents = eventsToVEvents(events);
         calendar.getComponents().addAll(vEvents);
-        return calendar;
+        return calendar.toString();
     }
 
     private List<VEvent> eventsToVEvents(Collection<Event> events) {

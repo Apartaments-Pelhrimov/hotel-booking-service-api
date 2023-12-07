@@ -108,7 +108,7 @@ public class CalendarService {
         );
         return iCalService.calendarFromEvents(
                 union(apartmentEvents, hotelEvents)
-        ).toString();
+        );
     }
 
     private Collection<Event> apartmentEventsForDateRange(ApartmentInstance apartmentInstance,
