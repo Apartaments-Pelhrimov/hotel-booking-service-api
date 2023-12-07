@@ -1,11 +1,6 @@
 package ua.mibal.booking.service;
 
 import lombok.RequiredArgsConstructor;
-import net.fortuna.ical4j.data.CalendarBuilder;
-import net.fortuna.ical4j.data.ParserException;
-import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.component.VEvent;
 import org.springframework.stereotype.Service;
 import ua.mibal.booking.config.properties.BookingICalProps;
 import ua.mibal.booking.model.entity.ApartmentInstance;
@@ -13,8 +8,6 @@ import ua.mibal.booking.model.entity.Event;
 import ua.mibal.booking.model.exception.NotFoundException;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
@@ -29,7 +22,7 @@ import java.util.function.Predicate;
 @Service
 public class BookingComReservationService {
     private final BookingICalProps bookingICalProps;
-
+    private final ICalService iCalService;
 
     public boolean isFree(ApartmentInstance apartmentInstance, LocalDateTime start, LocalDateTime end) {
         List<Event> events = getEventsForApartmentInstance(apartmentInstance);
@@ -40,35 +33,17 @@ public class BookingComReservationService {
     }
 
     public List<Event> getEventsForApartmentInstance(ApartmentInstance apartmentInstance) {
-        URI uri = iCalUrlByApartmentInstance(apartmentInstance);
-        List<VEvent> vEvents = vEventsByUri(uri);
-        return eventsFromVEvents(vEvents);
+        File iCalFile = iCalFileByApartmentInstance(apartmentInstance);
+        return iCalService.eventsFromFile(iCalFile);
     }
 
-    private List<Event> eventsFromVEvents(List<VEvent> vEvents) {
-        return vEvents.stream().map(vEvent -> {
-            LocalDateTime from = LocalDateTime.from(vEvent.getStartDate().getDate().toInstant());
-            LocalDateTime to = LocalDateTime.from(vEvent.getEndDate().getDate().toInstant());
-            String eventName = vEvent.getDescription().getValue();
-            return Event.from(from, to, eventName);
-        }).toList();
-    }
-
-    private List<VEvent> vEventsByUri(URI uri) {
-        try (FileInputStream inputStream = new FileInputStream(new File(uri))) {
-            Calendar calendar = new CalendarBuilder().build(inputStream);
-            return calendar.getComponents(Component.VEVENT);
-        } catch (IOException | ParserException e) {
-            throw new IllegalArgumentException(e);
-        }
-    }
-
-    private URI iCalUrlByApartmentInstance(ApartmentInstance apartmentInstance) {
+    private File iCalFileByApartmentInstance(ApartmentInstance apartmentInstance) {
         try {
             String iCalId = apartmentInstance.getBookingIcalId()
                     .orElseThrow(() -> new NotFoundException(
                             "Apartment instance has not id for booking iCal system"));
-            return new URI(bookingICalProps.baseUrl() + iCalId);
+            URI uri = new URI(bookingICalProps.baseUrl() + iCalId);
+            return new File(uri);
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException(e);
         }
