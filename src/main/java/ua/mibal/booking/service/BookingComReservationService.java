@@ -26,7 +26,7 @@ public class BookingComReservationService {
     }
 
     public List<Event> getEventsForApartmentInstance(ApartmentInstance apartmentInstance) {
-        Url url = linkedUrlById(apartmentInstance.getBookingIcalId());
+        Url url = linkedUrlById(apartmentInstance);
         List<VEvent> vEvents = vEventsByUrl(url);
         return eventsFromVEvents(vEvents);
     }
@@ -40,7 +40,7 @@ public class BookingComReservationService {
         return null;
     }
 
-    private Url linkedUrlById(String bookingIcalId) {
+    private Url linkedUrlById(ApartmentInstance apartmentInstance) {
         return null;
     }
 }

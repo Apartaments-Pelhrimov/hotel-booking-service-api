@@ -22,6 +22,7 @@ import ua.mibal.booking.model.entity.embeddable.TurningOffTime;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static lombok.AccessLevel.PRIVATE;
 
@@ -44,9 +45,9 @@ public class ApartmentInstance {
     @GeneratedValue
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
-    @Column(unique = true)
     private String bookingIcalId;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
@@ -76,6 +77,10 @@ public class ApartmentInstance {
     @OneToMany(mappedBy = "apartmentInstance")
     @Setter(PRIVATE)
     private List<Reservation> reservations = new ArrayList<>();
+
+    public Optional<String> getBookingIcalId() {
+        return Optional.ofNullable(bookingIcalId);
+    }
 
     public void addReservation(Reservation reservation) {
         reservation.setApartmentInstance(this);
