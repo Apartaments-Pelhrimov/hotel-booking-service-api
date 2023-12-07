@@ -45,9 +45,13 @@ public class BookingComReservationService {
         return eventsFromVEvents(vEvents);
     }
 
-    // TODO
     private List<Event> eventsFromVEvents(List<VEvent> vEvents) {
-        return null;
+        return vEvents.stream().map(vEvent -> {
+            LocalDateTime from = LocalDateTime.from(vEvent.getStartDate().getDate().toInstant());
+            LocalDateTime to = LocalDateTime.from(vEvent.getEndDate().getDate().toInstant());
+            String eventName = vEvent.getDescription().getValue();
+            return Event.from(from, to, eventName);
+        }).toList();
     }
 
     private List<VEvent> vEventsByUri(URI uri) {

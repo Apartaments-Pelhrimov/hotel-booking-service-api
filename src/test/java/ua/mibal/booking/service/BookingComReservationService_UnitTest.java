@@ -19,11 +19,12 @@ import ua.mibal.booking.config.properties.BookingICalProps;
 import ua.mibal.booking.model.entity.ApartmentInstance;
 import ua.mibal.booking.model.entity.Event;
 import ua.mibal.booking.model.exception.NotFoundException;
-import ua.mibal.booking.model.mapper.EventMapper;
+import ua.mibal.booking.testUtils.ICalUtil;
 
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -53,13 +54,17 @@ class BookingComReservationService_UnitTest {
     @CsvSource({
             "file:/Users/admin/Downloads/Calendar.ics",
     })
-    void getEventsForApartmentInstance(String uri) {
+    void getEventsForApartmentInstance() {
+        String calendarUri = "file:/Users/admin/IdeaProjects/hotel-booking-service/" +
+                             "src/test/resources/correct.ics";
         when(apartmentInstance.getBookingIcalId()).thenReturn(Optional.of(""));
-        when(bookingICalProps.baseUrl()).thenReturn("test/file.ics");
+        when(bookingICalProps.baseUrl()).thenReturn(calendarUri);
 
-        List<? extends Event> actual = service.getEventsForApartmentInstance(apartmentInstance);
+        List<Event> expected = ICalUtil.writeTestEventsIntoCalendar(calendarUri);
 
+        List<Event> actual = service.getEventsForApartmentInstance(apartmentInstance);
 
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -101,7 +106,7 @@ class BookingComReservationService_UnitTest {
         when(apartmentInstance.getBookingIcalId()).thenReturn(Optional.of(""));
         when(bookingICalProps.baseUrl()).thenReturn(
                 "file:/Users/admin/IdeaProjects/hotel-booking-service/" +
-                "src/test/resources/incorrectCalendar.ics");
+                "src/test/resources/incorrect.ics");
 
         IllegalArgumentException e = assertThrows(
                 IllegalArgumentException.class,
