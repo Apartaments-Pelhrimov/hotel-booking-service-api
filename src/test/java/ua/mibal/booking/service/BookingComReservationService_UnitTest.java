@@ -7,7 +7,9 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +25,13 @@ import ua.mibal.booking.model.exception.NotFoundException;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
+import static java.util.List.of;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -55,19 +61,32 @@ class BookingComReservationService_UnitTest {
     @Mock
     private Event event;
 
+    public static Stream<Arguments> eventsFactory() {
+        LocalDateTime first = LocalDate.of(2023, 12, 1).atStartOfDay();
+        LocalDateTime third = LocalDate.of(2023, 12, 3).atStartOfDay();
+        LocalDateTime fifth = LocalDate.of(2023, 12, 5).atStartOfDay();
+        LocalDateTime sixth = LocalDate.of(2023, 12, 6).atStartOfDay();
+        return Stream.of(
+                Arguments.of(of(), first, fifth, true),
+                Arguments.of(of(Event.from(first, third, "")), fifth, sixth, true),
+                Arguments.of(of(Event.from(first, fifth, "")), first, fifth, false),
+                Arguments.of(of(Event.from(first, third, "")), first, fifth, false),
+                Arguments.of(of(Event.from(third, fifth, "")), first, fifth, false)
+        );
+    }
+
     @Test
     @Order(1)
     void getEventsForApartmentInstance() throws URISyntaxException {
-        String calendarUri = "file:/Users/admin/IdeaProjects/hotel-booking-service/" +
-                             "src/test/resources/correct.ics";
-        when(apartmentInstance.getBookingIcalId()).thenReturn(Optional.of(""));
+        String calendarUri = "file:/correct";
+        when(apartmentInstance.getBookingIcalId()).thenReturn(Optional.of("File"));
         when(bookingICalProps.baseUrl()).thenReturn(calendarUri);
-        when(iCalService.eventsFromFile(new File(new URI(calendarUri))))
-                .thenReturn(List.of(event));
+        when(iCalService.eventsFromFile(new File(new URI("file:/correctFile"))))
+                .thenReturn(of(event));
 
         List<Event> actual = service.getEventsForApartmentInstance(apartmentInstance);
 
-        assertEquals(List.of(event), actual);
+        assertEquals(of(event), actual);
     }
 
     @Test
@@ -102,8 +121,17 @@ class BookingComReservationService_UnitTest {
         assertTrue(e.getMessage().toLowerCase().contains(message));
     }
 
-    @Test
-    void isFree() {
+    @ParameterizedTest
+    @Order(4)
+    @MethodSource("eventsFactory")
+    void isFree(List<Event> events, LocalDateTime from, LocalDateTime to, boolean expected) throws URISyntaxException {
+        when(apartmentInstance.getBookingIcalId()).thenReturn(Optional.of(""));
+        when(bookingICalProps.baseUrl()).thenReturn("file:/calendarUri");
+        when(iCalService.eventsFromFile(new File(new URI("file:/calendarUri"))))
+                .thenReturn(events);
 
+        boolean actual = service.isFree(apartmentInstance, from, to);
+
+        assertEquals(expected, actual);
     }
 }

@@ -29,7 +29,7 @@ public class BookingComReservationService {
         Predicate<Event> intersectsWithRange =
                 ev -> ev.getEnd().isAfter(start) &&
                       ev.getStart().isBefore(end);
-        return events.stream().anyMatch(intersectsWithRange);
+        return events.stream().noneMatch(intersectsWithRange);
     }
 
     public List<Event> getEventsForApartmentInstance(ApartmentInstance apartmentInstance) {
