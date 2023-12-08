@@ -13,6 +13,7 @@ import ua.mibal.booking.model.entity.embeddable.TurningOffTime;
 import ua.mibal.booking.model.exception.IllegalTurningOffTimeException;
 import ua.mibal.booking.model.exception.entity.ApartmentInstanceNotFoundException;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
+import ua.mibal.booking.model.mapper.TurningOffTimeMapper;
 import ua.mibal.booking.repository.ApartmentRepository;
 import ua.mibal.booking.repository.HotelTurningOffRepository;
 import ua.mibal.booking.repository.ReservationRepository;
@@ -41,6 +42,7 @@ public class CalendarService {
     private final ReservationRepository reservationRepository;
     private final ICalService iCalService;
     private final BookingComReservationService bookingComReservationService;
+    private final TurningOffTimeMapper turningOffTimeMapper;
 
     @Transactional(readOnly = true)
     public List<Calendar> getCalendarsForApartment(Long apartmentId, YearMonth yearMonth) {
@@ -69,7 +71,7 @@ public class CalendarService {
 
     public void turnOffHotel(TurnOffDto turnOffDto) {
         validateRangeToTurnOffHotel(turnOffDto.from(), turnOffDto.to());
-        HotelTurningOffTime turningOffTime = hotelTurningOffFromDto(turnOffDto);
+        HotelTurningOffTime turningOffTime = turningOffTimeMapper.hotelFromDto(turnOffDto);
         hotelTurningOffRepository.save(turningOffTime);
     }
 
@@ -78,7 +80,7 @@ public class CalendarService {
         ApartmentInstance instance = apartmentRepository.findInstanceByIdFetchReservations(id)
                 .orElseThrow(() -> new ApartmentInstanceNotFoundException(id));
         validateRangeToTurnOffApartmentInstance(instance, turnOffDto.from(), turnOffDto.to());
-        TurningOffTime turningOffTime = turningOffTimeFromDto(turnOffDto);
+        TurningOffTime turningOffTime = turningOffTimeMapper.apartmentfromDto(turnOffDto);
         instance.addTurningOffTime(turningOffTime);
     }
 
@@ -146,21 +148,6 @@ public class CalendarService {
     private void validateApartmentExists(Long apartmentId) {
         if (!apartmentRepository.existsById(apartmentId))
             throw new ApartmentNotFoundException(apartmentId);
-    }
-
-    private HotelTurningOffTime hotelTurningOffFromDto(TurnOffDto turnOffDto) {
-        return HotelTurningOffTime.builder()
-                .from(turnOffDto.from())
-                .to(turnOffDto.to())
-                .event(turnOffDto.event())
-                .build();
-    }
-
-    private TurningOffTime turningOffTimeFromDto(TurnOffDto turnOffDto) {
-        return TurningOffTime.builder()
-                .from(turnOffDto.from())
-                .to(turnOffDto.to())
-                .build();
     }
 
     private void validateRangeToTurnOffApartmentInstance(ApartmentInstance instance,
