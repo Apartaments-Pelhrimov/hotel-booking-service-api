@@ -17,6 +17,7 @@ import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -58,11 +59,11 @@ class ICalService_UnitTest {
      * @return hardcoded events from {@code classpath:test.ics}
      */
     private static List<Event> testEvents() {
-        ZoneId australia = ZoneId.of("Australia/Darwin");
+        ZoneId australia = ZoneId.of("Australia/Sydney");
         LocalDateTime first = timeAtToOurZoneId(
                 LocalDate.of(2024, 1, 1).atStartOfDay(), australia, zoneId);
         LocalDateTime twentyFifth = timeAtToOurZoneId(
-                LocalDate.of(2023, 12, 25).atStartOfDay(), australia, zoneId);
+                LocalDate.of(2023, 12, 25).atStartOfDay(), ZoneOffset.UTC, zoneId);
         LocalDateTime birthday = timeAtToOurZoneId(
                 LocalDate.of(2004, 9, 18).atStartOfDay(), australia, zoneId);
         return List.of(
@@ -94,8 +95,8 @@ class ICalService_UnitTest {
     @Test
     void eventsFromFile() throws URISyntaxException {
         File iCalFile = new File(getClass().getClassLoader().getResource("test.ics").toURI());
-
         List<Event> expected = testEvents();
+
         List<Event> actual = service.eventsFromFile(iCalFile);
 
         assertEquals(expected, actual);
