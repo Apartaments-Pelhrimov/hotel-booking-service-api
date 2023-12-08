@@ -75,9 +75,11 @@ public class ICalService {
     }
 
     private List<VEvent> eventsToVEvents(Collection<Event> events) {
-        return events.stream()
-                .map(this::toVEvent)
-                .toList();
+        return events.stream().map(event -> new VEvent(
+                iCalDateTimeFrom(event.getStart()),
+                iCalDateTimeFrom(event.getEnd()),
+                event.getEventName())
+        ).toList();
     }
 
     private Calendar initCalendar() {
@@ -86,14 +88,6 @@ public class ICalService {
         calendar.getProperties().add(Version.VERSION_2_0);
         calendar.getProperties().add(CalScale.GREGORIAN);
         return calendar;
-    }
-
-    private VEvent toVEvent(Event event) {
-        return new VEvent(
-                iCalDateTimeFrom(event.getStart()),
-                iCalDateTimeFrom(event.getEnd()),
-                event.getEventName()
-        );
     }
 
     private DateTime iCalDateTimeFrom(LocalDateTime localDateTime) {
