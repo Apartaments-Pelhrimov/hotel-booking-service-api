@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import static java.math.BigDecimal.ZERO;
 import static java.math.BigDecimal.valueOf;
 import static java.time.Period.between;
 
@@ -31,8 +32,18 @@ import static java.time.Period.between;
 @Service
 public class CostCalculationService {
 
-    public BigDecimal calculateFullPriceForDays(BigDecimal cost, LocalDate from, LocalDate to) {
-        long days = between(from, to).getDays();
-        return cost.multiply(valueOf(days));
+    public BigDecimal calculateFullCost(BigDecimal price, LocalDate from, LocalDate to) {
+        validate(price, from, to);
+        long nights = between(from, to).getDays();
+        return price.multiply(valueOf(nights));
+    }
+
+    private void validate(BigDecimal price, LocalDate from, LocalDate to) {
+        if (price.compareTo(ZERO) < 0)
+            throw new IllegalArgumentException(
+                    "Illegal price=" + price);
+        if (!from.isBefore(to))
+            throw new IllegalArgumentException(
+                    "Illegal date range: from=" + from + " to=" + to);
     }
 }

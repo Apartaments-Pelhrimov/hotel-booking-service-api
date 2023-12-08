@@ -139,7 +139,7 @@ public class ReservationService {
         Price price = apartment.getPriceForPeople(request.people())
                 .orElseThrow(() -> new PriceForPeopleCountNotFoundException(apartmentId, request.people()));
         BigDecimal fullCost = costCalculationService
-                .calculateFullPriceForDays(price.getCost(), request.from(), request.to());
+                .calculateFullCost(price.getCost(), request.from(), request.to());
         LocalDateTime from = dateTimeUtils.reserveFrom(request.from());
         LocalDateTime to = dateTimeUtils.reserveTo(request.to());
         return new ReservationDetails(

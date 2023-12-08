@@ -27,6 +27,9 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static java.math.BigDecimal.ONE;
+import static java.math.BigDecimal.ZERO;
+import static java.math.BigDecimal.valueOf;
 import static java.util.List.of;
 
 /**
@@ -83,6 +86,29 @@ public class DataGenerator {
                 Arguments.of(of(Event.from(first, fifth, "")), first, fifth, false),
                 Arguments.of(of(Event.from(first, third, "")), first, fifth, false),
                 Arguments.of(of(Event.from(third, fifth, "")), first, fifth, false)
+        );
+    }
+
+    public static Stream<Arguments> correctPriceCalculation() {
+        LocalDate first = LocalDate.of(2023, 12, 1);
+        LocalDate second = LocalDate.of(2023, 12, 2);
+        LocalDate fifth = LocalDate.of(2023, 12, 5);
+        LocalDate sixth = LocalDate.of(2023, 12, 6);
+        return Stream.of(
+                Arguments.of(ZERO, first, fifth, ZERO),
+                Arguments.of(ONE, first, fifth, valueOf(4)),
+                Arguments.of(valueOf(100_000), first, sixth, valueOf(500_000)),
+                Arguments.of(valueOf(100_000), first, second, valueOf(100_000))
+        );
+    }
+
+    public static Stream<Arguments> incorrectPriceCalculation() {
+        LocalDate first = LocalDate.of(2023, 12, 1);
+        LocalDate fifth = LocalDate.of(2023, 12, 5);
+        return Stream.of(
+                Arguments.of(ZERO, fifth, fifth),
+                Arguments.of(ONE, fifth, first),
+                Arguments.of(valueOf(-100_000), first, fifth)
         );
     }
 
