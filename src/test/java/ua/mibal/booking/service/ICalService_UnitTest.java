@@ -11,14 +11,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import ua.mibal.booking.config.properties.CalendarProps;
 import ua.mibal.booking.model.entity.Event;
+import ua.mibal.booking.testUtils.DataGenerator;
 
 import java.io.File;
 import java.net.URISyntaxException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -41,43 +38,6 @@ class ICalService_UnitTest {
     @MockBean
     private CalendarProps calendarProps;
 
-    /**
-     * @return random events
-     */
-    private static List<Event> randomEvents() {
-        LocalDateTime first = LocalDate.of(2024, 1, 1).atStartOfDay();
-        LocalDateTime twentyFifth = LocalDate.of(2023, 12, 25).atStartOfDay();
-        LocalDateTime birthday = LocalDate.of(2004, 9, 18).atStartOfDay();
-        return List.of(
-                Event.from(first, first, "New Year"),
-                Event.from(twentyFifth, first, "Christmas holidays"),
-                Event.from(birthday, birthday, "My Birthday")
-        );
-    }
-
-    /**
-     * @return hardcoded events from {@code classpath:test.ics}
-     */
-    private static List<Event> testEvents() {
-        ZoneId australia = ZoneId.of("Australia/Sydney");
-        LocalDateTime first = timeAtToOurZoneId(
-                LocalDate.of(2024, 1, 1).atStartOfDay(), australia, zoneId);
-        LocalDateTime twentyFifth = timeAtToOurZoneId(
-                LocalDate.of(2023, 12, 25).atStartOfDay(), ZoneOffset.UTC, zoneId);
-        LocalDateTime birthday = timeAtToOurZoneId(
-                LocalDate.of(2004, 9, 18).atStartOfDay(), australia, zoneId);
-        return List.of(
-                Event.from(first, first, "New Year"),
-                Event.from(twentyFifth, first, "Christmas holidays"),
-                Event.from(birthday, birthday, "My Birthday")
-        );
-    }
-
-    private static LocalDateTime timeAtToOurZoneId(LocalDateTime localDateTime, ZoneId original, ZoneId wanted) {
-        ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, original);
-        return zonedDateTime.toOffsetDateTime().atZoneSameInstant(wanted).toLocalDateTime();
-    }
-
     @BeforeEach
     void setup() {
         when(calendarProps.zoneId()).thenReturn(zoneId);
@@ -85,7 +45,7 @@ class ICalService_UnitTest {
 
     @Test
     void calendarFromEvents() {
-        List<Event> events = randomEvents();
+        List<Event> events = DataGenerator.randomEvents();
 
         String calendar = service.calendarFromEvents(events);
 
@@ -95,7 +55,7 @@ class ICalService_UnitTest {
     @Test
     void eventsFromFile() throws URISyntaxException {
         File iCalFile = new File(getClass().getClassLoader().getResource("test.ics").toURI());
-        List<Event> expected = testEvents();
+        List<Event> expected = DataGenerator.testEventsFromTestFile(zoneId);
 
         List<Event> actual = service.eventsFromFile(iCalFile);
 
