@@ -7,7 +7,7 @@ spring:
     open-in-view: false
     show-sql: true
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
 
 rsa:
   private-key: classpath:certs/private.pem
@@ -38,6 +38,8 @@ server:
     key-alias: hotel-booking-service
 
 calendar:
+  i-cal:
+    prod-id-name: Apartments Pelhrimov Booking service
   zone-id: Europe/Prague
   reservation-hours:
     start: 15

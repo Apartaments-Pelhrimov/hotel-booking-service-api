@@ -1,5 +1,6 @@
 package ua.mibal.booking.config.properties;
 
+import net.fortuna.ical4j.model.property.ProdId;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.time.LocalTime;
@@ -12,7 +13,8 @@ import java.time.ZoneId;
 @ConfigurationProperties("calendar")
 public record CalendarProps(
         ZoneId zoneId,
-        ReservationDateTimeProps reservationDateTime
+        ReservationDateTimeProps reservationDateTime,
+        ICalProps iCal
 ) {
 
     @ConfigurationProperties("calendar.reservation-hours")
@@ -26,6 +28,15 @@ public record CalendarProps(
 
         public LocalTime reservationEnd() {
             return LocalTime.of(end, 0);
+        }
+    }
+
+    @ConfigurationProperties("i-cal")
+    public record ICalProps(
+            String prodIdName
+    ) {
+        public ProdId prodId() {
+            return new ProdId("-//" + prodIdName + "//iCal4j 1.0//EN");
         }
     }
 }

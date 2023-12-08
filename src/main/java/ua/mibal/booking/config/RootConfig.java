@@ -38,8 +38,9 @@ import ua.mibal.booking.config.properties.CalendarProps;
         AwsProps.AwsBucketProps.class,
         CalendarProps.class,
         CalendarProps.ReservationDateTimeProps.class,
+        CalendarProps.ICalProps.class,
         ActivationCodeProps.class,
-        BookingICalProps.class
+        BookingICalProps.class,
 })
 @Configuration
 public class RootConfig {

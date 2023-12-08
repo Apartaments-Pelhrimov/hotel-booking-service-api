@@ -9,7 +9,6 @@ import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.CalScale;
 import net.fortuna.ical4j.model.property.DateProperty;
-import net.fortuna.ical4j.model.property.ProdId;
 import net.fortuna.ical4j.model.property.Version;
 import org.springframework.stereotype.Service;
 import ua.mibal.booking.config.properties.CalendarProps;
@@ -74,7 +73,7 @@ public class ICalService {
 
     private Calendar initCalendar() {
         Calendar calendar = new Calendar();
-        calendar.getProperties().add(new ProdId("-//Ben Fortuna//iCal4j 1.0//EN"));
+        calendar.getProperties().add(calendarProps.iCal().prodId());
         calendar.getProperties().add(Version.VERSION_2_0);
         calendar.getProperties().add(CalScale.GREGORIAN);
         return calendar;

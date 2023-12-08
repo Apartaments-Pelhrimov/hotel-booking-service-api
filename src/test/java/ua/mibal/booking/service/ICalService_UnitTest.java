@@ -1,5 +1,6 @@
 package ua.mibal.booking.service;
 
+import net.fortuna.ical4j.model.property.ProdId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -37,10 +38,14 @@ class ICalService_UnitTest {
 
     @MockBean
     private CalendarProps calendarProps;
+    @MockBean
+    private CalendarProps.ICalProps iCalProps;
 
     @BeforeEach
     void setup() {
         when(calendarProps.zoneId()).thenReturn(zoneId);
+        when(calendarProps.iCal()).thenReturn(iCalProps);
+        when(iCalProps.prodId()).thenReturn(new ProdId("TEST"));
     }
 
     @Test
