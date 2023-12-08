@@ -5,10 +5,7 @@ import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.TimeZone;
-import net.fortuna.ical4j.model.TimeZoneRegistry;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.CalScale;
 import net.fortuna.ical4j.model.property.DateProperty;
@@ -21,14 +18,12 @@ import ua.mibal.booking.model.entity.Event;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.text.ParseException;
+import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoField;
 import java.util.Collection;
 import java.util.List;
-
-import static java.time.format.DateTimeFormatter.ofPattern;
 
 /**
  * @author Mykhailo Balakhon
@@ -38,11 +33,6 @@ import static java.time.format.DateTimeFormatter.ofPattern;
 @Service
 public class ICalService {
     private final CalendarProps calendarProps;
-
-    private static LocalDateTime timeAtToOurZoneId(LocalDateTime localDateTime, ZoneId original, ZoneId wanted) {
-        ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, original);
-        return zonedDateTime.toOffsetDateTime().atZoneSameInstant(wanted).toLocalDateTime();
-    }
 
     public String calendarFromEvents(Collection<Event> events) {
         Calendar calendar = initCalendar();
@@ -91,24 +81,13 @@ public class ICalService {
     }
 
     private DateTime iCalDateTimeFrom(LocalDateTime localDateTime) {
-        String iCalDateString = toICalDateString(localDateTime);
-        TimeZoneRegistry registry = new CalendarBuilder().getRegistry();
-        TimeZone timeZone = registry.getTimeZone(calendarProps.zoneId().getId());
-        try {
-            return new DateTime(iCalDateString, timeZone);
-        } catch (ParseException e) {
-            throw new IllegalArgumentException(e);
-        }
+        Instant instant = localDateTime.atZone(calendarProps.zoneId()).toInstant();
+        return new DateTime(instant.getLong(ChronoField.MILLI_OF_SECOND));
     }
 
     private LocalDateTime localDateTimeFrom(DateProperty dateProperty) {
-        Date date = dateProperty.getDate();
-        String timeZone = dateProperty.getTimeZone().getID();
-        LocalDateTime localDateTime = LocalDateTime.parse(date.toString(), ofPattern("yyyyMMdd'T'HHmmss"));
-        return timeAtToOurZoneId(localDateTime, ZoneId.of(timeZone), calendarProps.zoneId());
-    }
-
-    private String toICalDateString(LocalDateTime localDateTime) {
-        return localDateTime.format(ofPattern("yyyyMMdd'T'HHmmss"));
+        Instant instant = dateProperty.getDate().toInstant();
+        ZonedDateTime zonedDateTimeAtOurZone = instant.atZone(calendarProps.zoneId());
+        return zonedDateTimeAtOurZone.toLocalDateTime();
     }
 }
