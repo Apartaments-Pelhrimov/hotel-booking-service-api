@@ -5,9 +5,13 @@ import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.TimeZone;
+import net.fortuna.ical4j.model.TimeZoneRegistry;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.CalScale;
+import net.fortuna.ical4j.model.property.DateProperty;
 import net.fortuna.ical4j.model.property.ProdId;
 import net.fortuna.ical4j.model.property.Version;
 import org.springframework.stereotype.Service;
@@ -17,10 +21,14 @@ import ua.mibal.booking.model.entity.Event;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.time.Instant;
+import java.text.ParseException;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.List;
+
+import static java.time.format.DateTimeFormatter.ofPattern;
 
 /**
  * @author Mykhailo Balakhon
@@ -30,6 +38,11 @@ import java.util.List;
 @Service
 public class ICalService {
     private final CalendarProps calendarProps;
+
+    private static LocalDateTime timeAtToOurZoneId(LocalDateTime localDateTime, ZoneId original, ZoneId wanted) {
+        ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, original);
+        return zonedDateTime.toOffsetDateTime().atZoneSameInstant(wanted).toLocalDateTime();
+    }
 
     public String calendarFromEvents(Collection<Event> events) {
         Calendar calendar = initCalendar();
@@ -54,9 +67,9 @@ public class ICalService {
 
     private List<Event> eventsFromVEvents(List<VEvent> vEvents) {
         return vEvents.stream().map(vEvent -> {
-            LocalDateTime from = LocalDateTime.from(vEvent.getStartDate().getDate().toInstant());
-            LocalDateTime to = LocalDateTime.from(vEvent.getEndDate().getDate().toInstant());
-            String eventName = vEvent.getDescription().getValue();
+            LocalDateTime from = localDateTimeFrom(vEvent.getStartDate());
+            LocalDateTime to = localDateTimeFrom(vEvent.getEndDate());
+            String eventName = vEvent.getSummary().getValue();
             return Event.from(from, to, eventName);
         }).toList();
     }
@@ -76,17 +89,32 @@ public class ICalService {
     }
 
     private VEvent toVEvent(Event event) {
-        java.util.Date from = dateFromLocalDateTime(event.getStart());
-        java.util.Date to = dateFromLocalDateTime(event.getEnd());
         return new VEvent(
-                new DateTime(from),
-                new DateTime(to),
+                iCalDateTimeFrom(event.getStart()),
+                iCalDateTimeFrom(event.getEnd()),
                 event.getEventName()
         );
     }
 
-    private java.util.Date dateFromLocalDateTime(LocalDateTime localDateTime) {
-        Instant instant = localDateTime.atZone(calendarProps.zoneId()).toInstant();
-        return java.util.Date.from(instant);
+    private DateTime iCalDateTimeFrom(LocalDateTime localDateTime) {
+        String iCalDateString = toICalDateString(localDateTime);
+        TimeZoneRegistry registry = new CalendarBuilder().getRegistry();
+        TimeZone timeZone = registry.getTimeZone(calendarProps.zoneId().getId());
+        try {
+            return new DateTime(iCalDateString, timeZone);
+        } catch (ParseException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    private LocalDateTime localDateTimeFrom(DateProperty dateProperty) {
+        Date date = dateProperty.getDate();
+        String timeZone = dateProperty.getTimeZone().getID();
+        LocalDateTime localDateTime = LocalDateTime.parse(date.toString(), ofPattern("yyyyMMdd'T'HHmmss"));
+        return timeAtToOurZoneId(localDateTime, ZoneId.of(timeZone), calendarProps.zoneId());
+    }
+
+    private String toICalDateString(LocalDateTime localDateTime) {
+        return localDateTime.format(ofPattern("yyyyMMdd'T'HHmmss"));
     }
 }
