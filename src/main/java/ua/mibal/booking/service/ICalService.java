@@ -6,6 +6,8 @@ import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.TimeZone;
+import net.fortuna.ical4j.model.TimeZoneRegistry;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.CalScale;
 import net.fortuna.ical4j.model.property.DateProperty;
@@ -20,9 +22,10 @@ import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
-import java.time.temporal.ChronoField;
 import java.util.Collection;
 import java.util.List;
+
+import static java.util.Date.from;
 
 /**
  * @author Mykhailo Balakhon
@@ -81,7 +84,13 @@ public class ICalService {
 
     private DateTime iCalDateTimeFrom(LocalDateTime localDateTime) {
         Instant instant = localDateTime.atZone(calendarProps.zoneId()).toInstant();
-        return new DateTime(instant.getLong(ChronoField.MILLI_OF_SECOND));
+        TimeZone timeZone = iCaltimeZone(calendarProps.zoneId().getId());
+        return new DateTime(from(instant), timeZone);
+    }
+
+    private TimeZone iCaltimeZone(String id) {
+        TimeZoneRegistry registry = new CalendarBuilder().getRegistry();
+        return registry.getTimeZone(id);
     }
 
     private LocalDateTime localDateTimeFrom(DateProperty dateProperty) {
