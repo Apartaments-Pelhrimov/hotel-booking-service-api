@@ -16,7 +16,6 @@ import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.repository.ApartmentRepository;
 import ua.mibal.booking.repository.HotelTurningOffRepository;
 import ua.mibal.booking.repository.ReservationRepository;
-import ua.mibal.booking.service.util.DateTimeUtils;
 
 import java.time.LocalDateTime;
 import java.time.YearMonth;
@@ -27,6 +26,8 @@ import java.util.function.Predicate;
 import static java.time.LocalDateTime.MAX;
 import static java.time.LocalDateTime.now;
 import static org.apache.commons.collections4.CollectionUtils.union;
+import static ua.mibal.booking.service.util.DateTimeUtils.monthEndWithTime;
+import static ua.mibal.booking.service.util.DateTimeUtils.monthStartWithTime;
 
 /**
  * @author Mykhailo Balakhon
@@ -40,7 +41,6 @@ public class CalendarService {
     private final ReservationRepository reservationRepository;
     private final ICalService iCalService;
     private final BookingComReservationService bookingComReservationService;
-    private final DateTimeUtils dateTimeUtils;
 
     @Transactional(readOnly = true)
     public List<Calendar> getCalendarsForApartment(Long apartmentId, YearMonth yearMonth) {
@@ -95,8 +95,8 @@ public class CalendarService {
                                         YearMonth yearMonth) {
         Collection<Event> apartmentEvents = apartmentEventsForDateRange(
                 apartmentInstance,
-                dateTimeUtils.monthStartWithTime(yearMonth),
-                dateTimeUtils.monthEndWithTime(yearMonth)
+                monthStartWithTime(yearMonth),
+                monthEndWithTime(yearMonth)
         );
         return Calendar.of(union(apartmentEvents, hotelEvents));
     }
@@ -138,8 +138,8 @@ public class CalendarService {
 
     private List<HotelTurningOffTime> hotelTurningOffTimes(YearMonth yearMonth) {
         return hotelTurningOffRepository.findBetween(
-                dateTimeUtils.monthStartWithTime(yearMonth),
-                dateTimeUtils.monthEndWithTime(yearMonth)
+                monthStartWithTime(yearMonth),
+                monthEndWithTime(yearMonth)
         );
     }
 

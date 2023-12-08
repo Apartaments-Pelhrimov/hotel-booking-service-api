@@ -5,12 +5,8 @@ import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.TimeZone;
-import net.fortuna.ical4j.model.TimeZoneRegistry;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.CalScale;
-import net.fortuna.ical4j.model.property.DateProperty;
 import net.fortuna.ical4j.model.property.Version;
 import org.springframework.stereotype.Service;
 import ua.mibal.booking.config.properties.CalendarProps;
@@ -19,13 +15,11 @@ import ua.mibal.booking.model.entity.Event;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.List;
 
-import static java.util.Date.from;
+import static ua.mibal.booking.service.util.DateTimeUtils.fromICal;
+import static ua.mibal.booking.service.util.DateTimeUtils.toIcal;
 
 /**
  * @author Mykhailo Balakhon
@@ -58,18 +52,17 @@ public class ICalService {
     }
 
     private List<Event> eventsFromVEvents(List<VEvent> vEvents) {
-        return vEvents.stream().map(vEvent -> {
-            LocalDateTime from = localDateTimeFrom(vEvent.getStartDate());
-            LocalDateTime to = localDateTimeFrom(vEvent.getEndDate());
-            String eventName = vEvent.getSummary().getValue();
-            return Event.from(from, to, eventName);
-        }).toList();
+        return vEvents.stream().map(vEvent -> Event.from(
+                fromICal(vEvent.getStartDate(), calendarProps.zoneId()),
+                fromICal(vEvent.getEndDate(), calendarProps.zoneId()),
+                vEvent.getSummary().getValue()
+        )).toList();
     }
 
     private List<VEvent> eventsToVEvents(Collection<Event> events) {
         return events.stream().map(event -> new VEvent(
-                iCalDateTimeFrom(event.getStart()),
-                iCalDateTimeFrom(event.getEnd()),
+                toIcal(event.getStart(), calendarProps.zoneId()),
+                toIcal(event.getEnd(), calendarProps.zoneId()),
                 event.getEventName())
         ).toList();
     }
@@ -80,22 +73,5 @@ public class ICalService {
         calendar.getProperties().add(Version.VERSION_2_0);
         calendar.getProperties().add(CalScale.GREGORIAN);
         return calendar;
-    }
-
-    private DateTime iCalDateTimeFrom(LocalDateTime localDateTime) {
-        Instant instant = localDateTime.atZone(calendarProps.zoneId()).toInstant();
-        TimeZone timeZone = iCaltimeZone(calendarProps.zoneId().getId());
-        return new DateTime(from(instant), timeZone);
-    }
-
-    private TimeZone iCaltimeZone(String id) {
-        TimeZoneRegistry registry = new CalendarBuilder().getRegistry();
-        return registry.getTimeZone(id);
-    }
-
-    private LocalDateTime localDateTimeFrom(DateProperty dateProperty) {
-        Instant instant = dateProperty.getDate().toInstant();
-        ZonedDateTime zonedDateTimeAtOurZone = instant.atZone(calendarProps.zoneId());
-        return zonedDateTimeAtOurZone.toLocalDateTime();
     }
 }
