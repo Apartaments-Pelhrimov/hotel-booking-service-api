@@ -14,9 +14,10 @@ import ua.mibal.booking.model.dto.response.ApartmentCardDto;
 import ua.mibal.booking.model.dto.response.ApartmentDto;
 import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.entity.ApartmentInstance;
-import ua.mibal.booking.model.exception.FreeApartmentsForDateNotFoundException;
+import ua.mibal.booking.model.exception.ApartmentIsNotAvialableForReservation;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.model.mapper.ApartmentMapper;
+import ua.mibal.booking.model.request.ReservationFormRequest;
 import ua.mibal.booking.repository.ApartmentRepository;
 import ua.mibal.booking.service.util.DateTimeUtils;
 
@@ -51,6 +52,8 @@ class ApartmentService_UnitTest {
     private ApartmentMapper apartmentMapper;
     @MockBean
     private DateTimeUtils dateTimeUtils;
+    @MockBean
+    private BookingComReservationService bookingComReservationService;
 
     @Mock
     private Apartment apartment;
@@ -145,10 +148,14 @@ class ApartmentService_UnitTest {
     public void getFreeApartmentInstanceByApartmentId() {
         when(dateTimeUtils.reserveFrom(dateFrom)).thenReturn(MIN);
         when(dateTimeUtils.reserveTo(dateTo)).thenReturn(MAX);
-        when(apartmentRepository.findFreeApartmentInstanceByApartmentIdAndDates(1L, MIN, MAX))
-                .thenReturn(Optional.of(apartmentInstance));
+        when(apartmentRepository.findFreeApartmentInstanceByApartmentIdAndDates(1L, MIN, MAX, 1))
+                .thenReturn(List.of(apartmentInstance));
+        when(bookingComReservationService.isFree(apartmentInstance, MIN, MAX))
+                .thenReturn(true);
+        // TODO check selecting logic
 
-        ApartmentInstance actual = service.getFreeApartmentInstanceByApartmentId(1L, dateFrom, dateTo);
+        ApartmentInstance actual = service
+                .getFreeApartmentInstanceByApartmentId(1L, new ReservationFormRequest(dateFrom, dateTo, 1));
 
         assertEquals(apartmentInstance, actual);
     }
@@ -157,16 +164,16 @@ class ApartmentService_UnitTest {
     public void getFreeApartmentInstanceByApartmentId_should_throw_FreeApartmentsForDateNotFoundException() {
         when(dateTimeUtils.reserveFrom(dateFrom)).thenReturn(MIN);
         when(dateTimeUtils.reserveTo(dateTo)).thenReturn(MAX);
-        when(apartmentRepository.findFreeApartmentInstanceByApartmentIdAndDates(1L, MIN, MAX))
-                .thenReturn(Optional.empty());
+        when(apartmentRepository.findFreeApartmentInstanceByApartmentIdAndDates(1L, MIN, MAX, 1))
+                .thenReturn(List.of());
 
-        FreeApartmentsForDateNotFoundException e = assertThrows(
-                FreeApartmentsForDateNotFoundException.class,
-                () -> service.getFreeApartmentInstanceByApartmentId(1L, dateFrom, dateTo)
+        ApartmentIsNotAvialableForReservation e = assertThrows(
+                ApartmentIsNotAvialableForReservation.class,
+                () -> service.getFreeApartmentInstanceByApartmentId(1L, new ReservationFormRequest(dateFrom, dateTo, 1))
         );
 
         assertEquals(
-                new FreeApartmentsForDateNotFoundException(MIN, MAX, 1L).getMessage(),
+                new ApartmentIsNotAvialableForReservation(MIN, MAX, 1L).getMessage(),
                 e.getMessage()
         );
     }
