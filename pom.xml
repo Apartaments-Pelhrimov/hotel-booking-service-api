@@ -32,6 +32,8 @@
     <description>hotel-booking-service</description>
 
     <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <java.version>17</java.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <awssdk.version>2.21.27</awssdk.version>
