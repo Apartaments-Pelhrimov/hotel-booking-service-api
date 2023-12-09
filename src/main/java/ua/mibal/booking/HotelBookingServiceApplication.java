@@ -26,8 +26,6 @@ import ua.mibal.booking.model.entity.embeddable.Phone;
 import ua.mibal.booking.model.entity.embeddable.Role;
 import ua.mibal.booking.repository.UserRepository;
 
-import java.util.List;
-
 @SpringBootApplication
 public class HotelBookingServiceApplication {
 
@@ -56,7 +54,12 @@ public class HotelBookingServiceApplication {
             testAdmin.setRole(Role.ROLE_MANAGER);
             testAdmin.setEnabled(true);
 
-            userRepository.saveAll(List.of(testUser, testAdmin));
+            if (!userRepository.existsByEmail(testUser.getEmail())) {
+                userRepository.save(testUser);
+            }
+            if (!userRepository.existsByEmail(testAdmin.getEmail())) {
+                userRepository.save(testAdmin);
+            }
         };
     }
 }
