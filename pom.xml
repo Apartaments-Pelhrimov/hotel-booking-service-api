@@ -32,8 +32,6 @@
     <description>hotel-booking-service</description>
 
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
         <java.version>17</java.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <awssdk.version>2.21.27</awssdk.version>
@@ -120,6 +118,16 @@
     <build>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.1</version>
+                    <configuration>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+                        <target>1.7</target>
+                    </configuration>
+                </plugin>
                 <!-- FIXME -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
