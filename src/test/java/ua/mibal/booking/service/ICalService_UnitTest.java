@@ -30,8 +30,7 @@ import ua.mibal.booking.config.properties.CalendarProps;
 import ua.mibal.booking.model.entity.Event;
 import ua.mibal.booking.testUtils.DataGenerator;
 
-import java.io.File;
-import java.net.URISyntaxException;
+import java.io.InputStream;
 import java.time.ZoneId;
 import java.util.List;
 
@@ -74,11 +73,11 @@ class ICalService_UnitTest {
     }
 
     @Test
-    void eventsFromFile() throws URISyntaxException {
-        File iCalFile = new File(getClass().getClassLoader().getResource("test.ics").toURI());
+    void eventsFromFile() {
+        InputStream iCalFile = getClass().getResourceAsStream("/test.ics");
         List<Event> expected = DataGenerator.testEventsFromTestFile(zoneId);
 
-        List<Event> actual = service.eventsFromFile(iCalFile);
+        List<Event> actual = service.eventsFromCalendarStream(iCalFile);
 
         assertEquals(expected, actual);
     }

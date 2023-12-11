@@ -24,9 +24,9 @@ import ua.mibal.booking.config.properties.BookingICalProps;
 import ua.mibal.booking.model.entity.ApartmentInstance;
 import ua.mibal.booking.model.entity.Event;
 
-import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Predicate;
@@ -55,7 +55,7 @@ public class BookingComReservationService {
     public List<Event> getEventsForApartmentInstance(ApartmentInstance apartmentInstance) {
         return apartmentInstance.getBookingIcalId()
                 .map(this::iCalFileByApartmentInstance)
-                .map(iCalService::eventsFromFile)
+                .map(iCalService::eventsFromCalendarStream)
                 .orElseGet(() -> {
                     log.info(
                             "No booking.com event calendar found for ApartmentInstance[id={},name={}]",
@@ -65,11 +65,11 @@ public class BookingComReservationService {
                 });
     }
 
-    private File iCalFileByApartmentInstance(String bookingICalId) {
+    private InputStream iCalFileByApartmentInstance(String bookingICalId) {
         try {
-            URI uri = new URI(bookingICalProps.baseUrl() + bookingICalId);
-            return new File(uri);
-        } catch (URISyntaxException e) {
+            URL url = new URL(bookingICalProps.baseUrl() + bookingICalId);
+            return url.openStream();
+        } catch (IOException e) {
             throw new IllegalArgumentException(e);
         }
     }

@@ -28,9 +28,8 @@ import org.springframework.stereotype.Service;
 import ua.mibal.booking.config.properties.CalendarProps;
 import ua.mibal.booking.model.entity.Event;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
 
@@ -53,15 +52,21 @@ public class ICalService {
         return calendar.toString();
     }
 
-    public List<Event> eventsFromFile(File file) {
-        Calendar calendar = calendarFromFile(file);
+    /**
+     * Returns list of events from {@link InputStream} calendar file.
+     * NOTICE: method closes the {@link InputStream} {@code calendarStream}.
+     * @param calendarStream calendar source with events.
+     * @return {@link List} of {@link Event}
+     */
+    public List<Event> eventsFromCalendarStream(InputStream calendarStream) {
+        Calendar calendar = calendarFromInputStream(calendarStream);
         List<VEvent> vEvents = calendar.getComponents(Component.VEVENT);
         return eventsFromVEvents(vEvents);
     }
 
-    private Calendar calendarFromFile(File file) {
-        try (FileInputStream inputStream = new FileInputStream(file)) {
-            return new CalendarBuilder().build(inputStream);
+    private Calendar calendarFromInputStream(InputStream file) {
+        try (file) {
+            return new CalendarBuilder().build(file);
         } catch (IOException | ParserException e) {
             throw new IllegalArgumentException(e);
         }

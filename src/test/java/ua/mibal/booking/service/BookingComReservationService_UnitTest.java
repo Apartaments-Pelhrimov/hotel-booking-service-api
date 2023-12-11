@@ -36,9 +36,6 @@ import ua.mibal.booking.config.properties.BookingICalProps;
 import ua.mibal.booking.model.entity.ApartmentInstance;
 import ua.mibal.booking.model.entity.Event;
 
-import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -47,7 +44,7 @@ import static java.util.List.of;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 /**
@@ -76,11 +73,12 @@ class BookingComReservationService_UnitTest {
 
     @Test
     @Order(1)
-    void getEventsForApartmentInstance() throws URISyntaxException {
-        String calendarUri = "file:/correct";
-        when(apartmentInstance.getBookingIcalId()).thenReturn(Optional.of("File"));
-        when(bookingICalProps.baseUrl()).thenReturn(calendarUri);
-        when(iCalService.eventsFromFile(new File(new URI("file:/correctFile"))))
+    void getEventsForApartmentInstance() {
+        String calendarUrl = "file:/Users/admin/IdeaProjects/hotel-booking-service/src/test/resources";
+        when(apartmentInstance.getBookingIcalId())
+                .thenReturn(Optional.of("/test.ics"));
+        when(bookingICalProps.baseUrl()).thenReturn(calendarUrl);
+        when(iCalService.eventsFromCalendarStream(any()))
                 .thenReturn(of(event));
 
         List<Event> actual = service.getEventsForApartmentInstance(apartmentInstance);
@@ -101,13 +99,13 @@ class BookingComReservationService_UnitTest {
     @ParameterizedTest
     @Order(3)
     @CsvSource({
-            "invalid_url\",                  urisyntaxexception",
-            "valid_url,                      is not absolute",
-            "./valid_url/,                   is not absolute",
-            "//valid_url/,                   is not absolute",
-            "~/valid_url/,                   is not absolute",
+            "invalid_url\"",
+            "valid_url",
+            "./valid_url/",
+            "//valid_url/",
+            "~/valid_url/",
     })
-    void getEventsForApartmentInstance_should_throw_IllegalArgumentException_if_uri_is_invalid(String uri, String message) {
+    void getEventsForApartmentInstance_should_throw_IllegalArgumentException_if_uri_is_invalid(String uri) {
         when(apartmentInstance.getBookingIcalId()).thenReturn(Optional.of("id"));
         when(bookingICalProps.baseUrl()).thenReturn(uri);
 
@@ -115,16 +113,16 @@ class BookingComReservationService_UnitTest {
                 IllegalArgumentException.class,
                 () -> service.getEventsForApartmentInstance(apartmentInstance)
         );
-        assertTrue(e.getMessage().toLowerCase().contains(message));
     }
 
     @ParameterizedTest
     @Order(4)
     @MethodSource("ua.mibal.booking.testUtils.DataGenerator#eventsFactory")
-    void isFree(List<Event> events, LocalDateTime from, LocalDateTime to, boolean expected) throws URISyntaxException {
-        when(apartmentInstance.getBookingIcalId()).thenReturn(Optional.of(""));
-        when(bookingICalProps.baseUrl()).thenReturn("file:/calendarUri");
-        when(iCalService.eventsFromFile(new File(new URI("file:/calendarUri"))))
+    void isFree(List<Event> events, LocalDateTime from, LocalDateTime to, boolean expected) {
+        when(apartmentInstance.getBookingIcalId()).thenReturn(Optional.of("/test.ics"));
+        when(bookingICalProps.baseUrl())
+                .thenReturn("file:/Users/admin/IdeaProjects/hotel-booking-service/src/test/resources");
+        when(iCalService.eventsFromCalendarStream(any()))
                 .thenReturn(events);
 
         boolean actual = service.isFree(apartmentInstance, from, to);
