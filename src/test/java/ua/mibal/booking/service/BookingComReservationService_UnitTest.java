@@ -35,7 +35,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ua.mibal.booking.config.properties.BookingICalProps;
 import ua.mibal.booking.model.entity.ApartmentInstance;
 import ua.mibal.booking.model.entity.Event;
-import ua.mibal.booking.model.exception.NotFoundException;
 
 import java.io.File;
 import java.net.URI;
@@ -45,6 +44,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.List.of;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -90,14 +90,12 @@ class BookingComReservationService_UnitTest {
 
     @Test
     @Order(2)
-    void getEventsForApartmentInstance_should_throw_NotFoundException() {
+    void getEventsForApartmentInstance_should_not_throw_NotFoundException() {
         when(apartmentInstance.getBookingIcalId()).thenReturn(Optional.empty());
 
-        NotFoundException e = assertThrows(
-                NotFoundException.class,
+        assertDoesNotThrow(
                 () -> service.getEventsForApartmentInstance(apartmentInstance)
         );
-        assertTrue(e.getMessage().toLowerCase().contains("ical"));
     }
 
     @ParameterizedTest
