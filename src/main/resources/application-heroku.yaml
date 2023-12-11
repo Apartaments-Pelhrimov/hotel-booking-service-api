@@ -35,3 +35,7 @@ calendar:
   reservation-hours:
     start: 15
     end: 11
+
+server:
+  ssl:
+    enabled: false
