@@ -35,7 +35,6 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.type.NumericBooleanConverter;
@@ -54,7 +53,6 @@ import static lombok.AccessLevel.PRIVATE;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
@@ -89,7 +87,7 @@ public class Apartment {
     private List<Price> prices = new LinkedList<>();
 
     @Embedded
-    private ApartmentOptions options = ApartmentOptions.DEFAULT;
+    private ApartmentOptions options;
 
     @Convert(converter = NumericBooleanConverter.class)
     @Column(nullable = false)
@@ -131,6 +129,10 @@ public class Apartment {
     @OneToMany(mappedBy = "apartment")
     @Setter(PRIVATE)
     private List<Comment> comments = new ArrayList<>();
+
+    public Apartment() {
+         this.setOptions(ApartmentOptions.DEFAULT);
+    }
 
     public void addApartmentInstance(ApartmentInstance apartmentInstance) {
         apartmentInstance.setApartment(this);

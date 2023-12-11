@@ -30,7 +30,6 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.proxy.HibernateProxy;
@@ -55,7 +54,6 @@ import static ua.mibal.booking.model.entity.embeddable.Role.ROLE_USER;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
@@ -87,18 +85,18 @@ public class User implements UserDetails {
     private Photo photo;
 
     @Embedded
-    private NotificationSettings notificationSettings = NotificationSettings.DEFAULT;
+    private NotificationSettings notificationSettings;
 
     @Convert(converter = NumericBooleanConverter.class)
     @Column(nullable = false)
-    private Boolean enabled = false;
+    private Boolean enabled;
 
     @Column(nullable = false)
-    private ZonedDateTime creationDateTime = ZonedDateTime.now();
+    private ZonedDateTime creationDateTime;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Role role = ROLE_USER;
+    private Role role;
 
     @OneToMany(mappedBy = "user")
     @Setter(PRIVATE)
@@ -110,6 +108,13 @@ public class User implements UserDetails {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
     private ActivationCode activationCode;
+
+    public User() {
+        this.setNotificationSettings(NotificationSettings.DEFAULT);
+        this.setCreationDateTime(ZonedDateTime.now());
+        this.setEnabled(false);
+        this.setRole(ROLE_USER);
+    }
 
     public void addReservation(Reservation reservation) {
         reservation.setUser(this);

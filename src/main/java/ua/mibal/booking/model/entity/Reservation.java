@@ -36,7 +36,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ua.mibal.booking.model.entity.embeddable.Rejection;
 import ua.mibal.booking.model.entity.embeddable.ReservationDetails;
@@ -50,7 +49,6 @@ import java.util.List;
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
@@ -105,7 +103,11 @@ public class Reservation implements Event {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private State state = State.PROCESSED;
+    private State state;
+
+    public Reservation() {
+        this.setState(State.PROCESSED);
+    }
 
     @Override
     public boolean equals(Object o) {
