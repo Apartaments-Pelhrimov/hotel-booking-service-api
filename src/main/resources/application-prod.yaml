@@ -4,43 +4,5 @@ spring:
     username: ${PROD_DB_USERNAME}
     password: ${PROD_DB_PASSWORD}
   jpa:
-    open-in-view: false
-    show-sql: true
     hibernate:
       ddl-auto: update
-
-rsa:
-  private-key: classpath:certs/private.pem
-  public-key: classpath:certs/public.pem
-
-jwt-token:
-  expiring-days: 30
-
-activation-code:
-  length: 60
-
-aws:
-  access-key-id: AKIA2VXUQKUE74F2Z57O
-  secret-access-key: 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
-  region: eu-north-1
-  bucket:
-    name: hotel-booking-service-dev
-    users-folder: users/
-    apartments-folder: apartments/
-
-server:
-  port: 443
-  ssl:
-    enabled: true
-    key-store-type: PKCS12
-    key-store: classpath:keystore/hotel-booking-service.p12
-    key-store-password: 210605
-    key-alias: hotel-booking-service
-
-calendar:
-  i-cal:
-    prod-id-name: Apartments Pelhrimov Booking service
-  zone-id: Europe/Prague
-  reservation-hours:
-    start: 15
-    end: 11
