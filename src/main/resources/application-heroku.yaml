@@ -40,5 +40,3 @@ server:
   ssl:
     enabled: false
 
-booking-ical:
-  base-url: https://ical.booking.com/v1/export?t=

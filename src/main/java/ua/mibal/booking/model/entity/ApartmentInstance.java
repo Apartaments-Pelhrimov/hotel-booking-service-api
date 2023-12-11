@@ -64,7 +64,8 @@ public class ApartmentInstance {
     @Column(nullable = false)
     private String name;
 
-    private String bookingIcalId;
+    @Column(name = "booking_ical_url")
+    private String bookingICalUrl;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(
@@ -94,8 +95,8 @@ public class ApartmentInstance {
     @Setter(PRIVATE)
     private List<Reservation> reservations = new ArrayList<>();
 
-    public Optional<String> getBookingIcalId() {
-        return Optional.ofNullable(bookingIcalId);
+    public Optional<String> getBookingICalUrl() {
+        return Optional.ofNullable(bookingICalUrl);
     }
 
     public void addReservation(Reservation reservation) {

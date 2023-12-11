@@ -32,7 +32,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
-import ua.mibal.booking.config.properties.BookingICalProps;
 import ua.mibal.booking.model.entity.ApartmentInstance;
 import ua.mibal.booking.model.entity.Event;
 
@@ -57,12 +56,13 @@ import static org.mockito.Mockito.when;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @TestMethodOrder(OrderAnnotation.class)
 class BookingComReservationService_UnitTest {
+    private final static String calendarUrl =
+            "file:/Users/admin/IdeaProjects/hotel-booking-service/" +
+            "src/test/resources/test.ics";
 
     @Autowired
     private BookingComReservationService service;
 
-    @MockBean
-    private BookingICalProps bookingICalProps;
     @MockBean
     private ICalService iCalService;
 
@@ -74,12 +74,8 @@ class BookingComReservationService_UnitTest {
     @Test
     @Order(1)
     void getEventsForApartmentInstance() {
-        String calendarUrl = "file:/Users/admin/IdeaProjects/hotel-booking-service/src/test/resources";
-        when(apartmentInstance.getBookingIcalId())
-                .thenReturn(Optional.of("/test.ics"));
-        when(bookingICalProps.baseUrl()).thenReturn(calendarUrl);
-        when(iCalService.eventsFromCalendarStream(any()))
-                .thenReturn(of(event));
+        when(apartmentInstance.getBookingICalUrl()).thenReturn(Optional.of(calendarUrl));
+        when(iCalService.eventsFromCalendarStream(any())).thenReturn(of(event));
 
         List<Event> actual = service.getEventsForApartmentInstance(apartmentInstance);
 
@@ -89,7 +85,7 @@ class BookingComReservationService_UnitTest {
     @Test
     @Order(2)
     void getEventsForApartmentInstance_should_not_throw_NotFoundException() {
-        when(apartmentInstance.getBookingIcalId()).thenReturn(Optional.empty());
+        when(apartmentInstance.getBookingICalUrl()).thenReturn(Optional.empty());
 
         assertDoesNotThrow(
                 () -> service.getEventsForApartmentInstance(apartmentInstance)
@@ -105,11 +101,10 @@ class BookingComReservationService_UnitTest {
             "//valid_url/",
             "~/valid_url/",
     })
-    void getEventsForApartmentInstance_should_throw_IllegalArgumentException_if_uri_is_invalid(String uri) {
-        when(apartmentInstance.getBookingIcalId()).thenReturn(Optional.of("id"));
-        when(bookingICalProps.baseUrl()).thenReturn(uri);
+    void getEventsForApartmentInstance_should_throw_IllegalArgumentException_if_uri_is_invalid(String url) {
+        when(apartmentInstance.getBookingICalUrl()).thenReturn(Optional.of(url));
 
-        IllegalArgumentException e = assertThrows(
+        assertThrows(
                 IllegalArgumentException.class,
                 () -> service.getEventsForApartmentInstance(apartmentInstance)
         );
@@ -119,9 +114,7 @@ class BookingComReservationService_UnitTest {
     @Order(4)
     @MethodSource("ua.mibal.booking.testUtils.DataGenerator#eventsFactory")
     void isFree(List<Event> events, LocalDateTime from, LocalDateTime to, boolean expected) {
-        when(apartmentInstance.getBookingIcalId()).thenReturn(Optional.of("/test.ics"));
-        when(bookingICalProps.baseUrl())
-                .thenReturn("file:/Users/admin/IdeaProjects/hotel-booking-service/src/test/resources");
+        when(apartmentInstance.getBookingICalUrl()).thenReturn(Optional.of(calendarUrl));
         when(iCalService.eventsFromCalendarStream(any()))
                 .thenReturn(events);
 

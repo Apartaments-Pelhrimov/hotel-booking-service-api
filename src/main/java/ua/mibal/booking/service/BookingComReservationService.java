@@ -20,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ua.mibal.booking.config.properties.BookingICalProps;
 import ua.mibal.booking.model.entity.ApartmentInstance;
 import ua.mibal.booking.model.entity.Event;
 
@@ -41,7 +40,6 @@ import static java.util.Collections.emptyList;
 @Service
 public class BookingComReservationService {
     private final static Logger log = LoggerFactory.getLogger(BookingComReservationService.class);
-    private final BookingICalProps bookingICalProps;
     private final ICalService iCalService;
 
     public boolean isFree(ApartmentInstance apartmentInstance, LocalDateTime start, LocalDateTime end) {
@@ -53,8 +51,8 @@ public class BookingComReservationService {
     }
 
     public List<Event> getEventsForApartmentInstance(ApartmentInstance apartmentInstance) {
-        return apartmentInstance.getBookingIcalId()
-                .map(this::iCalFileByApartmentInstance)
+        return apartmentInstance.getBookingICalUrl()
+                .map(this::iCalStreamByUrl)
                 .map(iCalService::eventsFromCalendarStream)
                 .orElseGet(() -> {
                     log.info(
@@ -65,9 +63,9 @@ public class BookingComReservationService {
                 });
     }
 
-    private InputStream iCalFileByApartmentInstance(String bookingICalId) {
+    private InputStream iCalStreamByUrl(String bookingICalUrl) {
         try {
-            URL url = new URL(bookingICalProps.baseUrl() + bookingICalId);
+            URL url = new URL(bookingICalUrl);
             return url.openStream();
         } catch (IOException e) {
             throw new IllegalArgumentException(e);
