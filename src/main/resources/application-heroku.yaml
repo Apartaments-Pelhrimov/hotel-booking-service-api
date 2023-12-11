@@ -24,7 +24,7 @@ aws:
   secret-access-key: YSNR6a7BlwOVCCmIGKl+phJa9Dstm2QXLseULRON
   region: eu-north-1
   bucket:
-    name: hotel-booking-service-dev
+    name: hotel-booking-service-heroku
     users-folder: users/
     apartments-folder: apartments/
 
