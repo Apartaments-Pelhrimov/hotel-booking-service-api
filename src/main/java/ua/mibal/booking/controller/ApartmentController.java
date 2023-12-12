@@ -40,22 +40,22 @@ import java.util.List;
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/apartments")
 public class ApartmentController {
     private final ApartmentService apartmentService;
 
-    @GetMapping("/apartments/{id}")
+    @GetMapping("/{id}")
     public ApartmentDto getOne(@PathVariable Long id) {
         return apartmentService.getOneDto(id);
     }
 
-    @GetMapping("/apartments")
+    @GetMapping
     public List<ApartmentCardDto> getAll() {
         return apartmentService.getAll();
     }
 
     @RolesAllowed("MANAGER")
-    @PostMapping("/apartments")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void create(@RequestBody @Valid CreateApartmentDto createApartmentDto) {
         apartmentService.createApartment(createApartmentDto);
