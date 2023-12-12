@@ -16,25 +16,30 @@
 
 package ua.mibal.booking.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import ua.mibal.booking.model.dto.request.CreateApartmentDto;
 import ua.mibal.booking.service.ApartmentService;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -53,6 +58,9 @@ class ApartmentController_UnitTest {
 
     @MockBean
     private ApartmentService apartmentService;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @BeforeEach
     public void setup() {
@@ -85,5 +93,14 @@ class ApartmentController_UnitTest {
 
         verify(apartmentService, times(1))
                 .getAll();
+    }
+
+    @ParameterizedTest
+    @MethodSource("ua.mibal.booking.testUtils.DataGenerator#invalidApartmentDto")
+    void create_should_throw_if_dto_is_invalid(CreateApartmentDto createApartmentDto) throws Exception {
+        mvc.perform(post("/api/apartments")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(createApartmentDto)))
+                .andExpect(status().isBadRequest());
     }
 }

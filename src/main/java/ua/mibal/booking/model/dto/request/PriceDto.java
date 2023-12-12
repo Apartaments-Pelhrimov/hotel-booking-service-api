@@ -16,40 +16,26 @@
 
 package ua.mibal.booking.model.dto.request;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import ua.mibal.booking.model.entity.Apartment.ApartmentClass;
-import ua.mibal.booking.model.entity.embeddable.ApartmentOptions;
 
-import java.util.List;
+import java.math.BigDecimal;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public record CreateApartmentDto(
-
-        @NotBlank
-        @Size(min = 3)
-        String name,
+public record PriceDto(
 
         @NotNull
-        ApartmentClass apartmentClass,
+        @Min(1)
+        Integer person,
 
-        ApartmentOptions options,
-
-        @Valid
-        List<PriceDto> prices,
-
-        @Valid
-        List<PhotoDto> photos,
-
-        @Valid
-        List<RoomDto> rooms,
-
-        @Valid
-        List<CreateApartmentInstanceDto> instances
+        @NotNull
+        @DecimalMin("0")
+        @DecimalMax("100000")
+        BigDecimal cost
 ) {
 }

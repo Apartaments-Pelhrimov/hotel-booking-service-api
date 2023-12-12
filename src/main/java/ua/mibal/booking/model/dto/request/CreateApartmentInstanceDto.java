@@ -16,40 +16,11 @@
 
 package ua.mibal.booking.model.dto.request;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import ua.mibal.booking.model.entity.Apartment.ApartmentClass;
-import ua.mibal.booking.model.entity.embeddable.ApartmentOptions;
-
-import java.util.List;
-
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public record CreateApartmentDto(
-
-        @NotBlank
-        @Size(min = 3)
-        String name,
-
-        @NotNull
-        ApartmentClass apartmentClass,
-
-        ApartmentOptions options,
-
-        @Valid
-        List<PriceDto> prices,
-
-        @Valid
-        List<PhotoDto> photos,
-
-        @Valid
-        List<RoomDto> rooms,
-
-        @Valid
-        List<CreateApartmentInstanceDto> instances
+public record CreateApartmentInstanceDto(
+        // TODO
 ) {
 }

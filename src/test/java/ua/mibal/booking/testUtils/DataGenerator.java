@@ -17,7 +17,13 @@
 package ua.mibal.booking.testUtils;
 
 import org.junit.jupiter.params.provider.Arguments;
+import ua.mibal.booking.model.dto.request.BedDto;
+import ua.mibal.booking.model.dto.request.CreateApartmentDto;
+import ua.mibal.booking.model.dto.request.PhotoDto;
+import ua.mibal.booking.model.dto.request.PriceDto;
+import ua.mibal.booking.model.dto.request.RoomDto;
 import ua.mibal.booking.model.entity.Event;
+import ua.mibal.booking.model.entity.embeddable.Bed;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -31,6 +37,10 @@ import static java.math.BigDecimal.ONE;
 import static java.math.BigDecimal.ZERO;
 import static java.math.BigDecimal.valueOf;
 import static java.util.List.of;
+import static java.util.function.Function.identity;
+import static ua.mibal.booking.model.entity.Apartment.ApartmentClass.COMFORT;
+import static ua.mibal.booking.model.entity.Room.RoomType.BEDROOM;
+import static ua.mibal.booking.model.entity.embeddable.ApartmentOptions.DEFAULT;
 
 /**
  * @author Mykhailo Balakhon
@@ -45,7 +55,7 @@ public class DataGenerator {
         LocalDateTime first = LocalDate.of(2024, 1, 1).atStartOfDay();
         LocalDateTime twentyFifth = LocalDate.of(2023, 12, 25).atStartOfDay();
         LocalDateTime birthday = LocalDate.of(2004, 9, 18).atStartOfDay();
-        return List.of(
+        return of(
                 Event.from(first, first, "New Year"),
                 Event.from(twentyFifth, first, "Christmas holidays"),
                 Event.from(birthday, birthday, "My Birthday")
@@ -64,7 +74,7 @@ public class DataGenerator {
                 LocalDate.of(2023, 12, 25).atStartOfDay(), ZoneOffset.UTC, targetZoneId);
         LocalDateTime birthday = timeAtToOurZoneId(
                 LocalDate.of(2004, 9, 18).atStartOfDay(), australia, targetZoneId);
-        return List.of(
+        return of(
                 Event.from(first, first, "New Year"),
                 Event.from(twentyFifth, first, "Christmas holidays"),
                 Event.from(birthday, birthday, "My Birthday")
@@ -73,7 +83,7 @@ public class DataGenerator {
 
     /**
      * @return random {@link List} of {@link Event} Apartment reservations and
-     *         user intent reservation intervals with expected result of operation
+     * user intent reservation intervals with expected result of operation
      */
     public static Stream<Arguments> eventsFactory() {
         LocalDateTime first = LocalDate.of(2023, 12, 1).atStartOfDay();
@@ -109,6 +119,93 @@ public class DataGenerator {
                 Arguments.of(ZERO, fifth, fifth),
                 Arguments.of(ONE, fifth, first),
                 Arguments.of(valueOf(-100_000), first, fifth)
+        );
+    }
+
+    public static Stream<Arguments> invalidApartmentDto() {
+        Stream<Arguments> simpleArgs = Stream.of(
+                // incorrect name
+                Arguments.of(new CreateApartmentDto("", COMFORT, DEFAULT, of(), of(), of(), of())),
+                Arguments.of(new CreateApartmentDto(null, COMFORT, DEFAULT, of(), of(), of(), of())),
+
+                // incorrect type
+                Arguments.of(new CreateApartmentDto("correct_name", null, DEFAULT, of(), of(), of(), of())),
+
+                // incorrect prices
+                Arguments.of(new CreateApartmentDto("correct_name", COMFORT, DEFAULT, incorrectPrices(), of(), of(), of())),
+
+
+                // incorrect rooms
+                Arguments.of(new CreateApartmentDto("correct_name", COMFORT, DEFAULT, of(), of(), incorrectRooms(), of()))
+        );
+        return of(
+                simpleArgs,
+                invalidApartmentDtoWithInvalidPrices(),
+                invalidApartmentDtoWithInvalidPhotos(),
+                invalidApartmentDtoWithInvalidRooms()
+        ).parallelStream()
+                .flatMap(identity());
+    }
+
+    private static Stream<Arguments> invalidApartmentDtoWithInvalidPrices() {
+        return incorrectPrices().stream()
+                .map(price -> Arguments.of(new CreateApartmentDto(
+                        "correct_name", COMFORT, DEFAULT, of(price), of(), of(), of())
+                ));
+    }
+
+    private static Stream<Arguments> invalidApartmentDtoWithInvalidPhotos() {
+        return incorrectPhotos().stream()
+                .map(photo -> Arguments.of(new CreateApartmentDto(
+                        "correct_name", COMFORT, DEFAULT, of(), of(photo), of(), of())
+                ));
+    }
+
+    private static Stream<Arguments> invalidApartmentDtoWithInvalidRooms() {
+        return incorrectRooms().stream()
+                .map(room -> Arguments.of(new CreateApartmentDto(
+                        "correct_name", COMFORT, DEFAULT, of(), of(), of(room), of())
+                ));
+    }
+
+    public static List<PriceDto> incorrectPrices() {
+        return of(
+                // incorrect person number
+                new PriceDto(null, ZERO),
+                new PriceDto(-1, ZERO),
+                new PriceDto(0, valueOf(100_000)),
+
+                // incorrect cost
+                new PriceDto(1, null),
+                new PriceDto(1, valueOf(-1)),
+                new PriceDto(1, valueOf(100_001))
+        );
+    }
+
+    public static List<PhotoDto> incorrectPhotos() {
+        return of(
+                new PhotoDto(null),
+                new PhotoDto(""),
+                new PhotoDto("https://invalid") // TODO
+        );
+    }
+
+    public static List<RoomDto> incorrectRooms() {
+        List<RoomDto> rooms = new java.util.ArrayList<>(
+                incorrectBeds().stream()
+                        .map(bed -> new RoomDto(of(bed), BEDROOM))
+                        .toList()
+        );
+        rooms.add(new RoomDto(of(), null));
+        return rooms;
+    }
+
+    public static List<BedDto> incorrectBeds() {
+        return of(
+                new BedDto(null, Bed.BedType.CONNECTED),
+                new BedDto(0, Bed.BedType.CONNECTED),
+
+                new BedDto(1, null)
         );
     }
 
