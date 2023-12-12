@@ -17,15 +17,21 @@
 package ua.mibal.booking.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.services.s3.S3Client;
 import ua.mibal.booking.config.properties.ActivationCodeProps;
 import ua.mibal.booking.config.properties.AwsProps;
 import ua.mibal.booking.config.properties.CalendarProps;
+import ua.mibal.booking.model.entity.User;
+import ua.mibal.booking.model.entity.embeddable.Phone;
+import ua.mibal.booking.model.entity.embeddable.Role;
+import ua.mibal.booking.repository.UserRepository;
 
 /**
  * @author Mykhailo Balakhon
@@ -54,5 +60,35 @@ public class RootConfig {
                         )))
                 .region(awsProps.region())
                 .build();
+    }
+
+    @Bean
+    public CommandLineRunner setup(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        return args -> {
+            User testUser = new User();
+            testUser.setFirstName("Test");
+            testUser.setLastName("User");
+            testUser.setEmail("user@company.com");
+            testUser.setPhone(new Phone("+380951234567"));
+            testUser.setPassword(passwordEncoder.encode("password1"));
+            testUser.setRole(Role.ROLE_USER);
+            testUser.setEnabled(true);
+
+            User testAdmin = new User();
+            testAdmin.setFirstName("Test");
+            testAdmin.setLastName("Admin");
+            testAdmin.setEmail("admin@company.com");
+            testAdmin.setPhone(new Phone("+380951234567"));
+            testAdmin.setPassword(passwordEncoder.encode("password1"));
+            testAdmin.setRole(Role.ROLE_MANAGER);
+            testAdmin.setEnabled(true);
+
+            if (!userRepository.existsByEmail(testUser.getEmail())) {
+                userRepository.save(testUser);
+            }
+            if (!userRepository.existsByEmail(testAdmin.getEmail())) {
+                userRepository.save(testAdmin);
+            }
+        };
     }
 }

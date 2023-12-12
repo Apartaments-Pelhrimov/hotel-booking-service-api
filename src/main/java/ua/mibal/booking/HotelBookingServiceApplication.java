@@ -16,50 +16,13 @@
 
 package ua.mibal.booking;
 
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import ua.mibal.booking.model.entity.User;
-import ua.mibal.booking.model.entity.embeddable.Phone;
-import ua.mibal.booking.model.entity.embeddable.Role;
-import ua.mibal.booking.repository.UserRepository;
 
 @SpringBootApplication
 public class HotelBookingServiceApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(HotelBookingServiceApplication.class, args);
-    }
-
-    @Bean
-    public CommandLineRunner setup(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        return args -> {
-            User testUser = new User();
-            testUser.setFirstName("Test");
-            testUser.setLastName("User");
-            testUser.setEmail("user@company.com");
-            testUser.setPhone(new Phone("+380951234567"));
-            testUser.setPassword(passwordEncoder.encode("password1"));
-            testUser.setRole(Role.ROLE_USER);
-            testUser.setEnabled(true);
-
-            User testAdmin = new User();
-            testAdmin.setFirstName("Test");
-            testAdmin.setLastName("Admin");
-            testAdmin.setEmail("admin@company.com");
-            testAdmin.setPhone(new Phone("+380951234567"));
-            testAdmin.setPassword(passwordEncoder.encode("password1"));
-            testAdmin.setRole(Role.ROLE_MANAGER);
-            testAdmin.setEnabled(true);
-
-            if (!userRepository.existsByEmail(testUser.getEmail())) {
-                userRepository.save(testUser);
-            }
-            if (!userRepository.existsByEmail(testAdmin.getEmail())) {
-                userRepository.save(testAdmin);
-            }
-        };
     }
 }
