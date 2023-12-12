@@ -91,7 +91,7 @@ public class Apartment {
 
     @Convert(converter = NumericBooleanConverter.class)
     @Column(nullable = false)
-    private Boolean published = false;
+    private Boolean published;
 
     @Column
     private Double rating;
@@ -132,6 +132,7 @@ public class Apartment {
 
     public Apartment() {
          this.setOptions(ApartmentOptions.DEFAULT);
+         this.setPublished(false);
     }
 
     public void addApartmentInstance(ApartmentInstance apartmentInstance) {
