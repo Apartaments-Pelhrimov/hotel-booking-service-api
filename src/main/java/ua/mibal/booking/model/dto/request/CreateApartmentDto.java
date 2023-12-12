@@ -14,26 +14,13 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.mapper;
-
-import org.mapstruct.Mapper;
-import org.mapstruct.MappingConstants;
-import ua.mibal.booking.model.dto.request.CreateApartmentDto;
-import ua.mibal.booking.model.dto.response.ApartmentCardDto;
-import ua.mibal.booking.model.dto.response.ApartmentDto;
-import ua.mibal.booking.model.entity.Apartment;
+package ua.mibal.booking.model.dto.request;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Mapper(uses = PhotoMapper.class,
-        componentModel = MappingConstants.ComponentModel.SPRING)
-public interface ApartmentMapper {
+public record CreateApartmentDto(
 
-    ApartmentDto toDto(Apartment apartment);
-
-    ApartmentCardDto toCardDto(Apartment apartment);
-
-    Apartment toEntity(CreateApartmentDto createApartmentDto);
+) {
 }

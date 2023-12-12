@@ -16,11 +16,18 @@
 
 package ua.mibal.booking.controller;
 
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import ua.mibal.booking.model.dto.request.CreateApartmentDto;
 import ua.mibal.booking.model.dto.response.ApartmentCardDto;
 import ua.mibal.booking.model.dto.response.ApartmentDto;
 import ua.mibal.booking.service.ApartmentService;
@@ -45,5 +52,12 @@ public class ApartmentController {
     @GetMapping("/apartments")
     public List<ApartmentCardDto> getAll() {
         return apartmentService.getAll();
+    }
+
+    @RolesAllowed("MANAGER")
+    @PostMapping("/apartments")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void create(@RequestBody @Valid CreateApartmentDto createApartmentDto) {
+        apartmentService.createApartment(createApartmentDto);
     }
 }

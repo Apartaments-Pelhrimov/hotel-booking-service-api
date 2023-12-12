@@ -19,6 +19,7 @@ package ua.mibal.booking.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ua.mibal.booking.model.dto.request.CreateApartmentDto;
 import ua.mibal.booking.model.dto.response.ApartmentCardDto;
 import ua.mibal.booking.model.dto.response.ApartmentDto;
 import ua.mibal.booking.model.entity.Apartment;
@@ -84,5 +85,10 @@ public class ApartmentService {
         if (apartments.size() == 1) return apartments.get(0);
         // TODO implement logic
         return apartments.get(0);
+    }
+
+    public void createApartment(CreateApartmentDto createApartmentDto) {
+        var apartment = apartmentMapper.toEntity(createApartmentDto);
+        apartmentRepository.save(apartment);
     }
 }

@@ -26,6 +26,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+import ua.mibal.booking.model.dto.request.CreateApartmentDto;
 import ua.mibal.booking.model.dto.response.ApartmentCardDto;
 import ua.mibal.booking.model.dto.response.ApartmentDto;
 import ua.mibal.booking.model.entity.Apartment;
@@ -46,6 +47,7 @@ import static java.time.LocalDateTime.MIN;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
@@ -83,6 +85,8 @@ class ApartmentService_UnitTest {
     private LocalDate dateFrom;
     @Mock
     private LocalDate dateTo;
+    @Mock
+    private CreateApartmentDto createApartmentDto;
 
     @Test
     void getOneDto() {
@@ -192,5 +196,14 @@ class ApartmentService_UnitTest {
                 new ApartmentIsNotAvialableForReservation(MIN, MAX, 1L).getMessage(),
                 e.getMessage()
         );
+    }
+
+    @Test
+    public void createApartment() {
+        when(apartmentMapper.toEntity(createApartmentDto)).thenReturn(apartment);
+
+        service.createApartment(createApartmentDto);
+
+        verify(apartmentRepository).save(apartment);
     }
 }
