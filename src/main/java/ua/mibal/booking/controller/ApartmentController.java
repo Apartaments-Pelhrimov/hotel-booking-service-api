@@ -75,7 +75,7 @@ public class ApartmentController {
     @RolesAllowed("MANAGER")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void change(@PathVariable Long id) {
+    public void delete(@PathVariable Long id) {
         apartmentService.delete(id);
     }
 }

@@ -30,6 +30,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import ua.mibal.booking.model.dto.request.CreateApartmentDto;
@@ -111,5 +112,13 @@ class ApartmentController_UnitTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(createApartmentDto)))
                 .andExpect(status().isBadRequest());
+    }
+
+    @ParameterizedTest
+    @CsvSource({"1", "10000", "489374981"})
+    void delete(Long id) throws Exception {
+        mvc.perform(MockMvcRequestBuilders.delete("/api/apartments/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
     }
 }
