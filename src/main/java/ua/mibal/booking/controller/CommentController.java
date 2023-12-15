@@ -23,6 +23,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -56,5 +57,13 @@ public class CommentController {
                            @Valid @RequestBody CreateCommentDto createCommentDto,
                            Authentication authentication) {
         commentService.addCommentToApartment(createCommentDto, authentication.getName(), apartmentId);
+    }
+
+    @RolesAllowed("USER")
+    @DeleteMapping("/apartments/comments/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteComment(@PathVariable Long id,
+                              Authentication authentication) {
+        commentService.deleteComment(id, authentication.getName());
     }
 }

@@ -76,4 +76,8 @@ public class CommentService {
             throw new IllegalArgumentException("User with email='" + userEmail + "' does not " +
                                                "have access to comments for Apartment with id=" + apartmentId);
     }
+
+    public void deleteComment(Long id, String name) {
+
+    }
 }
