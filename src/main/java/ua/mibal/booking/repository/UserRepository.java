@@ -78,4 +78,11 @@ public interface UserRepository extends JpaRepository<User, Long>, CustomUserRep
             where u.email = ?1 and a.id = ?2
             """)
     boolean userHasReservationWithApartment(String email, Long apartmentId);
+
+    @Query("""
+            select count(c.id) = 1 from Comment c
+                left join c.user u
+            where u.email = ?1 and c.id = ?2
+            """)
+    boolean userHasComment(String email, Long commentId);
 }

@@ -69,15 +69,23 @@ public class CommentService {
         commentRepository.refreshRatingForApartment(apartmentId);
     }
 
+    public void deleteComment(Long id, String email) {
+        validateUserHasComment(id, email);
+        commentRepository.deleteById(id);
+    }
+
+    private void validateUserHasComment(Long commentId, String email) {
+        if (!userRepository.userHasComment(email, commentId)) {
+            throw new IllegalArgumentException("User with email='" + email + "' can not " +
+                                               "delete Comment with id=" + commentId);
+        }
+    }
+
     private void validate(Long apartmentId, String userEmail) {
         if (!apartmentRepository.existsById(apartmentId))
             throw new ApartmentNotFoundException(apartmentId);
         if (!userRepository.userHasReservationWithApartment(userEmail, apartmentId))
             throw new IllegalArgumentException("User with email='" + userEmail + "' does not " +
                                                "have access to comments for Apartment with id=" + apartmentId);
-    }
-
-    public void deleteComment(Long id, String name) {
-
     }
 }
