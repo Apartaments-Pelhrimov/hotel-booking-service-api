@@ -41,17 +41,17 @@ import ua.mibal.booking.service.CommentService;
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/apartments")
 public class CommentController {
     private final CommentService commentService;
 
-    @GetMapping("/apartments/{apartmentId}/comments")
+    @GetMapping("/{apartmentId}/comments")
     public Page<CommentDto> getCommentsForApartment(@PathVariable Long apartmentId, Pageable pageable) {
         return commentService.getCommentsInApartment(apartmentId, pageable);
     }
 
     @RolesAllowed("USER")
-    @PostMapping("/apartments/{apartmentId}/comments")
+    @PostMapping("/{apartmentId}/comments")
     @ResponseStatus(HttpStatus.CREATED)
     public void addComment(@PathVariable Long apartmentId,
                            @Valid @RequestBody CreateCommentDto createCommentDto,
@@ -60,7 +60,7 @@ public class CommentController {
     }
 
     @RolesAllowed("USER")
-    @DeleteMapping("/apartments/comments/{id}")
+    @DeleteMapping("/comments/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteComment(@PathVariable Long id,
                               Authentication authentication) {
