@@ -19,6 +19,7 @@ package ua.mibal.booking.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ua.mibal.booking.model.dto.request.ChangeApartmentDto;
 import ua.mibal.booking.model.dto.request.CreateApartmentDto;
 import ua.mibal.booking.model.dto.response.ApartmentCardDto;
 import ua.mibal.booking.model.dto.response.ApartmentDto;
@@ -90,5 +91,13 @@ public class ApartmentService {
     public void createApartment(CreateApartmentDto createApartmentDto) {
         var apartment = apartmentMapper.toEntity(createApartmentDto);
         apartmentRepository.save(apartment);
+    }
+
+    public void change(ChangeApartmentDto changeApartmentDto, Long id) {
+
+    }
+
+    public void delete(Long id) {
+
     }
 }
