@@ -116,6 +116,19 @@ public class User implements UserDetails {
         this.setRole(ROLE_USER);
     }
 
+    public User(final String firstName,
+                final String lastName,
+                final String email,
+                final String password,
+                final String phone) {
+        this();
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.phone = new Phone(phone);
+    }
+
     public void addReservation(Reservation reservation) {
         reservation.setUser(this);
         this.reservations.add(reservation);

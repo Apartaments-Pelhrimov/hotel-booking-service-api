@@ -22,7 +22,10 @@ import ua.mibal.booking.model.dto.request.CreateApartmentDto;
 import ua.mibal.booking.model.dto.request.PhotoDto;
 import ua.mibal.booking.model.dto.request.PriceDto;
 import ua.mibal.booking.model.dto.request.RoomDto;
+import ua.mibal.booking.model.entity.Apartment;
+import ua.mibal.booking.model.entity.Comment;
 import ua.mibal.booking.model.entity.Event;
+import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.entity.embeddable.Bed;
 
 import java.time.LocalDate;
@@ -39,6 +42,7 @@ import static java.math.BigDecimal.valueOf;
 import static java.util.List.of;
 import static java.util.function.Function.identity;
 import static ua.mibal.booking.model.entity.Apartment.ApartmentClass.COMFORT;
+import static ua.mibal.booking.model.entity.Apartment.ApartmentClass.STANDARD;
 import static ua.mibal.booking.model.entity.Room.RoomType.BEDROOM;
 import static ua.mibal.booking.model.entity.Room.RoomType.LIVING_ROOM;
 import static ua.mibal.booking.model.entity.embeddable.ApartmentOptions.DEFAULT;
@@ -226,5 +230,29 @@ public class DataGenerator {
     private static LocalDateTime timeAtToOurZoneId(LocalDateTime localDateTime, ZoneId original, ZoneId wanted) {
         ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, original);
         return zonedDateTime.toOffsetDateTime().atZoneSameInstant(wanted).toLocalDateTime();
+    }
+
+    public static User testUser() {
+        return new User(
+                "Test",
+                "User",
+                "test@mail.com",
+                "test",
+                "+380951234567"
+        );
+    }
+
+    public static Comment testComment() {
+        return new Comment(
+                "Test body",
+                1.7
+        );
+    }
+
+    public static Apartment testApartment() {
+        return new Apartment(
+                "Test Apartment",
+                STANDARD
+        );
     }
 }

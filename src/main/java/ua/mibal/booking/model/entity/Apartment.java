@@ -135,6 +135,12 @@ public class Apartment {
          this.setPublished(false);
     }
 
+    public Apartment(String name, ApartmentClass apartmentClass) {
+        this();
+        this.name = name;
+        this.apartmentClass = apartmentClass;
+    }
+
     public void addApartmentInstance(ApartmentInstance apartmentInstance) {
         apartmentInstance.setApartment(this);
         this.apartmentInstances.add(apartmentInstance);
