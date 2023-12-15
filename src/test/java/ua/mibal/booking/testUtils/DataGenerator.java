@@ -40,6 +40,7 @@ import static java.util.List.of;
 import static java.util.function.Function.identity;
 import static ua.mibal.booking.model.entity.Apartment.ApartmentClass.COMFORT;
 import static ua.mibal.booking.model.entity.Room.RoomType.BEDROOM;
+import static ua.mibal.booking.model.entity.Room.RoomType.LIVING_ROOM;
 import static ua.mibal.booking.model.entity.embeddable.ApartmentOptions.DEFAULT;
 
 /**
@@ -122,6 +123,15 @@ public class DataGenerator {
         );
     }
 
+    public static Stream<Arguments> validApartmentDto() {
+        return Stream.of(Arguments.of(new CreateApartmentDto("correctName", COMFORT, DEFAULT,
+                of(new PriceDto(1, valueOf(10000))),
+                of(new PhotoDto("https://apple.com")),
+                of(new RoomDto(of(new BedDto(1, Bed.BedType.TRANSFORMER)), LIVING_ROOM)),
+                of()
+        )));
+    }
+
     public static Stream<Arguments> invalidApartmentDto() {
         Stream<Arguments> simpleArgs = Stream.of(
                 // incorrect name
@@ -186,7 +196,11 @@ public class DataGenerator {
         return of(
                 new PhotoDto(null),
                 new PhotoDto(""),
-                new PhotoDto("https://invalid") // TODO
+                new PhotoDto("invalid.com"),
+                new PhotoDto("http://invalid"),
+                new PhotoDto("https://invalid"),
+                new PhotoDto("https://invalid/fjdskl"),
+                new PhotoDto("https://invalid.com\\")
         );
     }
 
