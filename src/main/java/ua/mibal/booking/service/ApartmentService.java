@@ -21,6 +21,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.model.dto.request.ChangeApartmentDto;
 import ua.mibal.booking.model.dto.request.CreateApartmentDto;
+import ua.mibal.booking.model.dto.request.CreateApartmentInstanceDto;
+import ua.mibal.booking.model.dto.request.PriceDto;
+import ua.mibal.booking.model.dto.request.RoomDto;
 import ua.mibal.booking.model.dto.response.ApartmentCardDto;
 import ua.mibal.booking.model.dto.response.ApartmentDto;
 import ua.mibal.booking.model.entity.Apartment;
@@ -98,6 +101,30 @@ public class ApartmentService {
     }
 
     public void delete(Long id) {
+
+    }
+
+    public void addInstance(Long id, CreateApartmentInstanceDto createApartmentInstanceDto) {
+
+    }
+
+    public void deleteInstance(Long id) {
+
+    }
+
+    public void addRoom(Long id, RoomDto roomDto) {
+
+    }
+
+    public void deleteRoom(Long id) {
+
+    }
+
+    public void addPrice(Long id, PriceDto priceDto) {
+
+    }
+
+    public void deletePrice(Long apartmentId, Integer person) {
 
     }
 }

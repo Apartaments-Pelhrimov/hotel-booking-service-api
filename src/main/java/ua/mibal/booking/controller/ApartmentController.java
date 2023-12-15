@@ -27,10 +27,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ua.mibal.booking.model.dto.request.ChangeApartmentDto;
 import ua.mibal.booking.model.dto.request.CreateApartmentDto;
+import ua.mibal.booking.model.dto.request.CreateApartmentInstanceDto;
+import ua.mibal.booking.model.dto.request.PriceDto;
+import ua.mibal.booking.model.dto.request.RoomDto;
 import ua.mibal.booking.model.dto.response.ApartmentCardDto;
 import ua.mibal.booking.model.dto.response.ApartmentDto;
 import ua.mibal.booking.service.ApartmentService;
@@ -77,5 +81,51 @@ public class ApartmentController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         apartmentService.delete(id);
+    }
+
+    @RolesAllowed("MANAGER")
+    @PostMapping("/{id}/instances")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addInstance(@PathVariable Long id,
+                            @RequestBody @Valid CreateApartmentInstanceDto createApartmentInstanceDto) {
+        apartmentService.addInstance(id, createApartmentInstanceDto);
+    }
+
+    @RolesAllowed("MANAGER")
+    @DeleteMapping("/instances/{id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void deleteInstance(@PathVariable Long id) {
+        apartmentService.deleteInstance(id);
+    }
+
+    @RolesAllowed("MANAGER")
+    @PostMapping("/{id}/rooms")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addRoom(@PathVariable Long id,
+                        @RequestBody @Valid RoomDto roomDto) {
+        apartmentService.addRoom(id, roomDto);
+    }
+
+    @RolesAllowed("MANAGER")
+    @DeleteMapping("/rooms/{id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void deleteRoom(@PathVariable Long id) {
+        apartmentService.deleteRoom(id);
+    }
+
+    @RolesAllowed("MANAGER")
+    @PostMapping("/{id}/prices")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addPrice(@PathVariable Long id,
+                         @RequestBody @Valid PriceDto priceDto) {
+        apartmentService.addPrice(id, priceDto);
+    }
+
+    @RolesAllowed("MANAGER")
+    @DeleteMapping("/{apartmentId}/prices")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void deletePrice(@PathVariable Long apartmentId,
+                            @RequestParam("person") Integer person) {
+        apartmentService.deletePrice(apartmentId, person);
     }
 }
