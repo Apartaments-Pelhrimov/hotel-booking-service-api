@@ -20,6 +20,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -27,13 +28,23 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import ua.mibal.booking.model.entity.Apartment;
+import ua.mibal.booking.model.entity.ApartmentInstance;
 import ua.mibal.booking.model.entity.Comment;
+import ua.mibal.booking.model.entity.Reservation;
 import ua.mibal.booking.model.entity.User;
+import ua.mibal.booking.model.entity.embeddable.Photo;
 
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static ua.mibal.booking.testUtils.DataGenerator.testApartment;
+import static ua.mibal.booking.testUtils.DataGenerator.testApartmentInstance;
 import static ua.mibal.booking.testUtils.DataGenerator.testComment;
+import static ua.mibal.booking.testUtils.DataGenerator.testReservation;
 import static ua.mibal.booking.testUtils.DataGenerator.testUser;
 
 /**
@@ -44,8 +55,9 @@ import static ua.mibal.booking.testUtils.DataGenerator.testUser;
 @DataJpaTest
 @TestPropertySource(locations = "classpath:application.yaml")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UserRepository_UnitTest {
-    private final static User user = testUser();
+    private static final User user = testUser();
 
     @Autowired
     private UserRepository repository;
@@ -55,39 +67,122 @@ class UserRepository_UnitTest {
 
     @BeforeEach
     private void beforeEach() {
-        entityManager.persistAndFlush(user);
+        entityManager.merge(user);
     }
 
     @Test
     void findByEmail() {
+        assertEquals(
+                user,
+                repository.findByEmail(user.getEmail())
+                        .orElseThrow()
+        );
+    }
+
+    @Test
+    void findByEmail_empty() {
+        assertEquals(
+                Optional.empty(),
+                repository.findByEmail("not_exists@mail.com")
+        );
     }
 
     @Test
     void findPasswordByEmail() {
+        assertEquals(
+                user.getPassword(),
+                repository.findPasswordByEmail(user.getEmail())
+                        .orElseThrow()
+        );
     }
 
     @Test
-    void existsByEmail() {
+    void findPasswordByEmail_empty() {
+        assertEquals(
+                Optional.empty(),
+                repository.findPasswordByEmail("not_exists@mail.com")
+        );
+    }
+
+    @Test
+    void existsByEmail_true() {
+        assertTrue(
+                repository.existsByEmail(user.getEmail())
+        );
+    }
+
+    @Test
+    void existsByEmail_false() {
+        assertFalse(
+                repository.existsByEmail("not_exists@mail.com")
+        );
     }
 
     @Test
     void deleteByEmail() {
+        assertTrue(
+                repository.existsByEmail(user.getEmail())
+        );
+
+        repository.deleteByEmail(user.getEmail());
+
+        assertFalse(
+                repository.existsByEmail(user.getEmail())
+        );
     }
 
     @Test
     void updateUserPasswordByEmail() {
+        String newPass = "new_pass";
+
+        repository.updateUserPasswordByEmail(newPass, user.getEmail());
+
+        User mergedUser = entityManager.find(user.getClass(), user.getId());
+        assertSame(newPass, mergedUser.getPassword());
     }
 
     @Test
     void updateUserPhotoByEmail() {
+        Photo newPhoto = new Photo("new_link");
+
+        repository.updateUserPhotoByEmail(newPhoto, user.getEmail());
+
+        User mergedUser = entityManager.find(user.getClass(), user.getId());
+        assertSame(newPhoto, mergedUser.getPhoto());
+
     }
 
     @Test
     void deleteUserPhotoByEmail() {
+        repository.deleteUserPhotoByEmail(user.getEmail());
+
+        User mergedUser = entityManager.find(user.getClass(), user.getId());
+        assertNull(mergedUser.getPhoto());
     }
 
     @Test
-    void userHasReservationWithApartment() {
+    void userHasReservationWithApartment_true() {
+        Apartment apartment = entityManager.persistAndFlush(testApartment());
+
+        ApartmentInstance apartmentInstance = testApartmentInstance();
+        apartmentInstance.setApartment(apartment);
+        entityManager.persistAndFlush(apartmentInstance);
+
+        Reservation reservation = testReservation();
+        reservation.setUser(user);
+        reservation.setApartmentInstance(apartmentInstance);
+        entityManager.persistAndFlush(reservation);
+
+        assertTrue(
+                repository.userHasReservationWithApartment(user.getEmail(), apartment.getId())
+        );
+    }
+
+    @Test
+    void userHasReservationWithApartment_false() {
+        assertFalse(
+                repository.userHasReservationWithApartment(user.getEmail(), 0L)
+        );
     }
 
     @Test

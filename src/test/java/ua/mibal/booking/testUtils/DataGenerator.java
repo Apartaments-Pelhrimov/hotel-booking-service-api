@@ -23,10 +23,15 @@ import ua.mibal.booking.model.dto.request.PhotoDto;
 import ua.mibal.booking.model.dto.request.PriceDto;
 import ua.mibal.booking.model.dto.request.RoomDto;
 import ua.mibal.booking.model.entity.Apartment;
+import ua.mibal.booking.model.entity.ApartmentInstance;
 import ua.mibal.booking.model.entity.Comment;
 import ua.mibal.booking.model.entity.Event;
+import ua.mibal.booking.model.entity.Reservation;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.entity.embeddable.Bed;
+import ua.mibal.booking.model.entity.embeddable.Photo;
+import ua.mibal.booking.model.entity.embeddable.Price;
+import ua.mibal.booking.model.entity.embeddable.ReservationDetails;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -39,6 +44,7 @@ import java.util.stream.Stream;
 import static java.math.BigDecimal.ONE;
 import static java.math.BigDecimal.ZERO;
 import static java.math.BigDecimal.valueOf;
+import static java.time.LocalDateTime.now;
 import static java.util.List.of;
 import static java.util.function.Function.identity;
 import static ua.mibal.booking.model.entity.Apartment.ApartmentClass.COMFORT;
@@ -233,13 +239,15 @@ public class DataGenerator {
     }
 
     public static User testUser() {
-        return new User(
+        User user = new User(
                 "Test",
                 "User",
                 "test@mail.com",
                 "test",
                 "+380951234567"
         );
+        user.setPhoto(new Photo("test"));
+        return user;
     }
 
     public static Comment testComment() {
@@ -254,5 +262,23 @@ public class DataGenerator {
                 "Test Apartment",
                 STANDARD
         );
+    }
+
+    public static Reservation testReservation() {
+        Reservation reservation = new Reservation();
+        reservation.setDateTime(now());
+        ReservationDetails reservationDetails = new ReservationDetails(
+                now().minusDays(1), now(),
+                valueOf(10_000), new Price(1, valueOf(10_000))
+        );
+        reservation.setDetails(reservationDetails);
+        return reservation;
+    }
+
+    public static ApartmentInstance testApartmentInstance() {
+        ApartmentInstance instance = new ApartmentInstance();
+        instance.setName("Name");
+        instance.setBookingICalUrl("link://");
+        return instance;
     }
 }
