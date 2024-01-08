@@ -27,18 +27,10 @@ import ua.mibal.booking.model.dto.request.ChangeUserDetailsDto;
 import ua.mibal.booking.model.dto.request.DeleteMeDto;
 import ua.mibal.booking.model.dto.response.UserDto;
 import ua.mibal.booking.model.entity.User;
-import ua.mibal.booking.model.entity.embeddable.Phone;
 import ua.mibal.booking.model.exception.IllegalPasswordException;
 import ua.mibal.booking.model.exception.entity.UserNotFoundException;
 import ua.mibal.booking.model.mapper.UserMapper;
 import ua.mibal.booking.repository.UserRepository;
-
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
-import static java.util.Map.of;
 
 /**
  * @author Mykhailo Balakhon
@@ -95,26 +87,13 @@ public class UserService {
     public void changeDetails(ChangeUserDetailsDto changeUserDetailsDto,
                               String email) {
         User user = getOneByEmail(email);
-        performIfNotNull(of(
-                (Supplier<String>) changeUserDetailsDto::firstName, user::setFirstName,
-                changeUserDetailsDto::lastName, user::setLastName,
-                changeUserDetailsDto::phone, phone -> user.setPhone(new Phone(phone))
-        ));
+        userMapper.update(user, changeUserDetailsDto);
     }
 
     @Transactional
     public void changeNotificationSettings(ChangeNotificationSettingsDto changeNotificationSettingsDto,
                                            String email) {
         User user = getOneByEmail(email);
-        performIfNotNull(of(
-                (Supplier<Boolean>) changeNotificationSettingsDto::receiveOrderEmails, user.getNotificationSettings()::setReceiveOrderEmails,
-                changeNotificationSettingsDto::receiveNewsEmails, user.getNotificationSettings()::setReceiveNewsEmails
-        ));
-    }
-
-    private <T> void performIfNotNull(Map<Supplier<T>, Consumer<T>> fieldsMap) {
-        fieldsMap.forEach((sup, con) ->
-                Optional.ofNullable(sup.get()).ifPresent(con)
-        );
+        userMapper.update(user.getNotificationSettings(), changeNotificationSettingsDto);
     }
 }

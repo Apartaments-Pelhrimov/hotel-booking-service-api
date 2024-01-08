@@ -37,16 +37,17 @@ import ua.mibal.booking.model.dto.request.DeleteMeDto;
 import ua.mibal.booking.model.dto.response.UserDto;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.entity.embeddable.NotificationSettings;
+import ua.mibal.booking.model.entity.embeddable.Phone;
 import ua.mibal.booking.model.exception.IllegalPasswordException;
 import ua.mibal.booking.model.exception.entity.UserNotFoundException;
 import ua.mibal.booking.model.mapper.UserMapper;
 import ua.mibal.booking.repository.UserRepository;
+import ua.mibal.booking.testUtils.DataGenerator;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.Mockito.never;
@@ -287,15 +288,18 @@ class UserService_UnitTest {
             "name,name,null",
     }, nullValues = "null")
     void changeDetails_should_update_dynamic(String firstName, String lastName, String phone) {
-        User emptyUser = new User();
+        User test = DataGenerator.testUser();
+        String oldFirstName = test.getFirstName();
+        String oldLastName = test.getLastName();
+        Phone oldPhone = test.getPhone();
         when(userRepository.findByEmail("email"))
-                .thenReturn(Optional.of(emptyUser));
+                .thenReturn(Optional.of(test));
 
         service.changeDetails(new ChangeUserDetailsDto(firstName, lastName, phone), "email");
 
-        if (firstName == null) assertNull(emptyUser.getFirstName());
-        if (lastName == null) assertNull(emptyUser.getLastName());
-        if (phone == null) assertNull(emptyUser.getPhone());
+        if (firstName == null) assertEquals(oldFirstName, test.getFirstName());
+        if (lastName == null) assertEquals(oldLastName, test.getLastName());
+        if (phone == null) assertEquals(oldPhone, test.getPhone());
     }
 
     @Test

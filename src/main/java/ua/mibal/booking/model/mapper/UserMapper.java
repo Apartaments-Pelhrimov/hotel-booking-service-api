@@ -19,10 +19,14 @@ package ua.mibal.booking.model.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
+import org.mapstruct.MappingTarget;
 import ua.mibal.booking.model.dto.auth.AuthResponseDto;
 import ua.mibal.booking.model.dto.auth.RegistrationDto;
+import ua.mibal.booking.model.dto.request.ChangeNotificationSettingsDto;
+import ua.mibal.booking.model.dto.request.ChangeUserDetailsDto;
 import ua.mibal.booking.model.dto.response.UserDto;
 import ua.mibal.booking.model.entity.User;
+import ua.mibal.booking.model.entity.embeddable.NotificationSettings;
 
 /**
  * @author Mykhailo Balakhon
@@ -40,4 +44,9 @@ public interface UserMapper {
     @Mapping(target = "phone", source = "phone.number")
     @Mapping(target = "photo", source = "photo.photoLink")
     UserDto toDto(User user);
+
+    @Mapping(target = "phone.number", source = "phone")
+    void update(@MappingTarget User user, ChangeUserDetailsDto changeUserDetailsDto);
+
+    void update(@MappingTarget NotificationSettings notificationSettings, ChangeNotificationSettingsDto changeNotificationSettingsDto);
 }
