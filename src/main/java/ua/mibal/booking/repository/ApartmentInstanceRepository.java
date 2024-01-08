@@ -14,30 +14,14 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.mapper;
+package ua.mibal.booking.repository;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.MappingConstants;
-import ua.mibal.booking.model.dto.request.CreateApartmentDto;
-import ua.mibal.booking.model.dto.request.CreateApartmentInstanceDto;
-import ua.mibal.booking.model.dto.response.ApartmentCardDto;
-import ua.mibal.booking.model.dto.response.ApartmentDto;
-import ua.mibal.booking.model.entity.Apartment;
+import org.springframework.data.jpa.repository.JpaRepository;
 import ua.mibal.booking.model.entity.ApartmentInstance;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Mapper(uses = PhotoMapper.class,
-        componentModel = MappingConstants.ComponentModel.SPRING)
-public interface ApartmentMapper {
-
-    ApartmentDto toDto(Apartment apartment);
-
-    ApartmentCardDto toCardDto(Apartment apartment);
-
-    Apartment toEntity(CreateApartmentDto createApartmentDto);
-
-    ApartmentInstance toInstance(CreateApartmentInstanceDto createApartmentInstanceDto);
+public interface ApartmentInstanceRepository extends JpaRepository<ApartmentInstance, Long> {
 }

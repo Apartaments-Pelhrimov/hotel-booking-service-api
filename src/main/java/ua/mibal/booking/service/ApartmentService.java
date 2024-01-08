@@ -29,6 +29,7 @@ import ua.mibal.booking.model.dto.response.ApartmentDto;
 import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.entity.ApartmentInstance;
 import ua.mibal.booking.model.exception.ApartmentIsNotAvialableForReservation;
+import ua.mibal.booking.model.exception.entity.ApartmentInstanceNotFoundException;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.model.mapper.ApartmentMapper;
 import ua.mibal.booking.model.request.ReservationFormRequest;
@@ -115,7 +116,8 @@ public class ApartmentService {
     }
 
     public void deleteInstance(Long id) {
-
+        validateInstanceExists(id);
+        apartmentInstanceRepository.deleteById(id);
     }
 
     public void addRoom(Long id, RoomDto roomDto) {
@@ -137,6 +139,12 @@ public class ApartmentService {
     private void validateExists(Long id) {
         if (!apartmentRepository.existsById(id)) {
             throw new ApartmentNotFoundException(id);
+        }
+    }
+
+    private void validateInstanceExists(Long id) {
+        if (!apartmentInstanceRepository.existsById(id)) {
+            throw new ApartmentInstanceNotFoundException(id);
         }
     }
 }

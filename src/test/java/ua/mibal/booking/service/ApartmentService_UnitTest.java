@@ -33,6 +33,7 @@ import ua.mibal.booking.model.dto.response.ApartmentDto;
 import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.entity.ApartmentInstance;
 import ua.mibal.booking.model.exception.ApartmentIsNotAvialableForReservation;
+import ua.mibal.booking.model.exception.entity.ApartmentInstanceNotFoundException;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.model.mapper.ApartmentMapper;
 import ua.mibal.booking.model.request.ReservationFormRequest;
@@ -262,5 +263,28 @@ class ApartmentService_UnitTest {
         );
 
         verifyNoInteractions(apartmentMapper, apartmentInstance, apartmentInstanceRepository);
+    }
+
+    @Test
+    public void deleteInstance() {
+        Long id = 1L;
+        when(apartmentInstanceRepository.existsById(id)).thenReturn(true);
+
+        service.deleteInstance(id);
+
+        verify(apartmentInstanceRepository, times(1)).deleteById(id);
+    }
+
+    @Test
+    public void deleteInstance_should_throw_ApartmentInstanceNotFoundException() {
+        Long id = 1L;
+        when(apartmentInstanceRepository.existsById(id)).thenReturn(false);
+
+        assertThrows(
+                ApartmentInstanceNotFoundException.class,
+                () -> service.deleteInstance(id)
+        );
+
+        verify(apartmentInstanceRepository, never()).deleteById(id);
     }
 }
