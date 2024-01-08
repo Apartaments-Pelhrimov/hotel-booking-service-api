@@ -28,13 +28,16 @@ import ua.mibal.booking.model.dto.response.ApartmentCardDto;
 import ua.mibal.booking.model.dto.response.ApartmentDto;
 import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.entity.ApartmentInstance;
+import ua.mibal.booking.model.entity.Room;
 import ua.mibal.booking.model.exception.ApartmentIsNotAvialableForReservation;
 import ua.mibal.booking.model.exception.entity.ApartmentInstanceNotFoundException;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.model.mapper.ApartmentMapper;
+import ua.mibal.booking.model.mapper.RoomMapper;
 import ua.mibal.booking.model.request.ReservationFormRequest;
 import ua.mibal.booking.repository.ApartmentInstanceRepository;
 import ua.mibal.booking.repository.ApartmentRepository;
+import ua.mibal.booking.repository.RoomRepository;
 import ua.mibal.booking.service.util.DateTimeUtils;
 
 import java.time.LocalDateTime;
@@ -49,7 +52,9 @@ import java.util.List;
 public class ApartmentService {
     private final ApartmentRepository apartmentRepository;
     private final ApartmentInstanceRepository apartmentInstanceRepository;
+    private final RoomRepository roomRepository;
     private final ApartmentMapper apartmentMapper;
+    private final RoomMapper roomMapper;
     private final DateTimeUtils dateTimeUtils;
     private final BookingComReservationService bookingComReservationService;
 
@@ -120,8 +125,11 @@ public class ApartmentService {
         apartmentInstanceRepository.deleteById(id);
     }
 
-    public void addRoom(Long id, RoomDto roomDto) {
-
+    public void addRoom(Long apartmentId, RoomDto roomDto) {
+        validateExists(apartmentId);
+        Room room = roomMapper.toEntity(roomDto);
+        room.setApartment(apartmentRepository.getReferenceById(apartmentId));
+        roomRepository.save(room);
     }
 
     public void deleteRoom(Long id) {

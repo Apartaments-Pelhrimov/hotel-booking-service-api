@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,30 +14,19 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.dto.request;
+package ua.mibal.booking.model.mapper;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import ua.mibal.booking.model.entity.Room.RoomType;
-
-import java.util.List;
+import org.mapstruct.Mapper;
+import org.mapstruct.MappingConstants;
+import ua.mibal.booking.model.dto.request.RoomDto;
+import ua.mibal.booking.model.entity.Room;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public record RoomDto(
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+public interface RoomMapper {
 
-        @NotBlank
-        @Size(min = 3)
-        String name,
-
-        @Valid
-        List<BedDto> beds,
-
-        @NotNull
-        RoomType type
-) {
+    Room toEntity(RoomDto roomDto);
 }

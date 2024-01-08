@@ -137,7 +137,7 @@ public class DataGenerator {
         return Stream.of(Arguments.of(new CreateApartmentDto("correctName", COMFORT, DEFAULT,
                 of(new PriceDto(1, valueOf(10000))),
                 of(new PhotoDto("https://apple.com")),
-                of(new RoomDto(of(new BedDto(1, Bed.BedType.TRANSFORMER)), LIVING_ROOM)),
+                of(new RoomDto("correctRoomName", of(new BedDto(1, Bed.BedType.TRANSFORMER)), LIVING_ROOM)),
                 of()
         )));
     }
@@ -217,10 +217,12 @@ public class DataGenerator {
     public static List<RoomDto> incorrectRooms() {
         List<RoomDto> rooms = new java.util.ArrayList<>(
                 incorrectBeds().stream()
-                        .map(bed -> new RoomDto(of(bed), BEDROOM))
+                        .map(bed -> new RoomDto("correctRoomName", of(bed), BEDROOM))
                         .toList()
         );
-        rooms.add(new RoomDto(of(), null));
+        rooms.add(new RoomDto("correctRoomName", of(), null));
+        rooms.add(new RoomDto("", of(), BEDROOM)); // incorrect names
+        rooms.add(new RoomDto("b", of(), BEDROOM));
         return rooms;
     }
 
