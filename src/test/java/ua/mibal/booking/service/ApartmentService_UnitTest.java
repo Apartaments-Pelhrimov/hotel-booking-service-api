@@ -27,6 +27,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import ua.mibal.booking.model.dto.request.CreateApartmentDto;
+import ua.mibal.booking.model.dto.request.CreateApartmentInstanceDto;
 import ua.mibal.booking.model.dto.response.ApartmentCardDto;
 import ua.mibal.booking.model.dto.response.ApartmentDto;
 import ua.mibal.booking.model.entity.Apartment;
@@ -35,6 +36,7 @@ import ua.mibal.booking.model.exception.ApartmentIsNotAvialableForReservation;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.model.mapper.ApartmentMapper;
 import ua.mibal.booking.model.request.ReservationFormRequest;
+import ua.mibal.booking.repository.ApartmentInstanceRepository;
 import ua.mibal.booking.repository.ApartmentRepository;
 import ua.mibal.booking.service.util.DateTimeUtils;
 
@@ -69,6 +71,8 @@ class ApartmentService_UnitTest {
     @MockBean
     private ApartmentRepository apartmentRepository;
     @MockBean
+    private ApartmentInstanceRepository apartmentInstanceRepository;
+    @MockBean
     private ApartmentMapper apartmentMapper;
     @MockBean
     private DateTimeUtils dateTimeUtils;
@@ -89,6 +93,8 @@ class ApartmentService_UnitTest {
     private LocalDate dateTo;
     @Mock
     private CreateApartmentDto createApartmentDto;
+    @Mock
+    private CreateApartmentInstanceDto createApartmentInstanceDto;
 
     @Test
     void getOneDto() {
@@ -230,5 +236,31 @@ class ApartmentService_UnitTest {
         );
 
         verify(apartmentRepository, never()).deleteById(id);
+    }
+
+    @Test
+    public void addInstance() {
+        when(apartment.getId()).thenReturn(1L);
+        when(apartmentRepository.existsById(1L)).thenReturn(true);
+        when(apartmentMapper.toInstance(createApartmentInstanceDto)).thenReturn(apartmentInstance);
+        when(apartmentRepository.getReferenceById(1L)).thenReturn(apartment);
+
+        service.addInstance(apartment.getId(), createApartmentInstanceDto);
+
+        verify(apartmentInstance, times(1)).setApartment(apartment);
+        verify(apartmentInstanceRepository, times(1)).save(apartmentInstance);
+    }
+
+    @Test
+    public void addInstance_should_throw_ApartmentNotFoundException() {
+        when(apartment.getId()).thenReturn(1L);
+        when(apartmentRepository.existsById(1L)).thenReturn(false);
+
+        assertThrows(
+                ApartmentNotFoundException.class,
+                () -> service.addInstance(apartment.getId(), createApartmentInstanceDto)
+        );
+
+        verifyNoInteractions(apartmentMapper, apartmentInstance, apartmentInstanceRepository);
     }
 }

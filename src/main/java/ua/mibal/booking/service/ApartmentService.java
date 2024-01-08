@@ -32,6 +32,7 @@ import ua.mibal.booking.model.exception.ApartmentIsNotAvialableForReservation;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.model.mapper.ApartmentMapper;
 import ua.mibal.booking.model.request.ReservationFormRequest;
+import ua.mibal.booking.repository.ApartmentInstanceRepository;
 import ua.mibal.booking.repository.ApartmentRepository;
 import ua.mibal.booking.service.util.DateTimeUtils;
 
@@ -46,6 +47,7 @@ import java.util.List;
 @Service
 public class ApartmentService {
     private final ApartmentRepository apartmentRepository;
+    private final ApartmentInstanceRepository apartmentInstanceRepository;
     private final ApartmentMapper apartmentMapper;
     private final DateTimeUtils dateTimeUtils;
     private final BookingComReservationService bookingComReservationService;
@@ -105,8 +107,11 @@ public class ApartmentService {
         apartmentRepository.deleteById(id);
     }
 
-    public void addInstance(Long id, CreateApartmentInstanceDto createApartmentInstanceDto) {
-
+    public void addInstance(Long apartmentId, CreateApartmentInstanceDto createApartmentInstanceDto) {
+        validateExists(apartmentId);
+        ApartmentInstance instance = apartmentMapper.toInstance(createApartmentInstanceDto);
+        instance.setApartment(apartmentRepository.getReferenceById(apartmentId));
+        apartmentInstanceRepository.save(instance);
     }
 
     public void deleteInstance(Long id) {
