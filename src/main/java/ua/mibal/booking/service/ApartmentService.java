@@ -101,7 +101,8 @@ public class ApartmentService {
     }
 
     public void delete(Long id) {
-
+        validateExists(id);
+        apartmentRepository.deleteById(id);
     }
 
     public void addInstance(Long id, CreateApartmentInstanceDto createApartmentInstanceDto) {
@@ -126,5 +127,11 @@ public class ApartmentService {
 
     public void deletePrice(Long apartmentId, Integer person) {
 
+    }
+
+    private void validateExists(Long id) {
+        if (!apartmentRepository.existsById(id)) {
+            throw new ApartmentNotFoundException(id);
+        }
     }
 }

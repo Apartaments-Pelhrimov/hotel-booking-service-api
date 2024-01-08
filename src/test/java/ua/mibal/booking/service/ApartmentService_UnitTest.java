@@ -47,6 +47,8 @@ import static java.time.LocalDateTime.MIN;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -205,5 +207,28 @@ class ApartmentService_UnitTest {
         service.createApartment(createApartmentDto);
 
         verify(apartmentRepository).save(apartment);
+    }
+
+    @Test
+    public void delete() {
+        Long id = 1L;
+        when(apartmentRepository.existsById(id)).thenReturn(true);
+
+        service.delete(id);
+
+        verify(apartmentRepository, times(1)).deleteById(id);
+    }
+
+    @Test
+    public void delete_should_throw_ApartmentNotFoundException() {
+        Long id = 1L;
+        when(apartmentRepository.existsById(id)).thenReturn(false);
+
+        assertThrows(
+                ApartmentNotFoundException.class,
+                () -> service.delete(id)
+        );
+
+        verify(apartmentRepository, never()).deleteById(id);
     }
 }
