@@ -271,7 +271,7 @@ public class DataGenerator {
         reservation.setDateTime(now());
         ReservationDetails reservationDetails = new ReservationDetails(
                 now().minusDays(1), now(),
-                valueOf(10_000), new Price(1, valueOf(10_000))
+                valueOf(10_000), new Price(1, valueOf(10_000), null)
         );
         reservation.setDetails(reservationDetails);
         return reservation;

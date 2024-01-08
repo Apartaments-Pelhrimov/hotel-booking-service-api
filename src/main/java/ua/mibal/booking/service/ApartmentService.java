@@ -29,11 +29,14 @@ import ua.mibal.booking.model.dto.response.ApartmentDto;
 import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.entity.ApartmentInstance;
 import ua.mibal.booking.model.entity.Room;
+import ua.mibal.booking.model.entity.embeddable.Price;
 import ua.mibal.booking.model.exception.ApartmentIsNotAvialableForReservation;
 import ua.mibal.booking.model.exception.entity.ApartmentInstanceNotFoundException;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
+import ua.mibal.booking.model.exception.entity.PriceNotFoundException;
 import ua.mibal.booking.model.exception.entity.RoomNotFoundException;
 import ua.mibal.booking.model.mapper.ApartmentMapper;
+import ua.mibal.booking.model.mapper.PriceMapper;
 import ua.mibal.booking.model.mapper.RoomMapper;
 import ua.mibal.booking.model.request.ReservationFormRequest;
 import ua.mibal.booking.repository.ApartmentInstanceRepository;
@@ -56,6 +59,7 @@ public class ApartmentService {
     private final RoomRepository roomRepository;
     private final ApartmentMapper apartmentMapper;
     private final RoomMapper roomMapper;
+    private final PriceMapper priceMapper;
     private final DateTimeUtils dateTimeUtils;
     private final BookingComReservationService bookingComReservationService;
 
@@ -139,11 +143,21 @@ public class ApartmentService {
     }
 
     public void addPrice(Long id, PriceDto priceDto) {
-
+        Price price = priceMapper.toEntity(priceDto);
+        Apartment apartment = getOneFetchPrices(id);
+        apartment.addPrice(price);
     }
 
     public void deletePrice(Long apartmentId, Integer person) {
+        Apartment apartment = getOneFetchPrices(apartmentId);
+        if (!apartment.deletePrice(person)) {
+            throw new PriceNotFoundException(apartmentId, person);
+        }
+    }
 
+    private Apartment getOneFetchPrices(Long id) {
+        return apartmentRepository.findByIdFetchPrices(id)
+                .orElseThrow(() -> new ApartmentNotFoundException(id));
     }
 
     private void validateExists(Long id) {

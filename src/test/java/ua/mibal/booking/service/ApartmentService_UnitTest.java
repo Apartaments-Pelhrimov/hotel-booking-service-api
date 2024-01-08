@@ -28,17 +28,21 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import ua.mibal.booking.model.dto.request.CreateApartmentDto;
 import ua.mibal.booking.model.dto.request.CreateApartmentInstanceDto;
+import ua.mibal.booking.model.dto.request.PriceDto;
 import ua.mibal.booking.model.dto.request.RoomDto;
 import ua.mibal.booking.model.dto.response.ApartmentCardDto;
 import ua.mibal.booking.model.dto.response.ApartmentDto;
 import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.entity.ApartmentInstance;
 import ua.mibal.booking.model.entity.Room;
+import ua.mibal.booking.model.entity.embeddable.Price;
 import ua.mibal.booking.model.exception.ApartmentIsNotAvialableForReservation;
 import ua.mibal.booking.model.exception.entity.ApartmentInstanceNotFoundException;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
+import ua.mibal.booking.model.exception.entity.PriceNotFoundException;
 import ua.mibal.booking.model.exception.entity.RoomNotFoundException;
 import ua.mibal.booking.model.mapper.ApartmentMapper;
+import ua.mibal.booking.model.mapper.PriceMapper;
 import ua.mibal.booking.model.mapper.RoomMapper;
 import ua.mibal.booking.model.request.ReservationFormRequest;
 import ua.mibal.booking.repository.ApartmentInstanceRepository;
@@ -55,6 +59,7 @@ import static java.time.LocalDateTime.MIN;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -85,6 +90,8 @@ class ApartmentService_UnitTest {
     @MockBean
     private RoomMapper roomMapper;
     @MockBean
+    private PriceMapper priceMapper;
+    @MockBean
     private DateTimeUtils dateTimeUtils;
     @MockBean
     private BookingComReservationService bookingComReservationService;
@@ -109,6 +116,10 @@ class ApartmentService_UnitTest {
     private Room room;
     @Mock
     private RoomDto roomDto;
+    @Mock
+    private Price price;
+    @Mock
+    private PriceDto priceDto;
 
     @Test
     void getOneDto() {
@@ -348,5 +359,67 @@ class ApartmentService_UnitTest {
         );
 
         verify(roomRepository, never()).deleteById(id);
+    }
+
+    @Test
+    public void addPrice() {
+        Long id = 1L;
+        when(priceMapper.toEntity(priceDto)).thenReturn(price);
+        when(apartmentRepository.findByIdFetchPrices(id)).thenReturn(Optional.of(apartment));
+
+        service.addPrice(id, priceDto);
+
+        verify(apartment, times(1)).addPrice(price);
+    }
+
+    @Test
+    public void addPrice_should_throw_ApartmentNotFoundException() {
+        Long id = 1L;
+        when(priceMapper.toEntity(priceDto)).thenReturn(price);
+        when(apartmentRepository.findByIdFetchPrices(id)).thenReturn(Optional.empty());
+
+        assertThrows(
+                ApartmentNotFoundException.class,
+                () -> service.addPrice(id, priceDto)
+        );
+
+        verify(apartment, never()).addPrice(price);
+    }
+
+    @Test
+    public void deletePrice() {
+        Long id = 1L;
+        Integer person = 2;
+        when(apartmentRepository.findByIdFetchPrices(id)).thenReturn(Optional.of(apartment));
+        when(apartment.deletePrice(person)).thenReturn(true);
+
+        assertDoesNotThrow(() -> service.deletePrice(id, person));
+    }
+
+    @Test
+    public void deletePrice_should_throw_ApartmentNotFoundException() {
+        Long id = 1L;
+        Integer person = 2;
+        when(apartmentRepository.findByIdFetchPrices(id)).thenReturn(Optional.empty());
+
+        assertThrows(
+                ApartmentNotFoundException.class,
+                () -> service.deletePrice(id, person)
+        );
+
+        verify(apartment, never()).deletePrice(any());
+    }
+
+    @Test
+    public void deletePrice_should_throw_PriceNotFoundException() {
+        Long id = 1L;
+        Integer person = 2;
+        when(apartmentRepository.findByIdFetchPrices(id)).thenReturn(Optional.of(apartment));
+        when(apartment.deletePrice(person)).thenReturn(false);
+
+        assertThrows(
+                PriceNotFoundException.class,
+                () -> service.deletePrice(id, person)
+        );
     }
 }

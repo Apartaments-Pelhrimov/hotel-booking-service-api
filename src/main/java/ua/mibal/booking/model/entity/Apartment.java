@@ -191,6 +191,17 @@ public class Apartment {
                 .findFirst();
     }
 
+    public void addPrice(Price price) {
+        price.setApartment(this);
+        if (!prices.contains(price)) {
+            prices.add(price);
+        }
+    }
+
+    public boolean deletePrice(Integer person) {
+        return prices.removeIf(price -> price.getPerson().equals(person));
+    }
+
     public enum ApartmentClass {
         COMFORT, STANDARD
     }

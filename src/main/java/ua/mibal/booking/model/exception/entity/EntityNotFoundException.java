@@ -31,4 +31,9 @@ public abstract class EntityNotFoundException extends jakarta.persistence.Entity
     protected EntityNotFoundException(String userEmail) {
         super("Entity User by email='" + userEmail + "' not found");
     }
+
+    protected EntityNotFoundException(Long apartmentId, Integer people) {
+        super("Entity Price by Apartment with id=" + apartmentId +
+              " and with people count=" + people + " not found");
+    }
 }
