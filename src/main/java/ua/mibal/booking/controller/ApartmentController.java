@@ -73,7 +73,7 @@ public class ApartmentController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void change(@PathVariable Long id,
                        @RequestBody @Valid ChangeApartmentDto changeApartmentDto) {
-        apartmentService.change(changeApartmentDto, id);
+        apartmentService.update(changeApartmentDto, id);
     }
 
     @RolesAllowed("MANAGER")

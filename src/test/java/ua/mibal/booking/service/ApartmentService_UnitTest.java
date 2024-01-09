@@ -26,6 +26,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+import ua.mibal.booking.model.dto.request.ChangeApartmentDto;
 import ua.mibal.booking.model.dto.request.CreateApartmentDto;
 import ua.mibal.booking.model.dto.request.CreateApartmentInstanceDto;
 import ua.mibal.booking.model.dto.request.PriceDto;
@@ -120,6 +121,8 @@ class ApartmentService_UnitTest {
     private Price price;
     @Mock
     private PriceDto priceDto;
+    @Mock
+    private ChangeApartmentDto changeApartmentDto;
 
     @Test
     void getOneDto() {
@@ -159,7 +162,7 @@ class ApartmentService_UnitTest {
                 .thenReturn(Optional.of(apartment));
 
         Apartment actual = assertDoesNotThrow(
-                () -> service.getOne(1L)
+                () -> service.getOneFetchPhotos(1L)
         );
 
         assertEquals(apartment, actual);
@@ -172,7 +175,7 @@ class ApartmentService_UnitTest {
 
         ApartmentNotFoundException e = assertThrows(
                 ApartmentNotFoundException.class,
-                () -> service.getOne(1L)
+                () -> service.getOneFetchPhotos(1L)
         );
 
         assertEquals(
@@ -421,5 +424,28 @@ class ApartmentService_UnitTest {
                 PriceNotFoundException.class,
                 () -> service.deletePrice(id, person)
         );
+    }
+
+    @Test
+    public void update() {
+        Long id = 1L;
+        when(apartmentRepository.findById(id)).thenReturn(Optional.of(apartment));
+
+        service.update(changeApartmentDto, id);
+
+        verify(apartmentMapper, times(1)).update(apartment, changeApartmentDto);
+    }
+
+    @Test
+    public void update_should_throw_ApartmentNotFoundException() {
+        Long id = 1L;
+        when(apartmentRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(
+                ApartmentNotFoundException.class,
+                () -> service.update(changeApartmentDto, id)
+        );
+
+        verifyNoInteractions(apartmentMapper);
     }
 }

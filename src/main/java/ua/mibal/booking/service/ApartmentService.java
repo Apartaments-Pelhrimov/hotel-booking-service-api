@@ -70,7 +70,7 @@ public class ApartmentService {
                 .orElseThrow(() -> new ApartmentNotFoundException(id));
     }
 
-    public Apartment getOne(Long id) {
+    public Apartment getOneFetchPhotos(Long id) {
         return apartmentRepository.findByIdFetchPhotos(id)
                 .orElseThrow(() -> new ApartmentNotFoundException(id));
     }
@@ -109,8 +109,15 @@ public class ApartmentService {
         apartmentRepository.save(apartment);
     }
 
-    public void change(ChangeApartmentDto changeApartmentDto, Long id) {
+    @Transactional
+    public void update(ChangeApartmentDto changeApartmentDto, Long id) {
+        Apartment apartment = getOne(id);
+        apartmentMapper.update(apartment, changeApartmentDto);
+    }
 
+    private Apartment getOne(Long id) {
+        return apartmentRepository.findById(id)
+                .orElseThrow(() -> new ApartmentNotFoundException(id));
     }
 
     public void delete(Long id) {
