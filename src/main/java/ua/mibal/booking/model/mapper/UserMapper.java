@@ -16,10 +16,12 @@
 
 package ua.mibal.booking.model.mapper;
 
+import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 import ua.mibal.booking.model.dto.auth.AuthResponseDto;
 import ua.mibal.booking.model.dto.auth.RegistrationDto;
 import ua.mibal.booking.model.dto.request.ChangeNotificationSettingsDto;
@@ -45,8 +47,11 @@ public interface UserMapper {
     @Mapping(target = "photo", source = "photo.photoLink")
     UserDto toDto(User user);
 
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "phone.number", source = "phone")
     void update(@MappingTarget User user, ChangeUserDetailsDto changeUserDetailsDto);
 
-    void update(@MappingTarget NotificationSettings notificationSettings, ChangeNotificationSettingsDto changeNotificationSettingsDto);
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void update(@MappingTarget NotificationSettings notificationSettings,
+                ChangeNotificationSettingsDto changeNotificationSettingsDto);
 }
