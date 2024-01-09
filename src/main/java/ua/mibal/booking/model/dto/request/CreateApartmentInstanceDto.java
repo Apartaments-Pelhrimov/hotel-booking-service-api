@@ -16,11 +16,21 @@
 
 package ua.mibal.booking.model.dto.request;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import ua.mibal.booking.model.validation.constraints.Link;
+
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 public record CreateApartmentInstanceDto(
-        // TODO
+
+        @Size(min = 3)
+        @NotBlank
+        String name,
+
+        @Link
+        String bookingICalUrl
 ) {
 }

@@ -34,6 +34,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import ua.mibal.booking.model.dto.request.CreateApartmentDto;
+import ua.mibal.booking.model.dto.request.CreateApartmentInstanceDto;
 import ua.mibal.booking.service.ApartmentService;
 
 import static org.mockito.Mockito.times;
@@ -101,7 +102,7 @@ class ApartmentController_UnitTest {
     void create(CreateApartmentDto createApartmentDto) throws Exception {
         mvc.perform(post("/api/apartments")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsBytes(createApartmentDto)))
+                        .content(objectMapper.writeValueAsString(createApartmentDto)))
                 .andExpect(status().isCreated());
     }
 
@@ -110,7 +111,7 @@ class ApartmentController_UnitTest {
     void create_should_throw_if_dto_is_invalid(CreateApartmentDto createApartmentDto) throws Exception {
         mvc.perform(post("/api/apartments")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsBytes(createApartmentDto)))
+                        .content(objectMapper.writeValueAsString(createApartmentDto)))
                 .andExpect(status().isBadRequest());
     }
 
@@ -120,5 +121,25 @@ class ApartmentController_UnitTest {
         mvc.perform(MockMvcRequestBuilders.delete("/api/apartments/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
+    }
+
+    @ParameterizedTest
+    @MethodSource("ua.mibal.booking.testUtils.DataGenerator#validCreateApartmentInstanceDto")
+    void addInstance(CreateApartmentInstanceDto createApartmentInstanceDto) throws Exception {
+        mvc.perform(MockMvcRequestBuilders.post("/api/apartments/{id}/instances", 1)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(createApartmentInstanceDto)))
+                .andExpect(status().isCreated());
+    }
+
+    @ParameterizedTest
+    @MethodSource("ua.mibal.booking.testUtils.DataGenerator#invalidCreateApartmentInstanceDto")
+    void addInstance_should_throw_if_dto_is_invalid(CreateApartmentInstanceDto createApartmentInstanceDto) throws Exception {
+        mvc.perform(MockMvcRequestBuilders.post("/api/apartments/{id}/instances", 1)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(createApartmentInstanceDto)))
+                .andExpect(status().isBadRequest());
+
+        verifyNoInteractions(apartmentService);
     }
 }

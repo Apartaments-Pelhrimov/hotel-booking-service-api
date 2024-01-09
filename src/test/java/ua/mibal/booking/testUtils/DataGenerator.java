@@ -19,6 +19,7 @@ package ua.mibal.booking.testUtils;
 import org.junit.jupiter.params.provider.Arguments;
 import ua.mibal.booking.model.dto.request.BedDto;
 import ua.mibal.booking.model.dto.request.CreateApartmentDto;
+import ua.mibal.booking.model.dto.request.CreateApartmentInstanceDto;
 import ua.mibal.booking.model.dto.request.PhotoDto;
 import ua.mibal.booking.model.dto.request.PriceDto;
 import ua.mibal.booking.model.dto.request.RoomDto;
@@ -282,5 +283,30 @@ public class DataGenerator {
         instance.setName("Name");
         instance.setBookingICalUrl("link://");
         return instance;
+    }
+
+    public static Stream<Arguments> invalidCreateApartmentInstanceDto() {
+        return Stream.of(
+                Arguments.of(new CreateApartmentInstanceDto("na", null)),
+                Arguments.of(new CreateApartmentInstanceDto("       ", null)),
+                Arguments.of(new CreateApartmentInstanceDto("correct_name", "")),
+                Arguments.of(new CreateApartmentInstanceDto("correct_name", "invalid.com")),
+                Arguments.of(new CreateApartmentInstanceDto("correct_name", "http://invalid")),
+                Arguments.of(new CreateApartmentInstanceDto("correct_name", "https://invalid")),
+                Arguments.of(new CreateApartmentInstanceDto("correct_name", "https://invalid/fjdskl")),
+                Arguments.of(new CreateApartmentInstanceDto("correct_name", "https://invalid.com\\"))
+        );
+    }
+
+    public static Stream<Arguments> validCreateApartmentInstanceDto() {
+        return Stream.of(
+                Arguments.of(new CreateApartmentInstanceDto("correct_name ", null)),
+                Arguments.of(new CreateApartmentInstanceDto("correct name", null)),
+                Arguments.of(new CreateApartmentInstanceDto("aaa", null)),
+                Arguments.of(new CreateApartmentInstanceDto("correct_name", "https://valid.com")),
+                Arguments.of(new CreateApartmentInstanceDto("correct_name", "https://valid.com/page")),
+                Arguments.of(new CreateApartmentInstanceDto("correct_name", "http://valid.com")),
+                Arguments.of(new CreateApartmentInstanceDto("correct_name", "http://valid.com/page"))
+        );
     }
 }
