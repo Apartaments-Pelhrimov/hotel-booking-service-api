@@ -28,6 +28,8 @@ import ua.mibal.booking.model.entity.User;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Properties;
 
 /**
@@ -52,10 +54,11 @@ public class EmailSendingService {
 
     private Session getSessionByProperties(Environment env) {
         Properties props = new Properties();
-        props.put("mail.smtp.host", env.getProperty("mail.smtp.host"));
-        props.put("mail.smtp.port", env.getProperty("mail.smtp.port"));
-        props.put("mail.smtp.starttls.enable", env.getProperty("mail.smtp.starttls.enable"));
-        props.put("mail.debug", env.getProperty("mail.debug"));
+        props.put("mail.smtp.host", Objects.requireNonNull(env.getProperty("mail.smtp.host")));
+        props.put("mail.smtp.port", Objects.requireNonNull(env.getProperty("mail.smtp.port")));
+        props.put("mail.smtp.starttls.enable", Objects.requireNonNull(env.getProperty("mail.smtp.starttls.enable")));
+        Optional.ofNullable(env.getProperty("mail.debug"))
+                .ifPresent(val -> props.put("mail.debug", val));
         return Session.getInstance(props, null);
     }
 
