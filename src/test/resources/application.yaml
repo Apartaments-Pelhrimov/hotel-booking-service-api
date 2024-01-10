@@ -16,3 +16,29 @@ rsa:
 
 jwt-token:
   expiring-days: 30
+
+  mail:
+    user: 9mohapx9@gmail.com
+    password: knknuxiivdlhklwo
+
+
+
+
+mail:
+  debug: true
+  user: 9mohapx9@gmail.com
+  password: knknuxiivdlhklwo
+  smtp:
+    host: smtp.gmail.com
+    port: 587
+    starttls:
+      enable: true
+  imap:
+    host: imap.gmail.com
+    port: 993
+    starttls:
+      enable: true
+    ssl:
+      trust: imap.gmail.com
+  store:
+    protocol: imaps

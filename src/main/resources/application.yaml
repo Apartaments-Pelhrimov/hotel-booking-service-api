@@ -44,3 +44,12 @@ calendar:
   reservation-hours:
     start: 15
     end: 11
+
+mail:
+  user: 9mohapx9@gmail.com
+  password: knknuxiivdlhklwo
+  smtp:
+    host: smtp.gmail.com
+    port: 587
+    starttls:
+      enable: true

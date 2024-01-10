@@ -34,6 +34,7 @@ import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.exception.EmailAlreadyExistsException;
 import ua.mibal.booking.model.exception.entity.UserNotFoundException;
 import ua.mibal.booking.model.mapper.UserMapper;
+import ua.mibal.booking.service.email.EmailSendingService;
 import ua.mibal.booking.service.security.TokenService;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;

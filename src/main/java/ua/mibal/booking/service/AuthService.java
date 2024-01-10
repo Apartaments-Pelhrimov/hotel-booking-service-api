@@ -28,6 +28,7 @@ import ua.mibal.booking.model.entity.ActivationCode;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.exception.EmailAlreadyExistsException;
 import ua.mibal.booking.model.mapper.UserMapper;
+import ua.mibal.booking.service.email.EmailSendingService;
 import ua.mibal.booking.service.security.TokenService;
 
 /**
