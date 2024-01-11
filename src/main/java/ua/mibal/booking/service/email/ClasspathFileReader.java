@@ -20,10 +20,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 /**
@@ -34,16 +32,16 @@ import java.util.Optional;
 public class ClasspathFileReader {
 
     public String read(String path) {
-        try {
-            URL fileUrl = getUrl(path);
-            return Files.readString(Paths.get(fileUrl.toURI()));
-        } catch (URISyntaxException | IOException e) {
+        try (InputStream fileStream = getInputStream(path)) {
+            return new String(fileStream.readAllBytes(), StandardCharsets.UTF_8);
+        } catch (IOException e) {
             throw new RuntimeException("Exception while reading file", e);
         }
     }
 
-    private URL getUrl(String path) throws FileNotFoundException {
-        return Optional.ofNullable(getClass().getClassLoader().getResource(path))
+    private InputStream getInputStream(String path) throws FileNotFoundException {
+        InputStream fileStream = getClass().getClassLoader().getResourceAsStream(path);
+        return Optional.ofNullable(fileStream)
                 .orElseThrow(() -> new FileNotFoundException(
                         "File with name '" + path + "' not found in classpath"));
     }
