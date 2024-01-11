@@ -19,7 +19,6 @@ package ua.mibal.booking.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.entity.embeddable.Photo;
 import ua.mibal.booking.repository.custom.CustomUserRepository;
@@ -42,10 +41,8 @@ public interface UserRepository extends JpaRepository<User, Long>, CustomUserRep
 
     boolean existsByEmail(String email);
 
-    @Transactional
     void deleteByEmail(String email);
 
-    @Transactional
     @Modifying
     @Query("""
             update User u
