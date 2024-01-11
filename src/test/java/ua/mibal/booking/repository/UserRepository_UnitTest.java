@@ -137,7 +137,8 @@ class UserRepository_UnitTest {
 
         repository.updateUserPasswordByEmail(newPass, user.getEmail());
 
-        User mergedUser = entityManager.find(user.getClass(), user.getId());
+        entityManager.clear();
+        User mergedUser = entityManager.find(User.class, user.getId());
         assertSame(newPass, mergedUser.getPassword());
     }
 
@@ -147,7 +148,8 @@ class UserRepository_UnitTest {
 
         repository.updateUserPhotoByEmail(newPhoto, user.getEmail());
 
-        User mergedUser = entityManager.find(user.getClass(), user.getId());
+        entityManager.clear();
+        User mergedUser = entityManager.find(User.class, user.getId());
         assertSame(newPhoto, mergedUser.getPhoto());
 
     }
@@ -156,7 +158,8 @@ class UserRepository_UnitTest {
     void deleteUserPhotoByEmail() {
         repository.deleteUserPhotoByEmail(user.getEmail());
 
-        User mergedUser = entityManager.find(user.getClass(), user.getId());
+        entityManager.clear();
+        User mergedUser = entityManager.find(User.class, user.getId());
         assertNull(mergedUser.getPhoto());
     }
 
