@@ -22,18 +22,15 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.model.dto.request.ChangeApartmentDto;
 import ua.mibal.booking.model.dto.request.CreateApartmentDto;
 import ua.mibal.booking.model.dto.request.CreateApartmentInstanceDto;
-import ua.mibal.booking.model.dto.request.PriceDto;
 import ua.mibal.booking.model.dto.request.RoomDto;
 import ua.mibal.booking.model.dto.response.ApartmentCardDto;
 import ua.mibal.booking.model.dto.response.ApartmentDto;
 import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.entity.ApartmentInstance;
 import ua.mibal.booking.model.entity.Room;
-import ua.mibal.booking.model.entity.embeddable.Price;
 import ua.mibal.booking.model.exception.ApartmentIsNotAvialableForReservation;
 import ua.mibal.booking.model.exception.entity.ApartmentInstanceNotFoundException;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
-import ua.mibal.booking.model.exception.entity.PriceNotFoundException;
 import ua.mibal.booking.model.exception.entity.RoomNotFoundException;
 import ua.mibal.booking.model.mapper.ApartmentMapper;
 import ua.mibal.booking.model.mapper.PriceMapper;
@@ -149,22 +146,7 @@ public class ApartmentService {
         roomRepository.deleteById(id);
     }
 
-    @Transactional
-    public void addPrice(Long id, PriceDto priceDto) {
-        Price price = priceMapper.toEntity(priceDto);
-        Apartment apartment = getOneFetchPrices(id);
-        apartment.addPrice(price);
-    }
-
-    @Transactional
-    public void deletePrice(Long apartmentId, Integer person) {
-        Apartment apartment = getOneFetchPrices(apartmentId);
-        if (!apartment.deletePrice(person)) {
-            throw new PriceNotFoundException(apartmentId, person);
-        }
-    }
-
-    private Apartment getOneFetchPrices(Long id) {
+    public Apartment getOneFetchPrices(Long id) {
         return apartmentRepository.findByIdFetchPrices(id)
                 .orElseThrow(() -> new ApartmentNotFoundException(id));
     }
@@ -185,12 +167,5 @@ public class ApartmentService {
         if (!roomRepository.existsById(id)) {
             throw new RoomNotFoundException(id);
         }
-    }
-
-    public List<PriceDto> getPrices(Long apartmentId) {
-        return getOneFetchPrices(apartmentId)
-                .getPrices().stream()
-                .map(priceMapper::toDto)
-                .toList();
     }
 }

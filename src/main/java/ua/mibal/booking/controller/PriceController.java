@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ua.mibal.booking.model.dto.request.PriceDto;
-import ua.mibal.booking.service.ApartmentService;
+import ua.mibal.booking.service.PriceService;
 
 import java.util.List;
 
@@ -42,12 +42,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/apartments/{apartmentId}/prices")
 public class PriceController {
-    // TODO create PriceService
-    private final ApartmentService apartmentService;
+    private final PriceService priceService;
 
     @GetMapping
     public List<PriceDto> getPrices(@PathVariable Long apartmentId) {
-        return apartmentService.getPrices(apartmentId);
+        return priceService.getAllByApartment(apartmentId);
     }
 
     @RolesAllowed("MANAGER")
@@ -55,7 +54,7 @@ public class PriceController {
     @ResponseStatus(HttpStatus.CREATED)
     public void addPrice(@PathVariable Long apartmentId,
                          @RequestBody @Valid PriceDto priceDto) {
-        apartmentService.addPrice(apartmentId, priceDto);
+        priceService.addToApartment(apartmentId, priceDto);
     }
 
     @RolesAllowed("MANAGER")
@@ -63,6 +62,6 @@ public class PriceController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletePrice(@PathVariable Long apartmentId,
                             @RequestParam("person") Integer person) {
-        apartmentService.deletePrice(apartmentId, person);
+        priceService.delete(apartmentId, person);
     }
 }
