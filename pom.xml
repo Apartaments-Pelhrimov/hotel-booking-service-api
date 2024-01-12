@@ -38,6 +38,7 @@
         <ical4j.version>3.2.14</ical4j.version>
         <springdoc.version>2.2.0</springdoc.version>
         <jakarta.mail.version>2.0.1</jakarta.mail.version>
+        <instancio.version>2.9.0</instancio.version>
     </properties>
 
     <dependencies>
@@ -125,6 +126,12 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.instancio</groupId>
+            <artifactId>instancio-junit</artifactId>
+            <version>${instancio.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

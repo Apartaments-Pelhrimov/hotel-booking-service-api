@@ -16,6 +16,7 @@
 
 package ua.mibal.booking.testUtils;
 
+import org.instancio.Instancio;
 import org.junit.jupiter.params.provider.Arguments;
 import ua.mibal.booking.model.dto.request.BedDto;
 import ua.mibal.booking.model.dto.request.CreateApartmentDto;
@@ -30,9 +31,6 @@ import ua.mibal.booking.model.entity.Event;
 import ua.mibal.booking.model.entity.Reservation;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.entity.embeddable.Bed;
-import ua.mibal.booking.model.entity.embeddable.Photo;
-import ua.mibal.booking.model.entity.embeddable.Price;
-import ua.mibal.booking.model.entity.embeddable.ReservationDetails;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -45,11 +43,10 @@ import java.util.stream.Stream;
 import static java.math.BigDecimal.ONE;
 import static java.math.BigDecimal.ZERO;
 import static java.math.BigDecimal.valueOf;
-import static java.time.LocalDateTime.now;
 import static java.util.List.of;
 import static java.util.function.Function.identity;
+import static org.instancio.Select.field;
 import static ua.mibal.booking.model.entity.Apartment.ApartmentClass.COMFORT;
-import static ua.mibal.booking.model.entity.Apartment.ApartmentClass.STANDARD;
 import static ua.mibal.booking.model.entity.Room.RoomType.BEDROOM;
 import static ua.mibal.booking.model.entity.Room.RoomType.LIVING_ROOM;
 import static ua.mibal.booking.model.entity.embeddable.ApartmentOptions.DEFAULT;
@@ -242,47 +239,38 @@ public class DataGenerator {
     }
 
     public static User testUser() {
-        User user = new User(
-                "Test",
-                "User",
-                "test@mail.com",
-                "test",
-                "+380951234567"
-        );
-        user.setPhoto(new Photo("test"));
-        return user;
+        return Instancio.of(User.class)
+                .set(field(User::getId), null)
+                .set(field(User::getComments), null)
+                .set(field(User::getReservations), null)
+                .create();
     }
 
     public static Comment testComment() {
-        return new Comment(
-                "Test body",
-                1.7
-        );
+        return Instancio.of(Comment.class)
+                .set(field(Comment::getId), null)
+                .create();
     }
 
     public static Apartment testApartment() {
-        return new Apartment(
-                "Test Apartment",
-                STANDARD
-        );
+        return Instancio.of(Apartment.class)
+                .set(field(Apartment::getId), null)
+                .set(field(Apartment::getComments), null)
+                .set(field(Apartment::getApartmentInstances), null)
+                .create();
     }
 
     public static Reservation testReservation() {
-        Reservation reservation = new Reservation();
-        reservation.setDateTime(now());
-        ReservationDetails reservationDetails = new ReservationDetails(
-                now().minusDays(1), now(),
-                valueOf(10_000), new Price(1, valueOf(10_000), null)
-        );
-        reservation.setDetails(reservationDetails);
-        return reservation;
+        return Instancio.of(Reservation.class)
+                .set(field(Reservation::getId), null)
+                .set(field(Reservation::getRejections), null)
+                .create();
     }
 
     public static ApartmentInstance testApartmentInstance() {
-        ApartmentInstance instance = new ApartmentInstance();
-        instance.setName("Name");
-        instance.setBookingICalUrl("link://");
-        return instance;
+        return Instancio.of(ApartmentInstance.class)
+                .set(field(ApartmentInstance::getId), null)
+                .create();
     }
 
     public static Stream<Arguments> invalidCreateApartmentInstanceDto() {
