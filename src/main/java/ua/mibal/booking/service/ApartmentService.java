@@ -149,12 +149,14 @@ public class ApartmentService {
         roomRepository.deleteById(id);
     }
 
+    @Transactional
     public void addPrice(Long id, PriceDto priceDto) {
         Price price = priceMapper.toEntity(priceDto);
         Apartment apartment = getOneFetchPrices(id);
         apartment.addPrice(price);
     }
 
+    @Transactional
     public void deletePrice(Long apartmentId, Integer person) {
         Apartment apartment = getOneFetchPrices(apartmentId);
         if (!apartment.deletePrice(person)) {
