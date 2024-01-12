@@ -93,7 +93,7 @@ public class ApartmentController {
 
     @RolesAllowed("MANAGER")
     @DeleteMapping("/instances/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteInstance(@PathVariable Long id) {
         apartmentService.deleteInstance(id);
     }
@@ -108,7 +108,7 @@ public class ApartmentController {
 
     @RolesAllowed("MANAGER")
     @DeleteMapping("/rooms/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteRoom(@PathVariable Long id) {
         apartmentService.deleteRoom(id);
     }
@@ -123,7 +123,7 @@ public class ApartmentController {
 
     @RolesAllowed("MANAGER")
     @DeleteMapping("/{apartmentId}/prices")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletePrice(@PathVariable Long apartmentId,
                             @RequestParam("person") Integer person) {
         apartmentService.deletePrice(apartmentId, person);
