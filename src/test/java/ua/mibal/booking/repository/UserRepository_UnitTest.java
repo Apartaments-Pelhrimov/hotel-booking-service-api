@@ -150,7 +150,7 @@ class UserRepository_UnitTest {
 
         entityManager.clear();
         User mergedUser = entityManager.find(User.class, user.getId());
-        assertSame(newPhoto, mergedUser.getPhoto());
+        assertEquals(newPhoto, mergedUser.getPhoto());
 
     }
 
