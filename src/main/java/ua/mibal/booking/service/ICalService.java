@@ -55,6 +55,7 @@ public class ICalService {
     /**
      * Returns list of events from {@link InputStream} calendar file.
      * NOTICE: method closes the {@link InputStream} {@code calendarStream}.
+     *
      * @param calendarStream calendar source with events.
      * @return {@link List} of {@link Event}
      */
@@ -84,8 +85,8 @@ public class ICalService {
         return events.stream().map(event -> new VEvent(
                 toIcal(event.getStart(), calendarProps.zoneId()),
                 toIcal(event.getEnd(), calendarProps.zoneId()),
-                event.getEventName())
-        ).toList();
+                event.getEventName()
+        )).toList();
     }
 
     private Calendar initCalendar() {

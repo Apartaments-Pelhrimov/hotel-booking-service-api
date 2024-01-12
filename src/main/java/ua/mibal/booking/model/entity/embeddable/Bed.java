@@ -43,10 +43,6 @@ public class Bed {
     @Column(nullable = false)
     private BedType type;
 
-    public enum BedType {
-        BUNK, CONNECTED, TRANSFORMER
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -61,5 +57,9 @@ public class Bed {
         int result = size.hashCode();
         result = 31 * result + type.hashCode();
         return result;
+    }
+
+    public enum BedType {
+        BUNK, CONNECTED, TRANSFORMER
     }
 }

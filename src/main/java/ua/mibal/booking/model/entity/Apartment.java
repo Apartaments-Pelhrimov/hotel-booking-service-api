@@ -131,8 +131,8 @@ public class Apartment {
     private List<Comment> comments = new ArrayList<>();
 
     public Apartment() {
-         this.setOptions(ApartmentOptions.DEFAULT);
-         this.setPublished(false);
+        this.setOptions(ApartmentOptions.DEFAULT);
+        this.setPublished(false);
     }
 
     public Apartment(String name, ApartmentClass apartmentClass) {

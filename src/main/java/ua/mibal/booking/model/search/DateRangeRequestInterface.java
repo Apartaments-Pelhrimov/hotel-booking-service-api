@@ -23,6 +23,8 @@ import java.time.LocalDate;
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 public interface DateRangeRequestInterface {
+
     LocalDate getFrom();
+
     LocalDate getTo();
 }

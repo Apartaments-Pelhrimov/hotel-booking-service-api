@@ -38,7 +38,7 @@ public @interface ValidDateRange {
     String message() default
             "Required date request params must be in range: [now() < from < to]";
 
-    Class<?>[] groups() default { };
+    Class<?>[] groups() default {};
 
-    Class<? extends Payload>[] payload() default { };
+    Class<? extends Payload>[] payload() default {};
 }
