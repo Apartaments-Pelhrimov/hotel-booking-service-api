@@ -113,6 +113,11 @@ public class ApartmentController {
         apartmentService.deleteRoom(id);
     }
 
+    @GetMapping("/{apartmentId}/prices")
+    public List<PriceDto> getPrices(@PathVariable Long apartmentId) {
+        return apartmentService.getPrices(apartmentId);
+    }
+
     @RolesAllowed("MANAGER")
     @PostMapping("/{id}/prices")
     @ResponseStatus(HttpStatus.CREATED)

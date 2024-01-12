@@ -29,4 +29,6 @@ import ua.mibal.booking.model.entity.embeddable.Price;
 public interface PriceMapper {
 
     Price toEntity(PriceDto priceDto);
+
+    PriceDto toDto(Price price);
 }

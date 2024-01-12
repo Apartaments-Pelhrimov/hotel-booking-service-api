@@ -186,4 +186,11 @@ public class ApartmentService {
             throw new RoomNotFoundException(id);
         }
     }
+
+    public List<PriceDto> getPrices(Long apartmentId) {
+        return getOneFetchPrices(apartmentId)
+                .getPrices().stream()
+                .map(priceMapper::toDto)
+                .toList();
+    }
 }

@@ -448,4 +448,26 @@ class ApartmentService_UnitTest {
 
         verifyNoInteractions(apartmentMapper);
     }
+
+    @Test
+    public void getPrices() {
+        Long id = 1L;
+        when(apartmentRepository.findByIdFetchPrices(id)).thenReturn(Optional.of(apartment));
+        when(apartment.getPrices()).thenReturn(List.of());
+
+        List<PriceDto> actual = service.getPrices(id);
+
+        assertEquals(List.of(), actual);
+    }
+
+    @Test
+    public void getPrices_should_throw_ApartmentNotFoundException() {
+        Long id = 1L;
+        when(apartmentRepository.findByIdFetchPrices(id)).thenReturn(Optional.empty());
+
+        assertThrows(
+                ApartmentNotFoundException.class,
+                () -> service.getPrices(id)
+        );
+    }
 }
