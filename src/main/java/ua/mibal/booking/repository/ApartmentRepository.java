@@ -19,9 +19,7 @@ package ua.mibal.booking.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ua.mibal.booking.model.entity.Apartment;
-import ua.mibal.booking.model.entity.ApartmentInstance;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,45 +44,4 @@ public interface ApartmentRepository extends JpaRepository<Apartment, Long> {
             where a.id = ?1
             """)
     Optional<Apartment> findByIdFetchPrices(Long id);
-
-    @Query("""
-            select ai
-                from ApartmentInstance ai
-            where
-                ai.apartment.id = ?1
-                and (select (count(r.id) = 0)
-                        from Reservation r
-                        where r.apartmentInstance.id = ai.id
-                            and not (r.state = 'REJECTED' or r.details.reservedTo < ?2 or r.details.reservedFrom > ?3))
-                and (select (count(distinct tot) = 0)
-                        from ApartmentInstance ai
-                            left join ai.turningOffTimes tot
-                        where not (tot.to < ?2 or tot.from > ?3))
-                and (select (count(htot.id) = 0)
-                        from HotelTurningOffTime htot
-                        where not (htot.to < ?2 or htot.from > ?3))
-                and (select (count(a.id) > 0)
-                        from Apartment a
-                            left join a.prices p
-                        where a.id = ?1
-                            and p.person = ?4)
-            """)
-    List<ApartmentInstance> findFreeApartmentInstanceByApartmentIdAndDates(Long id, LocalDateTime from, LocalDateTime to, int people);
-
-    @Query("""
-            select ai
-                from ApartmentInstance ai
-                left join fetch ai.reservations
-            where ai.id = ?1
-            """)
-    Optional<ApartmentInstance> findInstanceByIdFetchReservations(Long id);
-
-    @Query("""
-            select ai
-                from ApartmentInstance ai
-                left join fetch ai.reservations
-            where ai.apartment.id = ?1
-                order by ai.id
-            """)
-    List<ApartmentInstance> findInstancesByApartmentIdFetchReservations(Long apartmentId);
 }

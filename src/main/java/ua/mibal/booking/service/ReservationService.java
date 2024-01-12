@@ -55,7 +55,7 @@ public class ReservationService {
     private final ReservationMapper reservationMapper;
     private final UserRepository userRepository;
     private final ApartmentRepository apartmentRepository;
-    private final ApartmentService apartmentService;
+    private final ApartmentInstanceService apartmentInstanceService;
     private final DateTimeUtils dateTimeUtils;
     private final CostCalculationService costCalculationService;
 
@@ -121,8 +121,8 @@ public class ReservationService {
 
     private Reservation reservationOf(Long apartmentId, String userEmail, ReservationFormRequest request) {
         User userReference = userRepository.getReferenceByEmail(userEmail);
-        ApartmentInstance apartmentInstance = apartmentService
-                .getFreeApartmentInstanceByApartmentId(apartmentId, request);
+        ApartmentInstance apartmentInstance = apartmentInstanceService
+                .getFreeByApartmentId(apartmentId, request);
         ReservationDetails reservationDetails = reservationDetailsOf(apartmentId, request);
         return Reservation.builder()
                 .user(userReference)

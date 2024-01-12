@@ -21,27 +21,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.model.dto.request.ChangeApartmentDto;
 import ua.mibal.booking.model.dto.request.CreateApartmentDto;
-import ua.mibal.booking.model.dto.request.CreateApartmentInstanceDto;
 import ua.mibal.booking.model.dto.request.RoomDto;
 import ua.mibal.booking.model.dto.response.ApartmentCardDto;
 import ua.mibal.booking.model.dto.response.ApartmentDto;
 import ua.mibal.booking.model.entity.Apartment;
-import ua.mibal.booking.model.entity.ApartmentInstance;
 import ua.mibal.booking.model.entity.Room;
-import ua.mibal.booking.model.exception.ApartmentIsNotAvialableForReservation;
-import ua.mibal.booking.model.exception.entity.ApartmentInstanceNotFoundException;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.model.exception.entity.RoomNotFoundException;
 import ua.mibal.booking.model.mapper.ApartmentMapper;
-import ua.mibal.booking.model.mapper.PriceMapper;
 import ua.mibal.booking.model.mapper.RoomMapper;
-import ua.mibal.booking.model.request.ReservationFormRequest;
-import ua.mibal.booking.repository.ApartmentInstanceRepository;
 import ua.mibal.booking.repository.ApartmentRepository;
 import ua.mibal.booking.repository.RoomRepository;
-import ua.mibal.booking.service.util.DateTimeUtils;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -52,13 +43,9 @@ import java.util.List;
 @Service
 public class ApartmentService {
     private final ApartmentRepository apartmentRepository;
-    private final ApartmentInstanceRepository apartmentInstanceRepository;
     private final RoomRepository roomRepository;
     private final ApartmentMapper apartmentMapper;
     private final RoomMapper roomMapper;
-    private final PriceMapper priceMapper;
-    private final DateTimeUtils dateTimeUtils;
-    private final BookingComReservationService bookingComReservationService;
 
     @Transactional(readOnly = true) // for LAZY Apartment.beds fetch
     public ApartmentDto getOneDto(Long id) {
@@ -78,27 +65,6 @@ public class ApartmentService {
                 .stream()
                 .map(apartmentMapper::toCardDto)
                 .toList();
-    }
-
-    public ApartmentInstance getFreeApartmentInstanceByApartmentId(Long apartmentId, ReservationFormRequest request) {
-        LocalDateTime from = dateTimeUtils.reserveFrom(request.from());
-        LocalDateTime to = dateTimeUtils.reserveTo(request.to());
-        List<ApartmentInstance> apartments = apartmentRepository
-                .findFreeApartmentInstanceByApartmentIdAndDates(apartmentId, from, to, request.people())
-                .stream()
-                .filter(in -> bookingComReservationService.isFree(in, from, to))
-                .toList();
-        return selectMostSuitableApartmentInstance(apartments, apartmentId, from, to);
-    }
-
-    private ApartmentInstance selectMostSuitableApartmentInstance(List<ApartmentInstance> apartments,
-                                                                  Long apartmentId,
-                                                                  LocalDateTime from,
-                                                                  LocalDateTime to) {
-        if (apartments.isEmpty()) throw new ApartmentIsNotAvialableForReservation(from, to, apartmentId);
-        if (apartments.size() == 1) return apartments.get(0);
-        // TODO implement logic
-        return apartments.get(0);
     }
 
     public void createApartment(CreateApartmentDto createApartmentDto) {
@@ -122,18 +88,6 @@ public class ApartmentService {
         apartmentRepository.deleteById(id);
     }
 
-    public void addInstance(Long apartmentId, CreateApartmentInstanceDto createApartmentInstanceDto) {
-        validateExists(apartmentId);
-        ApartmentInstance instance = apartmentMapper.toInstance(createApartmentInstanceDto);
-        instance.setApartment(apartmentRepository.getReferenceById(apartmentId));
-        apartmentInstanceRepository.save(instance);
-    }
-
-    public void deleteInstance(Long id) {
-        validateInstanceExists(id);
-        apartmentInstanceRepository.deleteById(id);
-    }
-
     public void addRoom(Long apartmentId, RoomDto roomDto) {
         validateExists(apartmentId);
         Room room = roomMapper.toEntity(roomDto);
@@ -154,12 +108,6 @@ public class ApartmentService {
     private void validateExists(Long id) {
         if (!apartmentRepository.existsById(id)) {
             throw new ApartmentNotFoundException(id);
-        }
-    }
-
-    private void validateInstanceExists(Long id) {
-        if (!apartmentInstanceRepository.existsById(id)) {
-            throw new ApartmentInstanceNotFoundException(id);
         }
     }
 

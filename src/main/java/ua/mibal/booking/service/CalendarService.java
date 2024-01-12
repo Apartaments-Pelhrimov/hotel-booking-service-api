@@ -30,6 +30,7 @@ import ua.mibal.booking.model.exception.IllegalTurningOffTimeException;
 import ua.mibal.booking.model.exception.entity.ApartmentInstanceNotFoundException;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.model.mapper.TurningOffTimeMapper;
+import ua.mibal.booking.repository.ApartmentInstanceRepository;
 import ua.mibal.booking.repository.ApartmentRepository;
 import ua.mibal.booking.repository.HotelTurningOffRepository;
 import ua.mibal.booking.repository.ReservationRepository;
@@ -54,6 +55,7 @@ import static ua.mibal.booking.service.util.DateTimeUtils.monthStartWithTime;
 @Service
 public class CalendarService {
     private final ApartmentRepository apartmentRepository;
+    private final ApartmentInstanceRepository apartmentInstanceRepository;
     private final HotelTurningOffRepository hotelTurningOffRepository;
     private final ReservationRepository reservationRepository;
     private final ICalService iCalService;
@@ -63,15 +65,15 @@ public class CalendarService {
     @Transactional(readOnly = true)
     public List<Calendar> getCalendarsForApartment(Long apartmentId, YearMonth yearMonth) {
         validateApartmentExists(apartmentId);
-        List<ApartmentInstance> instances = apartmentRepository
-                .findInstancesByApartmentIdFetchReservations(apartmentId);
+        List<ApartmentInstance> instances = apartmentInstanceRepository
+                .findByApartmentIdFetchReservations(apartmentId);
         List<? extends Event> hotelEvents = hotelTurningOffTimes(yearMonth);
         return instancesToCalendars(instances, hotelEvents, yearMonth);
     }
 
     @Transactional(readOnly = true)
     public Calendar getCalendarForApartmentInstance(Long instanceId, YearMonth yearMonth) {
-        ApartmentInstance instance = apartmentRepository.findInstanceByIdFetchReservations(instanceId)
+        ApartmentInstance instance = apartmentInstanceRepository.findByIdFetchReservations(instanceId)
                 .orElseThrow(() -> new ApartmentInstanceNotFoundException(instanceId));
         List<? extends Event> hotelEvents = hotelTurningOffTimes(yearMonth);
         return instanceToCalendar(instance, hotelEvents, yearMonth);
@@ -79,7 +81,7 @@ public class CalendarService {
 
     @Transactional(readOnly = true)
     public String getICalForApartmentInstance(Long instanceId) {
-        ApartmentInstance apartmentInstance = apartmentRepository.findInstanceByIdFetchReservations(instanceId)
+        ApartmentInstance apartmentInstance = apartmentInstanceRepository.findByIdFetchReservations(instanceId)
                 .orElseThrow(() -> new ApartmentInstanceNotFoundException(instanceId));
         List<? extends Event> hotelEvents = hotelTurningOffRepository.findFromNow();
         return instanceToICal(apartmentInstance, hotelEvents);
@@ -93,7 +95,7 @@ public class CalendarService {
 
     @Transactional
     public void turnOffApartmentInstance(Long id, TurnOffDto turnOffDto) {
-        ApartmentInstance instance = apartmentRepository.findInstanceByIdFetchReservations(id)
+        ApartmentInstance instance = apartmentInstanceRepository.findByIdFetchReservations(id)
                 .orElseThrow(() -> new ApartmentInstanceNotFoundException(id));
         validateRangeToTurnOffApartmentInstance(instance, turnOffDto.from(), turnOffDto.to());
         TurningOffTime turningOffTime = turningOffTimeMapper.apartmentfromDto(turnOffDto);
