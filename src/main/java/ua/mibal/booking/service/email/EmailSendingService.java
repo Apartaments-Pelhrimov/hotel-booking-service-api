@@ -62,7 +62,7 @@ public class EmailSendingService {
         return Session.getInstance(props, null);
     }
 
-    private void send(String recipient, String subject, Object message) {
+    private synchronized void send(String recipient, String subject, Object message) {
         try {
             MimeMessage msg = new MimeMessage(session);
             msg.setFrom(username);
@@ -82,7 +82,9 @@ public class EmailSendingService {
                 "user", user,
                 "link", type.getFrontLink(code)
         ));
-        send(user.getEmail(), type.getSubject(), filledPage);
+        new Thread(
+                () -> send(user.getEmail(), type.getSubject(), filledPage)
+        ).start();
     }
 
     public void sendActivationCode(User user, ActivationCode activationCode) {
