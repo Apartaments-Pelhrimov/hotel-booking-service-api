@@ -17,13 +17,6 @@ rsa:
 jwt-token:
   expiring-days: 30
 
-  mail:
-    user: 9mohapx9@gmail.com
-    password: knknuxiivdlhklwo
-
-
-
-
 mail:
   debug: true
   user: 9mohapx9@gmail.com
