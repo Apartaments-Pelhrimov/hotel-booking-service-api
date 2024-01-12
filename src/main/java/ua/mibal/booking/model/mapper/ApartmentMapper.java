@@ -75,10 +75,9 @@ public abstract class ApartmentMapper {
     protected Integer roomsToPeopleCount(List<Room> rooms) {
         return rooms.stream()
                 .map(Room::getBeds)
-                .mapToInt(beds ->
-                        beds.stream()
-                                .mapToInt(Bed::getSize)
-                                .sum()
+                .mapToInt(beds -> beds.stream()
+                        .mapToInt(Bed::getSize)
+                        .sum()
                 ).sum();
     }
 
