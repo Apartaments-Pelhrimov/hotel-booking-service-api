@@ -21,17 +21,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.model.dto.request.ChangeApartmentDto;
 import ua.mibal.booking.model.dto.request.CreateApartmentDto;
-import ua.mibal.booking.model.dto.request.RoomDto;
 import ua.mibal.booking.model.dto.response.ApartmentCardDto;
 import ua.mibal.booking.model.dto.response.ApartmentDto;
 import ua.mibal.booking.model.entity.Apartment;
-import ua.mibal.booking.model.entity.Room;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
-import ua.mibal.booking.model.exception.entity.RoomNotFoundException;
 import ua.mibal.booking.model.mapper.ApartmentMapper;
-import ua.mibal.booking.model.mapper.RoomMapper;
 import ua.mibal.booking.repository.ApartmentRepository;
-import ua.mibal.booking.repository.RoomRepository;
 
 import java.util.List;
 
@@ -43,9 +38,7 @@ import java.util.List;
 @Service
 public class ApartmentService {
     private final ApartmentRepository apartmentRepository;
-    private final RoomRepository roomRepository;
     private final ApartmentMapper apartmentMapper;
-    private final RoomMapper roomMapper;
 
     @Transactional(readOnly = true) // for LAZY Apartment.beds fetch
     public ApartmentDto getOneDto(Long id) {
@@ -88,18 +81,6 @@ public class ApartmentService {
         apartmentRepository.deleteById(id);
     }
 
-    public void addRoom(Long apartmentId, RoomDto roomDto) {
-        validateExists(apartmentId);
-        Room room = roomMapper.toEntity(roomDto);
-        room.setApartment(apartmentRepository.getReferenceById(apartmentId));
-        roomRepository.save(room);
-    }
-
-    public void deleteRoom(Long id) {
-        validateRoomExists(id);
-        roomRepository.deleteById(id);
-    }
-
     public Apartment getOneFetchPrices(Long id) {
         return apartmentRepository.findByIdFetchPrices(id)
                 .orElseThrow(() -> new ApartmentNotFoundException(id));
@@ -108,12 +89,6 @@ public class ApartmentService {
     private void validateExists(Long id) {
         if (!apartmentRepository.existsById(id)) {
             throw new ApartmentNotFoundException(id);
-        }
-    }
-
-    private void validateRoomExists(Long id) {
-        if (!roomRepository.existsById(id)) {
-            throw new RoomNotFoundException(id);
         }
     }
 }

@@ -28,17 +28,12 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import ua.mibal.booking.model.dto.request.ChangeApartmentDto;
 import ua.mibal.booking.model.dto.request.CreateApartmentDto;
-import ua.mibal.booking.model.dto.request.RoomDto;
 import ua.mibal.booking.model.dto.response.ApartmentCardDto;
 import ua.mibal.booking.model.dto.response.ApartmentDto;
 import ua.mibal.booking.model.entity.Apartment;
-import ua.mibal.booking.model.entity.Room;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
-import ua.mibal.booking.model.exception.entity.RoomNotFoundException;
 import ua.mibal.booking.model.mapper.ApartmentMapper;
-import ua.mibal.booking.model.mapper.RoomMapper;
 import ua.mibal.booking.repository.ApartmentRepository;
-import ua.mibal.booking.repository.RoomRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -68,11 +63,7 @@ class ApartmentService_UnitTest {
     @MockBean
     private ApartmentRepository apartmentRepository;
     @MockBean
-    private RoomRepository roomRepository;
-    @MockBean
     private ApartmentMapper apartmentMapper;
-    @MockBean
-    private RoomMapper roomMapper;
 
     @Mock
     private Apartment apartment;
@@ -82,10 +73,6 @@ class ApartmentService_UnitTest {
     private ApartmentCardDto apartmentCardDto;
     @Mock
     private CreateApartmentDto createApartmentDto;
-    @Mock
-    private Room room;
-    @Mock
-    private RoomDto roomDto;
     @Mock
     private ChangeApartmentDto changeApartmentDto;
 
@@ -195,55 +182,6 @@ class ApartmentService_UnitTest {
         );
 
         verify(apartmentRepository, never()).deleteById(id);
-    }
-
-    @Test
-    public void addRoom() {
-        when(apartment.getId()).thenReturn(1L);
-        when(apartmentRepository.existsById(1L)).thenReturn(true);
-        when(roomMapper.toEntity(roomDto)).thenReturn(room);
-        when(apartmentRepository.getReferenceById(1L)).thenReturn(apartment);
-
-        service.addRoom(apartment.getId(), roomDto);
-
-        verify(room, times(1)).setApartment(apartment);
-        verify(roomRepository, times(1)).save(room);
-    }
-
-    @Test
-    public void addRoom_should_throw_ApartmentNotFoundException() {
-        when(apartment.getId()).thenReturn(1L);
-        when(apartmentRepository.existsById(1L)).thenReturn(false);
-
-        assertThrows(
-                ApartmentNotFoundException.class,
-                () -> service.addRoom(apartment.getId(), roomDto)
-        );
-
-        verifyNoInteractions(roomMapper, room, roomRepository);
-    }
-
-    @Test
-    public void deleteRoom() {
-        Long id = 1L;
-        when(roomRepository.existsById(id)).thenReturn(true);
-
-        service.deleteRoom(id);
-
-        verify(roomRepository, times(1)).deleteById(id);
-    }
-
-    @Test
-    public void deleteRoom_should_throw_RoomNotFoundException() {
-        Long id = 1L;
-        when(roomRepository.existsById(id)).thenReturn(false);
-
-        assertThrows(
-                RoomNotFoundException.class,
-                () -> service.deleteRoom(id)
-        );
-
-        verify(roomRepository, never()).deleteById(id);
     }
 
     @Test

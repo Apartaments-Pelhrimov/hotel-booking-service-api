@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ua.mibal.booking.model.dto.request.RoomDto;
-import ua.mibal.booking.service.ApartmentService;
+import ua.mibal.booking.service.RoomService;
 
 /**
  * @author Mykhailo Balakhon
@@ -38,21 +38,20 @@ import ua.mibal.booking.service.ApartmentService;
 @RestController
 @RequestMapping("/api/apartments")
 public class RoomController {
-    // TODO create RoomService
-    private final ApartmentService apartmentService;
+    private final RoomService roomService;
 
     @RolesAllowed("MANAGER")
     @PostMapping("/{apartmentId}/rooms")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addRoom(@PathVariable Long apartmentId,
-                        @RequestBody @Valid RoomDto roomDto) {
-        apartmentService.addRoom(apartmentId, roomDto);
+    public void addToApartment(@PathVariable Long apartmentId,
+                               @RequestBody @Valid RoomDto roomDto) {
+        roomService.addToApartment(apartmentId, roomDto);
     }
 
     @RolesAllowed("MANAGER")
     @DeleteMapping("/rooms/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteRoom(@PathVariable Long id) {
-        apartmentService.deleteRoom(id);
+    public void delete(@PathVariable Long id) {
+        roomService.delete(id);
     }
 }
