@@ -29,15 +29,25 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import ua.mibal.booking.model.dto.request.ChangeApartmentDto;
+import ua.mibal.booking.model.dto.response.ApartmentCardDto;
+import ua.mibal.booking.model.dto.response.ApartmentDto;
 import ua.mibal.booking.model.entity.Apartment;
+import ua.mibal.booking.model.entity.Room;
 import ua.mibal.booking.model.entity.embeddable.ApartmentOptions;
+import ua.mibal.booking.model.entity.embeddable.Bed;
+import ua.mibal.booking.model.entity.embeddable.Price;
 
+import java.math.BigDecimal;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
+import static ua.mibal.booking.testUtils.CustomAssertions.assertEqualsList;
 
 /**
  * @author Mykhailo Balakhon
@@ -60,15 +70,53 @@ class ApartmentMapper_UnitTest {
     @Mock
     private ApartmentOptions options;
 
+    private static List<Bed> addRoomsGetBeds(Apartment apartment) {
+        List.of(
+                new Room(null, "test room", List.of(new Bed(1, Bed.BedType.BUNK)), Room.RoomType.BEDROOM, null),
+                new Room(null, "test room", List.of(new Bed(2, Bed.BedType.TRANSFORMER)), Room.RoomType.BEDROOM, null)
+        ).forEach(r -> apartment.getRooms().add(r));
+        return List.of(new Bed(1, Bed.BedType.BUNK), new Bed(2, Bed.BedType.TRANSFORMER));
+    }
+
+    private static BigDecimal addPricesGetMin(Apartment apartment) {
+        List.of(
+                new Price(1, BigDecimal.ZERO, null),
+                new Price(6, BigDecimal.TEN, null)
+        ).forEach(apartment::addPrice);
+        return BigDecimal.ZERO;
+    }
+
+    private static Integer addRoomsGetSeats(Apartment apartment) {
+        return addRoomsGetBeds(apartment).stream()
+                .mapToInt(Bed::getSize)
+                .sum();
+    }
+
+    @Test
+    void toDto_correct_maps_cost_and_beds() {
+        Apartment apartment = new Apartment();
+        BigDecimal expectedMinPrice = addPricesGetMin(apartment);
+        List<Bed> expectedBedList = addRoomsGetBeds(apartment);
+
+        ApartmentDto actual = apartmentMapper.toDto(apartment);
+
+        assertEquals(expectedMinPrice, actual.cost());
+        assertEqualsList(expectedBedList, actual.beds());
+    }
+
+    @Test
+    void toCardDto_correct_maps_cost_and_beds() {
+        Apartment apartment = new Apartment();
+        BigDecimal expectedMinPrice = addPricesGetMin(apartment);
+        Integer expectedSeatsCount = addRoomsGetSeats(apartment);
+
+        ApartmentCardDto actual = apartmentMapper.toCardDto(apartment);
+
+        assertEquals(expectedMinPrice, actual.cost());
+        assertEquals(expectedSeatsCount, actual.people());
+    }
+
     // TODO
-    @Test
-    void toDto() {
-    }
-
-    @Test
-    void toCardDto() {
-    }
-
     @Test
     void toEntity() {
     }

@@ -46,4 +46,20 @@ public class Bed {
     public enum BedType {
         BUNK, CONNECTED, TRANSFORMER
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Bed bed = (Bed) o;
+        if (!size.equals(bed.size)) return false;
+        return type == bed.type;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = size.hashCode();
+        result = 31 * result + type.hashCode();
+        return result;
+    }
 }

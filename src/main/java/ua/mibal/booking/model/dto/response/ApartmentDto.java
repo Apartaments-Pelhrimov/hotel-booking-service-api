@@ -31,7 +31,7 @@ public record ApartmentDto(
         String name,
         Set<String> photos,
         ApartmentOptions options,
-        Float rating,
+        Double rating,
         List<Bed> beds,
         BigDecimal cost
 ) {

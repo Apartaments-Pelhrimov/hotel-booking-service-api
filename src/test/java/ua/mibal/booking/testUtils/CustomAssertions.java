@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,22 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.dto.response;
+package ua.mibal.booking.testUtils;
 
-import ua.mibal.booking.model.entity.embeddable.ApartmentOptions;
+import java.util.List;
 
-import java.math.BigDecimal;
-import java.util.Set;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public record ApartmentCardDto(
-        String name,
-        Set<String> photos,
-        ApartmentOptions options,
-        Double rating,
-        Integer people,
-        BigDecimal cost
-) {
+public class CustomAssertions {
+
+    public static <T> void assertEqualsList(List<T> expected, List<T> actual) {
+        assertEquals(expected.size(), actual.size());
+        for (int i = 0; i < expected.size(); i++) {
+            assertEquals(expected.get(i), actual.get(i));
+        }
+    }
 }

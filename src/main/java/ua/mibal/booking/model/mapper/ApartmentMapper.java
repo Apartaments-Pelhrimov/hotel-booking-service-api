@@ -18,6 +18,7 @@ package ua.mibal.booking.model.mapper;
 
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
@@ -28,7 +29,13 @@ import ua.mibal.booking.model.dto.response.ApartmentCardDto;
 import ua.mibal.booking.model.dto.response.ApartmentDto;
 import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.entity.ApartmentInstance;
+import ua.mibal.booking.model.entity.Room;
 import ua.mibal.booking.model.entity.embeddable.ApartmentOptions;
+import ua.mibal.booking.model.entity.embeddable.Bed;
+import ua.mibal.booking.model.entity.embeddable.Price;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author Mykhailo Balakhon
@@ -36,19 +43,45 @@ import ua.mibal.booking.model.entity.embeddable.ApartmentOptions;
  */
 @Mapper(uses = PhotoMapper.class,
         componentModel = MappingConstants.ComponentModel.SPRING)
-public interface ApartmentMapper {
+public abstract class ApartmentMapper {
 
-    ApartmentDto toDto(Apartment apartment);
+    @Mapping(target = "cost", source = "prices")
+    @Mapping(target = "beds", source = "rooms")
+    public abstract ApartmentDto toDto(Apartment apartment);
 
-    ApartmentCardDto toCardDto(Apartment apartment);
+    @Mapping(target = "cost", source = "prices")
+    @Mapping(target = "people", source = "rooms")
+    public abstract ApartmentCardDto toCardDto(Apartment apartment);
 
-    Apartment toEntity(CreateApartmentDto createApartmentDto);
+    public abstract Apartment toEntity(CreateApartmentDto createApartmentDto);
 
-    ApartmentInstance toInstance(CreateApartmentInstanceDto createApartmentInstanceDto);
+    public abstract ApartmentInstance toInstance(CreateApartmentInstanceDto createApartmentInstanceDto);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void update(@MappingTarget Apartment apartment, ChangeApartmentDto changeApartmentDto);
+    public abstract void update(@MappingTarget Apartment apartment, ChangeApartmentDto changeApartmentDto);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void update(@MappingTarget ApartmentOptions target, ApartmentOptions source);
+    public abstract void update(@MappingTarget ApartmentOptions target, ApartmentOptions source);
+
+    protected List<Bed> roomsToBeds(List<Room> rooms) {
+        return rooms.stream()
+                .flatMap(room -> room.getBeds().stream())
+                .toList();
+    }
+
+    protected Integer roomsToPeopleCount(List<Room> rooms) {
+        return rooms.stream()
+                .map(Room::getBeds)
+                .mapToInt(beds ->
+                        beds.stream()
+                                .mapToInt(Bed::getSize)
+                                .sum()
+                ).sum();
+    }
+
+    protected BigDecimal findMinPrice(List<Price> prices) {
+        return prices.stream()
+                .map(Price::getCost)
+                .reduce(BigDecimal.ZERO, BigDecimal::min);
+    }
 }
