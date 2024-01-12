@@ -20,8 +20,8 @@ activation-code:
   length: 60
 
 aws:
-  access-key-id: AKIA2VXUQKUE74F2Z57O
-  secret-access-key: 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
+  access-key-id: ${AWS_ACCESS_KEY_ID}
+  secret-access-key: ${AWS_SECRET_ACCESS_KEY}
   region: eu-north-1
   bucket:
     name: hotel-booking-service-heroku
@@ -42,8 +42,8 @@ server:
 
 
 mail:
-  user: 9mohapx9@gmail.com
-  password: knknuxiivdlhklwo
+  user: ${MAIL_USER}
+  password: ${MAIL_PASSWORD}
   smtp:
     host: smtp.gmail.com
     port: 587

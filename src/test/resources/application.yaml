@@ -19,8 +19,8 @@ jwt-token:
 
 mail:
   debug: true
-  user: 9mohapx9@gmail.com
-  password: knknuxiivdlhklwo
+  user: ${MAIL_USER}
+  password: ${MAIL_PASSWORD}
   smtp:
     host: smtp.gmail.com
     port: 587
