@@ -152,7 +152,7 @@ public class CalendarService {
                 .filter(Reservation::notRejected)
                 .toList();
         List<Event> bookingComApartmentReservations = bookingComReservationService
-                .getEventsForApartmentInstance(apartmentInstance);
+                .getEvents(apartmentInstance);
         return union(localReservations, bookingComApartmentReservations);
     }
 

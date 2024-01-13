@@ -54,19 +54,19 @@ public class ICalService {
 
     /**
      * Returns list of events from {@link InputStream} calendar file.
-     * NOTICE: method closes the {@link InputStream} {@code calendarStream}.
+     * NOTICE: method does not close the {@link InputStream} {@code calendarStream}.
      *
      * @param calendarStream calendar source with events.
      * @return {@link List} of {@link Event}
      */
-    public List<Event> eventsFromCalendarStream(InputStream calendarStream) {
+    public List<Event> getEventsFromCalendarFile(InputStream calendarStream) {
         Calendar calendar = calendarFromInputStream(calendarStream);
         List<VEvent> vEvents = calendar.getComponents(Component.VEVENT);
         return eventsFromVEvents(vEvents);
     }
 
     private Calendar calendarFromInputStream(InputStream file) {
-        try (file) {
+        try {
             return new CalendarBuilder().build(file);
         } catch (IOException | ParserException e) {
             throw new IllegalArgumentException(e);

@@ -73,22 +73,22 @@ class BookingComReservationService_UnitTest {
 
     @Test
     @Order(1)
-    void getEventsForApartmentInstance() {
+    void getEvents() {
         when(apartmentInstance.getBookingICalUrl()).thenReturn(Optional.of(calendarUrl));
-        when(iCalService.eventsFromCalendarStream(any())).thenReturn(of(event));
+        when(iCalService.getEventsFromCalendarFile(any())).thenReturn(of(event));
 
-        List<Event> actual = service.getEventsForApartmentInstance(apartmentInstance);
+        List<Event> actual = service.getEvents(apartmentInstance);
 
         assertEquals(of(event), actual);
     }
 
     @Test
     @Order(2)
-    void getEventsForApartmentInstance_should_not_throw_NotFoundException() {
+    void getEvents_should_not_throw_NotFoundException() {
         when(apartmentInstance.getBookingICalUrl()).thenReturn(Optional.empty());
 
         assertDoesNotThrow(
-                () -> service.getEventsForApartmentInstance(apartmentInstance)
+                () -> service.getEvents(apartmentInstance)
         );
     }
 
@@ -101,12 +101,12 @@ class BookingComReservationService_UnitTest {
             "//valid_url/",
             "~/valid_url/",
     })
-    void getEventsForApartmentInstance_should_throw_IllegalArgumentException_if_uri_is_invalid(String url) {
+    void getEvents_should_throw_IllegalArgumentException_if_uri_is_invalid(String url) {
         when(apartmentInstance.getBookingICalUrl()).thenReturn(Optional.of(url));
 
         assertThrows(
                 IllegalArgumentException.class,
-                () -> service.getEventsForApartmentInstance(apartmentInstance)
+                () -> service.getEvents(apartmentInstance)
         );
     }
 
@@ -115,7 +115,7 @@ class BookingComReservationService_UnitTest {
     @MethodSource("ua.mibal.booking.testUtils.DataGenerator#eventsFactory")
     void isFree(List<Event> events, LocalDateTime from, LocalDateTime to, boolean expected) {
         when(apartmentInstance.getBookingICalUrl()).thenReturn(Optional.of(calendarUrl));
-        when(iCalService.eventsFromCalendarStream(any()))
+        when(iCalService.getEventsFromCalendarFile(any()))
                 .thenReturn(events);
 
         boolean actual = service.isFree(apartmentInstance, from, to);

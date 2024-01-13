@@ -22,15 +22,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ua.mibal.booking.model.entity.ApartmentInstance;
 import ua.mibal.booking.model.entity.Event;
+import ua.mibal.booking.model.exception.service.BookingComServiceException;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
-
-import static java.util.Collections.emptyList;
 
 /**
  * @author Mykhailo Balakhon
@@ -42,33 +42,43 @@ public class BookingComReservationService {
     private final static Logger log = LoggerFactory.getLogger(BookingComReservationService.class);
     private final ICalService iCalService;
 
-    public boolean isFree(ApartmentInstance apartmentInstance, LocalDateTime start, LocalDateTime end) {
-        List<Event> events = getEventsForApartmentInstance(apartmentInstance);
-        Predicate<Event> intersectsWithRange =
-                ev -> ev.getEnd().isAfter(start) &&
-                      ev.getStart().isBefore(end);
-        return events.stream().noneMatch(intersectsWithRange);
+    public boolean isFree(ApartmentInstance apartmentInstance,
+                          LocalDateTime reservationStart,
+                          LocalDateTime reservationEnd) {
+        Predicate<Event> intersectsReservationRange =
+                ev -> ev.getEnd().isAfter(reservationStart) &&
+                      ev.getStart().isBefore(reservationEnd);
+        return getEvents(apartmentInstance)
+                .stream()
+                .noneMatch(intersectsReservationRange);
     }
 
-    public List<Event> getEventsForApartmentInstance(ApartmentInstance apartmentInstance) {
-        return apartmentInstance.getBookingICalUrl()
-                .map(this::iCalStreamByUrl)
-                .map(iCalService::eventsFromCalendarStream)
-                .orElseGet(() -> {
-                    log.info(
-                            "No booking.com event calendar found for ApartmentInstance[id={},name={}]",
-                            apartmentInstance.getId(), apartmentInstance.getName()
-                    );
-                    return emptyList();
-                });
-    }
-
-    private InputStream iCalStreamByUrl(String bookingICalUrl) {
-        try {
-            URL url = new URL(bookingICalUrl);
-            return url.openStream();
-        } catch (IOException e) {
-            throw new IllegalArgumentException(e);
+    public List<Event> getEvents(ApartmentInstance apartmentInstance) {
+        Optional<String> calendarUrl = apartmentInstance.getBookingICalUrl();
+        if (calendarUrl.isEmpty()) {
+            log.info(
+                    "No booking.com event calendar found " +
+                    "for ApartmentInstance[id={},name={}]",
+                    apartmentInstance.getId(), apartmentInstance.getName()
+            );
+            return List.of();
         }
+        return getEventsByCalendarUrl(calendarUrl.get());
+    }
+
+    private List<Event> getEventsByCalendarUrl(String calendarUrl) {
+        try (InputStream calendar = streamFromUrl(calendarUrl)) {
+            return iCalService.getEventsFromCalendarFile(calendar);
+        } catch (IOException e) {
+            throw new BookingComServiceException(
+                    "Exception while reading ICal Calendar " +
+                    "file by link: '%s'".formatted(calendarUrl), e
+            );
+        }
+    }
+
+    private InputStream streamFromUrl(String calendarUrl) throws IOException {
+        URL url = new URL(calendarUrl);
+        return url.openStream();
     }
 }

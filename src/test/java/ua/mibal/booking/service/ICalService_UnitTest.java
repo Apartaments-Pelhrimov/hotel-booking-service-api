@@ -77,7 +77,7 @@ class ICalService_UnitTest {
         InputStream iCalFile = getClass().getResourceAsStream("/test.ics");
         List<Event> expected = DataGenerator.testEventsFromTestFile(zoneId);
 
-        List<Event> actual = service.eventsFromCalendarStream(iCalFile);
+        List<Event> actual = service.getEventsFromCalendarFile(iCalFile);
 
         assertEquals(expected, actual);
     }
