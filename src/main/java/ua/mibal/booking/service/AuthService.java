@@ -57,19 +57,21 @@ public class AuthService {
     public void register(RegistrationDto registrationDto) {
         validateExistsEmail(registrationDto.email());
         User user = saveNewUserByRegistration(registrationDto);
-        ActivationCode activationCode = activationCodeService.generateAndSaveCodeForUser(user);
+        ActivationCode activationCode =
+                activationCodeService.generateAndSaveCodeForUser(user);
         emailSendingService.sendActivationCode(user, activationCode);
     }
 
     public void activate(String activationCode) {
-        activationCodeService.activateByCode(activationCode);
+        activationCodeService.activateUserByActivationCode(activationCode);
     }
 
     @Transactional
     public void restore(String email) {
         try {
             User user = userService.getOneByEmail(email);
-            ActivationCode activationCode = activationCodeService.generateAndSaveCodeForUser(user);
+            ActivationCode activationCode =
+                    activationCodeService.generateAndSaveCodeForUser(user);
             emailSendingService.sendPasswordChangingCode(user, activationCode);
         } catch (EntityNotFoundException ignored) {
         }
@@ -77,7 +79,7 @@ public class AuthService {
 
     public void newPassword(String activationCode, ForgetPasswordDto forgetPasswordDto) {
         String encodedPassword = passwordEncoder.encode(forgetPasswordDto.password());
-        activationCodeService.changePasswordByCode(activationCode, encodedPassword);
+        activationCodeService.changeUserPasswordByActivationCode(activationCode, encodedPassword);
     }
 
     private void validateExistsEmail(String email) {

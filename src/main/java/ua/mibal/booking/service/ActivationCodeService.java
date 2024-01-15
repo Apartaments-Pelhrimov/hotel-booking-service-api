@@ -37,28 +37,34 @@ public class ActivationCodeService {
     private final CodeGenerationService codeGenerationService;
 
     @Transactional
-    public void activateByCode(String activationCode) {
-        performIfPresentByCode(activationCode, code -> {
+    public void activateUserByActivationCode(String activationCode) {
+        performCodePresent(activationCode, code -> {
             code.getUser().setEnabled(true);
             activationCodeRepository.delete(code);
         });
     }
 
     @Transactional
-    public void changePasswordByCode(String activationCode, String password) {
-        performIfPresentByCode(activationCode, code -> {
+    public void changeUserPasswordByActivationCode(String activationCode, String password) {
+        performCodePresent(activationCode, code -> {
             code.getUser().setPassword(password);
             activationCodeRepository.delete(code);
         });
     }
 
-    private void performIfPresentByCode(String activationCode, Consumer<ActivationCode> action) {
-        activationCodeRepository
-                .findByCodeFetchUser(activationCode)
-                .ifPresent(action);
+    @Transactional
+    public ActivationCode generateAndSaveCodeForUser(User user) {
+        ActivationCode activationCode = generateActivationCode(user);
+        return activationCodeRepository.save(activationCode);
     }
 
-    public ActivationCode generateAndSaveCodeForUser(User user) {
+    private void performCodePresent(String activationCode, Consumer<ActivationCode> actionIfPresent) {
+        activationCodeRepository
+                .findByCodeFetchUser(activationCode)
+                .ifPresent(actionIfPresent);
+    }
+
+    private ActivationCode generateActivationCode(User user) {
         String code = codeGenerationService.generateCode();
         ActivationCode activationCode = ActivationCode.builder()
                 .user(user)

@@ -171,7 +171,7 @@ class AuthService_UnitTest {
         authService.activate(activationCode);
 
         verify(activationCodeService, times(1))
-                .activateByCode(activationCode);
+                .activateUserByActivationCode(activationCode);
     }
 
     @Test
@@ -211,9 +211,9 @@ class AuthService_UnitTest {
         authService.newPassword(code, forgetPasswordDto);
 
         verify(activationCodeService, times(1))
-                .changePasswordByCode(code, "encoded_password");
+                .changeUserPasswordByActivationCode(code, "encoded_password");
         verify(activationCodeService, never())
-                .changePasswordByCode(code, forgetPasswordDto.password());
+                .changeUserPasswordByActivationCode(code, forgetPasswordDto.password());
 
     }
 }
