@@ -34,6 +34,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import ua.mibal.booking.model.entity.ApartmentInstance;
 import ua.mibal.booking.model.entity.Event;
+import ua.mibal.booking.model.exception.service.BookingComServiceException;
 import ua.mibal.booking.model.request.ReservationRequest;
 
 import java.time.LocalDateTime;
@@ -106,7 +107,7 @@ class BookingComReservationService_UnitTest {
         when(apartmentInstance.getBookingICalUrl()).thenReturn(Optional.of(url));
 
         assertThrows(
-                IllegalArgumentException.class,
+                BookingComServiceException.class,
                 () -> service.getEvents(apartmentInstance)
         );
     }
