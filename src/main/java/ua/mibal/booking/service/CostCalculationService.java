@@ -16,14 +16,16 @@
 
 package ua.mibal.booking.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import ua.mibal.booking.model.exception.service.CostCalculationServiceException;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.Period;
 
 import static java.math.BigDecimal.ZERO;
-import static java.math.BigDecimal.valueOf;
-import static java.time.Period.between;
 
 /**
  * @author Mykhailo Balakhon
@@ -31,19 +33,36 @@ import static java.time.Period.between;
  */
 @Service
 public class CostCalculationService {
+    private final static Logger log = LoggerFactory.getLogger(CostCalculationService.class);
 
-    public BigDecimal calculateFullCost(BigDecimal price, LocalDate from, LocalDate to) {
-        validate(price, from, to);
-        long nights = between(from, to).getDays();
-        return price.multiply(valueOf(nights));
+    public BigDecimal calculatePrice(BigDecimal oneNightPrice, LocalDate from, LocalDate to) {
+        validate(oneNightPrice, from, to);
+        BigDecimal nights = calculateNights(from, to);
+        return oneNightPrice.multiply(nights);
+    }
+
+    private BigDecimal calculateNights(LocalDate from, LocalDate to) {
+        int nights = Period.between(from, to).getDays();
+        return BigDecimal.valueOf(nights);
     }
 
     private void validate(BigDecimal price, LocalDate from, LocalDate to) {
-        if (price.compareTo(ZERO) < 0)
-            throw new IllegalArgumentException(
-                    "Illegal price=" + price);
-        if (!from.isBefore(to))
-            throw new IllegalArgumentException(
-                    "Illegal date range: from=" + from + " to=" + to);
+        if (price.compareTo(ZERO) < 0) {
+            throwE(new CostCalculationServiceException(
+                    "Illegal one night price=" + price
+            ));
+        }
+        if (!from.isBefore(to)) {
+            throwE(new CostCalculationServiceException(
+                    "Illegal date range: from=%s to=%s".formatted(
+                            from, to
+                    )
+            ));
+        }
+    }
+
+    private void throwE(RuntimeException e) {
+        log.error(e.getMessage(), e);
+        throw e;
     }
 }

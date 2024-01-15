@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+import ua.mibal.booking.model.exception.service.CostCalculationServiceException;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -47,19 +48,19 @@ class CostCalculationService_UnitTest {
 
     @ParameterizedTest
     @MethodSource("ua.mibal.booking.testUtils.DataGenerator#correctPriceCalculation")
-    void calculateFullCosts(BigDecimal oneNight, LocalDate from, LocalDate to, BigDecimal expected) {
-        var actual = service.calculateFullCost(oneNight, from, to);
+    void calculatePrice(BigDecimal oneNightPrice, LocalDate from, LocalDate to, BigDecimal expected) {
+        var actual = service.calculatePrice(oneNightPrice, from, to);
         assertEquals(expected, actual);
     }
 
     @ParameterizedTest
     @MethodSource("ua.mibal.booking.testUtils.DataGenerator#incorrectPriceCalculation")
-    void calculateFullCost_should_throw_IllegalArgumentException(BigDecimal oneNight,
-                                                                 LocalDate from,
-                                                                 LocalDate to) {
+    void calculatePrice_should_throw_IllegalArgumentException(BigDecimal oneNightPrice,
+                                                              LocalDate from,
+                                                              LocalDate to) {
         assertThrows(
-                IllegalArgumentException.class,
-                () -> service.calculateFullCost(oneNight, from, to)
+                CostCalculationServiceException.class,
+                () -> service.calculatePrice(oneNightPrice, from, to)
         );
     }
 
