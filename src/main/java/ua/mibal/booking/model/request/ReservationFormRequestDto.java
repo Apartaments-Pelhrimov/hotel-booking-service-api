@@ -14,23 +14,32 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.exception;
+package ua.mibal.booking.model.request;
 
-import ua.mibal.booking.model.request.ReservationRequest;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
+import java.time.LocalDate;
+
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class ApartmentIsNotAvialableForReservation extends BadRequestException {
+public record ReservationFormRequestDto(
 
-    public ApartmentIsNotAvialableForReservation(ReservationRequest reservationRequest) {
-        super("Apartment with id=%d is not avialable for date [%s, %s].".formatted(
-                reservationRequest.apartmentId(),
-                reservationRequest.from().format(ISO_LOCAL_DATE),
-                reservationRequest.to().format(ISO_LOCAL_DATE)
-        ));
-    }
+        @NotNull
+        @DateTimeFormat(iso = DATE)
+        LocalDate from,
+
+        @NotNull
+        @DateTimeFormat(iso = DATE)
+        LocalDate to,
+
+        @NotNull
+        @Positive
+        Integer people
+) {
 }

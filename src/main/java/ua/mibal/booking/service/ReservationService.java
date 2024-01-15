@@ -35,7 +35,7 @@ import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.model.exception.entity.ReservationNotFoundException;
 import ua.mibal.booking.model.exception.entity.UserNotFoundException;
 import ua.mibal.booking.model.mapper.ReservationMapper;
-import ua.mibal.booking.model.request.ReservationFormRequest;
+import ua.mibal.booking.model.request.ReservationFormRequestDto;
 import ua.mibal.booking.repository.ApartmentRepository;
 import ua.mibal.booking.repository.ReservationRepository;
 import ua.mibal.booking.repository.UserRepository;
@@ -113,16 +113,16 @@ public class ReservationService {
     }
 
     @Transactional
-    public void reserveApartment(Long apartmentId, String userEmail, ReservationFormRequest request) {
+    public void reserveApartment(Long apartmentId, String userEmail, ReservationFormRequestDto request) {
         validateApartmentAndUserExists(apartmentId, userEmail);
         Reservation reservation = reservationOf(apartmentId, userEmail, request);
         reservationRepository.save(reservation);
     }
 
-    private Reservation reservationOf(Long apartmentId, String userEmail, ReservationFormRequest request) {
+    private Reservation reservationOf(Long apartmentId, String userEmail, ReservationFormRequestDto request) {
         User userReference = userRepository.getReferenceByEmail(userEmail);
         ApartmentInstance apartmentInstance = apartmentInstanceService
-                .getFreeByApartmentId(apartmentId, request);
+                .getFreeOne(apartmentId, request);
         ReservationDetails reservationDetails = reservationDetailsOf(apartmentId, request);
         return Reservation.builder()
                 .user(userReference)
@@ -133,7 +133,7 @@ public class ReservationService {
                 .build();
     }
 
-    private ReservationDetails reservationDetailsOf(Long apartmentId, ReservationFormRequest request) {
+    private ReservationDetails reservationDetailsOf(Long apartmentId, ReservationFormRequestDto request) {
         Apartment apartment = apartmentRepository.findByIdFetchPrices(apartmentId)
                 .orElseThrow(() -> new ApartmentNotFoundException(apartmentId));
         Price price = apartment.getPriceForPeople(request.people())

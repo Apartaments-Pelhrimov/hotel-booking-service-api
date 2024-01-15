@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,30 +16,16 @@
 
 package ua.mibal.booking.model.request;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.time.LocalDate;
-
-import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
+import java.time.LocalDateTime;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public record ReservationFormRequest(
-
-        @NotNull
-        @DateTimeFormat(iso = DATE)
-        LocalDate from,
-
-        @NotNull
-        @DateTimeFormat(iso = DATE)
-        LocalDate to,
-
-        @NotNull
-        @Positive
-        Integer people
+public record ReservationRequest(
+        LocalDateTime from,
+        LocalDateTime to,
+        int people,
+        Long apartmentId
 ) {
 }

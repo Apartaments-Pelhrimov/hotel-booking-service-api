@@ -23,11 +23,11 @@ import org.springframework.stereotype.Service;
 import ua.mibal.booking.model.entity.ApartmentInstance;
 import ua.mibal.booking.model.entity.Event;
 import ua.mibal.booking.model.exception.service.BookingComServiceException;
+import ua.mibal.booking.model.request.ReservationRequest;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -43,11 +43,10 @@ public class BookingComReservationService {
     private final ICalService iCalService;
 
     public boolean isFree(ApartmentInstance apartmentInstance,
-                          LocalDateTime reservationStart,
-                          LocalDateTime reservationEnd) {
+                          ReservationRequest reservationRequest) {
         Predicate<Event> intersectsReservationRange =
-                ev -> ev.getEnd().isAfter(reservationStart) &&
-                      ev.getStart().isBefore(reservationEnd);
+                ev -> ev.getEnd().isAfter(reservationRequest.from()) &&
+                      ev.getStart().isBefore(reservationRequest.to());
         return getEvents(apartmentInstance)
                 .stream()
                 .noneMatch(intersectsReservationRange);

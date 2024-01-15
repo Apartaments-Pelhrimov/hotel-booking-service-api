@@ -19,18 +19,21 @@ package ua.mibal.booking.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ua.mibal.booking.model.dto.request.CreateApartmentInstanceDto;
+import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.entity.ApartmentInstance;
 import ua.mibal.booking.model.exception.ApartmentIsNotAvialableForReservation;
 import ua.mibal.booking.model.exception.entity.ApartmentInstanceNotFoundException;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.model.mapper.ApartmentInstanceMapper;
-import ua.mibal.booking.model.request.ReservationFormRequest;
+import ua.mibal.booking.model.mapper.ReservationRequestMapper;
+import ua.mibal.booking.model.request.ReservationFormRequestDto;
+import ua.mibal.booking.model.request.ReservationRequest;
 import ua.mibal.booking.repository.ApartmentInstanceRepository;
 import ua.mibal.booking.repository.ApartmentRepository;
-import ua.mibal.booking.service.util.DateTimeUtils;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * @author Mykhailo Balakhon
@@ -41,41 +44,69 @@ import java.util.List;
 public class ApartmentInstanceService {
     private final ApartmentInstanceRepository apartmentInstanceRepository;
     private final ApartmentRepository apartmentRepository;
-    private final DateTimeUtils dateTimeUtils;
     private final BookingComReservationService bookingComReservationService;
     private final ApartmentInstanceMapper apartmentInstanceMapper;
+    private final ReservationRequestMapper reservationRequestMapper;
 
-    public ApartmentInstance getFreeByApartmentId(Long apartmentId, ReservationFormRequest request) {
-        LocalDateTime from = dateTimeUtils.reserveFrom(request.from());
-        LocalDateTime to = dateTimeUtils.reserveTo(request.to());
-        List<ApartmentInstance> apartments = apartmentInstanceRepository
-                .findFreeByApartmentIdAndDates(apartmentId, from, to, request.people())
-                .stream()
-                .filter(in -> bookingComReservationService.isFree(in, from, to))
-                .toList();
-        return selectMostSuitableApartmentInstance(apartments, apartmentId, from, to);
+    public ApartmentInstance getFreeOne(Long apartmentId,
+                                        ReservationFormRequestDto requestDto) {
+        ReservationRequest request =
+                reservationRequestMapper.toReservationRequest(requestDto, apartmentId);
+        List<ApartmentInstance> free = getFree(request);
+        return selectMostSuitable(free, request);
     }
 
-    private ApartmentInstance selectMostSuitableApartmentInstance(List<ApartmentInstance> apartments,
-                                                                  Long apartmentId,
-                                                                  LocalDateTime from,
-                                                                  LocalDateTime to) {
-        if (apartments.isEmpty()) throw new ApartmentIsNotAvialableForReservation(from, to, apartmentId);
-        if (apartments.size() == 1) return apartments.get(0);
-        // TODO implement logic
-        return apartments.get(0);
-    }
-
-    public void addToApartment(Long apartmentId, CreateApartmentInstanceDto createApartmentInstanceDto) {
+    public void createForApartment(Long apartmentId,
+                                   CreateApartmentInstanceDto createApartmentInstanceDto) {
         validateApartmentExists(apartmentId);
-        ApartmentInstance instance = apartmentInstanceMapper.toEntity(createApartmentInstanceDto);
-        instance.setApartment(apartmentRepository.getReferenceById(apartmentId));
-        apartmentInstanceRepository.save(instance);
+        ApartmentInstance newInstance =
+                apartmentInstanceMapper.toEntity(createApartmentInstanceDto);
+        Apartment apartmentReference = apartmentRepository.getReferenceById(apartmentId);
+        newInstance.setApartment(apartmentReference);
+        apartmentInstanceRepository.save(newInstance);
     }
 
     public void delete(Long id) {
         validateApartmentInstanceExists(id);
         apartmentInstanceRepository.deleteById(id);
+    }
+
+    private List<ApartmentInstance> getFree(ReservationRequest reservationRequest) {
+        List<ApartmentInstance> free = getFreeLocal(reservationRequest);
+        filterFreeAtBookingCom(free, reservationRequest);
+        return free;
+    }
+
+    private List<ApartmentInstance> getFreeLocal(ReservationRequest reservationRequest) {
+        List<ApartmentInstance> freeLocal = apartmentInstanceRepository.findFreeByRequest(
+                reservationRequest.apartmentId(),
+                reservationRequest.from(),
+                reservationRequest.to(),
+                reservationRequest.people()
+        );
+        return new ArrayList<>(freeLocal);
+    }
+
+    private void filterFreeAtBookingCom(List<ApartmentInstance> freeLocal,
+                                        ReservationRequest reservationRequest) {
+        Predicate<ApartmentInstance> isNotFreeAtBookingCom =
+                apartmentInstance -> !bookingComReservationService.isFree(
+                        apartmentInstance,
+                        reservationRequest
+                );
+        freeLocal.removeIf(isNotFreeAtBookingCom);
+    }
+
+    private ApartmentInstance selectMostSuitable(List<ApartmentInstance> variants,
+                                                 ReservationRequest request) {
+        if (variants.isEmpty()) {
+            throw new ApartmentIsNotAvialableForReservation(request);
+        }
+        if (variants.size() == 1) {
+            return variants.get(0);
+        }
+        // TODO implement logic
+        return variants.get(0);
     }
 
     private void validateApartmentExists(Long id) {

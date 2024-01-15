@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ua.mibal.booking.model.dto.request.ReservationRejectingFormDto;
 import ua.mibal.booking.model.dto.response.ReservationDto;
-import ua.mibal.booking.model.request.ReservationFormRequest;
+import ua.mibal.booking.model.request.ReservationFormRequestDto;
 import ua.mibal.booking.service.ReservationService;
 
 /**
@@ -49,7 +49,7 @@ public class ReservationController {
     @PatchMapping("/apartments/{id}/reserve")
     @ResponseStatus(HttpStatus.CREATED)
     public void createReservation(@PathVariable Long id,
-                                  @Valid ReservationFormRequest request,
+                                  @Valid ReservationFormRequestDto request,
                                   Authentication authentication) {
         reservationService.reserveApartment(id, authentication.getName(), request);
     }

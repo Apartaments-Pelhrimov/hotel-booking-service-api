@@ -34,6 +34,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import ua.mibal.booking.model.entity.ApartmentInstance;
 import ua.mibal.booking.model.entity.Event;
+import ua.mibal.booking.model.request.ReservationRequest;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -118,7 +119,7 @@ class BookingComReservationService_UnitTest {
         when(iCalService.getEventsFromCalendarFile(any()))
                 .thenReturn(events);
 
-        boolean actual = service.isFree(apartmentInstance, from, to);
+        boolean actual = service.isFree(apartmentInstance, new ReservationRequest(from, to, -1, -1L));
 
         assertEquals(expected, actual);
     }

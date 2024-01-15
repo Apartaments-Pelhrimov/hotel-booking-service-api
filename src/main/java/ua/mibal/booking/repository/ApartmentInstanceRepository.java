@@ -52,7 +52,7 @@ public interface ApartmentInstanceRepository extends JpaRepository<ApartmentInst
                         where a.id = ?1
                             and p.person = ?4)
             """)
-    List<ApartmentInstance> findFreeByApartmentIdAndDates(Long id, LocalDateTime from, LocalDateTime to, int people);
+    List<ApartmentInstance> findFreeByRequest(Long id, LocalDateTime from, LocalDateTime to, int people);
 
     @Query("""
             select ai

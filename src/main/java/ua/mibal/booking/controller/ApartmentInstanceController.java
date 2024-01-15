@@ -45,7 +45,7 @@ public class ApartmentInstanceController {
     @ResponseStatus(HttpStatus.CREATED)
     public void addInstance(@PathVariable Long apartmentId,
                             @RequestBody @Valid CreateApartmentInstanceDto createApartmentInstanceDto) {
-        apartmentInstanceService.addToApartment(apartmentId, createApartmentInstanceDto);
+        apartmentInstanceService.createForApartment(apartmentId, createApartmentInstanceDto);
     }
 
     @DeleteMapping("/instances/{id}")
