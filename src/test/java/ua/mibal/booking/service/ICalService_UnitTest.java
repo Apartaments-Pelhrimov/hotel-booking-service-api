@@ -28,6 +28,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import ua.mibal.booking.config.properties.CalendarProps;
 import ua.mibal.booking.model.entity.Event;
+import ua.mibal.booking.model.mapper.CalendarFormatMapper;
 import ua.mibal.booking.testUtils.DataGenerator;
 
 import java.io.InputStream;
@@ -43,13 +44,15 @@ import static ua.mibal.booking.testUtils.ICalTestUtils.mustContainEvents;
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = ICalService.class)
+@SpringBootTest(classes = {ICalService.class, CalendarFormatMapper.class})
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class ICalService_UnitTest {
     private final static ZoneId zoneId = ZoneId.of("Europe/Kyiv");
 
     @Autowired
     private ICalService service;
+    @Autowired
+    private CalendarFormatMapper calendarFormatMapper;
 
     @MockBean
     private CalendarProps calendarProps;

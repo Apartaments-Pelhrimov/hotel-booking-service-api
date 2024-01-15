@@ -35,3 +35,11 @@ mail:
       trust: imap.gmail.com
   store:
     protocol: imaps
+
+calendar:
+  i-cal:
+    prod-id-name: Test Booking service
+  zone-id: Europe/Prague
+  reservation-hours:
+    start: 15
+    end: 11
