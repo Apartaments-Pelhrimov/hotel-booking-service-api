@@ -63,19 +63,10 @@ public class ExceptionHandlerAdvice {
 
     @ExceptionHandler({
             BadRequestException.class,
-            MultipartException.class
+            MultipartException.class, // Exception while load so big photo file to server
     })
     public ResponseEntity<ApiError> handleBadRequestException(Exception e) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
-        return ResponseEntity.status(status)
-                .body(ApiError.ofException(status, e));
-    }
-
-    @ExceptionHandler({
-            RestClientResponseException.class
-    })
-    public ResponseEntity<ApiError> handleRestClientResponseException(RestClientResponseException e) {
-        HttpStatus status = HttpStatus.valueOf(e.getStatusCode().value());
         return ResponseEntity.status(status)
                 .body(ApiError.ofException(status, e));
     }
@@ -87,10 +78,7 @@ public class ExceptionHandlerAdvice {
                 .body(ApiError.ofException(status, e));
     }
 
-    @ExceptionHandler({
-            Exception.class,
-            InternalServerException.class
-    })
+    @ExceptionHandler(InternalServerException.class)
     public ResponseEntity<ApiError> handleInternalServerException(Exception e) {
         log.error("An Internal error occurred", e);
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
