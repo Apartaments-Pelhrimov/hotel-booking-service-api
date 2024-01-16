@@ -16,9 +16,8 @@
 
 package ua.mibal.booking.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import ua.mibal.booking.model.exception.IllegalReservationDateRangeException;
 import ua.mibal.booking.model.exception.service.CostCalculationServiceException;
 
 import java.math.BigDecimal;
@@ -33,7 +32,6 @@ import static java.math.BigDecimal.ZERO;
  */
 @Service
 public class CostCalculationService {
-    private final static Logger log = LoggerFactory.getLogger(CostCalculationService.class);
 
     public BigDecimal calculatePrice(BigDecimal oneNightPrice, LocalDate from, LocalDate to) {
         validate(oneNightPrice, from, to);
@@ -48,21 +46,12 @@ public class CostCalculationService {
 
     private void validate(BigDecimal price, LocalDate from, LocalDate to) {
         if (price.compareTo(ZERO) < 0) {
-            throwE(new CostCalculationServiceException(
+            throw new CostCalculationServiceException(
                     "Illegal one night price=" + price
-            ));
+            );
         }
         if (!from.isBefore(to)) {
-            throwE(new CostCalculationServiceException(
-                    "Illegal date range: from=%s to=%s".formatted(
-                            from, to
-                    )
-            ));
+            throw new IllegalReservationDateRangeException(from, to);
         }
-    }
-
-    private void throwE(RuntimeException e) {
-        log.error(e.getMessage(), e);
-        throw e;
     }
 }

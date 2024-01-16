@@ -16,11 +16,13 @@
 
 package ua.mibal.booking.model.exception.service;
 
+import ua.mibal.booking.model.exception.marker.InternalServerException;
+
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class ICalServiceException extends RuntimeException {
+public class ICalServiceException extends InternalServerException {
 
     public ICalServiceException(String message, Exception cause) {
         super(message, cause);

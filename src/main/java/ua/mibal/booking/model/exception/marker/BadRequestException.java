@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.exception.service;
-
-import ua.mibal.booking.model.exception.marker.InternalServerException;
+package ua.mibal.booking.model.exception.marker;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class CostCalculationServiceException extends InternalServerException {
+public abstract class BadRequestException extends RuntimeException {
 
-    public CostCalculationServiceException(String message) {
+    public BadRequestException(String message) {
         super(message);
     }
 }

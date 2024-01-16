@@ -17,6 +17,7 @@
 package ua.mibal.booking.model.exception;
 
 import ua.mibal.booking.model.entity.User;
+import ua.mibal.booking.model.exception.marker.BadRequestException;
 
 /**
  * @author Mykhailo Balakhon

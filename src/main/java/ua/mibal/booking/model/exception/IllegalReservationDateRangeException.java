@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,17 @@
 
 package ua.mibal.booking.model.exception;
 
+import ua.mibal.booking.model.exception.marker.BadRequestException;
+
+import java.time.LocalDate;
+
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class NotFoundException extends RuntimeException {
+public class IllegalReservationDateRangeException extends BadRequestException {
 
-    public NotFoundException(String message) {
-        super(message);
+    public IllegalReservationDateRangeException(LocalDate from, LocalDate to) {
+        super("Illegal date range: from=%s to=%s".formatted(from, to));
     }
 }

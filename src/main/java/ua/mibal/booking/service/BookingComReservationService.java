@@ -69,10 +69,10 @@ public class BookingComReservationService {
         try (InputStream calendar = streamFromUrl(calendarUrl)) {
             return iCalService.getEventsFromCalendarFile(calendar);
         } catch (IOException e) {
-            String message = "Exception while reading ICal Calendar " +
-                             "file by link: '%s'".formatted(calendarUrl);
-            log.warn(message, e);
-            throw new BookingComServiceException(message, e);
+            throw new BookingComServiceException(
+                    "Exception while reading ICal Calendar " +
+                    "file by link: '%s'".formatted(calendarUrl), e
+            );
         }
     }
 

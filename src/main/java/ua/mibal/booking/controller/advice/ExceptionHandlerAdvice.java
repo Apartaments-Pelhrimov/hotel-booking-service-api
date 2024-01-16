@@ -17,16 +17,20 @@
 package ua.mibal.booking.controller.advice;
 
 import jakarta.persistence.EntityNotFoundException;
-import lombok.Data;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ua.mibal.booking.model.exception.BadRequestException;
-import ua.mibal.booking.model.exception.NotFoundException;
+import org.springframework.web.client.RestClientResponseException;
+import org.springframework.web.multipart.MultipartException;
+import ua.mibal.booking.model.exception.marker.BadRequestException;
+import ua.mibal.booking.model.exception.marker.InternalServerException;
+import ua.mibal.booking.model.exception.marker.NotFoundException;
 
-import java.time.ZonedDateTime;
 import java.util.stream.Collectors;
 
 /**
@@ -35,6 +39,7 @@ import java.util.stream.Collectors;
  */
 @RestControllerAdvice
 public class ExceptionHandlerAdvice {
+    private final static Logger log = LoggerFactory.getLogger(ExceptionHandlerAdvice.class);
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiError> handleValidationException(MethodArgumentNotValidException e) {
@@ -48,7 +53,7 @@ public class ExceptionHandlerAdvice {
                 .map(er -> String.format(template, er.getField(), er.getRejectedValue(), er.getDefaultMessage()))
                 .collect(Collectors.joining(" "));
         return ResponseEntity.status(status)
-                .body(new ApiError(status, e, (objErrors + " " + fieldErrors).trim()));
+                .body(ApiError.ofExceptionAndMessage(status, e, (objErrors + " " + fieldErrors).trim()));
     }
 
     @ExceptionHandler({
@@ -58,40 +63,43 @@ public class ExceptionHandlerAdvice {
     public ResponseEntity<ApiError> handleValidationException(Exception e) {
         HttpStatus status = HttpStatus.NOT_FOUND;
         return ResponseEntity.status(status)
-                .body(new ApiError(status, e));
+                .body(ApiError.ofException(status, e));
     }
 
-    @ExceptionHandler(BadRequestException.class)
+    @ExceptionHandler({
+            BadRequestException.class,
+            MultipartException.class
+    })
     public ResponseEntity<ApiError> handleEmailAlreadyExistsException(Exception e) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         return ResponseEntity.status(status)
-                .body(new ApiError(status, e));
+                .body(ApiError.ofException(status, e));
     }
 
-    @Data
-    public static class ApiError {
-        private ZonedDateTime timestamp;
-        private Integer status;
-        private String error;
-        private String message;
+    @ExceptionHandler({
+            RestClientResponseException.class
+    })
+    public ResponseEntity<ApiError> handleRestClientResponseException(RestClientResponseException e) {
+        HttpStatus status = HttpStatus.valueOf(e.getStatusCode().value());
+        return ResponseEntity.status(status)
+                .body(ApiError.ofException(status, e));
+    }
 
-        public ApiError(Integer status, String error, String message) {
-            this.timestamp = ZonedDateTime.now();
-            this.status = status;
-            this.error = error;
-            this.message = message;
-        }
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiError> handleOtherException(AccessDeniedException e) {
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        return ResponseEntity.status(status)
+                .body(ApiError.ofException(status, e));
+    }
 
-        public ApiError(HttpStatus status, Exception e) {
-            this(status, e, e.getMessage());
-        }
-
-        public ApiError(HttpStatus status, Exception e, String message) {
-            this(
-                    status.value(),
-                    e.getClass().getSimpleName(),
-                    message
-            );
-        }
+    @ExceptionHandler({
+            Exception.class,
+            InternalServerException.class
+    })
+    public ResponseEntity<ApiError> handleOtherException(Exception e) {
+        log.error("An Internal error occurred", e);
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        return ResponseEntity.status(status)
+                .body(ApiError.ofException(status, e));
     }
 }

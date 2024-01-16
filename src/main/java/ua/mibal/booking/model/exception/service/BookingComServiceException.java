@@ -16,13 +16,15 @@
 
 package ua.mibal.booking.model.exception.service;
 
+import ua.mibal.booking.model.exception.marker.InternalServerException;
+
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class BookingComServiceException extends RuntimeException {
+public class BookingComServiceException extends InternalServerException {
 
-    public BookingComServiceException(String message, Exception cause) {
+    public BookingComServiceException(String message, Throwable cause) {
         super(message, cause);
     }
 }

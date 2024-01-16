@@ -16,6 +16,8 @@
 
 package ua.mibal.booking.model.exception;
 
+import ua.mibal.booking.model.exception.marker.BadRequestException;
+
 import java.time.LocalDateTime;
 
 /**

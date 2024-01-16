@@ -16,6 +16,7 @@
 
 package ua.mibal.booking.model.exception;
 
+import ua.mibal.booking.model.exception.marker.BadRequestException;
 import ua.mibal.booking.model.request.ReservationRequest;
 
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
