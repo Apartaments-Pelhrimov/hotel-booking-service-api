@@ -90,7 +90,7 @@ public class ApartmentInstanceService {
     private void filterFreeAtBookingCom(List<ApartmentInstance> freeLocal,
                                         ReservationRequest reservationRequest) {
         Predicate<ApartmentInstance> isNotFreeAtBookingCom =
-                apartmentInstance -> !bookingComReservationService.isFree(
+                apartmentInstance -> !bookingComReservationService.isFreeForReservation(
                         apartmentInstance,
                         reservationRequest
                 );

@@ -105,9 +105,9 @@ class ApartmentInstanceService_UnitTest {
                 .thenReturn(reservationRequest);
         when(apartmentInstanceRepository.findFreeByRequest(id, MIN, MAX, people))
                 .thenReturn(List.of(apartmentInstance2, apartmentInstance));
-        when(bookingComReservationService.isFree(apartmentInstance2, reservationRequest))
+        when(bookingComReservationService.isFreeForReservation(apartmentInstance2, reservationRequest))
                 .thenReturn(false);
-        when(bookingComReservationService.isFree(apartmentInstance, reservationRequest))
+        when(bookingComReservationService.isFreeForReservation(apartmentInstance, reservationRequest))
                 .thenReturn(true);
 
         ApartmentInstance actual = service

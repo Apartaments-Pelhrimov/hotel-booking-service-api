@@ -153,8 +153,8 @@ public class CalendarService {
                 .getReservations().stream()
                 .filter(Reservation::notRejected)
                 .toList();
-        List<Event> bookingComApartmentReservations = bookingComReservationService
-                .getEvents(apartmentInstance);
+        List<Event> bookingComApartmentReservations =
+                bookingComReservationService.getEventsFor(apartmentInstance);
         return union(localReservations, bookingComApartmentReservations);
     }
 

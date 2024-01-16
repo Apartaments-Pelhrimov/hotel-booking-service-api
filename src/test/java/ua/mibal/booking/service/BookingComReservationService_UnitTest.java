@@ -75,22 +75,22 @@ class BookingComReservationService_UnitTest {
 
     @Test
     @Order(1)
-    void getEvents() {
+    void getEventsFor() {
         when(apartmentInstance.getBookingICalUrl()).thenReturn(Optional.of(calendarUrl));
         when(iCalService.getEventsFromCalendarFile(any())).thenReturn(of(event));
 
-        List<Event> actual = service.getEvents(apartmentInstance);
+        List<Event> actual = service.getEventsFor(apartmentInstance);
 
         assertEquals(of(event), actual);
     }
 
     @Test
     @Order(2)
-    void getEvents_should_not_throw_NotFoundException() {
+    void getEventsFor_should_not_throw_NotFoundException() {
         when(apartmentInstance.getBookingICalUrl()).thenReturn(Optional.empty());
 
         assertDoesNotThrow(
-                () -> service.getEvents(apartmentInstance)
+                () -> service.getEventsFor(apartmentInstance)
         );
     }
 
@@ -103,24 +103,24 @@ class BookingComReservationService_UnitTest {
             "//valid_url/",
             "~/valid_url/",
     })
-    void getEvents_should_throw_IllegalArgumentException_if_uri_is_invalid(String url) {
+    void getEventsFor_should_throw_IllegalArgumentException_if_uri_is_invalid(String url) {
         when(apartmentInstance.getBookingICalUrl()).thenReturn(Optional.of(url));
 
         assertThrows(
                 BookingComServiceException.class,
-                () -> service.getEvents(apartmentInstance)
+                () -> service.getEventsFor(apartmentInstance)
         );
     }
 
     @ParameterizedTest
     @Order(4)
     @MethodSource("ua.mibal.booking.testUtils.DataGenerator#eventsFactory")
-    void isFree(List<Event> events, LocalDateTime from, LocalDateTime to, boolean expected) {
+    void isisFreeForReservationFree(List<Event> events, LocalDateTime from, LocalDateTime to, boolean expected) {
         when(apartmentInstance.getBookingICalUrl()).thenReturn(Optional.of(calendarUrl));
         when(iCalService.getEventsFromCalendarFile(any()))
                 .thenReturn(events);
 
-        boolean actual = service.isFree(apartmentInstance, new ReservationRequest(from, to, -1, -1L));
+        boolean actual = service.isFreeForReservation(apartmentInstance, new ReservationRequest(from, to, -1, -1L));
 
         assertEquals(expected, actual);
     }
