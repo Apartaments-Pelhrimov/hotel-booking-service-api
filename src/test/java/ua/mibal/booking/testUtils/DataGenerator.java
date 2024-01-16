@@ -18,6 +18,7 @@ package ua.mibal.booking.testUtils;
 
 import org.instancio.Instancio;
 import org.junit.jupiter.params.provider.Arguments;
+import ua.mibal.booking.model.dto.auth.RegistrationDto;
 import ua.mibal.booking.model.dto.request.BedDto;
 import ua.mibal.booking.model.dto.request.CreateApartmentDto;
 import ua.mibal.booking.model.dto.request.CreateApartmentInstanceDto;
@@ -129,6 +130,7 @@ public class DataGenerator {
                 Arguments.of(valueOf(-1), first, fifth)
         );
     }
+
     public static Stream<Arguments> incorrectDateRangeForCalculation() {
         LocalDate first = LocalDate.of(2023, 12, 1);
         LocalDate fifth = LocalDate.of(2023, 12, 5);
@@ -303,5 +305,17 @@ public class DataGenerator {
                 Arguments.of(new CreateApartmentInstanceDto("correct_name", "http://valid.com")),
                 Arguments.of(new CreateApartmentInstanceDto("correct_name", "http://valid.com/page"))
         );
+    }
+
+    public static RegistrationDto testRegistrationDto(String email) {
+        return Instancio.of(RegistrationDto.class)
+                .set(field(RegistrationDto::email), email)
+                .generate(field(RegistrationDto::phone), gen -> gen.text().pattern("+#d#d#d#d#d#d#d#d#d#d#d#d#d#d"))
+                .generate(field(RegistrationDto::password), gen -> gen.oneOf("password1", "password123", "qwerty1234Michael"))
+                .create();
+    }
+
+    public static RegistrationDto invalidRegistrationDto() {
+        return Instancio.of(RegistrationDto.class).create();
     }
 }
