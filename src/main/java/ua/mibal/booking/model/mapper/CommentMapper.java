@@ -19,6 +19,7 @@ package ua.mibal.booking.model.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
+import ua.mibal.booking.model.dto.request.CreateCommentDto;
 import ua.mibal.booking.model.dto.response.CommentDto;
 import ua.mibal.booking.model.entity.Comment;
 
@@ -32,4 +33,6 @@ public interface CommentMapper {
     @Mapping(target = ".", source = "comment.user")
     @Mapping(target = "userPhotoLink", source = "comment.user.photo.photoLink")
     CommentDto toDto(Comment comment);
+
+    Comment toEntity(CreateCommentDto createCommentDto);
 }

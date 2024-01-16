@@ -134,6 +134,6 @@ class CommentController_UnitTest {
                 .andExpect(status().isOk());
 
         verify(commentService, times(1))
-                .addCommentToApartment(createCommentDto, any(), apartmentId);
+                .addComment(createCommentDto, any(), apartmentId);
     }
 }

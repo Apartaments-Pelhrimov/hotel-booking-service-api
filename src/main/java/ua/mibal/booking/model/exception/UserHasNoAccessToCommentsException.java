@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,20 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.repository;
+package ua.mibal.booking.model.exception;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import ua.mibal.booking.model.entity.Comment;
+import ua.mibal.booking.model.exception.marker.BadRequestException;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public interface CommentRepository extends JpaRepository<Comment, Long> {
+public class UserHasNoAccessToCommentsException extends BadRequestException {
 
-    @Query("""
-            select c from Comment c
-                join fetch c.user
-            where c.apartment.id = ?1
-             """)
-    Page<Comment> findByApartmentIdFetchUser(Long apartmentId, Pageable pageable);
+    public UserHasNoAccessToCommentsException(String userEmail, Long apartmentId) {
+        super(
+                "User with email='%s' does not have access to comments of Apartment with id=%s"
+                        .formatted(userEmail, apartmentId)
+        );
+    }
 }
