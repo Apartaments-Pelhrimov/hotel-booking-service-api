@@ -67,10 +67,10 @@ class ICalService_UnitTest {
     }
 
     @Test
-    void calendarFromEvents() {
+    void getCalendarFromEvents() {
         List<Event> events = DataGenerator.randomEvents();
 
-        String calendar = service.calendarFromEvents(events);
+        String calendar = service.getCalendarFromEvents(events);
 
         mustContainEvents(calendar, events, zoneId);
     }

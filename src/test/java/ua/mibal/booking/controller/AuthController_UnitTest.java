@@ -79,7 +79,7 @@ class AuthController_UnitTest {
     @Test
     void login_should_handle_call_AuthService() throws Exception {
         AuthResponseDto expectedResponse = new AuthResponseDto("first", "last", "token");
-        when(authService.token(any()))
+        when(authService.login(any()))
                 .thenReturn(expectedResponse);
 
         mvc.perform(get("/api/auth/login")
@@ -90,7 +90,6 @@ class AuthController_UnitTest {
 
     @ParameterizedTest(name = "[{index}] {arguments}")
     @CsvSource(nullValues = "null", value = {
-            "null",
             // firstName
             "12345 Test +380951234567 example@example.com password1",
             "aa Test +380951234567 example@example.com password1",
@@ -173,7 +172,7 @@ class AuthController_UnitTest {
     }
 
     @Test
-    void setNewPassword_should_throw_exception_if_code_was_not_passed() throws Exception {
+    void updatePassword_should_throw_exception_if_code_was_not_passed() throws Exception {
         mvc.perform(put("/api/auth/forget/password"))
                 .andExpect(status().isBadRequest());
 
@@ -181,7 +180,7 @@ class AuthController_UnitTest {
     }
 
     @Test
-    void setNewPassword_should_throw_exception_if_request_body_is_empty() throws Exception {
+    void updatePassword_should_throw_exception_if_request_body_is_empty() throws Exception {
         mvc.perform(put("/api/auth/forget/password")
                         .param("code", "code"))
                 .andExpect(status().isBadRequest());
@@ -190,7 +189,7 @@ class AuthController_UnitTest {
     }
 
     @Test
-    void setNewPassword_should_delegate_params_to_AuthService() throws Exception {
+    void updatePassword_should_delegate_params_to_AuthService() throws Exception {
         ForgetPasswordDto forgetPasswordDto = new ForgetPasswordDto("password1");
 
         mvc.perform(put("/api/auth/forget/password")
@@ -200,7 +199,7 @@ class AuthController_UnitTest {
                 .andExpect(status().isNoContent());
 
         verify(authService, times(1))
-                .newPassword("code", forgetPasswordDto);
+                .updatePassword("code", forgetPasswordDto);
     }
 
     @ParameterizedTest

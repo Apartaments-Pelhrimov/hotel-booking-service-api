@@ -19,8 +19,8 @@ package ua.mibal.booking.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ua.mibal.booking.model.dto.request.ChangeApartmentDto;
 import ua.mibal.booking.model.dto.request.CreateApartmentDto;
+import ua.mibal.booking.model.dto.request.UpdateApartmentDto;
 import ua.mibal.booking.model.dto.response.ApartmentCardDto;
 import ua.mibal.booking.model.dto.response.ApartmentDto;
 import ua.mibal.booking.model.entity.Apartment;
@@ -41,39 +41,29 @@ public class ApartmentService {
     private final ApartmentMapper apartmentMapper;
 
     @Transactional(readOnly = true) // for LAZY Apartment.beds fetch
-    public ApartmentDto getOneDto(Long id) {
+    public ApartmentDto getOneFetchPhotosBeds(Long id) {
         return apartmentRepository.findByIdFetchPhotos(id)
                 .map(apartmentMapper::toDto)
                 .orElseThrow(() -> new ApartmentNotFoundException(id));
     }
 
-    public Apartment getOneFetchPhotos(Long id) {
-        return apartmentRepository.findByIdFetchPhotos(id)
-                .orElseThrow(() -> new ApartmentNotFoundException(id));
-    }
-
     @Transactional(readOnly = true) // for LAZY Apartment.beds fetch
-    public List<ApartmentCardDto> getAll() {
+    public List<ApartmentCardDto> getAllFetchPhotosBeds() {
         return apartmentRepository.findAllFetchPhotos()
                 .stream()
                 .map(apartmentMapper::toCardDto)
                 .toList();
     }
 
-    public void createApartment(CreateApartmentDto createApartmentDto) {
-        var apartment = apartmentMapper.toEntity(createApartmentDto);
+    public void create(CreateApartmentDto createApartmentDto) {
+        Apartment apartment = apartmentMapper.toEntity(createApartmentDto);
         apartmentRepository.save(apartment);
     }
 
     @Transactional
-    public void update(ChangeApartmentDto changeApartmentDto, Long id) {
+    public void update(UpdateApartmentDto updateApartmentDto, Long id) {
         Apartment apartment = getOne(id);
-        apartmentMapper.update(apartment, changeApartmentDto);
-    }
-
-    private Apartment getOne(Long id) {
-        return apartmentRepository.findById(id)
-                .orElseThrow(() -> new ApartmentNotFoundException(id));
+        apartmentMapper.update(apartment, updateApartmentDto);
     }
 
     public void delete(Long id) {
@@ -83,6 +73,11 @@ public class ApartmentService {
 
     public Apartment getOneFetchPrices(Long id) {
         return apartmentRepository.findByIdFetchPrices(id)
+                .orElseThrow(() -> new ApartmentNotFoundException(id));
+    }
+
+    private Apartment getOne(Long id) {
+        return apartmentRepository.findById(id)
                 .orElseThrow(() -> new ApartmentNotFoundException(id));
     }
 

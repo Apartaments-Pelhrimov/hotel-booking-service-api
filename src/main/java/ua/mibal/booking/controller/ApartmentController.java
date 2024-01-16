@@ -29,8 +29,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import ua.mibal.booking.model.dto.request.ChangeApartmentDto;
 import ua.mibal.booking.model.dto.request.CreateApartmentDto;
+import ua.mibal.booking.model.dto.request.UpdateApartmentDto;
 import ua.mibal.booking.model.dto.response.ApartmentCardDto;
 import ua.mibal.booking.model.dto.response.ApartmentDto;
 import ua.mibal.booking.service.ApartmentService;
@@ -49,27 +49,27 @@ public class ApartmentController {
 
     @GetMapping("/{id}")
     public ApartmentDto getOne(@PathVariable Long id) {
-        return apartmentService.getOneDto(id);
+        return apartmentService.getOneFetchPhotosBeds(id);
     }
 
     @GetMapping
     public List<ApartmentCardDto> getAll() {
-        return apartmentService.getAll();
+        return apartmentService.getAllFetchPhotosBeds();
     }
 
     @RolesAllowed("MANAGER")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void create(@RequestBody @Valid CreateApartmentDto createApartmentDto) {
-        apartmentService.createApartment(createApartmentDto);
+        apartmentService.create(createApartmentDto);
     }
 
     @RolesAllowed("MANAGER")
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void change(@PathVariable Long id,
-                       @RequestBody @Valid ChangeApartmentDto changeApartmentDto) {
-        apartmentService.update(changeApartmentDto, id);
+    public void update(@PathVariable Long id,
+                       @RequestBody @Valid UpdateApartmentDto updateApartmentDto) {
+        apartmentService.update(updateApartmentDto, id);
     }
 
     @RolesAllowed("MANAGER")

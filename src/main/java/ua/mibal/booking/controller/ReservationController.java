@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ua.mibal.booking.model.dto.request.ReservationRejectingFormDto;
 import ua.mibal.booking.model.dto.response.ReservationDto;
-import ua.mibal.booking.model.request.ReservationFormRequestDto;
+import ua.mibal.booking.model.request.ReservationRequestDto;
 import ua.mibal.booking.service.ReservationService;
 
 /**
@@ -48,16 +48,16 @@ public class ReservationController {
     @RolesAllowed("USER")
     @PatchMapping("/apartments/{id}/reserve")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createReservation(@PathVariable Long id,
-                                  @Valid ReservationFormRequestDto request,
-                                  Authentication authentication) {
-        reservationService.reserveApartment(id, authentication.getName(), request);
+    public void create(@PathVariable Long id,
+                       @Valid ReservationRequestDto request,
+                       Authentication authentication) {
+        reservationService.create(id, authentication.getName(), request);
     }
 
     @RolesAllowed("USER")
     @GetMapping("/users/me/reservations")
-    public Page<ReservationDto> getMyReservations(Authentication authentication, Pageable pageable) {
-        return reservationService.getReservationsByUser(authentication.getName(), pageable);
+    public Page<ReservationDto> getAllByUser(Authentication authentication, Pageable pageable) {
+        return reservationService.getAllByUser(authentication.getName(), pageable);
     }
 
     @RolesAllowed("USER")
@@ -80,7 +80,7 @@ public class ReservationController {
 
     @RolesAllowed("MANAGER")
     @GetMapping("/reservations")
-    public Page<ReservationDto> getAllReservations(Pageable pageable) {
-        return reservationService.getAllReservations(pageable);
+    public Page<ReservationDto> getAll(Pageable pageable) {
+        return reservationService.getAll(pageable);
     }
 }

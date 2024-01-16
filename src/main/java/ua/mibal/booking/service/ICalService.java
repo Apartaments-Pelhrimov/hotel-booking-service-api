@@ -45,7 +45,7 @@ public class ICalService {
     private final CalendarProps calendarProps;
     private final CalendarFormatMapper calendarFormatMapper;
 
-    public String calendarFromEvents(Collection<Event> events) {
+    public String getCalendarFromEvents(Collection<Event> events) {
         Calendar calendar = initCalendar();
         List<VEvent> vEvents = calendarFormatMapper.eventsToVEvents(events);
         calendar.getComponents().addAll(vEvents);

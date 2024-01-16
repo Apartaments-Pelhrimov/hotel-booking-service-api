@@ -80,14 +80,14 @@ class AuthService_UnitTest {
     private AuthService authService;
 
     @Test
-    void token_should_return_correct_AuthDto() {
+    void login_should_return_correct_AuthDto() {
         AuthResponseDto expectedAuthDto = generateAuthResponseDtoWithToken("test_token");
         when(tokenService.generateToken(testUser.getEmail(), testUser.getAuthorities()))
                 .thenReturn("test_token");
         when(userMapper.toAuthResponse(testUser, "test_token"))
                 .thenReturn(expectedAuthDto);
 
-        assertEquals(expectedAuthDto, authService.token(testUser));
+        assertEquals(expectedAuthDto, authService.login(testUser));
 
         verify(userMapper, times(1))
                 .toAuthResponse(testUser, "test_token");
@@ -177,13 +177,13 @@ class AuthService_UnitTest {
     @Test
     void restore_should_not_throw_exception_if_user_not_found() {
         String email = "email";
-        when(userService.getOneByEmail(email))
+        when(userService.getOne(email))
                 .thenThrow(new UserNotFoundException(email));
         verifyNoMoreInteractions(userService);
 
         assertDoesNotThrow(() -> authService.restore(email));
         verify(userService, times(1))
-                .getOneByEmail(email);
+                .getOne(email);
         verifyNoInteractions(activationCodeService, emailSendingService);
     }
 
@@ -191,7 +191,7 @@ class AuthService_UnitTest {
     void restore_should_call_ActivationCodeService_to_save_ActivationCode_and_EmailSendingService_to_send_ActivationCode() {
         String email = "email";
         ActivationCode activationCode = new ActivationCode(null, testUser, email);
-        when(userService.getOneByEmail(email))
+        when(userService.getOne(email))
                 .thenReturn(testUser);
         when(activationCodeService.generateAndSaveCodeForUser(testUser))
                 .thenReturn(activationCode);
@@ -202,13 +202,13 @@ class AuthService_UnitTest {
     }
 
     @Test
-    void newPassword_should_encode_password_and_call_ActivationCodeService_to_change_user_password_by_ActivationCode() {
+    void updatePassword_should_encode_password_and_call_ActivationCodeService_to_change_user_password_by_ActivationCode() {
         String code = "code";
         ForgetPasswordDto forgetPasswordDto = new ForgetPasswordDto("password");
         when(passwordEncoder.encode(forgetPasswordDto.password()))
                 .thenReturn("encoded_password");
 
-        authService.newPassword(code, forgetPasswordDto);
+        authService.updatePassword(code, forgetPasswordDto);
 
         verify(activationCodeService, times(1))
                 .changeUserPasswordByActivationCode(code, "encoded_password");

@@ -35,7 +35,7 @@ import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.model.exception.entity.ReservationNotFoundException;
 import ua.mibal.booking.model.exception.entity.UserNotFoundException;
 import ua.mibal.booking.model.mapper.ReservationMapper;
-import ua.mibal.booking.model.request.ReservationFormRequestDto;
+import ua.mibal.booking.model.request.ReservationRequestDto;
 import ua.mibal.booking.repository.ApartmentRepository;
 import ua.mibal.booking.repository.ReservationRepository;
 import ua.mibal.booking.repository.UserRepository;
@@ -59,12 +59,14 @@ public class ReservationService {
     private final DateTimeUtils dateTimeUtils;
     private final CostCalculationService costCalculationService;
 
-    public Page<ReservationDto> getReservationsByUser(String email, Pageable pageable) {
+    // TODO refactor
+
+    public Page<ReservationDto> getAllByUser(String email, Pageable pageable) {
         return reservationRepository.findAllByUserEmail(email, pageable)
                 .map(reservationMapper::toDto);
     }
 
-    public Page<ReservationDto> getAllReservations(Pageable pageable) {
+    public Page<ReservationDto> getAll(Pageable pageable) {
         return reservationRepository.findAll(pageable)
                 .map(reservationMapper::toDto);
     }
@@ -73,7 +75,7 @@ public class ReservationService {
     public void rejectByUser(Long id,
                              ReservationRejectingFormDto reservationRejectingFormDto,
                              String email) {
-        Reservation reservation = getOneByIdFetchRejections(id);
+        Reservation reservation = getOneFetchRejections(id);
         if (!reservation.getUser().getEmail().equals(email)) {
             throw new IllegalArgumentException("Reservation with id=" + id + " was not created " +
                                                "by User with email='" + email + "'");
@@ -85,16 +87,18 @@ public class ReservationService {
     public void rejectByManager(Long id,
                                 ReservationRejectingFormDto reservationRejectingFormDto,
                                 String email) {
-        Reservation reservation = getOneByIdFetchRejections(id);
+        Reservation reservation = getOneFetchRejections(id);
         rejectReservation(reservation, email, reservationRejectingFormDto.reason());
     }
 
-    public Reservation getOneById(Long id) {
-        return reservationRepository.findById(id)
-                .orElseThrow(() -> new ReservationNotFoundException(id));
+    @Transactional
+    public void create(Long apartmentId, String userEmail, ReservationRequestDto request) {
+        validateApartmentAndUserExists(apartmentId, userEmail);
+        Reservation reservation = reservationOf(apartmentId, userEmail, request);
+        reservationRepository.save(reservation);
     }
 
-    private Reservation getOneByIdFetchRejections(Long id) {
+    private Reservation getOneFetchRejections(Long id) {
         return reservationRepository.findByIdFetchRejections(id)
                 .orElseThrow(() -> new ReservationNotFoundException(id));
     }
@@ -112,14 +116,7 @@ public class ReservationService {
         // TODO validate by date or other condition
     }
 
-    @Transactional
-    public void reserveApartment(Long apartmentId, String userEmail, ReservationFormRequestDto request) {
-        validateApartmentAndUserExists(apartmentId, userEmail);
-        Reservation reservation = reservationOf(apartmentId, userEmail, request);
-        reservationRepository.save(reservation);
-    }
-
-    private Reservation reservationOf(Long apartmentId, String userEmail, ReservationFormRequestDto request) {
+    private Reservation reservationOf(Long apartmentId, String userEmail, ReservationRequestDto request) {
         User userReference = userRepository.getReferenceByEmail(userEmail);
         ApartmentInstance apartmentInstance = apartmentInstanceService
                 .getFreeOne(apartmentId, request);
@@ -133,7 +130,7 @@ public class ReservationService {
                 .build();
     }
 
-    private ReservationDetails reservationDetailsOf(Long apartmentId, ReservationFormRequestDto request) {
+    private ReservationDetails reservationDetailsOf(Long apartmentId, ReservationRequestDto request) {
         Apartment apartment = apartmentRepository.findByIdFetchPrices(apartmentId)
                 .orElseThrow(() -> new ApartmentNotFoundException(apartmentId));
         Price price = apartment.getPriceForPeople(request.people())

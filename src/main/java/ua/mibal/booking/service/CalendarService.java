@@ -62,6 +62,8 @@ public class CalendarService {
     private final BookingComReservationService bookingComReservationService;
     private final TurningOffTimeMapper turningOffTimeMapper;
 
+    // TODO refactor
+
     @Transactional(readOnly = true)
     public List<Calendar> getCalendarsForApartment(Long apartmentId, YearMonth yearMonth) {
         validateApartmentExists(apartmentId);
@@ -126,7 +128,7 @@ public class CalendarService {
         Collection<Event> apartmentEvents = apartmentEventsForDateRange(
                 apartmentInstance, now(), MAX
         );
-        return iCalService.calendarFromEvents(
+        return iCalService.getCalendarFromEvents(
                 union(apartmentEvents, hotelEvents)
         );
     }
@@ -164,8 +166,9 @@ public class CalendarService {
     }
 
     private void validateApartmentExists(Long apartmentId) {
-        if (!apartmentRepository.existsById(apartmentId))
+        if (!apartmentRepository.existsById(apartmentId)) {
             throw new ApartmentNotFoundException(apartmentId);
+        }
     }
 
     private void validateRangeToTurnOffApartmentInstance(ApartmentInstance instance,
@@ -176,12 +179,14 @@ public class CalendarService {
                      r.getDetails().getReservedTo().isAfter(start) &&
                      r.getDetails().getReservedFrom().isBefore(end);
         if (instance.getReservations().stream()
-                .anyMatch(intersectsWithRangeCondition))
+                .anyMatch(intersectsWithRangeCondition)) {
             throw new IllegalTurningOffTimeException(start, end);
+        }
     }
 
     private void validateRangeToTurnOffHotel(LocalDateTime start, LocalDateTime end) {
-        if (reservationRepository.existsReservationThatIntersectRange(start, end))
+        if (reservationRepository.existsReservationThatIntersectRange(start, end)) {
             throw new IllegalTurningOffTimeException(start, end);
+        }
     }
 }

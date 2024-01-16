@@ -93,26 +93,26 @@ class RoomService_UnitTest {
     }
 
     @Test
-    public void addToApartment() {
+    public void create() {
         when(apartment.getId()).thenReturn(1L);
         when(apartmentRepository.existsById(1L)).thenReturn(true);
         when(roomMapper.toEntity(roomDto)).thenReturn(room);
         when(apartmentRepository.getReferenceById(1L)).thenReturn(apartment);
 
-        service.addToApartment(apartment.getId(), roomDto);
+        service.create(apartment.getId(), roomDto);
 
         verify(room, times(1)).setApartment(apartment);
         verify(roomRepository, times(1)).save(room);
     }
 
     @Test
-    public void addToApartment_should_throw_ApartmentNotFoundException() {
+    public void create_should_throw_ApartmentNotFoundException() {
         when(apartment.getId()).thenReturn(1L);
         when(apartmentRepository.existsById(1L)).thenReturn(false);
 
         assertThrows(
                 ApartmentNotFoundException.class,
-                () -> service.addToApartment(apartment.getId(), roomDto)
+                () -> service.create(apartment.getId(), roomDto)
         );
 
         verifyNoInteractions(roomMapper, room, roomRepository);

@@ -43,11 +43,11 @@ public class UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
-    public UserDto getOneByEmailDto(String email) {
-        return userMapper.toDto(getOneByEmail(email));
+    public UserDto getOneDto(String email) {
+        return userMapper.toDto(getOne(email));
     }
 
-    public User getOneByEmail(String email) {
+    public User getOne(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException(email));
     }
@@ -75,25 +75,25 @@ public class UserService {
         userRepository.updateUserPasswordByEmail(newEncodedPassword, email);
     }
 
-    private void validatePassword(String password, String email) {
-        String encodedPassword = userRepository.findPasswordByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException(email));
-        if (!passwordEncoder.matches(password, encodedPassword)) {
-            throw new IllegalPasswordException();
-        }
-    }
-
     @Transactional
     public void changeDetails(ChangeUserDetailsDto changeUserDetailsDto,
                               String email) {
-        User user = getOneByEmail(email);
+        User user = getOne(email);
         userMapper.update(user, changeUserDetailsDto);
     }
 
     @Transactional
     public void changeNotificationSettings(ChangeNotificationSettingsDto changeNotificationSettingsDto,
                                            String email) {
-        User user = getOneByEmail(email);
+        User user = getOne(email);
         userMapper.update(user.getNotificationSettings(), changeNotificationSettingsDto);
+    }
+
+    private void validatePassword(String password, String email) {
+        String encodedPassword = userRepository.findPasswordByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException(email));
+        if (!passwordEncoder.matches(password, encodedPassword)) {
+            throw new IllegalPasswordException();
+        }
     }
 }

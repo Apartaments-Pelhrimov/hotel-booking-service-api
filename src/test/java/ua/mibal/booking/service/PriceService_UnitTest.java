@@ -102,12 +102,12 @@ class PriceService_UnitTest {
     }
 
     @Test
-    public void addToApartment() {
+    public void create() {
         Long id = 1L;
         when(priceMapper.toEntity(priceDto)).thenReturn(price);
         when(apartmentService.getOneFetchPrices(id)).thenReturn(apartment);
 
-        service.addToApartment(id, priceDto);
+        service.create(id, priceDto);
 
         verify(apartment, times(1)).addPrice(price);
     }

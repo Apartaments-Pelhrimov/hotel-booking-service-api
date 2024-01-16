@@ -43,9 +43,9 @@ public class RoomController {
     @RolesAllowed("MANAGER")
     @PostMapping("/{apartmentId}/rooms")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addToApartment(@PathVariable Long apartmentId,
-                               @RequestBody @Valid RoomDto roomDto) {
-        roomService.addToApartment(apartmentId, roomDto);
+    public void create(@PathVariable Long apartmentId,
+                       @RequestBody @Valid RoomDto roomDto) {
+        roomService.create(apartmentId, roomDto);
     }
 
     @RolesAllowed("MANAGER")

@@ -22,8 +22,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
-import ua.mibal.booking.model.dto.request.ChangeApartmentDto;
 import ua.mibal.booking.model.dto.request.CreateApartmentDto;
+import ua.mibal.booking.model.dto.request.UpdateApartmentDto;
 import ua.mibal.booking.model.dto.response.ApartmentCardDto;
 import ua.mibal.booking.model.dto.response.ApartmentDto;
 import ua.mibal.booking.model.entity.Apartment;
@@ -57,7 +57,7 @@ public abstract class ApartmentMapper {
     public abstract Apartment toEntity(CreateApartmentDto createApartmentDto);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    public abstract void update(@MappingTarget Apartment apartment, ChangeApartmentDto changeApartmentDto);
+    public abstract void update(@MappingTarget Apartment apartment, UpdateApartmentDto updateApartmentDto);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     public abstract void update(@MappingTarget ApartmentOptions target, ApartmentOptions source);

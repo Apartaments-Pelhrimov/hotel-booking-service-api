@@ -27,6 +27,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+import ua.mibal.booking.model.exception.UserHasNoAccessToComment;
 import ua.mibal.booking.model.mapper.CommentMapper;
 import ua.mibal.booking.repository.ApartmentRepository;
 import ua.mibal.booking.repository.CommentRepository;
@@ -75,10 +76,10 @@ class CommentService_UnitTest {
             "2,          email2",
             "1010101001, email3",
     })
-    void deleteComment(Long id, String email) {
+    void delete(Long id, String email) {
         when(userRepository.userHasComment(email, id)).thenReturn(true);
 
-        service.deleteComment(id, email);
+        service.delete(id, email);
 
         verify(commentRepository, times(1))
                 .deleteById(id);
@@ -91,12 +92,12 @@ class CommentService_UnitTest {
             "2,          email2",
             "1010101001, email3",
     })
-    void deleteComment_should_throw_IllegalArgumentException(Long id, String email) {
+    void delete_should_throw_UserHasNoAccessToComment(Long id, String email) {
         when(userRepository.userHasComment(email, id)).thenReturn(false);
 
         assertThrows(
-                IllegalArgumentException.class,
-                () -> service.deleteComment(id, email)
+                UserHasNoAccessToComment.class,
+                () -> service.delete(id, email)
         );
         verify(commentRepository, never()).deleteById(id);
     }

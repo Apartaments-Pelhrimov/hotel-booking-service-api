@@ -46,7 +46,7 @@ public class AuthController {
 
     @GetMapping("/login")
     public AuthResponseDto login(@AuthenticationPrincipal User user) {
-        return authService.token(user);
+        return authService.login(user);
     }
 
     @PostMapping("/register")
@@ -69,8 +69,8 @@ public class AuthController {
 
     @PutMapping("/forget/password")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void setNewPassword(@RequestParam("code") String activationCode,
+    public void updatePassword(@RequestParam("code") String activationCode,
                                @Valid @RequestBody ForgetPasswordDto forgetPasswordDto) {
-        authService.newPassword(activationCode, forgetPasswordDto);
+        authService.updatePassword(activationCode, forgetPasswordDto);
     }
 }

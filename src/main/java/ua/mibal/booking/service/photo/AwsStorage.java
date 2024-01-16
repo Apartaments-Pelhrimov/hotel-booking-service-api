@@ -45,6 +45,20 @@ public class AwsStorage {
         return getLink(folder, name);
     }
 
+    // TODO refactor
+    public boolean delete(String folder, String name) {
+        DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+                .bucket(awsBucketProps.name())
+                .key(folder + name)
+                .build();
+        try {
+            s3Client.deleteObject(deleteObjectRequest);
+            return true;
+        } catch (SdkException e) {
+            return false;
+        }
+    }
+
     private void upload(String folder,
                         String name,
                         byte[] file,
@@ -65,18 +79,5 @@ public class AwsStorage {
         return s3Client.utilities()
                 .getUrl(getUrlRequest)
                 .toExternalForm();
-    }
-
-    public boolean delete(String folder, String name) {
-        DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
-                .bucket(awsBucketProps.name())
-                .key(folder + name)
-                .build();
-        try {
-            s3Client.deleteObject(deleteObjectRequest);
-            return true;
-        } catch (SdkException e) {
-            return false;
-        }
     }
 }

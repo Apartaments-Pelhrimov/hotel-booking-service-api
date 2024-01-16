@@ -28,7 +28,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
-import ua.mibal.booking.model.dto.request.ChangeApartmentDto;
+import ua.mibal.booking.model.dto.request.UpdateApartmentDto;
 import ua.mibal.booking.model.dto.response.ApartmentCardDto;
 import ua.mibal.booking.model.dto.response.ApartmentDto;
 import ua.mibal.booking.model.entity.Apartment;
@@ -154,7 +154,7 @@ class ApartmentMapper_UnitTest {
 
         apartmentMapper.update(
                 apartment,
-                new ChangeApartmentDto(name, apartmentClass, apartmentOptions)
+                new UpdateApartmentDto(name, apartmentClass, apartmentOptions)
         );
 
         if (name == null) {

@@ -26,8 +26,8 @@ import ua.mibal.booking.model.exception.entity.ApartmentInstanceNotFoundExceptio
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.model.mapper.ApartmentInstanceMapper;
 import ua.mibal.booking.model.mapper.ReservationRequestMapper;
-import ua.mibal.booking.model.request.ReservationFormRequestDto;
 import ua.mibal.booking.model.request.ReservationRequest;
+import ua.mibal.booking.model.request.ReservationRequestDto;
 import ua.mibal.booking.repository.ApartmentInstanceRepository;
 import ua.mibal.booking.repository.ApartmentRepository;
 
@@ -49,15 +49,15 @@ public class ApartmentInstanceService {
     private final ReservationRequestMapper reservationRequestMapper;
 
     public ApartmentInstance getFreeOne(Long apartmentId,
-                                        ReservationFormRequestDto requestDto) {
+                                        ReservationRequestDto requestDto) {
         ReservationRequest request =
                 reservationRequestMapper.toReservationRequest(requestDto, apartmentId);
         List<ApartmentInstance> free = getFree(request);
         return selectMostSuitable(free, request);
     }
 
-    public void createForApartment(Long apartmentId,
-                                   CreateApartmentInstanceDto createApartmentInstanceDto) {
+    public void create(Long apartmentId,
+                       CreateApartmentInstanceDto createApartmentInstanceDto) {
         validateApartmentExists(apartmentId);
         ApartmentInstance newInstance =
                 apartmentInstanceMapper.toEntity(createApartmentInstanceDto);

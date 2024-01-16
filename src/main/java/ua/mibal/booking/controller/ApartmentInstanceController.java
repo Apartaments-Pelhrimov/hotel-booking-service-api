@@ -43,14 +43,14 @@ public class ApartmentInstanceController {
 
     @PostMapping("/{apartmentId}/instances")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addInstance(@PathVariable Long apartmentId,
-                            @RequestBody @Valid CreateApartmentInstanceDto createApartmentInstanceDto) {
-        apartmentInstanceService.createForApartment(apartmentId, createApartmentInstanceDto);
+    public void create(@PathVariable Long apartmentId,
+                       @RequestBody @Valid CreateApartmentInstanceDto createApartmentInstanceDto) {
+        apartmentInstanceService.create(apartmentId, createApartmentInstanceDto);
     }
 
     @DeleteMapping("/instances/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteInstance(@PathVariable Long id) {
+    public void delete(@PathVariable Long id) {
         apartmentInstanceService.delete(id);
     }
 }

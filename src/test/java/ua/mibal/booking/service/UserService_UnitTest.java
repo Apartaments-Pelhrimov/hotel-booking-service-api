@@ -93,27 +93,27 @@ class UserService_UnitTest {
     private NotificationSettings notificationSettings;
 
     @Test
-    void getOneByEmailDto() {
+    void getOneDto() {
         when(userRepository.findByEmail("existing_email"))
                 .thenReturn(Optional.of(user));
         when(userMapper.toDto(user))
                 .thenReturn(userDto);
 
         UserDto actual = assertDoesNotThrow(
-                () -> service.getOneByEmailDto("existing_email")
+                () -> service.getOneDto("existing_email")
         );
 
         assertEquals(userDto, actual);
     }
 
     @Test
-    void getOneByEmailDto_should_throw_UserNotFoundException() {
+    void getOneDto_should_throw_UserNotFoundException() {
         when(userRepository.findByEmail("not_existing_email"))
                 .thenReturn(Optional.empty());
 
         UserNotFoundException e = assertThrows(
                 UserNotFoundException.class,
-                () -> service.getOneByEmailDto("not_existing_email")
+                () -> service.getOneDto("not_existing_email")
         );
         assertEquals(
                 new UserNotFoundException("not_existing_email").getMessage(),
@@ -122,25 +122,25 @@ class UserService_UnitTest {
     }
 
     @Test
-    void getOneByEmail() {
+    void getOne() {
         when(userRepository.findByEmail("existing_email"))
                 .thenReturn(Optional.of(user));
 
         User actual = assertDoesNotThrow(
-                () -> service.getOneByEmail("existing_email")
+                () -> service.getOne("existing_email")
         );
 
         assertEquals(user, actual);
     }
 
     @Test
-    void getOneByEmail_should_throw_UserNotFoundException() {
+    void getOne_should_throw_UserNotFoundException() {
         when(userRepository.findByEmail("not_existing_email"))
                 .thenReturn(Optional.empty());
 
         UserNotFoundException e = assertThrows(
                 UserNotFoundException.class,
-                () -> service.getOneByEmail("not_existing_email")
+                () -> service.getOne("not_existing_email")
         );
         assertEquals(
                 new UserNotFoundException("not_existing_email").getMessage(),
@@ -332,9 +332,13 @@ class UserService_UnitTest {
 
         service.changeNotificationSettings(new ChangeNotificationSettingsDto(order, news), "email");
 
-        if (order == null) verify(notificationSettings, never())
-                .setReceiveOrderEmails(anyBoolean());
-        if (news == null) verify(notificationSettings, never())
-                .setReceiveNewsEmails(anyBoolean());
+        if (order == null) {
+            verify(notificationSettings, never())
+                    .setReceiveOrderEmails(anyBoolean());
+        }
+        if (news == null) {
+            verify(notificationSettings, never())
+                    .setReceiveNewsEmails(anyBoolean());
+        }
     }
 }

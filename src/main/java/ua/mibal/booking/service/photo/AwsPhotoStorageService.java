@@ -46,9 +46,11 @@ public class AwsPhotoStorageService implements PhotoStorageService {
     private final AwsStorage awsStorage;
     private final AwsBucketProps awsBucketProps;
 
+    // TODO refactor
+
     @Transactional
     @Override
-    public String setUserPhoto(String email, MultipartFile photo) {
+    public String changeUserPhoto(String email, MultipartFile photo) {
         String encodedLink = perform(aws -> aws.uploadImage(
                 awsBucketProps.usersFolder(),
                 email,
@@ -69,7 +71,7 @@ public class AwsPhotoStorageService implements PhotoStorageService {
 
     @Transactional
     @Override
-    public String addApartmentPhoto(Long id, MultipartFile photo) {
+    public String createApartmentPhoto(Long id, MultipartFile photo) {
         Apartment apartment = getApartmentById(id);
         String fileName = generateName(id, photo);
         String encodedLink = perform(aws -> aws.uploadImage(
@@ -87,9 +89,10 @@ public class AwsPhotoStorageService implements PhotoStorageService {
     @Override
     public void deleteApartmentPhoto(Long id, String link) {
         Apartment apartment = getApartmentById(id);
-        if (!apartment.deletePhoto(new Photo(link)))
+        if (!apartment.deletePhoto(new Photo(link))) {
             throw new IllegalArgumentException(
                     "Apartment with id=" + id + " doesn't contain photo='" + link + "'");
+        }
         String name = AwsUrlUtils.getFileName(link);
         perform(aws -> aws.delete(awsBucketProps.apartmentsFolder(), name));
     }

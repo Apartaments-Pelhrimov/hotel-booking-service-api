@@ -52,16 +52,16 @@ public class PriceController {
     @RolesAllowed("MANAGER")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void addPrice(@PathVariable Long apartmentId,
-                         @RequestBody @Valid PriceDto priceDto) {
-        priceService.addToApartment(apartmentId, priceDto);
+    public void create(@PathVariable Long apartmentId,
+                       @RequestBody @Valid PriceDto priceDto) {
+        priceService.create(apartmentId, priceDto);
     }
 
     @RolesAllowed("MANAGER")
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deletePrice(@PathVariable Long apartmentId,
-                            @RequestParam("person") Integer person) {
+    public void delete(@PathVariable Long apartmentId,
+                       @RequestParam("person") Integer person) {
         priceService.delete(apartmentId, person);
     }
 }

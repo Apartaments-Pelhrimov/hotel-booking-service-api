@@ -26,8 +26,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
-import ua.mibal.booking.model.dto.request.ChangeApartmentDto;
 import ua.mibal.booking.model.dto.request.CreateApartmentDto;
+import ua.mibal.booking.model.dto.request.UpdateApartmentDto;
 import ua.mibal.booking.model.dto.response.ApartmentCardDto;
 import ua.mibal.booking.model.dto.response.ApartmentDto;
 import ua.mibal.booking.model.entity.Apartment;
@@ -74,91 +74,52 @@ class ApartmentService_UnitTest {
     @Mock
     private CreateApartmentDto createApartmentDto;
     @Mock
-    private ChangeApartmentDto changeApartmentDto;
+    private UpdateApartmentDto updateApartmentDto;
 
     @Test
-    void getOneDto() {
+    public void create() {
+        when(apartmentMapper.toEntity(createApartmentDto)).thenReturn(apartment);
+
+        service.create(createApartmentDto);
+
+        verify(apartmentRepository).save(apartment);
+    }
+
+    @Test
+    public void update() {
+        Long id = 1L;
+        when(apartmentRepository.findById(id)).thenReturn(Optional.of(apartment));
+
+        service.update(updateApartmentDto, id);
+
+        verify(apartmentMapper, times(1)).update(apartment, updateApartmentDto);
+    }
+
+    @Test
+    public void update_should_throw_ApartmentNotFoundException() {
+        Long id = 1L;
+        when(apartmentRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(
+                ApartmentNotFoundException.class,
+                () -> service.update(updateApartmentDto, id)
+        );
+
+        verifyNoInteractions(apartmentMapper);
+    }
+
+    @Test
+    void getOneFetchPhotosBeds() {
         when(apartmentRepository.findByIdFetchPhotos(1L))
                 .thenReturn(Optional.of(apartment));
         when(apartmentMapper.toDto(apartment))
                 .thenReturn(apartmentDto);
 
         ApartmentDto actual = assertDoesNotThrow(
-                () -> service.getOneDto(1L)
+                () -> service.getOneFetchPhotosBeds(1L)
         );
 
         assertEquals(apartmentDto, actual);
-    }
-
-    @Test
-    void getOneDto_should_throw_ApartmentNotFoundException() {
-        when(apartmentRepository.findByIdFetchPhotos(1L))
-                .thenReturn(Optional.empty());
-
-        ApartmentNotFoundException e = assertThrows(
-                ApartmentNotFoundException.class,
-                () -> service.getOneDto(1L)
-        );
-
-        assertEquals(
-                new ApartmentNotFoundException(1L).getMessage(),
-                e.getMessage()
-        );
-        verifyNoInteractions(apartmentMapper);
-
-    }
-
-    @Test
-    void getOne() {
-        when(apartmentRepository.findByIdFetchPhotos(1L))
-                .thenReturn(Optional.of(apartment));
-
-        Apartment actual = assertDoesNotThrow(
-                () -> service.getOneFetchPhotos(1L)
-        );
-
-        assertEquals(apartment, actual);
-    }
-
-    @Test
-    void getOne_should_throw_ApartmentNotFoundException() {
-        when(apartmentRepository.findByIdFetchPhotos(1L))
-                .thenReturn(Optional.empty());
-
-        ApartmentNotFoundException e = assertThrows(
-                ApartmentNotFoundException.class,
-                () -> service.getOneFetchPhotos(1L)
-        );
-
-        assertEquals(
-                new ApartmentNotFoundException(1L).getMessage(),
-                e.getMessage()
-        );
-        verifyNoInteractions(apartmentMapper);
-    }
-
-    @Test
-    void getAll() {
-        when(apartmentRepository.findAllFetchPhotos())
-                .thenReturn(List.of(apartment, apartment));
-        when(apartmentMapper.toCardDto(apartment))
-                .thenReturn(apartmentCardDto);
-
-        List<ApartmentCardDto> actual = service.getAll();
-
-        assertEquals(
-                List.of(apartmentCardDto, apartmentCardDto),
-                actual
-        );
-    }
-
-    @Test
-    public void createApartment() {
-        when(apartmentMapper.toEntity(createApartmentDto)).thenReturn(apartment);
-
-        service.createApartment(createApartmentDto);
-
-        verify(apartmentRepository).save(apartment);
     }
 
     @Test
@@ -185,26 +146,36 @@ class ApartmentService_UnitTest {
     }
 
     @Test
-    public void update() {
-        Long id = 1L;
-        when(apartmentRepository.findById(id)).thenReturn(Optional.of(apartment));
+    void getOneFetchPhotosBeds_should_throw_ApartmentNotFoundException() {
+        when(apartmentRepository.findByIdFetchPhotos(1L))
+                .thenReturn(Optional.empty());
 
-        service.update(changeApartmentDto, id);
+        ApartmentNotFoundException e = assertThrows(
+                ApartmentNotFoundException.class,
+                () -> service.getOneFetchPhotosBeds(1L)
+        );
 
-        verify(apartmentMapper, times(1)).update(apartment, changeApartmentDto);
+        assertEquals(
+                new ApartmentNotFoundException(1L).getMessage(),
+                e.getMessage()
+        );
+        verifyNoInteractions(apartmentMapper);
+
     }
 
     @Test
-    public void update_should_throw_ApartmentNotFoundException() {
-        Long id = 1L;
-        when(apartmentRepository.findById(id)).thenReturn(Optional.empty());
+    void getAllFetchPhotosBeds() {
+        when(apartmentRepository.findAllFetchPhotos())
+                .thenReturn(List.of(apartment, apartment));
+        when(apartmentMapper.toCardDto(apartment))
+                .thenReturn(apartmentCardDto);
 
-        assertThrows(
-                ApartmentNotFoundException.class,
-                () -> service.update(changeApartmentDto, id)
+        List<ApartmentCardDto> actual = service.getAllFetchPhotosBeds();
+
+        assertEquals(
+                List.of(apartmentCardDto, apartmentCardDto),
+                actual
         );
-
-        verifyNoInteractions(apartmentMapper);
     }
 
     @Test

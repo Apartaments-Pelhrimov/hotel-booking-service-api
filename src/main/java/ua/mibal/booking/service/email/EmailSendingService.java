@@ -52,6 +52,14 @@ public class EmailSendingService {
         this.password = env.getProperty("mail.password");
     }
 
+    public void sendActivationCode(User user, ActivationCode activationCode) {
+        sendCode(EmailType.ACCOUNT_ACTIVATION, user, activationCode.getCode());
+    }
+
+    public void sendPasswordChangingCode(User user, ActivationCode activationCode) {
+        sendCode(EmailType.PASSWORD_CHANGING, user, activationCode.getCode());
+    }
+
     private Session getSessionByProperties(Environment env) {
         Properties props = new Properties();
         props.put("mail.smtp.host", Objects.requireNonNull(env.getProperty("mail.smtp.host")));
@@ -85,13 +93,5 @@ public class EmailSendingService {
         new Thread(
                 () -> send(user.getEmail(), type.getSubject(), filledPage)
         ).start();
-    }
-
-    public void sendActivationCode(User user, ActivationCode activationCode) {
-        sendCode(EmailType.ACCOUNT_ACTIVATION, user, activationCode.getCode());
-    }
-
-    public void sendPasswordChangingCode(User user, ActivationCode activationCode) {
-        sendCode(EmailType.PASSWORD_CHANGING, user, activationCode.getCode());
     }
 }

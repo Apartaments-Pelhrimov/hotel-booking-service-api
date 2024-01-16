@@ -48,14 +48,14 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/me")
-    public UserDto getMe(Authentication authentication) {
-        return userService.getOneByEmailDto(authentication.getName());
+    public UserDto getOne(Authentication authentication) {
+        return userService.getOneDto(authentication.getName());
     }
 
     @DeleteMapping("/me")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteMe(@Valid @RequestBody DeleteMeDto deleteMeDto,
-                         Authentication authentication) {
+    public void delete(@Valid @RequestBody DeleteMeDto deleteMeDto,
+                       Authentication authentication) {
         userService.delete(deleteMeDto, authentication.getName());
     }
 

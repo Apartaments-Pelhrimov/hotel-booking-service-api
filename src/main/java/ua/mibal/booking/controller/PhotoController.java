@@ -44,24 +44,24 @@ public class PhotoController {
     @RolesAllowed("USER")
     @PutMapping("/users/me/photo")
     @ResponseStatus(HttpStatus.CREATED)
-    public String changeMyPhoto(@RequestParam("file") MultipartFile file,
-                                Authentication authentication) {
-        return photoStorageService.setUserPhoto(authentication.getName(), file);
+    public String changeUserPhoto(@RequestParam("file") MultipartFile file,
+                                  Authentication authentication) {
+        return photoStorageService.changeUserPhoto(authentication.getName(), file);
     }
 
     @RolesAllowed("USER")
     @DeleteMapping("/users/me/photo")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteMyPhoto(Authentication authentication) {
+    public void deleteUserPhoto(Authentication authentication) {
         photoStorageService.deleteUserPhoto(authentication.getName());
     }
 
     @RolesAllowed("MANAGER")
     @PostMapping("/apartments/{id}/photos")
     @ResponseStatus(HttpStatus.CREATED)
-    public String addApartmentPhoto(@PathVariable Long id,
-                                    @RequestParam("file") MultipartFile file) {
-        return photoStorageService.addApartmentPhoto(id, file);
+    public String createApartmentPhoto(@PathVariable Long id,
+                                       @RequestParam("file") MultipartFile file) {
+        return photoStorageService.createApartmentPhoto(id, file);
     }
 
     @RolesAllowed("MANAGER")

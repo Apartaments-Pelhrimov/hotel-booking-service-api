@@ -72,7 +72,7 @@ class CommentController_UnitTest {
 
     @ParameterizedTest
     @CsvSource({"1-1", "value", "superman2004"})
-    void getCommentsForApartment_should_throw_if_id_path_variable_is_invalid(String id) throws Exception {
+    void getAllByApartment_should_throw_if_id_path_variable_is_invalid(String id) throws Exception {
         mvc.perform(get("/api/apartments/{apartmentId}/comments", id))
                 .andExpect(status().isBadRequest());
 
@@ -81,16 +81,16 @@ class CommentController_UnitTest {
 
     @ParameterizedTest
     @CsvSource({"1", "1000000", "" + Long.MAX_VALUE, "" + Long.MIN_VALUE})
-    void getCommentsForApartment_should_correct_handle_id(Long id) throws Exception {
+    void getAllByApartment_should_correct_handle_id(Long id) throws Exception {
         mvc.perform(get("/api/apartments/{apartmentId}/comments", id))
                 .andExpect(status().isOk());
 
         verify(commentService, times(1))
-                .getCommentsInApartment(eq(id), any());
+                .getAllByApartment(eq(id), any());
     }
 
     @Test
-    void addComment_should_allow_only_ROLE_USER() throws Exception {
+    void create_should_allow_only_ROLE_USER() throws Exception {
         // FIXME add Authentication ADMIN
         mvc.perform(post("/api/apartments/{apartmentId}/comments", 1)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -108,7 +108,7 @@ class CommentController_UnitTest {
             "'      ', 0",
             "'', 0"
     }, nullValues = "null")
-    void addComment_should_validate_CreateCommentDto(String body, Double rate) throws Exception {
+    void create_should_validate_CreateCommentDto(String body, Double rate) throws Exception {
         mvc.perform(post("/api/apartments/{apartmentId}/comments", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new CreateCommentDto(body, rate))))
@@ -125,7 +125,7 @@ class CommentController_UnitTest {
             "55, correct_body4, 4.5",
             "4893749872138478, correct_body5, 3.21",
     })
-    void addComment_should_handle_args_to_CommentService(Long apartmentId, String body, Double rate) throws Exception {
+    void create_should_handle_args_to_CommentService(Long apartmentId, String body, Double rate) throws Exception {
         CreateCommentDto createCommentDto = new CreateCommentDto(body, rate);
         // FIXME add Authentication
         mvc.perform(post("/api/apartments/{apartmentId}/comments", apartmentId)
@@ -134,6 +134,6 @@ class CommentController_UnitTest {
                 .andExpect(status().isOk());
 
         verify(commentService, times(1))
-                .addComment(createCommentDto, any(), apartmentId);
+                .create(createCommentDto, any(), apartmentId);
     }
 }

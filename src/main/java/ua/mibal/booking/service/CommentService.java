@@ -46,22 +46,22 @@ public class CommentService {
     private final UserRepository userRepository;
     private final ApartmentRepository apartmentRepository;
 
-    public Page<CommentDto> getCommentsInApartment(Long apartmentId, Pageable pageable) {
+    public Page<CommentDto> getAllByApartment(Long apartmentId, Pageable pageable) {
         return commentRepository.findByApartmentIdFetchUser(apartmentId, pageable)
                 .map(commentMapper::toDto);
     }
 
     @Transactional
-    public void addComment(CreateCommentDto createCommentDto,
-                           String userEmail,
-                           Long apartmentId) {
+    public void create(CreateCommentDto createCommentDto,
+                       String userEmail,
+                       Long apartmentId) {
         validateUserHasReservation(apartmentId, userEmail);
         Comment newComment = createComment(createCommentDto, userEmail, apartmentId);
         commentRepository.save(newComment);
         apartmentRepository.refreshRatingById(apartmentId);
     }
 
-    public void deleteComment(Long id, String email) {
+    public void delete(Long id, String email) {
         validateUserHasComment(id, email);
         commentRepository.deleteById(id);
     }

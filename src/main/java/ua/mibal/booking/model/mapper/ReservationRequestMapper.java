@@ -18,8 +18,8 @@ package ua.mibal.booking.model.mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ua.mibal.booking.model.request.ReservationFormRequestDto;
 import ua.mibal.booking.model.request.ReservationRequest;
+import ua.mibal.booking.model.request.ReservationRequestDto;
 import ua.mibal.booking.service.util.DateTimeUtils;
 
 import java.time.LocalDateTime;
@@ -33,7 +33,7 @@ import java.time.LocalDateTime;
 public class ReservationRequestMapper {
     private final DateTimeUtils dateTimeUtils;
 
-    public ReservationRequest toReservationRequest(ReservationFormRequestDto reservationRequestDto, Long apartmentId) {
+    public ReservationRequest toReservationRequest(ReservationRequestDto reservationRequestDto, Long apartmentId) {
         LocalDateTime from = dateTimeUtils.reserveFrom(reservationRequestDto.from());
         LocalDateTime to = dateTimeUtils.reserveTo(reservationRequestDto.to());
         return new ReservationRequest(

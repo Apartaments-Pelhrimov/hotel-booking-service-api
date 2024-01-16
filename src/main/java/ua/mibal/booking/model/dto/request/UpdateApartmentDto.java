@@ -14,32 +14,23 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.request;
+package ua.mibal.booking.model.dto.request;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.time.LocalDate;
-
-import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
+import jakarta.validation.constraints.Size;
+import ua.mibal.booking.model.entity.Apartment;
+import ua.mibal.booking.model.entity.embeddable.ApartmentOptions;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public record ReservationFormRequestDto(
+public record UpdateApartmentDto(
 
-        @NotNull
-        @DateTimeFormat(iso = DATE)
-        LocalDate from,
+        @Size(min = 3)
+        String name,
 
-        @NotNull
-        @DateTimeFormat(iso = DATE)
-        LocalDate to,
+        Apartment.ApartmentClass apartmentClass,
 
-        @NotNull
-        @Positive
-        Integer people
+        ApartmentOptions options
 ) {
 }

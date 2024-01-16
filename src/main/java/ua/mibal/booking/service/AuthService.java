@@ -45,7 +45,9 @@ public class AuthService {
     private final ActivationCodeService activationCodeService;
     private final EmailSendingService emailSendingService;
 
-    public AuthResponseDto token(User user) {
+    // TODO refactor
+
+    public AuthResponseDto login(User user) {
         String token = tokenService.generateToken(
                 user.getEmail(),
                 user.getAuthorities()
@@ -69,7 +71,7 @@ public class AuthService {
     @Transactional
     public void restore(String email) {
         try {
-            User user = userService.getOneByEmail(email);
+            User user = userService.getOne(email);
             ActivationCode activationCode =
                     activationCodeService.generateAndSaveCodeForUser(user);
             emailSendingService.sendPasswordChangingCode(user, activationCode);
@@ -77,7 +79,7 @@ public class AuthService {
         }
     }
 
-    public void newPassword(String activationCode, ForgetPasswordDto forgetPasswordDto) {
+    public void updatePassword(String activationCode, ForgetPasswordDto forgetPasswordDto) {
         String encodedPassword = passwordEncoder.encode(forgetPasswordDto.password());
         activationCodeService.changeUserPasswordByActivationCode(activationCode, encodedPassword);
     }

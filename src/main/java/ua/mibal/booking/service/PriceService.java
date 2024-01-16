@@ -45,7 +45,7 @@ public class PriceService {
     }
 
     @Transactional
-    public void addToApartment(Long id, PriceDto priceDto) {
+    public void create(Long id, PriceDto priceDto) {
         Price price = priceMapper.toEntity(priceDto);
         Apartment apartment = apartmentService.getOneFetchPrices(id);
         apartment.addPrice(price);

@@ -37,7 +37,7 @@ public class RoomService {
     private final ApartmentRepository apartmentRepository;
     private final RoomMapper roomMapper;
 
-    public void addToApartment(Long apartmentId, RoomDto roomDto) {
+    public void create(Long apartmentId, RoomDto roomDto) {
         validateApartmentExists(apartmentId);
         Room room = roomMapper.toEntity(roomDto);
         room.setApartment(apartmentRepository.getReferenceById(apartmentId));

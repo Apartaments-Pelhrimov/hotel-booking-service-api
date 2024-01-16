@@ -46,24 +46,25 @@ public class CommentController {
     private final CommentService commentService;
 
     @GetMapping("/{apartmentId}/comments")
-    public Page<CommentDto> getCommentsForApartment(@PathVariable Long apartmentId, Pageable pageable) {
-        return commentService.getCommentsInApartment(apartmentId, pageable);
+    public Page<CommentDto> getAllByApartment(@PathVariable Long apartmentId,
+                                              Pageable pageable) {
+        return commentService.getAllByApartment(apartmentId, pageable);
     }
 
     @RolesAllowed("USER")
     @PostMapping("/{apartmentId}/comments")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addComment(@PathVariable Long apartmentId,
-                           @Valid @RequestBody CreateCommentDto createCommentDto,
-                           Authentication authentication) {
-        commentService.addComment(createCommentDto, authentication.getName(), apartmentId);
+    public void create(@PathVariable Long apartmentId,
+                       @Valid @RequestBody CreateCommentDto createCommentDto,
+                       Authentication authentication) {
+        commentService.create(createCommentDto, authentication.getName(), apartmentId);
     }
 
     @RolesAllowed("USER")
     @DeleteMapping("/comments/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteComment(@PathVariable Long id,
-                              Authentication authentication) {
-        commentService.deleteComment(id, authentication.getName());
+    public void delete(@PathVariable Long id,
+                       Authentication authentication) {
+        commentService.delete(id, authentication.getName());
     }
 }
