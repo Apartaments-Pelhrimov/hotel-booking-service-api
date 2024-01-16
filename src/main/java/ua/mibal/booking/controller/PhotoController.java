@@ -57,7 +57,7 @@ public class PhotoController {
     }
 
     @RolesAllowed("MANAGER")
-    @PostMapping("/apartments/{id}/photos/upload")
+    @PostMapping("/apartments/{id}/photos")
     @ResponseStatus(HttpStatus.CREATED)
     public String addApartmentPhoto(@PathVariable Long id,
                                     @RequestParam("file") MultipartFile file) {
