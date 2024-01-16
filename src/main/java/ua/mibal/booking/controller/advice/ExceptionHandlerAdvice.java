@@ -16,7 +16,6 @@
 
 package ua.mibal.booking.controller.advice;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -25,7 +24,6 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.multipart.MultipartException;
 import ua.mibal.booking.model.exception.marker.BadRequestException;
 import ua.mibal.booking.model.exception.marker.InternalServerException;
@@ -67,7 +65,7 @@ public class ExceptionHandlerAdvice {
             BadRequestException.class,
             MultipartException.class
     })
-    public ResponseEntity<ApiError> handleEmailAlreadyExistsException(Exception e) {
+    public ResponseEntity<ApiError> handleBadRequestException(Exception e) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         return ResponseEntity.status(status)
                 .body(ApiError.ofException(status, e));
@@ -83,7 +81,7 @@ public class ExceptionHandlerAdvice {
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ApiError> handleOtherException(AccessDeniedException e) {
+    public ResponseEntity<ApiError> handleAccessDeniedException(AccessDeniedException e) {
         HttpStatus status = HttpStatus.FORBIDDEN;
         return ResponseEntity.status(status)
                 .body(ApiError.ofException(status, e));
@@ -93,7 +91,7 @@ public class ExceptionHandlerAdvice {
             Exception.class,
             InternalServerException.class
     })
-    public ResponseEntity<ApiError> handleOtherException(Exception e) {
+    public ResponseEntity<ApiError> handleInternalServerException(Exception e) {
         log.error("An Internal error occurred", e);
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         return ResponseEntity.status(status)
