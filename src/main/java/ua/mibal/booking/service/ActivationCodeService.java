@@ -66,10 +66,9 @@ public class ActivationCodeService {
 
     private ActivationCode generateActivationCode(User user) {
         String code = codeGenerationService.generateCode();
-        ActivationCode activationCode = ActivationCode.builder()
+        return ActivationCode.builder()
                 .user(user)
                 .code(code)
                 .build();
-        return activationCodeRepository.save(activationCode);
     }
 }
