@@ -56,11 +56,8 @@ public class ExceptionHandlerAdvice {
                 .body(ApiError.ofExceptionAndMessage(status, e, (objErrors + " " + fieldErrors).trim()));
     }
 
-    @ExceptionHandler({
-            EntityNotFoundException.class,
-            NotFoundException.class
-    })
-    public ResponseEntity<ApiError> handleValidationException(Exception e) {
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ApiError> handleNotFoundException(Exception e) {
         HttpStatus status = HttpStatus.NOT_FOUND;
         return ResponseEntity.status(status)
                 .body(ApiError.ofException(status, e));

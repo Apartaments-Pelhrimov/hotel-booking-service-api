@@ -16,11 +16,13 @@
 
 package ua.mibal.booking.model.exception.entity;
 
+import ua.mibal.booking.model.exception.marker.NotFoundException;
+
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public abstract class EntityNotFoundException extends jakarta.persistence.EntityNotFoundException {
+public abstract class EntityNotFoundException extends NotFoundException {
 
     protected final static String MESSAGE_FORMAT = "Entity %s by id=%s not found";
 
