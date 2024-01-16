@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+import ua.mibal.booking.model.exception.IllegalReservationDateRangeException;
 import ua.mibal.booking.model.exception.service.CostCalculationServiceException;
 
 import java.math.BigDecimal;
@@ -54,14 +55,24 @@ class CostCalculationService_UnitTest {
     }
 
     @ParameterizedTest
-    @MethodSource("ua.mibal.booking.testUtils.DataGenerator#incorrectPriceCalculation")
-    void calculatePrice_should_throw_IllegalArgumentException(BigDecimal oneNightPrice,
-                                                              LocalDate from,
-                                                              LocalDate to) {
+    @MethodSource("ua.mibal.booking.testUtils.DataGenerator#incorrectPriceForCalculation")
+    void calculatePrice_should_throw_CostCalculationServiceException(BigDecimal oneNightPrice,
+                                                                     LocalDate from,
+                                                                     LocalDate to) {
         assertThrows(
                 CostCalculationServiceException.class,
                 () -> service.calculatePrice(oneNightPrice, from, to)
         );
     }
 
+    @ParameterizedTest
+    @MethodSource("ua.mibal.booking.testUtils.DataGenerator#incorrectDateRangeForCalculation")
+    void calculatePrice_should_throw_IllegalReservationDateRangeException(BigDecimal oneNightPrice,
+                                                                          LocalDate from,
+                                                                          LocalDate to) {
+        assertThrows(
+                IllegalReservationDateRangeException.class,
+                () -> service.calculatePrice(oneNightPrice, from, to)
+        );
+    }
 }

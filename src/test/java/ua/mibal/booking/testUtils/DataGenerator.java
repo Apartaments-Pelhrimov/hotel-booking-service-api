@@ -121,13 +121,20 @@ public class DataGenerator {
         );
     }
 
-    public static Stream<Arguments> incorrectPriceCalculation() {
+    public static Stream<Arguments> incorrectPriceForCalculation() {
+        LocalDate first = LocalDate.of(2023, 12, 1);
+        LocalDate fifth = LocalDate.of(2023, 12, 5);
+        return Stream.of(
+                Arguments.of(valueOf(-100_000), first, fifth),
+                Arguments.of(valueOf(-1), first, fifth)
+        );
+    }
+    public static Stream<Arguments> incorrectDateRangeForCalculation() {
         LocalDate first = LocalDate.of(2023, 12, 1);
         LocalDate fifth = LocalDate.of(2023, 12, 5);
         return Stream.of(
                 Arguments.of(ZERO, fifth, fifth),
-                Arguments.of(ONE, fifth, first),
-                Arguments.of(valueOf(-100_000), first, fifth)
+                Arguments.of(ONE, fifth, first)
         );
     }
 
