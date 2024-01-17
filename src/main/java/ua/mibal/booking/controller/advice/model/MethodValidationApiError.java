@@ -29,9 +29,8 @@ import java.util.stream.Collectors;
 public class MethodValidationApiError extends ApiError {
 
     protected MethodValidationApiError(HttpStatus status,
-                                       Exception exception,
                                        String message) {
-        super(status, exception, message);
+        super(status, "bad-request-error.validation", message);
     }
 
     public static MethodValidationApiError of(HttpStatus status,
@@ -39,7 +38,7 @@ public class MethodValidationApiError extends ApiError {
         String objectErrors = getObjectErrorsMessage(e);
         String fieldErrors = getFieldErrorsMessage(e);
         String message = String.join(" ", objectErrors, fieldErrors);
-        return new MethodValidationApiError(status, e, message);
+        return new MethodValidationApiError(status, message);
     }
 
     private static String getFieldErrorsMessage(MethodArgumentNotValidException e) {

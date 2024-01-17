@@ -37,6 +37,10 @@ public class ApiError {
     private String error;
     private String message;
 
+    protected ApiError(HttpStatus status, String error, String message) {
+        this(status.value(), error, message);
+    }
+
     protected ApiError(HttpStatus status, Exception e, String message) {
         this(
                 status.value(),
