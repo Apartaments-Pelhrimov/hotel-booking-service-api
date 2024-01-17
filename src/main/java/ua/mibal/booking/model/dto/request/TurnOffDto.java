@@ -16,6 +16,7 @@
 
 package ua.mibal.booking.model.dto.request;
 
+import ua.mibal.booking.model.search.DateRangeValidRequest;
 import ua.mibal.booking.model.validation.constraints.ValidDateRange;
 
 import java.time.LocalDateTime;
@@ -29,5 +30,5 @@ public record TurnOffDto(
         LocalDateTime from,
         LocalDateTime to,
         String event
-) {
+) implements DateRangeValidRequest {
 }

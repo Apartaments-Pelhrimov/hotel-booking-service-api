@@ -16,15 +16,29 @@
 
 package ua.mibal.booking.model.search;
 
-import java.time.LocalDate;
+import java.time.temporal.Temporal;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public interface DateRangeRequestInterface {
+public interface DateRangeValidRequest {
 
-    LocalDate getFrom();
+    static DateRangeValidRequest of(Temporal from, Temporal to) {
+        return new DateRangeValidRequest() {
+            @Override
+            public Temporal from() {
+                return from;
+            }
 
-    LocalDate getTo();
+            @Override
+            public Temporal to() {
+                return to;
+            }
+        };
+    }
+
+    Temporal from();
+
+    Temporal to();
 }

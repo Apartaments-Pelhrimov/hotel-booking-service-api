@@ -18,25 +18,39 @@ package ua.mibal.booking.model.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import ua.mibal.booking.model.dto.request.TurnOffDto;
+import ua.mibal.booking.model.search.DateRangeValidRequest;
 import ua.mibal.booking.model.validation.constraints.ValidDateRange;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoField;
+import java.time.temporal.Temporal;
 import java.util.Objects;
-
-import static java.time.LocalDateTime.now;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class DateRangeValidator implements ConstraintValidator<ValidDateRange, TurnOffDto> {
+public class DateRangeValidator implements
+        ConstraintValidator<ValidDateRange, DateRangeValidRequest> {
 
     @Override
-    public boolean isValid(TurnOffDto turnOffDto, ConstraintValidatorContext context) {
-        LocalDateTime from = turnOffDto.from();
-        LocalDateTime to = turnOffDto.to();
+    public boolean isValid(DateRangeValidRequest request,
+                           ConstraintValidatorContext context) {
+        Comparable<Temporal> from = (Comparable<Temporal>) request.from();
+        Temporal to = request.to();
+        // now() < from < to
+        Temporal now = getNowDependingOnRequest(request);
         return !Objects.isNull(from) && !Objects.isNull(to) &&
-               from.isBefore(to) && from.isAfter(now());
+               from.compareTo(now) > 0 && from.compareTo(to) < 0;
+    }
+
+    private Temporal getNowDependingOnRequest(DateRangeValidRequest request) {
+        Temporal example = request.from();
+        if (example != null &&
+            example.isSupported(ChronoField.HOUR_OF_DAY)) {
+            return LocalDateTime.now();
+        }
+        return LocalDate.now();
     }
 }

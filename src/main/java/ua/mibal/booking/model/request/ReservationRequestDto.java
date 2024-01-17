@@ -19,6 +19,8 @@ package ua.mibal.booking.model.request;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import org.springframework.format.annotation.DateTimeFormat;
+import ua.mibal.booking.model.search.DateRangeValidRequest;
+import ua.mibal.booking.model.validation.constraints.ValidDateRange;
 
 import java.time.LocalDate;
 
@@ -28,6 +30,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
+@ValidDateRange
 public record ReservationRequestDto(
 
         @NotNull
@@ -41,5 +44,5 @@ public record ReservationRequestDto(
         @NotNull
         @Positive
         Integer people
-) {
+) implements DateRangeValidRequest {
 }
