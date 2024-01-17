@@ -61,7 +61,7 @@ public class AuthService {
         User user = saveNewUserByRegistration(registrationDto);
         ActivationCode activationCode =
                 activationCodeService.generateAndSaveCodeForUser(user);
-        emailSendingService.sendActivationCode(user, activationCode);
+        emailSendingService.sendActivationCode(activationCode);
     }
 
     public void activate(String activationCode) {
@@ -74,7 +74,7 @@ public class AuthService {
             User user = userService.getOne(email);
             ActivationCode activationCode =
                     activationCodeService.generateAndSaveCodeForUser(user);
-            emailSendingService.sendPasswordChangingCode(user, activationCode);
+            emailSendingService.sendPasswordChangingCode(activationCode);
         } catch (EntityNotFoundException ignored) {
         }
     }

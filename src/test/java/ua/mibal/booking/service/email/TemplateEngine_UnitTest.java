@@ -44,11 +44,11 @@ class TemplateEngine_UnitTest {
     private TemplateEngine templateEngine;
 
     @Test
-    void insert_simple() {
+    void insertIntoTemplate_simple() {
         String template = "Though our outer self is wasting away, our " +
                           "inner self is being renewed ${how_often}";
 
-        String actual = templateEngine.insert(template, Map.of(
+        String actual = templateEngine.insertIntoTemplate(template, Map.of(
                 "how_often", "day by day"
         ));
 
@@ -60,13 +60,13 @@ class TemplateEngine_UnitTest {
     }
 
     @Test
-    void insert_field() {
+    void insertIntoTemplate_field() {
         String template = "For ${who} ${who.action} the world," +
                           "that he gave his only Son," +
                           "that whoever believes in him" +
                           "should not perish but have eternal life";
 
-        String actual = templateEngine.insert(template, Map.of(
+        String actual = templateEngine.insertIntoTemplate(template, Map.of(
                 "who", new TestObject()
         ));
 
@@ -80,13 +80,13 @@ class TemplateEngine_UnitTest {
     }
 
     @Test
-    void insert_field_should_throw() {
+    void insertIntoTemplate_field_should_throw() {
         String template = "Therefore, since through God’s ${mercy.expiration} " +
                           "we have this ministry, we do not lose heart";
 
         RuntimeException e = assertThrows(
                 RuntimeException.class,
-                () -> templateEngine.insert(template, Map.of(
+                () -> templateEngine.insertIntoTemplate(template, Map.of(
                         "mercy", new TestObject()
                 ))
         );

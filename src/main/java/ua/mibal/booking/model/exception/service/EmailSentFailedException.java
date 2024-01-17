@@ -14,35 +14,17 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.email;
+package ua.mibal.booking.model.exception.service;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import ua.mibal.booking.model.exception.marker.InternalServerException;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@RequiredArgsConstructor
-@Getter
-public enum EmailType {
+public class EmailSentFailedException extends InternalServerException {
 
-    ACCOUNT_ACTIVATION(
-            "templates/account_activation.html",
-            "Account activation request",
-            "https://apartmany-pe.com/activate?code=%s"
-    ),
-    PASSWORD_CHANGING(
-            "templates/password_changing.html",
-            "Password changing request",
-            "https://apartmany-pe.com/changePass?code=%s"
-    );
-
-    private final String templatePath;
-    private final String subject;
-    private final String frontLink;
-
-    public String getFrontLink(String code) {
-        return frontLink.formatted(code);
+    public EmailSentFailedException(Throwable cause) {
+        super("Email send failed", cause);
     }
 }

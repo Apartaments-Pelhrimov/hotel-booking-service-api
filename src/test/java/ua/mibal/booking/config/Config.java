@@ -16,8 +16,15 @@
 
 package ua.mibal.booking.config;
 
+import jakarta.mail.Session;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
+
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Properties;
 
 /**
  * @author Mykhailo Balakhon
@@ -26,4 +33,15 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ComponentScan("ua.mibal.booking.testUtils")
 public class Config {
+
+    @Bean
+    public Session getSessionByProperties(Environment env) {
+        Properties props = new Properties();
+        props.put("mail.smtp.host", Objects.requireNonNull(env.getProperty("mail.smtp.host")));
+        props.put("mail.smtp.port", Objects.requireNonNull(env.getProperty("mail.smtp.port")));
+        props.put("mail.smtp.starttls.enable", Objects.requireNonNull(env.getProperty("mail.smtp.starttls.enable")));
+        Optional.ofNullable(env.getProperty("mail.debug"))
+                .ifPresent(val -> props.put("mail.debug", val));
+        return Session.getInstance(props);
+    }
 }

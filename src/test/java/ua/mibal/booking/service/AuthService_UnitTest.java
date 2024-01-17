@@ -161,7 +161,7 @@ class AuthService_UnitTest {
         authService.register(registrationDto);
 
         verify(emailSendingService, times(1))
-                .sendActivationCode(testUser, expectedActivationCode);
+                .sendActivationCode(expectedActivationCode);
     }
 
     @Test
@@ -198,7 +198,7 @@ class AuthService_UnitTest {
 
         assertDoesNotThrow(() -> authService.restore(email));
         verify(emailSendingService, times(1))
-                .sendPasswordChangingCode(testUser, activationCode);
+                .sendPasswordChangingCode(activationCode);
     }
 
     @Test
@@ -214,6 +214,5 @@ class AuthService_UnitTest {
                 .changeUserPasswordByActivationCode(code, "encoded_password");
         verify(activationCodeService, never())
                 .changeUserPasswordByActivationCode(code, forgetPasswordDto.password());
-
     }
 }

@@ -18,7 +18,8 @@ package ua.mibal.booking.service.email;
 
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,16 +32,15 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ua.mibal.booking.config.Config;
 import ua.mibal.booking.model.entity.ActivationCode;
 import ua.mibal.booking.model.entity.User;
+import ua.mibal.booking.service.email.model.EmailType;
 import ua.mibal.booking.testUtils.DataGenerator;
 import ua.mibal.booking.testUtils.EmailUtils;
 
-import java.util.Map;
-
 import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.ArgumentMatchers.anyMap;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
-import static ua.mibal.booking.service.email.EmailType.ACCOUNT_ACTIVATION;
 
 /**
  * @author Mykhailo Balakhon
@@ -67,23 +67,20 @@ class EmailSendingService_UnitTest {
     @Mock
     private ActivationCode activationCode;
 
-    @Test
-    void sendActivationCode() throws InterruptedException {
+    @ParameterizedTest
+    @EnumSource(EmailType.class)
+    void sendAllCodes(EmailType emailType) throws InterruptedException {
         when(user.getEmail()).thenReturn(env.getProperty("mail.user"));
+        when(activationCode.getUser()).thenReturn(user);
         when(activationCode.getCode()).thenReturn("CODE");
-        when(classpathFileReader.read(ACCOUNT_ACTIVATION.getTemplatePath())).thenReturn("TEMPLATE");
-        when(templateEngine.insert("TEMPLATE", Map.of(
-                "user", user,
-                "link", ACCOUNT_ACTIVATION.getFrontLink("CODE")
-        ))).thenReturn("INSERTED_TEMPLATE");
+        when(classpathFileReader.read(emailType.getTemplatePath()))
+                .thenReturn("TEMPLATE");
+        when(templateEngine.insertIntoTemplate(eq("TEMPLATE"), anyMap()))
+                .thenReturn("INSERTED_TEMPLATE_" + emailType.name());
 
-        assertDoesNotThrow(() -> service.sendActivationCode(user, activationCode));
+        service.sendActivationCode(activationCode);
+        Thread.sleep(10 * 1000); // to be confident - the email was sent
 
-//        Thread.sleep(5 * 1000); // to be confident - the email was sent
-        assertTrue(emailUtils.messageReceived(ACCOUNT_ACTIVATION.getSubject()));
-    }
-
-    @Test
-    void sendPasswordChangingCode() {
+        assertTrue(emailUtils.messageReceived(emailType.getSubject()));
     }
 }

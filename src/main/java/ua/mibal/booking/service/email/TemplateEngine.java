@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
 @Component
 public class TemplateEngine {
 
-    public String insert(String template, Map<String, Object> vars) {
+    public String insertIntoTemplate(String template, Map<String, Object> vars) {
         List<InsertPlace> insertPlaces = getInsertPlacesInTemplate(template);
         for (InsertPlace insertPlace : insertPlaces) {
             Object var = vars.get(insertPlace.getName());
@@ -86,8 +86,10 @@ public class TemplateEngine {
         return tokens;
     }
 
-    private String insert(Object value, InsertPlace insertPlace, String template) {
-        return template.replace("${" + insertPlace.getToken() + "}", value.toString());
+    private String insert(Object value,
+                          InsertPlace insertPlace,
+                          String template) {
+        return template.replace(insertPlace.getToken(), value.toString());
     }
 
     private InsertPlace tokenToInsertPlace(String token) {
@@ -121,6 +123,10 @@ public class TemplateEngine {
 
         public Optional<String> getFieldName() {
             return Optional.ofNullable(fieldName);
+        }
+
+        public String getToken() {
+            return "${" + token + "}";
         }
 
         public boolean isComplex() {

@@ -16,82 +16,84 @@
 
 package ua.mibal.booking.service.email;
 
-import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
 import jakarta.mail.Session;
 import jakarta.mail.Transport;
 import jakarta.mail.internet.MimeMessage;
-import org.springframework.core.env.Environment;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ua.mibal.booking.model.entity.ActivationCode;
-import ua.mibal.booking.model.entity.User;
+import ua.mibal.booking.model.exception.service.EmailSentFailedException;
+import ua.mibal.booking.service.email.model.EmailType;
+import ua.mibal.booking.service.email.model.MessageBuilder;
 
-import java.util.Date;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Properties;
+
+import static ua.mibal.booking.service.email.model.EmailType.ACCOUNT_ACTIVATION;
+import static ua.mibal.booking.service.email.model.EmailType.PASSWORD_CHANGING;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
+@RequiredArgsConstructor
 @Service
 public class EmailSendingService {
     private final Session session;
     private final ClasspathFileReader fileReader;
     private final TemplateEngine templateEngine;
-    private final String username;
-    private final String password;
 
-    public EmailSendingService(Environment env, ClasspathFileReader fileReader, TemplateEngine templateEngine) {
-        this.fileReader = fileReader;
-        this.templateEngine = templateEngine;
-        this.session = getSessionByProperties(env);
-        this.username = env.getProperty("mail.user");
-        this.password = env.getProperty("mail.password");
+    @Value("${mail.user}")
+    private String username;
+    @Value("${mail.password}")
+    private String password;
+
+    public void sendActivationCode(ActivationCode activationCode) {
+        sendCodeFor(ACCOUNT_ACTIVATION, activationCode);
     }
 
-    public void sendActivationCode(User user, ActivationCode activationCode) {
-        sendCode(EmailType.ACCOUNT_ACTIVATION, user, activationCode.getCode());
+    public void sendPasswordChangingCode(ActivationCode activationCode) {
+        sendCodeFor(PASSWORD_CHANGING, activationCode);
     }
 
-    public void sendPasswordChangingCode(User user, ActivationCode activationCode) {
-        sendCode(EmailType.PASSWORD_CHANGING, user, activationCode.getCode());
+    private void sendCodeFor(EmailType type, ActivationCode code) {
+        MessageBuilder messageBuilder = getMessageBuilderBy(type, code);
+        sendAsyncEmail(messageBuilder);
     }
 
-    private Session getSessionByProperties(Environment env) {
-        Properties props = new Properties();
-        props.put("mail.smtp.host", Objects.requireNonNull(env.getProperty("mail.smtp.host")));
-        props.put("mail.smtp.port", Objects.requireNonNull(env.getProperty("mail.smtp.port")));
-        props.put("mail.smtp.starttls.enable", Objects.requireNonNull(env.getProperty("mail.smtp.starttls.enable")));
-        Optional.ofNullable(env.getProperty("mail.debug"))
-                .ifPresent(val -> props.put("mail.debug", val));
-        return Session.getInstance(props, null);
+    private void sendAsyncEmail(MessageBuilder messageBuilder) {
+        new Thread(() -> {
+            try {
+                sendEmail(messageBuilder);
+            } catch (MessagingException e) {
+                throw new EmailSentFailedException(e);
+            }
+        }, "Email-sending-Thread").start();
     }
 
-    private synchronized void send(String recipient, String subject, Object message) {
-        try {
-            MimeMessage msg = new MimeMessage(session);
-            msg.setFrom(username);
-            msg.setRecipients(Message.RecipientType.TO, recipient);
-            msg.setSubject(subject);
-            msg.setSentDate(new Date());
-            msg.setContent(message, "text/html");
-            Transport.send(msg, username, password);
-        } catch (MessagingException e) {
-            throw new RuntimeException("Email send failed", e);
-        }
+    private synchronized void sendEmail(MessageBuilder messageBuilder)
+            throws MessagingException {
+        MimeMessage message = messageBuilder.buildMimeMessage();
+        Transport.send(message, username, password);
     }
 
-    private void sendCode(EmailType type, User user, String code) {
-        String sourceHtmlPage = fileReader.read(type.getTemplatePath());
-        String filledPage = templateEngine.insert(sourceHtmlPage, Map.of(
-                "user", user,
-                "link", type.getFrontLink(code)
+    private MessageBuilder getMessageBuilderBy(EmailType type,
+                                               ActivationCode code) {
+        String emailContent = getInsertedTemplateBy(type, code);
+        return new MessageBuilder()
+                .recipient(code.getUser().getEmail())
+                .sender(username)
+                .session(session)
+                .subject(type.getSubject())
+                .content(emailContent);
+    }
+
+    private String getInsertedTemplateBy(EmailType type, ActivationCode code) {
+        String sourceHtmlTemplate = fileReader.read(type.getTemplatePath());
+        return templateEngine.insertIntoTemplate(sourceHtmlTemplate, Map.of(
+                "user", code.getUser(),
+                "link", type.getFrontLink(code.getCode())
         ));
-        new Thread(
-                () -> send(user.getEmail(), type.getSubject(), filledPage)
-        ).start();
     }
 }
