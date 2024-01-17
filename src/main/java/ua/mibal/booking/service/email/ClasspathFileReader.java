@@ -17,12 +17,12 @@
 package ua.mibal.booking.service.email;
 
 import org.springframework.stereotype.Component;
+import ua.mibal.booking.model.exception.ClasspathFileReaderException;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Optional;
 
 /**
  * @author Mykhailo Balakhon
@@ -32,17 +32,20 @@ import java.util.Optional;
 public class ClasspathFileReader {
 
     public String read(String path) {
-        try (InputStream fileStream = getInputStream(path)) {
+        try (InputStream fileStream = getInputStreamBy(path)) {
             return new String(fileStream.readAllBytes(), StandardCharsets.UTF_8);
         } catch (IOException e) {
-            throw new RuntimeException("Exception while reading file", e);
+            throw new ClasspathFileReaderException(
+                    "Exception while reading file " + path, e);
         }
     }
 
-    private InputStream getInputStream(String path) throws FileNotFoundException {
-        InputStream fileStream = getClass().getClassLoader().getResourceAsStream(path);
-        return Optional.ofNullable(fileStream)
-                .orElseThrow(() -> new FileNotFoundException(
-                        "File with name '" + path + "' not found in classpath"));
+    private InputStream getInputStreamBy(String path) throws FileNotFoundException {
+        ClassLoader classLoader = getClass().getClassLoader();
+        InputStream fileStream = classLoader.getResourceAsStream(path);
+        if (fileStream == null) {
+            throw new FileNotFoundException(path + " not found in classpath");
+        }
+        return fileStream;
     }
 }

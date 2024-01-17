@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+import ua.mibal.booking.model.exception.ClasspathFileReaderException;
 
 import java.io.FileNotFoundException;
 
@@ -76,8 +77,8 @@ class ClasspathFileReader_UnitTest {
 
     @Test
     void read_should_throw_FileNotFoundException() {
-        RuntimeException e = assertThrows(
-                RuntimeException.class,
+        ClasspathFileReaderException e = assertThrows(
+                ClasspathFileReaderException.class,
                 () -> reader.read("not_existing_file")
         );
 
