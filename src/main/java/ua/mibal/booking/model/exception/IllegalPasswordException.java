@@ -25,6 +25,6 @@ import ua.mibal.booking.model.exception.marker.BadRequestException;
 public class IllegalPasswordException extends BadRequestException {
 
     public IllegalPasswordException() {
-        super("Illegal password");
+        super("bad-request-error.illegal-password");
     }
 }

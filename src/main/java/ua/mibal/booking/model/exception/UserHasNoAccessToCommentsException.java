@@ -24,10 +24,7 @@ import ua.mibal.booking.model.exception.marker.BadRequestException;
  */
 public class UserHasNoAccessToCommentsException extends BadRequestException {
 
-    public UserHasNoAccessToCommentsException(String userEmail, Long apartmentId) {
-        super(
-                "User with email='%s' does not have access to comments of Apartment with id=%s"
-                        .formatted(userEmail, apartmentId)
-        );
+    public UserHasNoAccessToCommentsException() {
+        super("bad-request-error.user-has-no-access-to-comments");
     }
 }

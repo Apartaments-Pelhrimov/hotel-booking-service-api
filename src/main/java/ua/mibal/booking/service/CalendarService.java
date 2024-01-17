@@ -180,13 +180,13 @@ public class CalendarService {
                      r.getDetails().getReservedFrom().isBefore(end);
         if (instance.getReservations().stream()
                 .anyMatch(intersectsWithRangeCondition)) {
-            throw new IllegalTurningOffTimeException(start, end);
+            throw new IllegalTurningOffTimeException();
         }
     }
 
     private void validateRangeToTurnOffHotel(LocalDateTime start, LocalDateTime end) {
         if (reservationRepository.existsReservationThatIntersectRange(start, end)) {
-            throw new IllegalTurningOffTimeException(start, end);
+            throw new IllegalTurningOffTimeException();
         }
     }
 }

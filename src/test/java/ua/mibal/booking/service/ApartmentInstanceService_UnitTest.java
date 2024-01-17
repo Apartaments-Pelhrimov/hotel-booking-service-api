@@ -29,7 +29,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ua.mibal.booking.model.dto.request.CreateApartmentInstanceDto;
 import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.entity.ApartmentInstance;
-import ua.mibal.booking.model.exception.ApartmentIsNotAvialableForReservation;
+import ua.mibal.booking.model.exception.ApartmentIsNotAvailableForReservation;
 import ua.mibal.booking.model.exception.entity.ApartmentInstanceNotFoundException;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.model.mapper.ApartmentInstanceMapper;
@@ -130,13 +130,13 @@ class ApartmentInstanceService_UnitTest {
         when(apartmentInstanceRepository.findFreeByRequest(id, MIN, MAX, people))
                 .thenReturn(List.of());
 
-        ApartmentIsNotAvialableForReservation e = assertThrows(
-                ApartmentIsNotAvialableForReservation.class,
+        ApartmentIsNotAvailableForReservation e = assertThrows(
+                ApartmentIsNotAvailableForReservation.class,
                 () -> service.getFreeOne(id, reservationRequestDto)
         );
 
         assertEquals(
-                new ApartmentIsNotAvialableForReservation(new ReservationRequest(MIN, MAX, people, id)).getMessage(),
+                new ApartmentIsNotAvailableForReservation().getMessage(),
                 e.getMessage()
         );
     }

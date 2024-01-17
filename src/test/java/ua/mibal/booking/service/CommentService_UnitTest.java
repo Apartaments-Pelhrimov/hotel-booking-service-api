@@ -27,7 +27,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
-import ua.mibal.booking.model.exception.UserHasNoAccessToComment;
+import ua.mibal.booking.model.exception.UserHasNoAccessToCommentException;
 import ua.mibal.booking.model.mapper.CommentMapper;
 import ua.mibal.booking.repository.ApartmentRepository;
 import ua.mibal.booking.repository.CommentRepository;
@@ -96,7 +96,7 @@ class CommentService_UnitTest {
         when(userRepository.userHasComment(email, id)).thenReturn(false);
 
         assertThrows(
-                UserHasNoAccessToComment.class,
+                UserHasNoAccessToCommentException.class,
                 () -> service.delete(id, email)
         );
         verify(commentRepository, never()).deleteById(id);

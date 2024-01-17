@@ -51,7 +51,7 @@ public class CostCalculationService {
             );
         }
         if (!from.isBefore(to)) {
-            throw new IllegalReservationDateRangeException(from, to);
+            throw new IllegalReservationDateRangeException();
         }
     }
 }

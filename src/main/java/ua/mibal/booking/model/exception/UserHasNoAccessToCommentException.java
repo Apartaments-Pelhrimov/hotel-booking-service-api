@@ -22,12 +22,9 @@ import ua.mibal.booking.model.exception.marker.BadRequestException;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class UserHasNoAccessToComment extends BadRequestException {
+public class UserHasNoAccessToCommentException extends BadRequestException {
 
-    public UserHasNoAccessToComment(String userEmail, Long commentId) {
-        super(
-                "User with email='%s' has no access to Comment with id=%d"
-                        .formatted(userEmail, commentId)
-        );
+    public UserHasNoAccessToCommentException() {
+        super("bad-request-error.user-has-no-access-to-comment");
     }
 }

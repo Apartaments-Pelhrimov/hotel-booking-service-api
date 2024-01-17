@@ -55,7 +55,7 @@ public class PriceService {
     public void delete(Long apartmentId, Integer person) {
         Apartment apartment = apartmentService.getOneFetchPrices(apartmentId);
         if (!apartment.deletePrice(person)) {
-            throw new PriceNotFoundException(apartmentId, person);
+            throw new PriceNotFoundException(person);
         }
     }
 }

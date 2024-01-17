@@ -16,8 +16,10 @@
 
 package ua.mibal.booking.controller.advice;
 
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -26,20 +28,22 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MultipartException;
 import ua.mibal.booking.controller.advice.model.ApiError;
-import ua.mibal.booking.controller.advice.model.InternalServerApiError;
 import ua.mibal.booking.controller.advice.model.MethodValidationApiError;
-import ua.mibal.booking.model.exception.marker.BadRequestException;
+import ua.mibal.booking.model.exception.marker.ApiException;
 import ua.mibal.booking.model.exception.marker.InternalServerException;
-import ua.mibal.booking.model.exception.marker.NotFoundException;
+
+import java.util.Locale;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
+@RequiredArgsConstructor
 @RestControllerAdvice
 public class ExceptionHandlerAdvice {
     private final static Logger log =
             LoggerFactory.getLogger(ExceptionHandlerAdvice.class);
+    private final MessageSource errorMessageSource;
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiError> handleValidationException(MethodArgumentNotValidException e) {
@@ -48,15 +52,7 @@ public class ExceptionHandlerAdvice {
                 .body(MethodValidationApiError.of(status, e));
     }
 
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ApiError> handleNotFoundException(Exception e) {
-        HttpStatus status = HttpStatus.NOT_FOUND;
-        return ResponseEntity.status(status)
-                .body(ApiError.ofException(status, e));
-    }
-
     @ExceptionHandler({
-            BadRequestException.class,
             MultipartException.class, // Exception while load so big photo file to server
     })
     public ResponseEntity<ApiError> handleBadRequestException(Exception e) {
@@ -72,11 +68,18 @@ public class ExceptionHandlerAdvice {
                 .body(ApiError.ofException(status, e));
     }
 
+    @ExceptionHandler(ApiException.class)
+    public ResponseEntity<ApiError> handleApiException(ApiException e,
+                                                       Locale locale) {
+        String message = e.getLocalizedMessage(errorMessageSource, locale);
+        return ResponseEntity.status(e.getHttpStatus())
+                .body(ApiError.of(e, message));
+    }
+
     @ExceptionHandler(InternalServerException.class)
-    public ResponseEntity<ApiError> handleInternalServerException(InternalServerException e) {
+    public ResponseEntity<ApiError> handleInternalServerException(InternalServerException e,
+                                                                  Locale locale) {
         log.error("An Internal error occurred", e);
-        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-        return ResponseEntity.status(status)
-                .body(InternalServerApiError.of(status, e));
+        return handleApiException(e, locale);
     }
 }

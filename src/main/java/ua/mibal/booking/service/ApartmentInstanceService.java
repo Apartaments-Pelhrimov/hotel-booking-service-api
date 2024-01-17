@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 import ua.mibal.booking.model.dto.request.CreateApartmentInstanceDto;
 import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.entity.ApartmentInstance;
-import ua.mibal.booking.model.exception.ApartmentIsNotAvialableForReservation;
+import ua.mibal.booking.model.exception.ApartmentIsNotAvailableForReservation;
 import ua.mibal.booking.model.exception.entity.ApartmentInstanceNotFoundException;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.model.mapper.ApartmentInstanceMapper;
@@ -100,7 +100,7 @@ public class ApartmentInstanceService {
     private ApartmentInstance selectMostSuitable(List<ApartmentInstance> variants,
                                                  ReservationRequest request) {
         if (variants.isEmpty()) {
-            throw new ApartmentIsNotAvialableForReservation(request);
+            throw new ApartmentIsNotAvailableForReservation();
         }
         if (variants.size() == 1) {
             return variants.get(0);

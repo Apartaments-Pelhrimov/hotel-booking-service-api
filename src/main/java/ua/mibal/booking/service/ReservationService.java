@@ -30,8 +30,8 @@ import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.entity.embeddable.Price;
 import ua.mibal.booking.model.entity.embeddable.Rejection;
 import ua.mibal.booking.model.entity.embeddable.ReservationDetails;
-import ua.mibal.booking.model.exception.PriceForPeopleCountNotFoundException;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
+import ua.mibal.booking.model.exception.entity.PriceNotFoundException;
 import ua.mibal.booking.model.exception.entity.ReservationNotFoundException;
 import ua.mibal.booking.model.exception.entity.UserNotFoundException;
 import ua.mibal.booking.model.mapper.ReservationMapper;
@@ -134,7 +134,7 @@ public class ReservationService {
         Apartment apartment = apartmentRepository.findByIdFetchPrices(apartmentId)
                 .orElseThrow(() -> new ApartmentNotFoundException(apartmentId));
         Price price = apartment.getPriceForPeople(request.people())
-                .orElseThrow(() -> new PriceForPeopleCountNotFoundException(apartmentId, request.people()));
+                .orElseThrow(() -> new PriceNotFoundException(request.people()));
         BigDecimal fullCost = costCalculationService
                 .calculatePrice(price.getCost(), request.from(), request.to());
         LocalDateTime from = dateTimeUtils.reserveFrom(request.from());

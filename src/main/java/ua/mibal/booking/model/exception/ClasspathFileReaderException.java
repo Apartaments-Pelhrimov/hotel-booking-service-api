@@ -16,11 +16,13 @@
 
 package ua.mibal.booking.model.exception;
 
+import ua.mibal.booking.model.exception.marker.InternalServerException;
+
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class ClasspathFileReaderException extends RuntimeException {
+public class ClasspathFileReaderException extends InternalServerException {
 
     public ClasspathFileReaderException(String message, Throwable cause) {
         super(message, cause);

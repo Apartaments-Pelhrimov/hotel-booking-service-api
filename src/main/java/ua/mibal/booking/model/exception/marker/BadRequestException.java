@@ -16,13 +16,23 @@
 
 package ua.mibal.booking.model.exception.marker;
 
+import org.springframework.http.HttpStatus;
+
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public abstract class BadRequestException extends RuntimeException {
+public abstract class BadRequestException extends ApiException {
 
-    public BadRequestException(String message) {
-        super(message);
+    private final Object[] args;
+
+    public BadRequestException(String code, Object... args) {
+        super(code, HttpStatus.BAD_REQUEST);
+        this.args = args;
+    }
+
+    @Override
+    public Object[] provideArgs() {
+        return args;
     }
 }

@@ -22,7 +22,7 @@ package ua.mibal.booking.model.exception.entity;
  */
 public class PriceNotFoundException extends EntityNotFoundException {
 
-    public PriceNotFoundException(Long apartmentId, Integer people) {
-        super(apartmentId, people);
+    public PriceNotFoundException(Integer people) {
+        super(people);
     }
 }

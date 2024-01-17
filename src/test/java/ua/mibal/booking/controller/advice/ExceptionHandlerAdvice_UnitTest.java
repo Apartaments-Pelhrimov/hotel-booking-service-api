@@ -34,7 +34,6 @@ import org.springframework.web.context.WebApplicationContext;
 import ua.mibal.booking.controller.ApartmentController;
 import ua.mibal.booking.controller.AuthController;
 import ua.mibal.booking.controller.advice.model.ApiError;
-import ua.mibal.booking.controller.advice.model.InternalServerApiError;
 import ua.mibal.booking.model.dto.auth.RegistrationDto;
 import ua.mibal.booking.model.exception.EmailAlreadyExistsException;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
@@ -42,8 +41,6 @@ import ua.mibal.booking.model.exception.service.CostCalculationServiceException;
 import ua.mibal.booking.service.ApartmentService;
 import ua.mibal.booking.service.AuthService;
 import ua.mibal.booking.testUtils.DataGenerator;
-
-import java.time.ZonedDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -86,7 +83,6 @@ class ExceptionHandlerAdvice_UnitTest {
     void handleValidationException() throws Exception {
         RegistrationDto registrationDto = DataGenerator.invalidRegistrationDto();
         ApiError expectedError = new ApiError(
-                ZonedDateTime.now(),
                 HttpStatus.BAD_REQUEST.value(),
                 MethodArgumentNotValidException.class.getSimpleName(),
                 ""
@@ -160,7 +156,7 @@ class ExceptionHandlerAdvice_UnitTest {
     @Test
     void handleInternalServerException() throws Exception {
         Long id = 1L;
-        ApiError expectedError = InternalServerApiError.of(
+        ApiError expectedError = ApiError.ofException(
                 HttpStatus.INTERNAL_SERVER_ERROR, new CostCalculationServiceException("test_message")
         );
         doThrow(new CostCalculationServiceException("test_message")).when(apartmentService).delete(id);

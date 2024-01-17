@@ -20,6 +20,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
+import ua.mibal.booking.model.exception.marker.ApiException;
 
 import java.time.ZonedDateTime;
 
@@ -31,14 +32,13 @@ import java.time.ZonedDateTime;
 @NoArgsConstructor
 @Getter
 public class ApiError {
-    private ZonedDateTime timestamp;
+    private final ZonedDateTime timestamp = ZonedDateTime.now();
     private Integer status;
     private String error;
     private String message;
 
     protected ApiError(HttpStatus status, Exception e, String message) {
         this(
-                ZonedDateTime.now(),
                 status.value(),
                 e.getClass().getSimpleName(),
                 message
@@ -51,5 +51,13 @@ public class ApiError {
 
     public static ApiError ofException(HttpStatus status, Exception e) {
         return new ApiError(status, e);
+    }
+
+    public static ApiError of(ApiException e, String message) {
+        return new ApiError(
+                e.getHttpStatus().value(),
+                e.getCode(),
+                message
+        );
     }
 }

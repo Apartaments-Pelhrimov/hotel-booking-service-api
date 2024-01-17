@@ -16,6 +16,7 @@
 
 package ua.mibal.booking.model.exception.entity;
 
+import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.exception.marker.NotFoundException;
 
 /**
@@ -24,18 +25,21 @@ import ua.mibal.booking.model.exception.marker.NotFoundException;
  */
 public abstract class EntityNotFoundException extends NotFoundException {
 
-    protected final static String MESSAGE_FORMAT = "Entity %s by id=%s not found";
-
     protected EntityNotFoundException(Class<?> entity, Long id) {
-        super(String.format(MESSAGE_FORMAT, entity.getSimpleName(), id));
+        super(
+                "not-found-error.entity.by-id",
+                entity.getSimpleName(), id
+        );
     }
 
     protected EntityNotFoundException(String userEmail) {
-        super("Entity User by email='" + userEmail + "' not found");
+        super(
+                "not-found-error.entity.user-by-email",
+                User.class, userEmail
+        );
     }
 
-    protected EntityNotFoundException(Long apartmentId, Integer people) {
-        super("Entity Price by Apartment with id=" + apartmentId +
-              " and with people count=" + people + " not found");
+    protected EntityNotFoundException(Integer people) {
+        super("not-found-error.entity.price-by-composite", people);
     }
 }

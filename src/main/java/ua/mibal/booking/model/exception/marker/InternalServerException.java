@@ -16,17 +16,33 @@
 
 package ua.mibal.booking.model.exception.marker;
 
+import org.springframework.http.HttpStatus;
+
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public abstract class InternalServerException extends RuntimeException {
+public abstract class InternalServerException extends ApiException {
 
-    public InternalServerException(String message, Throwable cause) {
-        super(message, cause);
+    protected InternalServerException(String message, Throwable cause) {
+        super(
+                message,
+                cause,
+                "internal-error",
+                HttpStatus.INTERNAL_SERVER_ERROR
+        );
     }
 
-    public InternalServerException(String message) {
-        super(message);
+    protected InternalServerException(String message) {
+        super(
+                message,
+                "internal-error",
+                HttpStatus.INTERNAL_SERVER_ERROR
+        );
+    }
+
+    @Override
+    public Object[] provideArgs() {
+        return new Object[0];
     }
 }

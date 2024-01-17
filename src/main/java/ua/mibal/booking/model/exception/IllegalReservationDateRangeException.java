@@ -18,15 +18,13 @@ package ua.mibal.booking.model.exception;
 
 import ua.mibal.booking.model.exception.marker.BadRequestException;
 
-import java.time.LocalDate;
-
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 public class IllegalReservationDateRangeException extends BadRequestException {
 
-    public IllegalReservationDateRangeException(LocalDate from, LocalDate to) {
-        super("Illegal date range: from=%s to=%s".formatted(from, to));
+    public IllegalReservationDateRangeException() {
+        super("bad-request-error.illegal-date-range");
     }
 }

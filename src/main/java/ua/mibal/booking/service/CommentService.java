@@ -26,7 +26,7 @@ import ua.mibal.booking.model.dto.response.CommentDto;
 import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.entity.Comment;
 import ua.mibal.booking.model.entity.User;
-import ua.mibal.booking.model.exception.UserHasNoAccessToComment;
+import ua.mibal.booking.model.exception.UserHasNoAccessToCommentException;
 import ua.mibal.booking.model.exception.UserHasNoAccessToCommentsException;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.model.mapper.CommentMapper;
@@ -79,7 +79,7 @@ public class CommentService {
 
     private void validateUserHasComment(Long commentId, String userEmail) {
         if (!userRepository.userHasComment(userEmail, commentId)) {
-            throw new UserHasNoAccessToComment(userEmail, commentId);
+            throw new UserHasNoAccessToCommentException();
         }
     }
 
@@ -88,7 +88,7 @@ public class CommentService {
             throw new ApartmentNotFoundException(apartmentId);
         }
         if (!userRepository.userHasReservationWithApartment(userEmail, apartmentId)) {
-            throw new UserHasNoAccessToCommentsException(userEmail, apartmentId);
+            throw new UserHasNoAccessToCommentsException();
         }
     }
 }

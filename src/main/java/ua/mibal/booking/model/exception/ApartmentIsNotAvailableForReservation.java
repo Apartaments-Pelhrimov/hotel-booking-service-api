@@ -16,19 +16,15 @@
 
 package ua.mibal.booking.model.exception;
 
-import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.exception.marker.BadRequestException;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class IllegalRoleException extends BadRequestException {
+public class ApartmentIsNotAvailableForReservation extends BadRequestException {
 
-    public IllegalRoleException(User user) {
-        super(String.format(
-                "User with id=%d have no access. User's roles=%s",
-                user.getId(), user.getRole()
-        ));
+    public ApartmentIsNotAvailableForReservation() {
+        super("bad-request-error.apartment-not-available");
     }
 }
