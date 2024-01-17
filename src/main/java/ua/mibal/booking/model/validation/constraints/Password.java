@@ -37,16 +37,14 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  */
 @Pattern(
         regexp = "^(?=.*[0-9])(?=.*[a-z])(?=\\S+$).{8,}$",
-        message = "must be longer than 8, without space character " +
-                  "and contain at least one letter and number"
+        message = "{validation.password}"
 )
 @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
 @Retention(RUNTIME)
 @Constraint(validatedBy = {})
 public @interface Password {
 
-    String message() default "must be longer than 8, without space character " +
-                             "and contain at least one letter and number";
+    String message() default "{validation.password}";
 
     Class<?>[] groups() default {};
 

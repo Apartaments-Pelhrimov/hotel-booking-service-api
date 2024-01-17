@@ -37,14 +37,14 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  */
 @Pattern(
         regexp = "^\\+([0-9]){10,15}",
-        message = "must begin with '+' and be valid number"
+        message = "{validation.phone}"
 )
 @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
 @Retention(RUNTIME)
 @Constraint(validatedBy = {})
 public @interface Phone {
 
-    String message() default "must begin with '+' and be valid number";
+    String message() default "{validation.phone}";
 
     Class<?>[] groups() default {};
 

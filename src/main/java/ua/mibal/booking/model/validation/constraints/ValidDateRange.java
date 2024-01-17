@@ -35,8 +35,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Constraint(validatedBy = DateRangeValidator.class)
 public @interface ValidDateRange {
 
-    String message() default
-            "Required date request params must be in range: [now() < from < to]";
+    String message() default "{validation.valid-date-range}";
 
     Class<?>[] groups() default {};
 

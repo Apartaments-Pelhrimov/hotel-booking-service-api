@@ -38,14 +38,14 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Pattern(
         regexp = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@" +
                  "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$",
-        message = "must be valid email"
+        message = "{validation.email}"
 )
 @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
 @Retention(RUNTIME)
 @Constraint(validatedBy = {})
 public @interface Email {
 
-    String message() default "should be valid email";
+    String message() default "{validation.email}";
 
     Class<?>[] groups() default {};
 

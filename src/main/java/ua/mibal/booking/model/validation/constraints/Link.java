@@ -38,14 +38,14 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Pattern(
         regexp = "https?://(www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}" +
                  "\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)",
-        message = "should be valid link"
+        message = "{validation.link}"
 )
 @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
 @Retention(RUNTIME)
 @Constraint(validatedBy = {})
 public @interface Link {
 
-    String message() default "should be valid link";
+    String message() default "{validation.link}";
 
     Class<?>[] groups() default {};
 

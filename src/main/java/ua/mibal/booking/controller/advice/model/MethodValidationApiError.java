@@ -16,8 +16,8 @@
 
 package ua.mibal.booking.controller.advice.model;
 
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.stream.Collectors;
@@ -27,9 +27,6 @@ import java.util.stream.Collectors;
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 public class MethodValidationApiError extends ApiError {
-
-    protected final static String
-            FIELD_ERROR_MESSAGE_TEMPLATE = "Field %s='%s' %s.";
 
     protected MethodValidationApiError(HttpStatus status,
                                        Exception exception,
@@ -49,23 +46,14 @@ public class MethodValidationApiError extends ApiError {
         return e.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .map(MethodValidationApiError::reformatFieldErrorMessage)
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.joining(" "));
     }
 
     private static String getObjectErrorsMessage(MethodArgumentNotValidException e) {
         return e.getGlobalErrors()
                 .stream()
-                .map(err -> err.getDefaultMessage() + ".")
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.joining(" "));
-    }
-
-    protected static String reformatFieldErrorMessage(FieldError error) {
-        String fieldName = error.getField();
-        Object fieldValue = error.getRejectedValue();
-        String errorMessage = error.getDefaultMessage();
-        return FIELD_ERROR_MESSAGE_TEMPLATE.formatted(
-                fieldName, fieldValue, errorMessage
-        );
     }
 }

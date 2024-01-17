@@ -37,14 +37,14 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  */
 @Pattern(
         regexp = "^(\\p{L}){3,50}",
-        message = "must be longer than 3 and without space character"
+        message = "{validation.name}"
 )
 @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
 @Retention(RUNTIME)
 @Constraint(validatedBy = {})
 public @interface Name {
 
-    String message() default "must be longer than 3 and without space character";
+    String message() default "{validation.name}";
 
     Class<?>[] groups() default {};
 
