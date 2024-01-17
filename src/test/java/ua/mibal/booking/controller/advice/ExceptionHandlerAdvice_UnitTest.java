@@ -33,6 +33,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.context.WebApplicationContext;
 import ua.mibal.booking.controller.ApartmentController;
 import ua.mibal.booking.controller.AuthController;
+import ua.mibal.booking.controller.advice.model.ApiError;
+import ua.mibal.booking.controller.advice.model.InternalServerApiError;
 import ua.mibal.booking.model.dto.auth.RegistrationDto;
 import ua.mibal.booking.model.exception.EmailAlreadyExistsException;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
@@ -44,6 +46,7 @@ import ua.mibal.booking.testUtils.DataGenerator;
 import java.time.ZonedDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -97,8 +100,12 @@ class ExceptionHandlerAdvice_UnitTest {
 
 
         ApiError responseError = objectMapper.readValue(responseContent, ApiError.class);
-        assertEquals(expectedError.status(), responseError.status());
-        assertEquals(expectedError.error(), responseError.error());
+        assertEquals(expectedError.getStatus(), responseError.getStatus());
+        assertEquals(expectedError.getError(), responseError.getError());
+
+        assertTrue(responseError.getMessage().contains(registrationDto.password()));
+        assertTrue(responseError.getMessage().contains(registrationDto.email()));
+        assertTrue(responseError.getMessage().contains(registrationDto.phone()));
     }
 
     @Test
@@ -116,9 +123,9 @@ class ExceptionHandlerAdvice_UnitTest {
 
 
         ApiError responseError = objectMapper.readValue(responseContent, ApiError.class);
-        assertEquals(expectedError.status(), responseError.status());
-        assertEquals(expectedError.error(), responseError.error());
-        assertEquals(expectedError.message(), responseError.message());
+        assertEquals(expectedError.getStatus(), responseError.getStatus());
+        assertEquals(expectedError.getError(), responseError.getError());
+        assertEquals(expectedError.getMessage(), responseError.getMessage());
     }
 
     @Test
@@ -140,9 +147,9 @@ class ExceptionHandlerAdvice_UnitTest {
 
 
         ApiError responseError = objectMapper.readValue(responseContent, ApiError.class);
-        assertEquals(expectedError.status(), responseError.status());
-        assertEquals(expectedError.error(), responseError.error());
-        assertEquals(expectedError.message(), responseError.message());
+        assertEquals(expectedError.getStatus(), responseError.getStatus());
+        assertEquals(expectedError.getError(), responseError.getError());
+        assertEquals(expectedError.getMessage(), responseError.getMessage());
     }
 
     @Test
@@ -153,7 +160,7 @@ class ExceptionHandlerAdvice_UnitTest {
     @Test
     void handleInternalServerException() throws Exception {
         Long id = 1L;
-        ApiError expectedError = ApiError.ofException(
+        ApiError expectedError = InternalServerApiError.of(
                 HttpStatus.INTERNAL_SERVER_ERROR, new CostCalculationServiceException("test_message")
         );
         doThrow(new CostCalculationServiceException("test_message")).when(apartmentService).delete(id);
@@ -165,9 +172,9 @@ class ExceptionHandlerAdvice_UnitTest {
 
 
         ApiError responseError = objectMapper.readValue(responseContent, ApiError.class);
-        assertEquals(expectedError.status(), responseError.status());
-        assertEquals(expectedError.error(), responseError.error());
-        assertEquals(expectedError.message(), responseError.message());
+        assertEquals(expectedError.getStatus(), responseError.getStatus());
+        assertEquals(expectedError.getError(), responseError.getError());
+        assertEquals(expectedError.getMessage(), responseError.getMessage());
     }
 }
 

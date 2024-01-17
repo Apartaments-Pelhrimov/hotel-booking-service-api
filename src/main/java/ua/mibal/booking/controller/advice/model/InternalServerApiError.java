@@ -14,35 +14,28 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.controller.advice;
+package ua.mibal.booking.controller.advice.model;
 
 import org.springframework.http.HttpStatus;
-
-import java.time.ZonedDateTime;
+import ua.mibal.booking.model.exception.marker.InternalServerException;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public record ApiError(
-        ZonedDateTime timestamp,
-        Integer status,
-        String error,
-        String message
-) {
-    private ApiError(HttpStatus status, Exception e) {
-        this(status, e, e.getLocalizedMessage());
+public class InternalServerApiError extends ApiError {
+
+    protected InternalServerApiError(HttpStatus status,
+                                     Exception e,
+                                     String message) {
+        super(status, e, message);
     }
 
-    private ApiError(HttpStatus status, Exception e, String message) {
-        this(ZonedDateTime.now(), status.value(), e.getClass().getSimpleName(), message);
-    }
-
-    public static ApiError ofException(HttpStatus status, Exception e) {
-        return new ApiError(status, e);
-    }
-
-    public static ApiError ofExceptionAndMessage(HttpStatus status, Exception e, String message) {
-        return new ApiError(status, e, message);
+    public static InternalServerApiError of(HttpStatus status,
+                                            InternalServerException e) {
+        String message = "Internal Server Error. " +
+                         "Please contact administrator. "
+                         + e.getLocalizedMessage();
+        return new InternalServerApiError(status, e, message);
     }
 }

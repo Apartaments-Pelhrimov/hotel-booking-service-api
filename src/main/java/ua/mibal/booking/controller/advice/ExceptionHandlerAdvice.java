@@ -25,11 +25,12 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MultipartException;
+import ua.mibal.booking.controller.advice.model.ApiError;
+import ua.mibal.booking.controller.advice.model.InternalServerApiError;
+import ua.mibal.booking.controller.advice.model.MethodValidationApiError;
 import ua.mibal.booking.model.exception.marker.BadRequestException;
 import ua.mibal.booking.model.exception.marker.InternalServerException;
 import ua.mibal.booking.model.exception.marker.NotFoundException;
-
-import java.util.stream.Collectors;
 
 /**
  * @author Mykhailo Balakhon
@@ -37,21 +38,14 @@ import java.util.stream.Collectors;
  */
 @RestControllerAdvice
 public class ExceptionHandlerAdvice {
-    private final static Logger log = LoggerFactory.getLogger(ExceptionHandlerAdvice.class);
+    private final static Logger log =
+            LoggerFactory.getLogger(ExceptionHandlerAdvice.class);
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiError> handleValidationException(MethodArgumentNotValidException e) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
-        String objErrors = e.getGlobalErrors().stream()
-                .map(err -> err.getDefaultMessage() + ".")
-                .collect(Collectors.joining(" "));
-        String template = "Field %s='%s' %s.";
-        String fieldErrors = e.getBindingResult()
-                .getFieldErrors().stream()
-                .map(er -> String.format(template, er.getField(), er.getRejectedValue(), er.getDefaultMessage()))
-                .collect(Collectors.joining(" "));
         return ResponseEntity.status(status)
-                .body(ApiError.ofExceptionAndMessage(status, e, (objErrors + " " + fieldErrors).trim()));
+                .body(MethodValidationApiError.of(status, e));
     }
 
     @ExceptionHandler(NotFoundException.class)
@@ -79,10 +73,10 @@ public class ExceptionHandlerAdvice {
     }
 
     @ExceptionHandler(InternalServerException.class)
-    public ResponseEntity<ApiError> handleInternalServerException(Exception e) {
+    public ResponseEntity<ApiError> handleInternalServerException(InternalServerException e) {
         log.error("An Internal error occurred", e);
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         return ResponseEntity.status(status)
-                .body(ApiError.ofException(status, e));
+                .body(InternalServerApiError.of(status, e));
     }
 }
