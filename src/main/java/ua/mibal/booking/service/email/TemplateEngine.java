@@ -19,6 +19,7 @@ package ua.mibal.booking.service.email;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
+import ua.mibal.booking.model.exception.TemplateEngineException;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -35,102 +36,169 @@ import java.util.regex.Pattern;
 @Component
 public class TemplateEngine {
 
-    public String insertIntoTemplate(String template, Map<String, Object> vars) {
-        List<InsertPlace> insertPlaces = getInsertPlacesInTemplate(template);
+    private final static String FIND_TOKEN_REGEX = "\\$\\{(.*?)}";
+    private final static String TOKEN_BODY_AND_FIELD_DIVIDER_REGEX = "\\.";
+    private final static String TOKEN_BODY_AND_FIELD_DIVIDER = ".";
+    private final static int TOKEN_BODY_INDEX = 0;
+    private final static int TOKEN_FIELD_INDEX = 1;
+
+    public String insertIntoTemplate(String template, Map<String, Object> varsToInsert) {
+        List<InsertPlace> insertPlaces = getInsertPlaces(template);
         for (InsertPlace insertPlace : insertPlaces) {
-            Object var = vars.get(insertPlace.getName());
-            if (insertPlace.isComplex()) {
-                Object fieldValue = getFieldValue(var, insertPlace);
-                template = insert(fieldValue, insertPlace, template);
-            } else {
-                template = insert(var, insertPlace, template);
-            }
+            Object insertValue = varsToInsert.get(insertPlace.getBody());
+            template = insertPlace.insertInto(template, insertValue);
         }
         return template;
     }
 
-    private Object getFieldValue(Object var, InsertPlace insertPlace) {
-        try {
-            String fieldName = insertPlace.getFieldName().get();
-            Field field = var.getClass().getDeclaredField(fieldName);
-            field.setAccessible(true);
-            Object result = field.get(var);
-            field.setAccessible(false);
-            return result;
-        } catch (IllegalAccessException | NoSuchFieldException e) {
-            throw new RuntimeException(
-                    "Exception while retrieving value from field name=" + insertPlace.fieldName +
-                    " from object by class='" + var.getClass(),
-                    e
-            );
-        }
+    private List<InsertPlace> getInsertPlaces(String template) {
+        List<String> tokens = getTokens(template);
+        return getInsertPlacesFromTokens(tokens);
     }
 
-    private List<InsertPlace> getInsertPlacesInTemplate(String template) {
-        return getTokens(template)
-                .stream()
+    private List<InsertPlace> getInsertPlacesFromTokens(List<String> tokens) {
+        return tokens.stream()
                 .map(this::tokenToInsertPlace)
                 .toList();
     }
 
+    /**
+     * Method parses given String template into tokens.
+     * <p>
+     * For example:
+     * <p>
+     * {@code "Hello, ${user.name}. Welcome to ${app.name}. Today is ${year}"}
+     * <p>
+     * Tokens in this example: {@code "${user.name}"}, {@code "${app.name}"}
+     * and {@code "${year}"}
+     * <p>
+     * Tokens can be complex and regular (see {@link InsertPlace} for more
+     * info);
+     *
+     * @param template
+     * @return tokens
+     */
     private List<String> getTokens(String template) {
-        Pattern pattern = Pattern.compile("\\$\\{(.*?)}");
-        Matcher matcher = pattern.matcher(template);
+        Pattern tokenPattern = Pattern.compile(FIND_TOKEN_REGEX);
+        Matcher tokenMatcher = tokenPattern.matcher(template);
 
         List<String> tokens = new ArrayList<>();
-        if (matcher.find()) {
+        if (tokenMatcher.find()) {
             do {
-                tokens.add(matcher.group(1));
-            } while (matcher.find(matcher.end()));
+                String token = tokenMatcher.group(1);
+                tokens.add(token);
+            } while (tokenMatcher.find(tokenMatcher.end()));
         }
         return tokens;
     }
 
-    private String insert(Object value,
-                          InsertPlace insertPlace,
-                          String template) {
-        return template.replace(insertPlace.getToken(), value.toString());
-    }
-
     private InsertPlace tokenToInsertPlace(String token) {
-        if (token.contains(".")) {
-            String[] tokenParts = token.split("\\.");
-            validateTokenParts(tokenParts, token);
-            String varName = tokenParts[0];
-            String fieldName = tokenParts[1];
-            return new InsertPlace(varName, fieldName, token);
-        } else {
+        if (!isComplex(token)) {
             return new InsertPlace(token, null, token);
         }
+        String[] tokenComponents = token.split(TOKEN_BODY_AND_FIELD_DIVIDER_REGEX);
+        validateTokenPartsLength(tokenComponents, token);
+        String tokenBody = tokenComponents[TOKEN_BODY_INDEX];
+        String tokenField = tokenComponents[TOKEN_FIELD_INDEX];
+        return new InsertPlace(tokenBody, tokenField, token);
     }
 
-    private void validateTokenParts(String[] tokenParts, String token) {
+    private boolean isComplex(String token) {
+        return token.contains(TOKEN_BODY_AND_FIELD_DIVIDER);
+    }
+
+    private void validateTokenPartsLength(String[] tokenParts, String token) {
         if (tokenParts.length != 2) {
-            throw new IllegalArgumentException(
-                    "Illegal placeholder '" + token + "'. " +
-                    "Token must consists of ${name.field}, 'field' is optional."
+            throw new TemplateEngineException(
+                    "Illegal placeholder '%s'. Token must consists of " +
+                    "'${obj.field}' or '${obj}' ('field' is optional).", token
             );
         }
     }
 
-    @Getter
+    /**
+     * This is representation of placeholder found at template.
+     * <p>
+     * There are 2 types of {@link InsertPlace}s: regular and complex.
+     * <p>
+     * <p>
+     * Example of complex:
+     * <p>
+     * {@code "Hello, ${user.name}."} or {@code "Today will be
+     * ${weather.forecast}"}
+     * <p>
+     * <p>
+     * Example of regular:
+     * <p>
+     * {@code "Click on the ${link} if you agree"}
+     * <p>
+     *
+     * @author Mykhailo Balakhon
+     * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
+     */
     @AllArgsConstructor
     private static class InsertPlace {
-
-        private String name;
-        private String fieldName;
+        @Getter
+        private String body;
+        private String field;
         private String token;
 
-        public Optional<String> getFieldName() {
-            return Optional.ofNullable(fieldName);
+        public String insertInto(String template, Object objectToInsert) {
+            if (this.isComplex()) {
+                Object fieldValue = getFieldValue(objectToInsert);
+                return template.replace(getToken(), fieldValue.toString());
+            }
+            return template.replace(getToken(), objectToInsert.toString());
         }
 
-        public String getToken() {
+        /**
+         * @return {@code true} if {@link InsertPlace} has
+         * {@link InsertPlace#field},
+         * {@code false} - if it has no
+         * {@link InsertPlace#field}
+         */
+        private boolean isComplex() {
+            return field != null;
+        }
+
+        private Optional<String> getField() {
+            return Optional.ofNullable(field);
+        }
+
+        private String getToken() {
             return "${" + token + "}";
         }
 
-        public boolean isComplex() {
-            return fieldName != null;
+        private Object getFieldValueFor(Object obj)
+                throws NoSuchFieldException, IllegalAccessException {
+            if (!this.isComplex()) {
+                throw new TemplateEngineException(
+                        "Exception while trying to retrieve field value from " +
+                        "class=%s when InsertPlace is not complex (has no field)",
+                        obj.getClass()
+                );
+            }
+            String fieldName = this.getField().get();
+            Field field = obj.getClass().getDeclaredField(fieldName);
+            if (field.canAccess(obj)) {
+                return field.get(obj);
+            }
+            field.setAccessible(true);
+            Object fieldValue = field.get(obj);
+            field.setAccessible(false);
+            return fieldValue;
+        }
+
+        private Object getFieldValue(Object obj) {
+            try {
+                return getFieldValueFor(obj);
+            } catch (IllegalAccessException | NoSuchFieldException e) {
+                throw new TemplateEngineException(
+                        "Exception while retrieving value from field name=%s " +
+                        "from object by class='%s'",
+                        e, field, obj.getClass()
+                );
+            }
         }
     }
 }

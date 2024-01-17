@@ -28,6 +28,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
@@ -57,6 +58,7 @@ class TemplateEngine_UnitTest {
                 "inner self is being renewed day by day",
                 actual
         );
+        assertNotEquals(template, actual);
     }
 
     @Test
@@ -77,6 +79,7 @@ class TemplateEngine_UnitTest {
                 "should not perish but have eternal life",
                 actual
         );
+        assertNotEquals(template, actual);
     }
 
     @Test
