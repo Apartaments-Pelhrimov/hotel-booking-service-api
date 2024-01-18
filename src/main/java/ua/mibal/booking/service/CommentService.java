@@ -58,7 +58,6 @@ public class CommentService {
         validateUserHasReservation(apartmentId, userEmail);
         Comment newComment = createComment(createCommentDto, userEmail, apartmentId);
         commentRepository.save(newComment);
-        apartmentRepository.refreshRatingById(apartmentId);
     }
 
     public void delete(Long id, String email) {

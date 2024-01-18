@@ -37,6 +37,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Formula;
 import org.hibernate.type.NumericBooleanConverter;
 import ua.mibal.booking.model.entity.embeddable.ApartmentOptions;
 import ua.mibal.booking.model.entity.embeddable.Photo;
@@ -93,7 +94,11 @@ public class Apartment {
     @Column(nullable = false)
     private Boolean published;
 
-    @Column
+    @Formula("""
+                 (select avg(c.rate)
+                    from comments c
+                  where c.apartment_id = id)
+            """)
     private Double rating;
 
     @Enumerated(EnumType.STRING)
