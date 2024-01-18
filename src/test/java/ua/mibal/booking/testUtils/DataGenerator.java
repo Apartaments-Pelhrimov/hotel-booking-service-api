@@ -258,6 +258,8 @@ public class DataGenerator {
     public static Comment testComment() {
         return Instancio.of(Comment.class)
                 .set(field(Comment::getId), null)
+                .set(field(Comment::getUser), null)
+                .set(field(Comment::getApartment), null)
                 .create();
     }
 
