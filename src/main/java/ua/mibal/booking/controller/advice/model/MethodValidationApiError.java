@@ -37,7 +37,7 @@ public class MethodValidationApiError extends ApiError {
                                               MethodArgumentNotValidException e) {
         String objectErrors = getObjectErrorsMessage(e);
         String fieldErrors = getFieldErrorsMessage(e);
-        String message = String.join(" ", objectErrors, fieldErrors);
+        String message = (objectErrors + " " + fieldErrors).trim();
         return new MethodValidationApiError(status, message);
     }
 
