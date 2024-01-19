@@ -42,8 +42,9 @@ server:
 
 
 mail:
-  user: ${MAIL_USER}
+  username: ${MAIL_USERNAME}
   password: ${MAIL_PASSWORD}
+  developers: ${MAIL_DEVELOPERS}
   smtp:
     host: smtp.gmail.com
     port: 587
