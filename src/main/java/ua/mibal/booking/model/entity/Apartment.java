@@ -85,6 +85,7 @@ public class Apartment {
                     name = "prices_apartment_id_and_person_uq",
                     columnNames = {"apartment_id", "person"}
             ))
+    @Setter(PRIVATE)
     private List<Price> prices = new LinkedList<>();
 
     @Embedded
@@ -172,8 +173,12 @@ public class Apartment {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Apartment that)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Apartment that)) {
+            return false;
+        }
         return id != null && id.equals(that.id);
     }
 
