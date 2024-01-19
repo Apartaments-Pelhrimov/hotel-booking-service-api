@@ -39,13 +39,21 @@ public class SimpleEvent implements Event {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         SimpleEvent that = (SimpleEvent) o;
 
-        if (!start.equals(that.start)) return false;
-        if (!end.equals(that.end)) return false;
+        if (!start.equals(that.start)) {
+            return false;
+        }
+        if (!end.equals(that.end)) {
+            return false;
+        }
         return eventName.equals(that.eventName);
     }
 
