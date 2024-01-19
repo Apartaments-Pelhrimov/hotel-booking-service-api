@@ -42,9 +42,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.List.of;
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -86,7 +86,7 @@ class BookingComReservationService_UnitTest {
 
     @Test
     @Order(2)
-    void getEventsFor_should_not_throw_NotFoundException() {
+    void getEventsFor_should_NOT_throw_if_apartmentInstance_has_not_ical_url() {
         when(apartmentInstance.getBookingICalUrl()).thenReturn(Optional.empty());
 
         assertDoesNotThrow(
@@ -98,12 +98,12 @@ class BookingComReservationService_UnitTest {
     @Order(3)
     @CsvSource({
             "invalid_url\"",
-            "valid_url",
-            "./valid_url/",
-            "//valid_url/",
-            "~/valid_url/",
+            "invalid_url",
+            "./invalid_url/",
+            "//invalid_url/",
+            "~/invalid_url/",
     })
-    void getEventsFor_should_throw_IllegalArgumentException_if_uri_is_invalid(String url) {
+    void getEventsFor_should_throw_BookingComServiceException_if_ical_url_is_invalid(String url) {
         when(apartmentInstance.getBookingICalUrl()).thenReturn(Optional.of(url));
 
         assertThrows(

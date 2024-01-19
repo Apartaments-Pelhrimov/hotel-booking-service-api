@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import static java.util.Collections.emptyList;
+
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
@@ -52,19 +54,26 @@ public class BookingComReservationService {
     public List<Event> getEventsFor(ApartmentInstance apartmentInstance) {
         Optional<String> calendarUrl = apartmentInstance.getBookingICalUrl();
         if (calendarUrl.isEmpty()) {
-            return List.of();
+            return emptyList();
         }
-        return getEventsByCalendarUrl(calendarUrl.get());
+        return getEventsByCalendarUrl(calendarUrl.get(), apartmentInstance);
     }
 
-    private List<Event> getEventsByCalendarUrl(String calendarUrl) {
-        try (InputStream calendar = streamFromUrl(calendarUrl)) {
-            return iCalService.getEventsFromCalendarFile(calendar);
+    private List<Event> getEventsByCalendarUrl(String calendarUrl,
+                                               ApartmentInstance apartmentInstance) {
+        try {
+            return getEventsByCalendarUrl0(calendarUrl);
         } catch (IOException e) {
             throw new BookingComServiceException(
-                    "Exception while reading ICal Calendar " +
-                    "file by link: '%s'".formatted(calendarUrl), e
+                    "ApartmentInstance with id='%d' has illegal ICalendar format at URL='%s'"
+                            .formatted(apartmentInstance.getId(), calendarUrl), e
             );
+        }
+    }
+
+    private List<Event> getEventsByCalendarUrl0(String calendarUrl) throws IOException {
+        try (InputStream calendar = streamFromUrl(calendarUrl)) {
+            return iCalService.getEventsFromCalendarFile(calendar);
         }
     }
 
