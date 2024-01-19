@@ -19,6 +19,7 @@ package ua.mibal.booking.repository;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.hibernate.SessionFactory;
 import org.hibernate.stat.Statistics;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -37,8 +38,6 @@ import java.util.List;
 
 import static java.time.LocalDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static ua.mibal.booking.testUtils.DataGenerator.testApartment;
 import static ua.mibal.booking.testUtils.DataGenerator.testApartmentInstance;
@@ -130,7 +129,7 @@ class ApartmentInstanceRepository_UnitTest {
     @Test
     void findFreeByRequest_with_no_price_option() {
         LocalDateTime requestFrom = now().plusYears(1);
-        LocalDateTime requestTo = now().plusYears(1).plusDays(7);
+        LocalDateTime requestTo = requestFrom.plusDays(7);
         int people = Integer.MAX_VALUE;
 
         Apartment apartment =
@@ -146,7 +145,7 @@ class ApartmentInstanceRepository_UnitTest {
     @Test
     void findFreeByRequest_with_no_ApartmentInstances() {
         LocalDateTime requestFrom = now().plusYears(1);
-        LocalDateTime requestTo = now().plusYears(1).plusDays(7);
+        LocalDateTime requestTo = requestFrom.plusDays(7);
         int people = 5;
 
         Apartment apartment = prepareCaseWithoutApartmentInstances(people);
@@ -160,7 +159,7 @@ class ApartmentInstanceRepository_UnitTest {
     @Test
     void findFreeByRequest_with_intersecting_ApartmentInstance() {
         LocalDateTime requestFrom = now().plusYears(1);
-        LocalDateTime requestTo = now().plusYears(1).plusDays(7);
+        LocalDateTime requestTo = requestFrom.plusDays(7);
         int people = 5;
 
         Apartment apartment =
@@ -175,7 +174,7 @@ class ApartmentInstanceRepository_UnitTest {
     @Test
     void findFreeByRequest_without_reservations_ApartmentInstance() {
         LocalDateTime requestFrom = now().plusYears(1);
-        LocalDateTime requestTo = now().plusYears(1).plusDays(7);
+        LocalDateTime requestTo = requestFrom.plusDays(7);
         int people = 5;
 
         Apartment apartment = prepareCaseWithoutReservations(people);
@@ -189,7 +188,7 @@ class ApartmentInstanceRepository_UnitTest {
     @Test
     void findFreeByRequest_with_intersecting_and_without_reservations() {
         LocalDateTime requestFrom = now().plusYears(1);
-        LocalDateTime requestTo = now().plusYears(1).plusDays(7);
+        LocalDateTime requestTo = requestFrom.plusDays(7);
         int people = 5;
 
         Apartment apartment =
@@ -199,8 +198,10 @@ class ApartmentInstanceRepository_UnitTest {
         List<ApartmentInstance> freeByRequest = repo.findFreeByRequest(
                 apartment.getId(), requestFrom, requestTo, people);
 
-        assertTrue(freeByRequest.stream().anyMatch(ai -> ai.getName().contains("2")));
-        assertFalse(freeByRequest.stream().anyMatch(ai -> ai.getName().contains("1")));
+        Assertions.assertTrue(freeByRequest.stream()
+                .anyMatch(ai -> ai.getName().contains("1")));
+        Assertions.assertFalse(freeByRequest.stream()
+                .anyMatch(ai -> ai.getName().contains("2")));
     }
 
     private Apartment prepareCaseWithoutApartmentInstances(int people) {
@@ -228,12 +229,12 @@ class ApartmentInstanceRepository_UnitTest {
     private Apartment prepareCaseWithoutReservationsAndWithIntersectingReservaitons(
             int people, LocalDateTime requestFrom, LocalDateTime requestTo) {
         ApartmentInstance withoutReservations =
-                testApartmentInstanceWithoutReservation("2");
+                testApartmentInstanceWithoutReservation("1");
 
         List<Reservation> reservations = List.of(
                 testReservationOf(requestFrom, requestTo, testUser()));
         ApartmentInstance withIntersectsReservation =
-                testApartmentInstanceWithReservations("1", reservations);
+                testApartmentInstanceWithReservations("2", reservations);
 
         return prepareCaseWithApartmentInstances(
                 people, withoutReservations, withIntersectsReservation);
@@ -259,8 +260,8 @@ class ApartmentInstanceRepository_UnitTest {
         Arrays.stream(testApartmentInstances).forEach(ai -> {
             entityManager.persistAndFlush(ai);
             ai.getReservations().forEach(r -> {
-                r.setApartmentInstance(ai);
                 entityManager.persistAndFlush(r.getUser());
+                r.setApartmentInstance(ai);
                 entityManager.persistAndFlush(r);
             });
         });

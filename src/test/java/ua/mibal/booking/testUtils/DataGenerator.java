@@ -326,18 +326,18 @@ public class DataGenerator {
     }
 
     public static ApartmentInstance testApartmentInstanceWithoutReservation(String name) {
-        return apartmentInstanceOf(name, null, List.of(), List.of());
+        return apartmentInstanceOf(name, List.of(), List.of());
     }
 
-    public static ApartmentInstance testApartmentInstanceWithReservations(String name, List<Reservation> reservations) {
-        return apartmentInstanceOf(name, null, List.of(), reservations);
+    public static ApartmentInstance testApartmentInstanceWithReservations(String name,
+                                                                          List<Reservation> reservations) {
+        return apartmentInstanceOf(name, List.of(), reservations);
     }
 
     private static ApartmentInstance apartmentInstanceOf(String name,
-                                                         Apartment apartment,
                                                          List<TurningOffTime> turningOffTimes,
                                                          List<Reservation> reservations) {
-        return new ApartmentInstance(null, name, null, apartment, turningOffTimes, reservations);
+        return new ApartmentInstance(null, name, null, null, turningOffTimes, reservations);
     }
 
     public static Reservation testReservationOf(LocalDateTime from, LocalDateTime to, User user) {
