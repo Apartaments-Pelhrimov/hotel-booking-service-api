@@ -16,6 +16,7 @@
 
 package ua.mibal.booking.repository;
 
+import org.assertj.core.api.Assertions;
 import org.hibernate.LazyInitializationException;
 import org.hibernate.SessionFactory;
 import org.hibernate.stat.Statistics;
@@ -32,7 +33,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.entity.Comment;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -54,26 +54,28 @@ import static ua.mibal.booking.testUtils.DataGenerator.testUser;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class ApartmentRepository_UnitTest {
 
-    private final List<Apartment> savedEntities = new ArrayList<>();
-
     @Autowired
     private ApartmentRepository repo;
 
     @Autowired
     private TestEntityManager entityManager;
+
     @Autowired
     private SessionFactory sessionFactory;
     private Statistics stats;
 
+    private Apartment apartment;
+
     @BeforeEach
     void statisticsSetUp() {
+        apartment = persistTestApartment();
         stats = sessionFactory.getStatistics();
         stats.clear();
     }
 
     @Test
     void findById_should_throw_LazyInitializationException_when_call_lazy_collections() {
-        Long id = persistTestApartment();
+        Long id = apartment.getId();
 
         Apartment managedApartment = repo.findById(id)
                 .orElseThrow();
@@ -96,7 +98,7 @@ class ApartmentRepository_UnitTest {
 
     @Test
     void findById_should_not_throw_LazyInitializationException() {
-        Long id = persistTestApartment();
+        Long id = apartment.getId();
 
         Apartment managedApartment = repo.findById(id)
                 .orElseThrow();
@@ -118,7 +120,7 @@ class ApartmentRepository_UnitTest {
 
     @Test
     void findByIdFetchPhotos() {
-        Long id = persistTestApartment();
+        Long id = apartment.getId();
 
         Apartment managedApartment = repo.findByIdFetchPhotos(id)
                 .orElseThrow();
@@ -128,11 +130,16 @@ class ApartmentRepository_UnitTest {
 
         assertThat(stats.getEntityLoadCount()).isOne();
         assertThat(stats.getCollectionLoadCount()).isOne();
+
+        Assertions.assertThat(stats.getQueryExecutionCount()).isOne();
+        Assertions.assertThat(stats.getEntityFetchCount()).isZero();
+        Assertions.assertThat(stats.getPrepareStatementCount())
+                .isEqualTo(stats.getQueryExecutionCount() + stats.getEntityFetchCount());
     }
 
     @Test
     void findByIdFetchPrices() {
-        Long id = persistTestApartment();
+        Long id = apartment.getId();
 
         Apartment managedApartment = repo.findByIdFetchPrices(id)
                 .orElseThrow();
@@ -142,25 +149,35 @@ class ApartmentRepository_UnitTest {
 
         assertThat(stats.getEntityLoadCount()).isOne();
         assertThat(stats.getCollectionLoadCount()).isOne();
+
+        Assertions.assertThat(stats.getQueryExecutionCount()).isOne();
+        Assertions.assertThat(stats.getEntityFetchCount()).isZero();
+        Assertions.assertThat(stats.getPrepareStatementCount())
+                .isEqualTo(stats.getQueryExecutionCount() + stats.getEntityFetchCount());
     }
 
     @Test
     void findAllFetchPhotos() {
         persistTestApartment();
-        persistTestApartment();
+        stats.clear();
 
         List<Apartment> actual = repo.findAllFetchPhotos();
 
         actual.forEach(entityManager::detach);
         actual.forEach(ap -> assertDoesNotThrow(() -> ap.getPhotos().size()));
 
-        assertThat(stats.getEntityLoadCount()).isEqualTo(actual.size());
-        assertThat(stats.getCollectionLoadCount()).isEqualTo(actual.size());
+        assertThat(stats.getEntityLoadCount()).isEqualTo(2);
+        assertThat(stats.getCollectionLoadCount()).isEqualTo(2);
+
+        Assertions.assertThat(stats.getQueryExecutionCount()).isOne();
+        Assertions.assertThat(stats.getEntityFetchCount()).isZero();
+        Assertions.assertThat(stats.getPrepareStatementCount())
+                .isEqualTo(stats.getQueryExecutionCount() + stats.getEntityFetchCount());
     }
 
     @Test
     void Apartment_auto_rating_computing() {
-        Long id = persistTestApartment();
+        Long id = apartment.getId();
 
         Apartment apartmentWithoutRating =
                 repo.findById(id).orElseThrow();
@@ -185,12 +202,11 @@ class ApartmentRepository_UnitTest {
         return entityManager.persistAndFlush(comment);
     }
 
-    private Long persistTestApartment() {
+    private Apartment persistTestApartment() {
         Apartment testApartment = testApartment();
         testApartment.setRating(null);
         entityManager.persistAndFlush(testApartment);
         entityManager.detach(testApartment);
-        savedEntities.add(testApartment);
-        return testApartment.getId();
+        return testApartment;
     }
 }
