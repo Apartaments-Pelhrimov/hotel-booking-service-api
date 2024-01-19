@@ -24,30 +24,40 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.context.WebApplicationContext;
 import ua.mibal.booking.controller.ApartmentController;
 import ua.mibal.booking.controller.AuthController;
 import ua.mibal.booking.controller.advice.model.ApiError;
+import ua.mibal.booking.controller.advice.model.MethodValidationApiError;
 import ua.mibal.booking.model.dto.auth.RegistrationDto;
 import ua.mibal.booking.model.exception.EmailAlreadyExistsException;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
+import ua.mibal.booking.model.exception.marker.ApiException;
 import ua.mibal.booking.model.exception.service.CostCalculationServiceException;
 import ua.mibal.booking.service.ApartmentService;
 import ua.mibal.booking.service.AuthService;
-import ua.mibal.booking.testUtils.DataGenerator;
+
+import java.util.List;
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ua.mibal.booking.testUtils.DataGenerator.invalidRegistrationDto;
+import static ua.mibal.booking.testUtils.DataGenerator.testRegistrationDto;
 
 /**
  * @author Mykhailo Balakhon
@@ -65,6 +75,9 @@ class ExceptionHandlerAdvice_UnitTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
 
+    @Autowired
+    private MessageSource messageSource;
+
     private MockMvc mvc;
 
     @MockBean
@@ -81,12 +94,10 @@ class ExceptionHandlerAdvice_UnitTest {
 
     @Test
     void handleValidationException() throws Exception {
-        RegistrationDto registrationDto = DataGenerator.invalidRegistrationDto();
-        ApiError expectedError = new ApiError(
-                HttpStatus.BAD_REQUEST.value(),
-                MethodArgumentNotValidException.class.getSimpleName(),
-                ""
-        );
+        RegistrationDto registrationDto = invalidRegistrationDto();
+        MethodArgumentNotValidException e = getMethodArgumentNotValidExceptionMock();
+        ApiError expectedError =
+                MethodValidationApiError.of(HttpStatus.BAD_REQUEST, e);
 
         String responseContent = mvc.perform(post("/api/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -107,10 +118,10 @@ class ExceptionHandlerAdvice_UnitTest {
     @Test
     void handleNotFoundException_at_ApartmentController_delete() throws Exception {
         Long id = 1L;
-        ApiError expectedError = ApiError.ofException(
-                HttpStatus.NOT_FOUND, new ApartmentNotFoundException(id)
-        );
-        doThrow(new ApartmentNotFoundException(id)).when(apartmentService).delete(id);
+        ApartmentNotFoundException e =
+                new ApartmentNotFoundException(id);
+        ApiError expectedError = fromApiException(e);
+        doThrow(e).when(apartmentService).delete(id);
 
 
         String responseContent = mvc.perform(delete("/api/apartments/{id}", id))
@@ -127,12 +138,11 @@ class ExceptionHandlerAdvice_UnitTest {
     @Test
     void handleBadRequestException_at_AuthService_register() throws Exception {
         String email = "user@email.com";
-        RegistrationDto registrationDto = DataGenerator.testRegistrationDto(email);
-        ApiError expectedError = ApiError.ofException(
-                HttpStatus.BAD_REQUEST, new EmailAlreadyExistsException(email)
-        );
-        doThrow(new EmailAlreadyExistsException(email))
-                .when(authService).register(registrationDto);
+        RegistrationDto registrationDto = testRegistrationDto(email);
+        EmailAlreadyExistsException e =
+                new EmailAlreadyExistsException(email);
+        ApiError expectedError = fromApiException(e);
+        doThrow(e).when(authService).register(registrationDto);
 
 
         String responseContent = mvc.perform(post("/api/auth/register")
@@ -156,10 +166,10 @@ class ExceptionHandlerAdvice_UnitTest {
     @Test
     void handleInternalServerException() throws Exception {
         Long id = 1L;
-        ApiError expectedError = ApiError.ofException(
-                HttpStatus.INTERNAL_SERVER_ERROR, new CostCalculationServiceException("test_message")
-        );
-        doThrow(new CostCalculationServiceException("test_message")).when(apartmentService).delete(id);
+        CostCalculationServiceException e =
+                new CostCalculationServiceException("test_message");
+        ApiError expectedError = fromApiException(e);
+        doThrow(e).when(apartmentService).delete(id);
 
 
         String responseContent = mvc.perform(delete("/api/apartments/{id}", id))
@@ -171,6 +181,20 @@ class ExceptionHandlerAdvice_UnitTest {
         assertEquals(expectedError.getStatus(), responseError.getStatus());
         assertEquals(expectedError.getError(), responseError.getError());
         assertEquals(expectedError.getMessage(), responseError.getMessage());
+    }
+
+    private MethodArgumentNotValidException getMethodArgumentNotValidExceptionMock() {
+        MethodArgumentNotValidException e = mock(MethodArgumentNotValidException.class);
+        BindingResult bindingResult = mock(BindingResult.class);
+        when(e.getBindingResult()).thenReturn(bindingResult);
+        when(bindingResult.getFieldErrors()).thenReturn(List.of());
+        when(e.getGlobalErrors()).thenReturn(List.of());
+        return e;
+    }
+
+    private ApiError fromApiException(ApiException e) {
+        String message = e.getLocalizedMessage(messageSource, Locale.ENGLISH);
+        return ApiError.of(e, message);
     }
 }
 
