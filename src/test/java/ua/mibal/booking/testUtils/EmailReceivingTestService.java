@@ -47,6 +47,23 @@ public class EmailReceivingTestService {
         this.password = env.getProperty("mail.password");
     }
 
+    public Message[] get(MailFolder mailFolder) {
+        try (Store store = session.getStore()) {
+            store.connect(host, username, password);
+            try (Folder folder = store.getFolder(mailFolder.getName())) {
+                folder.open(Folder.READ_ONLY);
+                Message[] lastTenMessages = folder.getMessages(
+                        folder.getMessageCount() - 5, folder.getMessageCount());
+                for (Message message : lastTenMessages) {
+                    System.out.println(message.getSubject());
+                }
+                return lastTenMessages;
+            }
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private Session getSessionByProperties(Environment env) {
         Properties props = new Properties();
         props.put("mail.imap.host", env.getProperty("mail.imap.host"));
@@ -56,21 +73,6 @@ public class EmailReceivingTestService {
         props.put("mail.store.protocol", env.getProperty("mail.store.protocol"));
         props.put("mail.imap.ssl.trust", env.getProperty("mail.imap.ssl.trust"));
         return Session.getInstance(props, null);
-    }
-
-    public Message[] get(MailFolder mailFolder) {
-        try (Store store = session.getStore()) {
-            store.connect(host, username, password);
-            try (Folder folder = store.getFolder(mailFolder.getName())) {
-                folder.open(Folder.READ_ONLY);
-                Message[] lastTenMessages = folder.getMessages(
-                        folder.getMessageCount() - 5, folder.getMessageCount());
-                for (Message message : lastTenMessages) System.out.println(message.getSubject());
-                return lastTenMessages;
-            }
-        } catch (MessagingException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @RequiredArgsConstructor

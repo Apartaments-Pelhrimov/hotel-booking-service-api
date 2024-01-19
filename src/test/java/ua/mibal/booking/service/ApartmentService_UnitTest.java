@@ -109,20 +109,6 @@ class ApartmentService_UnitTest {
     }
 
     @Test
-    void getOneFetchPhotosBeds() {
-        when(apartmentRepository.findByIdFetchPhotos(1L))
-                .thenReturn(Optional.of(apartment));
-        when(apartmentMapper.toDto(apartment))
-                .thenReturn(apartmentDto);
-
-        ApartmentDto actual = assertDoesNotThrow(
-                () -> service.getOneFetchPhotosBeds(1L)
-        );
-
-        assertEquals(apartmentDto, actual);
-    }
-
-    @Test
     public void delete() {
         Long id = 1L;
         when(apartmentRepository.existsById(id)).thenReturn(true);
@@ -143,6 +129,41 @@ class ApartmentService_UnitTest {
         );
 
         verify(apartmentRepository, never()).deleteById(id);
+    }
+
+    @Test
+    public void getOneFetchPrices() {
+        Long id = 1L;
+        when(apartmentRepository.findByIdFetchPrices(id)).thenReturn(Optional.of(apartment));
+
+        Apartment actual = service.getOneFetchPrices(id);
+
+        assertEquals(apartment, actual);
+    }
+
+    @Test
+    public void getOneFetchPrices_should_throw_ApartmentNotFoundException() {
+        Long id = 1L;
+        when(apartmentRepository.findByIdFetchPrices(id)).thenReturn(Optional.empty());
+
+        assertThrows(
+                ApartmentNotFoundException.class,
+                () -> service.getOneFetchPrices(id)
+        );
+    }
+
+    @Test
+    void getOneFetchPhotosBeds() {
+        when(apartmentRepository.findByIdFetchPhotos(1L))
+                .thenReturn(Optional.of(apartment));
+        when(apartmentMapper.toDto(apartment))
+                .thenReturn(apartmentDto);
+
+        ApartmentDto actual = assertDoesNotThrow(
+                () -> service.getOneFetchPhotosBeds(1L)
+        );
+
+        assertEquals(apartmentDto, actual);
     }
 
     @Test
@@ -175,27 +196,6 @@ class ApartmentService_UnitTest {
         assertEquals(
                 List.of(apartmentCardDto, apartmentCardDto),
                 actual
-        );
-    }
-
-    @Test
-    public void getOneFetchPrices() {
-        Long id = 1L;
-        when(apartmentRepository.findByIdFetchPrices(id)).thenReturn(Optional.of(apartment));
-
-        Apartment actual = service.getOneFetchPrices(id);
-
-        assertEquals(apartment, actual);
-    }
-
-    @Test
-    public void getOneFetchPrices_should_throw_ApartmentNotFoundException() {
-        Long id = 1L;
-        when(apartmentRepository.findByIdFetchPrices(id)).thenReturn(Optional.empty());
-
-        assertThrows(
-                ApartmentNotFoundException.class,
-                () -> service.getOneFetchPrices(id)
         );
     }
 }
