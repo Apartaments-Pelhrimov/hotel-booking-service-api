@@ -78,7 +78,9 @@ public abstract class ApartmentMapper {
     }
 
     protected BigDecimal findMinPrice(List<Price> prices) {
-        if (prices == null || prices.isEmpty()) return null;
+        if (prices == null || prices.isEmpty()) {
+            return null;
+        }
         return prices.stream()
                 .map(Price::getCost)
                 .reduce(valueOf(MAX_VALUE), BigDecimal::min);
