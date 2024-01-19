@@ -89,8 +89,12 @@ public class Comment {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Comment that)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Comment that)) {
+            return false;
+        }
         return id != null && id.equals(that.id);
     }
 

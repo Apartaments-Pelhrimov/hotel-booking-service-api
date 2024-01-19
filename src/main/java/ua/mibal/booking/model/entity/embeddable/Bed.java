@@ -45,10 +45,16 @@ public class Bed {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Bed bed = (Bed) o;
-        if (!size.equals(bed.size)) return false;
+        if (!size.equals(bed.size)) {
+            return false;
+        }
         return type == bed.type;
     }
 

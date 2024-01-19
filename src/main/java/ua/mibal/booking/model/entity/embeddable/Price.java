@@ -49,12 +49,18 @@ public class Price {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         Price price = (Price) o;
 
-        if (!person.equals(price.person)) return false;
+        if (!person.equals(price.person)) {
+            return false;
+        }
         return apartment.equals(price.apartment);
     }
 

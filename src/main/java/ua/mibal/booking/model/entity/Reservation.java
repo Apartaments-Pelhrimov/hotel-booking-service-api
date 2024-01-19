@@ -111,8 +111,12 @@ public class Reservation implements Event {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Reservation that)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Reservation that)) {
+            return false;
+        }
         return id != null && id.equals(that.id);
     }
 
