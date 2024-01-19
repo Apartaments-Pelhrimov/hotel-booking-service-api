@@ -9,6 +9,8 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+    properties:
+      hibernate.generate_statistics: true
 
 rsa:
   private-key: classpath:certs/private.pem

@@ -32,7 +32,11 @@ import ua.mibal.booking.model.entity.Event;
 import ua.mibal.booking.model.entity.Reservation;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.entity.embeddable.Bed;
+import ua.mibal.booking.model.entity.embeddable.Price;
+import ua.mibal.booking.model.entity.embeddable.ReservationDetails;
+import ua.mibal.booking.model.entity.embeddable.TurningOffTime;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -319,5 +323,40 @@ public class DataGenerator {
 
     public static RegistrationDto invalidRegistrationDto() {
         return Instancio.of(RegistrationDto.class).create();
+    }
+
+    public static ApartmentInstance testApartmentInstanceWithoutReservation(String name) {
+        return apartmentInstanceOf(name, null, List.of(), List.of());
+    }
+
+    public static ApartmentInstance testApartmentInstanceWithReservations(String name, List<Reservation> reservations) {
+        return apartmentInstanceOf(name, null, List.of(), reservations);
+    }
+
+    private static ApartmentInstance apartmentInstanceOf(String name,
+                                                         Apartment apartment,
+                                                         List<TurningOffTime> turningOffTimes,
+                                                         List<Reservation> reservations) {
+        return new ApartmentInstance(null, name, null, apartment, turningOffTimes, reservations);
+    }
+
+    public static Reservation testReservationOf(LocalDateTime from, LocalDateTime to, User user) {
+        ReservationDetails details = Instancio.of(ReservationDetails.class)
+                .set(field(ReservationDetails::getReservedFrom), from)
+                .set(field(ReservationDetails::getReservedTo), to)
+                .create();
+        return Instancio.of(Reservation.class)
+                .set(field(Reservation::getId), null)
+                .set(field(Reservation::getUser), user)
+                .set(field(Reservation::getRejections), List.of())
+                .set(field(Reservation::getDetails), details)
+                .set(field(Reservation::getState), Reservation.State.PROCESSED)
+                .create();
+    }
+
+    public static Apartment testApartmentWithPriceFor(int personCount) {
+        Apartment apartment = testApartment();
+        apartment.addPrice(new Price(personCount, BigDecimal.TEN, apartment));
+        return apartment;
     }
 }
