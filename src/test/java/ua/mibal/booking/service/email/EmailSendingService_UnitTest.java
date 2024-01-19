@@ -18,6 +18,7 @@ package ua.mibal.booking.service.email;
 
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.runner.RunWith;
@@ -26,12 +27,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
-import org.springframework.core.env.Environment;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import ua.mibal.booking.config.Config;
+import ua.mibal.booking.config.properties.EmailProps;
 import ua.mibal.booking.model.entity.ActivationCode;
 import ua.mibal.booking.model.entity.User;
+import ua.mibal.booking.model.exception.marker.InternalServerException;
+import ua.mibal.booking.model.exception.service.BookingComServiceException;
 import ua.mibal.booking.service.email.model.EmailType;
 import ua.mibal.booking.testUtils.DataGenerator;
 import ua.mibal.booking.testUtils.EmailUtils;
@@ -53,24 +56,36 @@ import static org.mockito.Mockito.when;
 @Import(Config.class)
 class EmailSendingService_UnitTest {
     private final User user = spy(DataGenerator.testUser());
+
+    // FIXME
+    //Exception in thread "Email-sending-Thread" java.lang.NullPointerException: Cannot invoke "Object.getClass()" because "obj" is null
+    //	at com.sun.mail.handlers.text_plain.writeTo(text_plain.java:109)
+    //	at jakarta.activation.ObjectDataContentHandler.writeTo(DataHandler.java:863)
+    //	at jakarta.activation.DataHandler.writeTo(DataHandler.java:290)
+    //	at jakarta.mail.internet.MimeUtility.getEncoding(MimeUtility.java:316)
+    //	at jakarta.mail.internet.MimeBodyPart.updateHeaders(MimeBodyPart.java:1551)
+    //	at jakarta.mail.internet.MimeMessage.updateHeaders(MimeMessage.java:2246)
+    //	at jakarta.mail.internet.MimeMessage.saveChanges(MimeMessage.java:2206)
+    //	at jakarta.mail.Transport.send(Transport.java:149)
+    //	at ua.mibal.booking.service.email.EmailSendingService.sendEmail(EmailSendingService.java:78)
+    //	at ua.mibal.booking.service.email.EmailSendingService.lambda$sendAsyncEmail$0(EmailSendingService.java:68)
     @Autowired
     private EmailSendingService service;
     @Autowired
     private EmailUtils emailUtils;
-    @Autowired
-    private Environment env;
-
     @MockBean
     private ClasspathFileReader classpathFileReader;
     @MockBean
     private TemplateEngine templateEngine;
     @Mock
     private ActivationCode activationCode;
+    @Autowired
+    private EmailProps emailProps;
 
     @ParameterizedTest
     @EnumSource(EmailType.class)
-    void sendAllCodes(EmailType emailType) throws InterruptedException {
-        when(user.getEmail()).thenReturn(env.getProperty("mail.user"));
+    void sendAllCodesForUsers(EmailType emailType) throws InterruptedException {
+        when(user.getEmail()).thenReturn(emailProps.username());
         when(activationCode.getUser()).thenReturn(user);
         when(activationCode.getCode()).thenReturn("CODE");
         when(classpathFileReader.read(emailType.getTemplatePath()))
@@ -82,5 +97,15 @@ class EmailSendingService_UnitTest {
         Thread.sleep(10 * 1000); // to be confident - the email was sent
 
         assertTrue(emailUtils.messageReceived(emailType.getSubject()));
+    }
+
+    @Test
+    void sendErrorEmailToDevelopers() throws InterruptedException {
+        InternalServerException e = new BookingComServiceException("message", null);
+
+        service.sendErrorEmailToDevelopers(e);
+        Thread.sleep(10 * 1000); // to be confident - the email was sent
+
+        assertTrue(emailUtils.messageReceived("Internal server error " + e.getClass()));
     }
 }

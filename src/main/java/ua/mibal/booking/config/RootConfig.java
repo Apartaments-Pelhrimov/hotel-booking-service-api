@@ -30,6 +30,7 @@ import software.amazon.awssdk.services.s3.S3Client;
 import ua.mibal.booking.config.properties.ActivationCodeProps;
 import ua.mibal.booking.config.properties.AwsProps;
 import ua.mibal.booking.config.properties.CalendarProps;
+import ua.mibal.booking.config.properties.EmailProps;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.entity.embeddable.Phone;
 import ua.mibal.booking.model.entity.embeddable.Role;
@@ -51,6 +52,7 @@ import java.util.Properties;
         CalendarProps.ReservationDateTimeProps.class,
         CalendarProps.ICalProps.class,
         ActivationCodeProps.class,
+        EmailProps.class,
 })
 @Configuration
 public class RootConfig {

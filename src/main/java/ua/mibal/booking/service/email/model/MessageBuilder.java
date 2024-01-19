@@ -16,12 +16,16 @@
 
 package ua.mibal.booking.service.email.model;
 
+import jakarta.mail.Address;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
 import jakarta.mail.Session;
+import jakarta.mail.internet.AddressException;
+import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author Mykhailo Balakhon
@@ -29,8 +33,8 @@ import java.util.Date;
  */
 public class MessageBuilder {
 
+    private String[] recipientEmails;
     private String senderEmail;
-    private String recipientEmail;
     private String subject;
     private String content;
     private Session session;
@@ -38,7 +42,8 @@ public class MessageBuilder {
     public MimeMessage buildMimeMessage() throws MessagingException {
         MimeMessage message = new MimeMessage(session);
         message.setFrom(senderEmail);
-        message.setRecipients(Message.RecipientType.TO, recipientEmail);
+        Address[] addresses = emailsToAddresses(recipientEmails);
+        message.setRecipients(Message.RecipientType.TO, addresses);
         message.setSubject(subject);
         message.setSentDate(new Date());
         message.setContent(content, "text/html");
@@ -50,8 +55,13 @@ public class MessageBuilder {
         return this;
     }
 
+    public MessageBuilder recipients(List<String> recipientEmails) {
+        this.recipientEmails = recipientEmails.toArray(String[]::new);
+        return this;
+    }
+
     public MessageBuilder recipient(String recipientEmail) {
-        this.recipientEmail = recipientEmail;
+        this.recipientEmails = new String[]{recipientEmail};
         return this;
     }
 
@@ -68,5 +78,15 @@ public class MessageBuilder {
     public MessageBuilder session(Session session) {
         this.session = session;
         return this;
+    }
+
+    private Address[] emailsToAddresses(String[] emails) throws AddressException {
+        Address[] addresses = new Address[emails.length];
+        for (int i = 0; i < emails.length; i++) {
+            String email = emails[i];
+            Address emailAddress = new InternetAddress(email);
+            addresses[i] = emailAddress;
+        }
+        return addresses;
     }
 }

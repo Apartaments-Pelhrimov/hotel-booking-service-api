@@ -17,10 +17,12 @@
 package ua.mibal.booking.config;
 
 import jakarta.mail.Session;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import ua.mibal.booking.config.properties.EmailProps;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -32,6 +34,7 @@ import java.util.Properties;
  */
 @Configuration
 @ComponentScan("ua.mibal.booking.testUtils")
+@EnableConfigurationProperties(EmailProps.class)
 public class Config {
 
     @Bean
@@ -42,6 +45,13 @@ public class Config {
         props.put("mail.smtp.starttls.enable", Objects.requireNonNull(env.getProperty("mail.smtp.starttls.enable")));
         Optional.ofNullable(env.getProperty("mail.debug"))
                 .ifPresent(val -> props.put("mail.debug", val));
+
+        props.put("mail.imap.host", env.getProperty("mail.imap.host"));
+        props.put("mail.imap.port", env.getProperty("mail.imap.port"));
+        props.put("mail.imap.starttls.enable", env.getProperty("mail.imap.starttls.enable"));
+        props.put("mail.debug", env.getProperty("mail.debug"));
+        props.put("mail.store.protocol", env.getProperty("mail.store.protocol"));
+        props.put("mail.imap.ssl.trust", env.getProperty("mail.imap.ssl.trust"));
         return Session.getInstance(props);
     }
 }

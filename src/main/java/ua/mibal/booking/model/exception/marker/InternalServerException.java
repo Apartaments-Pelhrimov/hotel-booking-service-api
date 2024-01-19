@@ -18,6 +18,9 @@ package ua.mibal.booking.model.exception.marker;
 
 import org.springframework.http.HttpStatus;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
@@ -44,5 +47,12 @@ public abstract class InternalServerException extends ApiException {
     @Override
     public Object[] provideArgs() {
         return new Object[0];
+    }
+
+    public String getFormattedStackTrace() {
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(stringWriter);
+        printStackTrace(printWriter);
+        return stringWriter.toString();
     }
 }

@@ -23,33 +23,27 @@ import jakarta.mail.Session;
 import jakarta.mail.Store;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.env.Environment;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import java.util.Properties;
+import ua.mibal.booking.config.properties.EmailProps;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
+@RequiredArgsConstructor
 @Component
 public class EmailReceivingTestService {
 
     private final Session session;
-    private final String host;
-    private final String username;
-    private final String password;
 
-    public EmailReceivingTestService(Environment env) {
-        this.session = getSessionByProperties(env);
-        this.host = env.getProperty("mail.imap.host");
-        this.username = env.getProperty("mail.user");
-        this.password = env.getProperty("mail.password");
-    }
+    private final EmailProps emailProps;
+    @Value("${mail.imap.host}")
+    private String host;
 
     public Message[] get(MailFolder mailFolder) {
         try (Store store = session.getStore()) {
-            store.connect(host, username, password);
+            store.connect(host, emailProps.username(), emailProps.password());
             try (Folder folder = store.getFolder(mailFolder.getName())) {
                 folder.open(Folder.READ_ONLY);
                 Message[] lastTenMessages = folder.getMessages(
@@ -62,17 +56,6 @@ public class EmailReceivingTestService {
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private Session getSessionByProperties(Environment env) {
-        Properties props = new Properties();
-        props.put("mail.imap.host", env.getProperty("mail.imap.host"));
-        props.put("mail.imap.port", env.getProperty("mail.imap.port"));
-        props.put("mail.imap.starttls.enable", env.getProperty("mail.imap.starttls.enable"));
-        props.put("mail.debug", env.getProperty("mail.debug"));
-        props.put("mail.store.protocol", env.getProperty("mail.store.protocol"));
-        props.put("mail.imap.ssl.trust", env.getProperty("mail.imap.ssl.trust"));
-        return Session.getInstance(props, null);
     }
 
     @RequiredArgsConstructor

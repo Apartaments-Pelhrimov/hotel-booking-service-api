@@ -21,9 +21,10 @@ import jakarta.mail.Session;
 import jakarta.mail.Transport;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import ua.mibal.booking.config.properties.EmailProps;
 import ua.mibal.booking.model.entity.ActivationCode;
+import ua.mibal.booking.model.exception.marker.InternalServerException;
 import ua.mibal.booking.model.exception.service.EmailSentFailedException;
 import ua.mibal.booking.service.email.model.EmailType;
 import ua.mibal.booking.service.email.model.MessageBuilder;
@@ -43,11 +44,7 @@ public class EmailSendingService {
     private final Session session;
     private final ClasspathFileReader fileReader;
     private final TemplateEngine templateEngine;
-
-    @Value("${mail.user}")
-    private String username;
-    @Value("${mail.password}")
-    private String password;
+    private final EmailProps emailProps;
 
     public void sendActivationCode(ActivationCode activationCode) {
         sendCodeFor(ACCOUNT_ACTIVATION, activationCode);
@@ -55,6 +52,11 @@ public class EmailSendingService {
 
     public void sendPasswordChangingCode(ActivationCode activationCode) {
         sendCodeFor(PASSWORD_CHANGING, activationCode);
+    }
+
+    public void sendErrorEmailToDevelopers(InternalServerException e) {
+        MessageBuilder messageBuilder = getMessageBuilderForDevelopers(e);
+        sendAsyncEmail(messageBuilder);
     }
 
     private void sendCodeFor(EmailType type, ActivationCode code) {
@@ -75,7 +77,15 @@ public class EmailSendingService {
     private synchronized void sendEmail(MessageBuilder messageBuilder)
             throws MessagingException {
         MimeMessage message = messageBuilder.buildMimeMessage();
-        Transport.send(message, username, password);
+        Transport.send(message, emailProps.username(), emailProps.password());
+    }
+
+    private MessageBuilder getMessageBuilderForDevelopers(InternalServerException e) {
+        return new MessageBuilder()
+                .session(session)
+                .recipients(emailProps.developers())
+                .subject("Internal server error " + e.getClass())
+                .content(e.getFormattedStackTrace());
     }
 
     private MessageBuilder getMessageBuilderBy(EmailType type,
@@ -83,7 +93,7 @@ public class EmailSendingService {
         String emailContent = getInsertedTemplateBy(type, code);
         return new MessageBuilder()
                 .recipient(code.getUser().getEmail())
-                .sender(username)
+                .sender(emailProps.username())
                 .session(session)
                 .subject(type.getSubject())
                 .content(emailContent);
