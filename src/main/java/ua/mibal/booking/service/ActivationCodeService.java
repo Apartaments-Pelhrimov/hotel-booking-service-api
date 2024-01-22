@@ -21,10 +21,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.model.entity.ActivationCode;
 import ua.mibal.booking.model.entity.User;
+import ua.mibal.booking.model.exception.entity.ActivationCodeNotFoundException;
 import ua.mibal.booking.repository.ActivationCodeRepository;
 import ua.mibal.booking.service.security.CodeGenerationService;
-
-import java.util.function.Consumer;
 
 /**
  * @author Mykhailo Balakhon
@@ -37,34 +36,17 @@ public class ActivationCodeService {
     private final CodeGenerationService codeGenerationService;
 
     @Transactional
-    public void activateUserByActivationCode(String activationCode) {
-        performCodePresent(activationCode, code -> {
-            code.getUser().setEnabled(true);
-            activationCodeRepository.delete(code);
-        });
-    }
-
-    @Transactional
-    public void changeUserPasswordByActivationCode(String activationCode, String password) {
-        performCodePresent(activationCode, code -> {
-            code.getUser().setPassword(password);
-            activationCodeRepository.delete(code);
-        });
-    }
-
-    @Transactional
-    public ActivationCode generateAndSaveCodeForUser(User user) {
-        ActivationCode activationCode = generateActivationCode(user);
+    public ActivationCode generateAndSaveCodeFor(User user) {
+        ActivationCode activationCode = generateActivationCodeFor(user);
         return activationCodeRepository.save(activationCode);
     }
 
-    private void performCodePresent(String activationCode, Consumer<ActivationCode> actionIfPresent) {
-        activationCodeRepository
-                .findByCodeFetchUser(activationCode)
-                .ifPresent(actionIfPresent);
+    public ActivationCode getOneByCode(String code) {
+        return activationCodeRepository.findByCode(code)
+                .orElseThrow(() -> new ActivationCodeNotFoundException(code));
     }
 
-    private ActivationCode generateActivationCode(User user) {
+    private ActivationCode generateActivationCodeFor(User user) {
         String code = codeGenerationService.generateCode();
         return ActivationCode.builder()
                 .user(user)

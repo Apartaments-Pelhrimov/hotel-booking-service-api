@@ -28,14 +28,15 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import ua.mibal.booking.model.entity.ActivationCode;
 import ua.mibal.booking.model.entity.User;
+import ua.mibal.booking.model.exception.entity.ActivationCodeNotFoundException;
 import ua.mibal.booking.repository.ActivationCodeRepository;
 import ua.mibal.booking.service.security.CodeGenerationService;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -64,73 +65,34 @@ class ActivationCodeService_UnitTest {
     private ActivationCode activationCode;
 
     @Test
-    void activateUserByActivationCode_should_activate_user_and_delete_code() {
-        when(activationCodeRepository.findByCodeFetchUser("code"))
-                .thenReturn(Optional.of(activationCode));
-        when(activationCode.getUser())
-                .thenReturn(user);
-
-        service.activateUserByActivationCode("code");
-
-        verify(user, times(1))
-                .setEnabled(true);
-        verify(activationCodeRepository, times(1))
-                .delete(activationCode);
-    }
-
-    @Test
-    void activateUserByActivationCode_should_not_activate_user_if_code_not_found() {
-        when(activationCodeRepository.findByCodeFetchUser("code"))
-                .thenReturn(Optional.empty());
-
-        assertDoesNotThrow(() ->
-                service.activateUserByActivationCode("code")
-        );
-
-        verify(user, never()).setEnabled(true);
-        verify(activationCodeRepository, never()).delete(any());
-    }
-
-    @Test
-    void changeUserPasswordByActivationCode_should_change_password_and_delete_code() {
-        when(activationCodeRepository.findByCodeFetchUser("code"))
-                .thenReturn(Optional.of(activationCode));
-        when(activationCode.getUser())
-                .thenReturn(user);
-
-        assertDoesNotThrow(() ->
-                service.changeUserPasswordByActivationCode("code", "password")
-        );
-
-        verify(user, times(1))
-                .setPassword("password");
-        verify(activationCodeRepository, times(1))
-                .delete(activationCode);
-    }
-
-    @Test
-    void changeUserPasswordByActivationCode_should_not_change_password_if_code_not_found() {
-        when(activationCodeRepository.findByCodeFetchUser("code"))
-                .thenReturn(Optional.empty());
-
-        assertDoesNotThrow(() ->
-                service.changeUserPasswordByActivationCode("code", "password")
-        );
-
-        verify(user, never())
-                .setPassword(any());
-        verify(activationCodeRepository, never())
-                .delete(any());
-    }
-
-    @Test
-    void generateAndSaveCodeForUser_should_generate_and_save() {
+    void generateAndSaveCodeFor_should_generate_and_save() {
         when(codeGenerationService.generateCode())
                 .thenReturn("code");
 
-        service.generateAndSaveCodeForUser(user);
+        service.generateAndSaveCodeFor(user);
 
         verify(activationCodeRepository, times(1))
                 .save(new ActivationCode(any(), user, "code"));
+    }
+
+    @Test
+    void getOneByCode() {
+        String code = "code";
+        when(activationCodeRepository.findByCode(code))
+                .thenReturn(Optional.of(activationCode));
+
+        var actual = service.getOneByCode(code);
+
+        assertEquals(activationCode, actual);
+    }
+
+    @Test
+    void getOneByCode_should_throw_ActivationCodeNotFoundException() {
+        String code = "code";
+        when(activationCodeRepository.findByCode(code))
+                .thenReturn(Optional.empty());
+
+        assertThrows(ActivationCodeNotFoundException.class,
+                () -> service.getOneByCode(code));
     }
 }

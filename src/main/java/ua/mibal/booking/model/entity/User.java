@@ -153,6 +153,10 @@ public class User implements UserDetails {
         }
     }
 
+    public void enable() {
+        this.setEnabled(true);
+    }
+
     public boolean is(Role role) {
         return getRole().equals(role);
     }

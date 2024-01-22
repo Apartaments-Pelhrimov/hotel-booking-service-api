@@ -142,7 +142,7 @@ class AuthController_UnitTest {
                 .andExpect(status().isNoContent());
 
         verify(authService, times(1))
-                .activate(code);
+                .activateNewAccountBy(code);
     }
 
     @Test
@@ -199,7 +199,7 @@ class AuthController_UnitTest {
                 .andExpect(status().isNoContent());
 
         verify(authService, times(1))
-                .updatePassword("code", forgetPasswordDto);
+                .setNewPassword("code", forgetPasswordDto);
     }
 
     @ParameterizedTest

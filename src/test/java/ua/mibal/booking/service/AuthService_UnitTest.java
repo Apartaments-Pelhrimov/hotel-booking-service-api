@@ -20,10 +20,10 @@ import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import ua.mibal.booking.model.dto.auth.AuthResponseDto;
@@ -40,7 +40,6 @@ import ua.mibal.booking.service.security.TokenService;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -57,11 +56,8 @@ import static org.mockito.Mockito.when;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class AuthService_UnitTest {
 
-    private final static User testUser = new User() {{
-        setFirstName("test");
-        setLastName("test");
-        setEmail("test");
-    }};
+    @Autowired
+    private AuthService authService;
 
     @MockBean
     private TokenService tokenService;
@@ -70,149 +66,131 @@ class AuthService_UnitTest {
     @MockBean
     private UserService userService;
     @MockBean
-    private PasswordEncoder passwordEncoder;
-    @MockBean
     private ActivationCodeService activationCodeService;
     @MockBean
     private EmailSendingService emailSendingService;
 
-    @Autowired
-    private AuthService authService;
+    @Mock
+    private User user;
+    @Mock
+    private ActivationCode activationCode;
+    @Mock
+    private AuthResponseDto expectedAuthDto;
+    @Mock
+    private RegistrationDto registrationDto;
+    @Mock
+    private ForgetPasswordDto forgetPasswordDto;
 
     @Test
-    void login_should_return_correct_AuthDto() {
-        AuthResponseDto expectedAuthDto = generateAuthResponseDtoWithToken("test_token");
-        when(tokenService.generateToken(testUser.getEmail(), testUser.getAuthorities()))
-                .thenReturn("test_token");
-        when(userMapper.toAuthResponse(testUser, "test_token"))
-                .thenReturn(expectedAuthDto);
+    void login() {
+        String token = "test_token";
+        when(tokenService.generateJwtToken(user)).thenReturn(token);
+        when(userMapper.toAuthResponse(user, token)).thenReturn(expectedAuthDto);
 
-        assertEquals(expectedAuthDto, authService.login(testUser));
+        var actual = authService.login(user);
 
-        verify(userMapper, times(1))
-                .toAuthResponse(testUser, "test_token");
-    }
-
-    private AuthResponseDto generateAuthResponseDtoWithToken(String token) {
-        return new AuthResponseDto(
-                testUser.getFirstName(),
-                testUser.getLastName(),
-                token
-        );
+        assertEquals(expectedAuthDto, actual);
     }
 
     @Test
-    void register_should_throw_EmailAlreadyExistsException_if_email_exists() {
+    void register() {
+        String notExistingEmail = "not_existing_email";
+        String password = "test_pass";
+        when(registrationDto.email()).thenReturn(notExistingEmail);
+        when(registrationDto.password()).thenReturn(password);
+
+        when(userService.isExistsByEmail(notExistingEmail))
+                .thenReturn(false);
+        when(userService.save(registrationDto))
+                .thenReturn(user);
+        when(activationCodeService.generateAndSaveCodeFor(user))
+                .thenReturn(activationCode);
+
+        authService.register(registrationDto);
+
+        verify(emailSendingService, times(1))
+                .sendActivationCode(activationCode);
+    }
+
+    @Test
+    void register_should_throw_EmailAlreadyExistsException() {
         String existingEmail = "existing_email";
+        when(registrationDto.email()).thenReturn(existingEmail);
+
         when(userService.isExistsByEmail(existingEmail))
                 .thenReturn(true);
+
         verifyNoMoreInteractions(userService);
 
         EmailAlreadyExistsException e = assertThrows(
                 EmailAlreadyExistsException.class,
-                () -> authService.register(registrationDtoWithEmail(existingEmail))
+                () -> authService.register(registrationDto)
         );
         assertEquals(
                 new EmailAlreadyExistsException(existingEmail).getMessage(),
                 e.getMessage()
         );
-        verifyNoInteractions(passwordEncoder, activationCodeService, emailSendingService);
-    }
-
-    private RegistrationDto registrationDtoWithEmail(String email) {
-        return new RegistrationDto(
-                "test",
-                "test",
-                "test",
-                email,
-                "test"
-        );
-    }
-
-    @Test
-    void register_should_delegate_user_saving_to_UserService() {
-        RegistrationDto registrationDto = registrationDtoWithEmail("email");
-        when(userService.isExistsByEmail(registrationDto.email()))
-                .thenReturn(false);
-        when(passwordEncoder.encode(registrationDto.password()))
-                .thenReturn(registrationDto.password());
-        when(userService.save(registrationDto, registrationDto.password()))
-                .thenReturn(testUser);
-
-        authService.register(registrationDto);
-
-        verify(userService, times(1))
-                .save(registrationDto, registrationDto.password());
-    }
-
-    @Test
-    void register_should_delegate_ActivationCode_saving_and_email_sending() {
-        RegistrationDto registrationDto = registrationDtoWithEmail("email");
-        when(userService.isExistsByEmail(registrationDto.email()))
-                .thenReturn(false);
-        when(passwordEncoder.encode(registrationDto.password()))
-                .thenReturn(registrationDto.password());
-        when(userService.save(registrationDto, registrationDto.password()))
-                .thenReturn(testUser);
-        ActivationCode expectedActivationCode = new ActivationCode();
-        when(activationCodeService.generateAndSaveCodeForUser(testUser))
-                .thenReturn(expectedActivationCode);
-
-        authService.register(registrationDto);
-
-        verify(emailSendingService, times(1))
-                .sendActivationCode(expectedActivationCode);
-    }
-
-    @Test
-    void activate_should_delegate_activation_to_ActivationCodeService() {
-        String activationCode = "CODE";
-
-        authService.activate(activationCode);
-
-        verify(activationCodeService, times(1))
-                .activateUserByActivationCode(activationCode);
-    }
-
-    @Test
-    void restore_should_not_throw_exception_if_user_not_found() {
-        String email = "email";
-        when(userService.getOne(email))
-                .thenThrow(new UserNotFoundException(email));
-        verifyNoMoreInteractions(userService);
-
-        assertDoesNotThrow(() -> authService.restore(email));
-        verify(userService, times(1))
-                .getOne(email);
         verifyNoInteractions(activationCodeService, emailSendingService);
     }
 
     @Test
-    void restore_should_call_ActivationCodeService_to_save_ActivationCode_and_EmailSendingService_to_send_ActivationCode() {
+    void activateNewAccountBy() {
+        String code = "CODE";
+        long id = 1L;
+        when(activationCodeService.getOneByCode(code))
+                .thenReturn(activationCode);
+        when(activationCode.getUser()).thenReturn(user);
+        when(user.getId()).thenReturn(id);
+
+        authService.activateNewAccountBy(code);
+
+        verify(userService, times(1))
+                .activateUserById(id);
+    }
+
+    @Test
+    void restore() {
         String email = "email";
-        ActivationCode activationCode = new ActivationCode(null, testUser, email);
-        when(userService.getOne(email))
-                .thenReturn(testUser);
-        when(activationCodeService.generateAndSaveCodeForUser(testUser))
+        when(userService.getOne(email)).thenReturn(user);
+        when(activationCodeService.generateAndSaveCodeFor(user))
                 .thenReturn(activationCode);
 
-        assertDoesNotThrow(() -> authService.restore(email));
+        assertDoesNotThrow(
+                () -> authService.restore(email)
+        );
         verify(emailSendingService, times(1))
                 .sendPasswordChangingCode(activationCode);
     }
 
     @Test
-    void updatePassword_should_encode_password_and_call_ActivationCodeService_to_change_user_password_by_ActivationCode() {
-        String code = "code";
-        ForgetPasswordDto forgetPasswordDto = new ForgetPasswordDto("password");
-        when(passwordEncoder.encode(forgetPasswordDto.password()))
-                .thenReturn("encoded_password");
+    void restore_should_not_throw_exception_if_user_not_found() {
+        String email = "not_existing_email";
+        when(userService.getOne(email)).thenThrow(UserNotFoundException.class);
 
-        authService.updatePassword(code, forgetPasswordDto);
+        verifyNoMoreInteractions(userService);
 
-        verify(activationCodeService, times(1))
-                .changeUserPasswordByActivationCode(code, "encoded_password");
-        verify(activationCodeService, never())
-                .changeUserPasswordByActivationCode(code, forgetPasswordDto.password());
+        assertDoesNotThrow(
+                () -> authService.restore(email)
+        );
+
+        verifyNoInteractions(activationCodeService, emailSendingService);
+    }
+
+    @Test
+    void setNewPassword() {
+        String password = "pass";
+        when(forgetPasswordDto.password()).thenReturn(password);
+
+        String code = "CODE";
+        long id = 1L;
+        when(activationCodeService.getOneByCode(code))
+                .thenReturn(activationCode);
+        when(activationCode.getUser()).thenReturn(user);
+        when(user.getId()).thenReturn(id);
+
+        authService.setNewPassword(code, forgetPasswordDto);
+
+        verify(userService, times(1))
+                .setNewPasswordForUser(id, password);
     }
 }

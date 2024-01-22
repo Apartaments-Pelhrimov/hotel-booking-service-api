@@ -17,7 +17,6 @@
 package ua.mibal.booking.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.model.dto.auth.AuthResponseDto;
@@ -26,7 +25,7 @@ import ua.mibal.booking.model.dto.auth.RegistrationDto;
 import ua.mibal.booking.model.entity.ActivationCode;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.exception.EmailAlreadyExistsException;
-import ua.mibal.booking.model.exception.entity.EntityNotFoundException;
+import ua.mibal.booking.model.exception.entity.UserNotFoundException;
 import ua.mibal.booking.model.mapper.UserMapper;
 import ua.mibal.booking.service.email.EmailSendingService;
 import ua.mibal.booking.service.security.TokenService;
@@ -41,57 +40,57 @@ public class AuthService {
     private final TokenService tokenService;
     private final UserMapper userMapper;
     private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
     private final ActivationCodeService activationCodeService;
     private final EmailSendingService emailSendingService;
 
-    // TODO refactor
-
     public AuthResponseDto login(User user) {
-        String token = tokenService.generateToken(
-                user.getEmail(),
-                user.getAuthorities()
-        );
+        String token = tokenService.generateJwtToken(user);
         return userMapper.toAuthResponse(user, token);
     }
 
     @Transactional
     public void register(RegistrationDto registrationDto) {
-        validateExistsEmail(registrationDto.email());
-        User user = saveNewUserByRegistration(registrationDto);
+        validateEmailDoesNotExist(registrationDto.email());
+        User user = userService.save(registrationDto);
         ActivationCode activationCode =
-                activationCodeService.generateAndSaveCodeForUser(user);
+                activationCodeService.generateAndSaveCodeFor(user);
         emailSendingService.sendActivationCode(activationCode);
     }
 
-    public void activate(String activationCode) {
-        activationCodeService.activateUserByActivationCode(activationCode);
+    public void activateNewAccountBy(String code) {
+        ActivationCode activationCode =
+                activationCodeService.getOneByCode(code);
+        Long userId = activationCode.getUser().getId();
+        userService.activateUserById(userId);
     }
 
     @Transactional
     public void restore(String email) {
         try {
-            User user = userService.getOne(email);
-            ActivationCode activationCode =
-                    activationCodeService.generateAndSaveCodeForUser(user);
-            emailSendingService.sendPasswordChangingCode(activationCode);
-        } catch (EntityNotFoundException ignored) {
+            restoreUserPassword(email);
+        } catch (UserNotFoundException ignored) {
         }
     }
 
-    public void updatePassword(String activationCode, ForgetPasswordDto forgetPasswordDto) {
-        String encodedPassword = passwordEncoder.encode(forgetPasswordDto.password());
-        activationCodeService.changeUserPasswordByActivationCode(activationCode, encodedPassword);
+    @Transactional
+    public void setNewPassword(String code,
+                               ForgetPasswordDto forgetPasswordDto) {
+        ActivationCode activationCode =
+                activationCodeService.getOneByCode(code);
+        Long userId = activationCode.getUser().getId();
+        userService.setNewPasswordForUser(userId, forgetPasswordDto.password());
     }
 
-    private void validateExistsEmail(String email) {
+    private void restoreUserPassword(String email) {
+        User user = userService.getOne(email);
+        ActivationCode activationCode =
+                activationCodeService.generateAndSaveCodeFor(user);
+        emailSendingService.sendPasswordChangingCode(activationCode);
+    }
+
+    private void validateEmailDoesNotExist(String email) {
         if (userService.isExistsByEmail(email)) {
             throw new EmailAlreadyExistsException(email);
         }
-    }
-
-    private User saveNewUserByRegistration(RegistrationDto registrationDto) {
-        String encodedPass = passwordEncoder.encode(registrationDto.password());
-        return userService.save(registrationDto, encodedPass);
     }
 }

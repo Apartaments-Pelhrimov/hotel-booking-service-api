@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,17 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.repository;
+package ua.mibal.booking.model.exception.entity;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import ua.mibal.booking.model.entity.ActivationCode;
 
-import java.util.Optional;
+/**
+ * @author Mykhailo Balakhon
+ * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
+ */
+public class ActivationCodeNotFoundException extends EntityNotFoundException {
 
-public interface ActivationCodeRepository extends JpaRepository<ActivationCode, Long> {
-
-    @Query("""
-            select c from ActivationCode c
-            where c.code = ?1
-            """)
-    Optional<ActivationCode> findByCode(String code);
+    public ActivationCodeNotFoundException(String code) {
+        super(ActivationCode.class, code);
+    }
 }

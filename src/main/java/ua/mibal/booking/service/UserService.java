@@ -62,8 +62,9 @@ public class UserService {
         userRepository.deleteByEmail(email);
     }
 
-    public User save(RegistrationDto registrationDto, String password) {
-        User user = userMapper.toEntity(registrationDto, password);
+    public User save(RegistrationDto registrationDto) {
+        String encodedPass = passwordEncoder.encode(registrationDto.password());
+        User user = userMapper.toEntity(registrationDto, encodedPass);
         return userRepository.save(user);
     }
 
@@ -87,6 +88,24 @@ public class UserService {
                                            String email) {
         User user = getOne(email);
         userMapper.update(user.getNotificationSettings(), changeNotificationSettingsDto);
+    }
+
+    @Transactional
+    public void setNewPasswordForUser(Long userId, String newPassword) {
+        User user = getOneById(userId);
+        String newEncodedPassword = passwordEncoder.encode(newPassword);
+        user.setPassword(newEncodedPassword);
+    }
+
+    @Transactional
+    public void activateUserById(Long userId) {
+        User user = getOneById(userId);
+        user.enable();
+    }
+
+    private User getOneById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId));
     }
 
     private void validatePassword(String password, String email) {

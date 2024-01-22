@@ -19,10 +19,12 @@ package ua.mibal.booking.service.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
+import ua.mibal.booking.model.entity.User;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -41,19 +43,33 @@ public class TokenService {
     @Value(value = "${jwt-token.expiring-days}")
     private Integer tokenExpiresInDays = 10;
 
-    public String generateToken(String name, Collection<? extends GrantedAuthority> grantedAuthorities) {
+    public String generateJwtToken(User user) {
+        return generateTokenFor(user.getEmail(), user.getRole().getGrantedAuthorities());
+    }
+
+    private String generateTokenFor(String username,
+                                    Collection<? extends GrantedAuthority> grantedAuthorities) {
+        JwtClaimsSet jwtClaims = jwtClaimsForUser(username, grantedAuthorities);
+        Jwt jwt = jwtEncoder.encode(JwtEncoderParameters.from(jwtClaims));
+        return jwt.getTokenValue();
+    }
+
+    private JwtClaimsSet jwtClaimsForUser(String username,
+                                          Collection<? extends GrantedAuthority> grantedAuthorities) {
         Instant now = Instant.now();
-        String scope = grantedAuthorities.stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(" "));
-        JwtClaimsSet claims = JwtClaimsSet.builder()
+        String scope = getScopeFromAuthorities(grantedAuthorities);
+        return JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(now)
                 .expiresAt(now.plus(tokenExpiresInDays, ChronoUnit.DAYS))
-                .subject(name)
+                .subject(username)
                 .claim("scope", scope)
                 .build();
-        return jwtEncoder.encode(JwtEncoderParameters.from(claims))
-                .getTokenValue();
+    }
+
+    private String getScopeFromAuthorities(Collection<? extends GrantedAuthority> grantedAuthorities) {
+        return grantedAuthorities.stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(" "));
     }
 }

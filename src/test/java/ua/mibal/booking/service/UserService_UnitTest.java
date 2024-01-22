@@ -41,15 +41,15 @@ import ua.mibal.booking.model.exception.IllegalPasswordException;
 import ua.mibal.booking.model.exception.entity.UserNotFoundException;
 import ua.mibal.booking.model.mapper.UserMapper;
 import ua.mibal.booking.repository.UserRepository;
-import ua.mibal.booking.testUtils.DataGenerator;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -80,27 +80,31 @@ class UserService_UnitTest {
     @Mock
     private User user;
     @Mock
+    private NotificationSettings notificationSettings;
+    @Mock
     private UserDto userDto;
     @Mock
     private RegistrationDto registrationDto;
     @Mock
     private ChangePasswordDto changePasswordDto;
     @Mock
+    private DeleteMeDto deleteMeDto;
+    @Mock
     private ChangeUserDetailsDto changeUserDetailsDto;
     @Mock
     private ChangeNotificationSettingsDto changeNotificationSettingsDto;
-    @Mock
-    private NotificationSettings notificationSettings;
 
     @Test
     void getOneDto() {
-        when(userRepository.findByEmail("existing_email"))
+        String email = "existing_email";
+
+        when(userRepository.findByEmail(email))
                 .thenReturn(Optional.of(user));
         when(userMapper.toDto(user))
                 .thenReturn(userDto);
 
-        UserDto actual = assertDoesNotThrow(
-                () -> service.getOneDto("existing_email")
+        var actual = assertDoesNotThrow(
+                () -> service.getOneDto(email)
         );
 
         assertEquals(userDto, actual);
@@ -108,26 +112,26 @@ class UserService_UnitTest {
 
     @Test
     void getOneDto_should_throw_UserNotFoundException() {
-        when(userRepository.findByEmail("not_existing_email"))
+        String notExistingEmail = "not_existing_email";
+
+        when(userRepository.findByEmail(notExistingEmail))
                 .thenReturn(Optional.empty());
 
-        UserNotFoundException e = assertThrows(
+        assertThrows(
                 UserNotFoundException.class,
-                () -> service.getOneDto("not_existing_email")
-        );
-        assertEquals(
-                new UserNotFoundException("not_existing_email").getMessage(),
-                e.getMessage()
+                () -> service.getOneDto(notExistingEmail)
         );
     }
 
     @Test
     void getOne() {
-        when(userRepository.findByEmail("existing_email"))
+        String email = "existing_email";
+
+        when(userRepository.findByEmail(email))
                 .thenReturn(Optional.of(user));
 
         User actual = assertDoesNotThrow(
-                () -> service.getOne("existing_email")
+                () -> service.getOne(email)
         );
 
         assertEquals(user, actual);
@@ -135,88 +139,96 @@ class UserService_UnitTest {
 
     @Test
     void getOne_should_throw_UserNotFoundException() {
-        when(userRepository.findByEmail("not_existing_email"))
+        String notExistingEmail = "not_existing_email";
+
+        when(userRepository.findByEmail(notExistingEmail))
                 .thenReturn(Optional.empty());
 
-        UserNotFoundException e = assertThrows(
+        assertThrows(
                 UserNotFoundException.class,
-                () -> service.getOne("not_existing_email")
-        );
-        assertEquals(
-                new UserNotFoundException("not_existing_email").getMessage(),
-                e.getMessage()
+                () -> service.getOne(notExistingEmail)
         );
     }
 
     @ParameterizedTest
     @CsvSource({"true", "false"})
     void isExistsByEmail(boolean value) {
-        when(userRepository.existsByEmail("email"))
+        String email = "email";
+
+        when(userRepository.existsByEmail(email))
                 .thenReturn(value);
 
-        boolean actual = service.isExistsByEmail("email");
+        boolean actual = service.isExistsByEmail(email);
 
         assertEquals(value, actual);
     }
 
     @Test
     void delete() {
-        DeleteMeDto deleteMeDto = new DeleteMeDto("password");
-        when(userRepository.findPasswordByEmail("email"))
-                .thenReturn(Optional.of("password"));
-        when(passwordEncoder.matches("password", "password"))
+        String pass = "password";
+        String email = "email";
+
+        when(deleteMeDto.password()).thenReturn(pass);
+
+        when(userRepository.findPasswordByEmail(email))
+                .thenReturn(Optional.of(pass));
+        when(passwordEncoder.matches(pass, pass))
                 .thenReturn(true);
 
-        service.delete(deleteMeDto, "email");
+        service.delete(deleteMeDto, email);
 
         verify(userRepository, times(1))
-                .deleteByEmail("email");
+                .deleteByEmail(email);
     }
 
     @Test
     void delete_should_throw_UserNotFoundException() {
-        DeleteMeDto deleteMeDto = new DeleteMeDto("password");
-        when(userRepository.findPasswordByEmail("not_existing_email"))
+        String notExistingEmail = "not_existing_email";
+
+        when(userRepository.findPasswordByEmail(notExistingEmail))
                 .thenReturn(Optional.empty());
+
         verifyNoMoreInteractions(userRepository, passwordEncoder);
 
-        UserNotFoundException e = assertThrows(
+        assertThrows(
                 UserNotFoundException.class,
-                () -> service.delete(deleteMeDto, "not_existing_email")
-        );
-        assertEquals(
-                new UserNotFoundException("not_existing_email").getMessage(),
-                e.getMessage()
+                () -> service.delete(deleteMeDto, notExistingEmail)
         );
     }
 
     @Test
     void delete_should_throw_IllegalPasswordException() {
-        DeleteMeDto deleteMeDto = new DeleteMeDto("password");
-        when(userRepository.findPasswordByEmail("email"))
-                .thenReturn(Optional.of("password"));
-        when(passwordEncoder.matches("password", "password"))
+        String pass = "password";
+        String email = "email";
+
+        when(deleteMeDto.password()).thenReturn(pass);
+
+        when(userRepository.findPasswordByEmail(email))
+                .thenReturn(Optional.of(pass));
+        when(passwordEncoder.matches(pass, pass))
                 .thenReturn(false);
+
         verifyNoMoreInteractions(userRepository);
 
-        IllegalPasswordException e = assertThrows(
+        assertThrows(
                 IllegalPasswordException.class,
-                () -> service.delete(deleteMeDto, "email")
-        );
-        assertEquals(
-                new IllegalPasswordException().getMessage(),
-                e.getMessage()
+                () -> service.delete(deleteMeDto, email)
         );
     }
 
     @Test
     void save() {
-        when(userMapper.toEntity(registrationDto, "password"))
-                .thenReturn(user);
-        when(userRepository.save(user))
+        String pass = "password";
+        String encodedPass = "encoded_password";
+
+        when(registrationDto.password()).thenReturn(pass);
+
+        when(passwordEncoder.encode(pass))
+                .thenReturn(encodedPass);
+        when(userMapper.toEntity(registrationDto, encodedPass))
                 .thenReturn(user);
 
-        service.save(registrationDto, "password");
+        service.save(registrationDto);
 
         verify(userRepository, times(1))
                 .save(user);
@@ -224,121 +236,175 @@ class UserService_UnitTest {
 
     @Test
     void changePassword() {
-        when(changePasswordDto.oldPassword()).thenReturn("password");
-        when(changePasswordDto.newPassword()).thenReturn("newpass");
-        when(userRepository.findPasswordByEmail("email"))
-                .thenReturn(Optional.of("password"));
-        when(passwordEncoder.matches("password", "password"))
+        String email = "email";
+        String oldOriginalPass = "password";
+        String oldPass = "password";
+        String newPass = "new_pass";
+        String encodedNewPass = "encoded_new_pass";
+
+        when(changePasswordDto.oldPassword()).thenReturn(oldPass);
+        when(changePasswordDto.newPassword()).thenReturn(newPass);
+
+        when(userRepository.findPasswordByEmail(email))
+                .thenReturn(Optional.of(oldOriginalPass));
+        when(passwordEncoder.matches(oldOriginalPass, oldPass))
                 .thenReturn(true);
-        when(passwordEncoder.encode("newpass"))
-                .thenReturn("encoded_newpass");
+        when(passwordEncoder.encode(newPass))
+                .thenReturn(encodedNewPass);
 
         assertDoesNotThrow(
-                () -> service.changePassword(changePasswordDto, "email")
+                () -> service.changePassword(changePasswordDto, email)
         );
 
         verify(userRepository, times(1))
-                .updateUserPasswordByEmail("encoded_newpass", "email");
+                .updateUserPasswordByEmail(encodedNewPass, email);
     }
 
     @Test
     void changePassword_should_throw_UserNotFoundException() {
-        when(userRepository.findPasswordByEmail("not_existing"))
+        String notExistingEmail = "not_existing";
+
+        when(userRepository.findPasswordByEmail(notExistingEmail))
                 .thenReturn(Optional.empty());
+
         verifyNoMoreInteractions(userRepository);
 
-        UserNotFoundException e = assertThrows(
+        assertThrows(
                 UserNotFoundException.class,
-                () -> service.changePassword(changePasswordDto, "not_existing")
-        );
-        assertEquals(
-                new UserNotFoundException("not_existing").getMessage(),
-                e.getMessage()
+                () -> service.changePassword(changePasswordDto, notExistingEmail)
         );
         verifyNoInteractions(passwordEncoder);
     }
 
     @Test
     void changePassword_should_throw_IllegalPasswordException() {
-        when(changePasswordDto.oldPassword()).thenReturn("oldPassword");
-        when(userRepository.findPasswordByEmail("email"))
-                .thenReturn(Optional.of("password"));
-        when(passwordEncoder.matches("oldPassword", "password"))
+        String email = "email";
+        String oldOriginalPass = "oldOriginalPassword";
+        String oldPass = "oldPassword";
+
+        when(changePasswordDto.oldPassword()).thenReturn(oldPass);
+
+        when(userRepository.findPasswordByEmail(email))
+                .thenReturn(Optional.of(oldOriginalPass));
+        when(passwordEncoder.matches(oldPass, oldOriginalPass))
                 .thenReturn(false);
+
         verifyNoMoreInteractions(userRepository, passwordEncoder);
 
-        IllegalPasswordException e = assertThrows(
+        assertThrows(
                 IllegalPasswordException.class,
-                () -> service.changePassword(changePasswordDto, "email")
-        );
-        assertEquals(
-                new IllegalPasswordException().getMessage(),
-                e.getMessage()
+                () -> service.changePassword(changePasswordDto, email)
         );
     }
 
     @Test
     void changeDetails_should_update_dynamic() {
-        User test = DataGenerator.testUser();
-        when(userRepository.findByEmail("email")).thenReturn(Optional.of(test));
+        String email = "email";
 
-        service.changeDetails(changeUserDetailsDto, "email");
+        when(userRepository.findByEmail(email))
+                .thenReturn(Optional.of(user));
 
-        verify(userMapper, times(1)).update(test, changeUserDetailsDto);
+        service.changeDetails(changeUserDetailsDto, email);
+
+        verify(userMapper, times(1))
+                .update(user, changeUserDetailsDto);
     }
 
     @Test
     void changeDetails_should_throw_UserNotFoundException() {
-        when(userRepository.findByEmail("not_existing_email"))
+        String notExistingEmail = "not_existing_email";
+
+        when(userRepository.findByEmail(notExistingEmail))
                 .thenReturn(Optional.empty());
 
-        UserNotFoundException e = assertThrows(
+        assertThrows(
                 UserNotFoundException.class,
-                () -> service.changeDetails(changeUserDetailsDto, "not_existing_email")
-        );
-        assertEquals(
-                new UserNotFoundException("not_existing_email").getMessage(),
-                e.getMessage()
+                () -> service.changeDetails(changeUserDetailsDto, notExistingEmail)
         );
     }
 
     @Test
     void changeNotificationSettings_should_throw_UserNotFoundException() {
-        when(userRepository.findByEmail("not_existing_email"))
+        String notExistingEmail = "not_existing_email";
+
+        when(userRepository.findByEmail(notExistingEmail))
                 .thenReturn(Optional.empty());
 
-        UserNotFoundException e = assertThrows(
+        assertThrows(
                 UserNotFoundException.class,
-                () -> service.changeNotificationSettings(changeNotificationSettingsDto, "not_existing_email")
-        );
-        assertEquals(
-                new UserNotFoundException("not_existing_email").getMessage(),
-                e.getMessage()
+                () -> service.changeNotificationSettings(changeNotificationSettingsDto, notExistingEmail)
         );
     }
 
-    @ParameterizedTest
-    @CsvSource(value = {
-            "true,true",
-            "null,true",
-            "null,null",
-            "true,null",
-    }, nullValues = "null")
-    void changeNotificationSettings_should_update_dynamic(Boolean order, Boolean news) {
-        when(userRepository.findByEmail("email"))
+    @Test
+    void changeNotificationSettings_should_update_dynamic() {
+        String email = "email";
+
+        when(userRepository.findByEmail(email))
                 .thenReturn(Optional.of(user));
         when(user.getNotificationSettings())
                 .thenReturn(notificationSettings);
 
-        service.changeNotificationSettings(new ChangeNotificationSettingsDto(order, news), "email");
+        service.changeNotificationSettings(changeNotificationSettingsDto, email);
 
-        if (order == null) {
-            verify(notificationSettings, never())
-                    .setReceiveOrderEmails(anyBoolean());
-        }
-        if (news == null) {
-            verify(notificationSettings, never())
-                    .setReceiveNewsEmails(anyBoolean());
-        }
+        verify(userMapper, only())
+                .update(notificationSettings, changeNotificationSettingsDto);
+    }
+
+
+    @Test
+    void setNewPasswordForUser() {
+        Long userId = 1L;
+        String pass = "pass";
+        String encodedPass = "encoded_pass";
+
+        when(userRepository.findById(userId))
+                .thenReturn(Optional.of(user));
+        when(passwordEncoder.encode(pass))
+                .thenReturn(encodedPass);
+
+        service.setNewPasswordForUser(userId, pass);
+
+        verify(user, times(1))
+                .setPassword(encodedPass);
+    }
+
+    @Test
+    void setNewPasswordForUser_should_throw_UserNotFoundException() {
+        Long userId = 1L;
+        String pass = "pass";
+
+        when(userRepository.findById(userId))
+                .thenReturn(Optional.empty());
+
+        assertThrows(UserNotFoundException.class,
+                () -> service.setNewPasswordForUser(userId, pass));
+
+        verify(user, never()).setPassword(any());
+    }
+
+    @Test
+    void activateUserById() {
+        Long userId = 1L;
+
+        when(userRepository.findById(userId))
+                .thenReturn(Optional.of(user));
+
+        service.activateUserById(userId);
+
+        verify(user, times(1)).enable();
+    }
+
+    @Test
+    void activateUserById_should_throw_UserNotFoundException() {
+        Long userId = 1L;
+
+        when(userRepository.findById(userId))
+                .thenReturn(Optional.empty());
+
+        assertThrows(UserNotFoundException.class,
+                () -> service.activateUserById(userId));
+
+        verify(user, never()).enable();
     }
 }

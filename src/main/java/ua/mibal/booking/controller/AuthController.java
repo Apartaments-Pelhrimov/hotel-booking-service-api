@@ -57,8 +57,8 @@ public class AuthController {
 
     @PostMapping("/activate")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void activateAccountRegistration(@RequestParam("code") String activationCode) {
-        authService.activate(activationCode);
+    public void activateNewAccount(@RequestParam("code") String activationCode) {
+        authService.activateNewAccountBy(activationCode);
     }
 
     @GetMapping("/forget")
@@ -69,8 +69,8 @@ public class AuthController {
 
     @PutMapping("/forget/password")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updatePassword(@RequestParam("code") String activationCode,
+    public void forgetPassword(@RequestParam("code") String activationCode,
                                @Valid @RequestBody ForgetPasswordDto forgetPasswordDto) {
-        authService.updatePassword(activationCode, forgetPasswordDto);
+        authService.setNewPassword(activationCode, forgetPasswordDto);
     }
 }
