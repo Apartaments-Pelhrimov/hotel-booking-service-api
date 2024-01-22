@@ -68,7 +68,7 @@ public class ICalService {
     private Calendar buildCalendarFromInputStream(InputStream file) {
         try {
             return new CalendarBuilder().build(file);
-        } catch (IOException | ParserException e) {
+        } catch (IOException | ParserException | RuntimeException e) {
             throw new ICalServiceException(
                     "Exception while building Calendar from ICal file", e
             );

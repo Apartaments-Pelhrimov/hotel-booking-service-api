@@ -28,6 +28,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import ua.mibal.booking.config.properties.CalendarProps;
 import ua.mibal.booking.model.entity.Event;
+import ua.mibal.booking.model.exception.service.ICalServiceException;
 import ua.mibal.booking.model.mapper.CalendarFormatMapper;
 import ua.mibal.booking.testUtils.DataGenerator;
 
@@ -36,6 +37,7 @@ import java.time.ZoneId;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 import static ua.mibal.booking.testUtils.ICalTestUtils.mustContainEvents;
 
@@ -83,5 +85,11 @@ class ICalService_UnitTest {
         List<Event> actual = service.getEventsFromCalendarFile(iCalFile);
 
         assertEquals(expected, actual);
+    }
+
+    @Test
+    void eventsFromFile_should_throw_ICalServiceException() {
+        assertThrows(ICalServiceException.class,
+                () -> service.getEventsFromCalendarFile(null));
     }
 }
