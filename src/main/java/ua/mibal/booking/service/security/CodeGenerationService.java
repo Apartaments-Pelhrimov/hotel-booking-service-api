@@ -29,23 +29,26 @@ import java.util.Random;
 @RequiredArgsConstructor
 @Service
 public class CodeGenerationService {
-    private final static String ALLOWED_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+    private static final String ALLOWED_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
                                                 "abcdefghijklmnopqrstuvwxyz" +
                                                 "0123456789" + "0123456789" +
                                                 "0123456789" + "0123456789";
+    private static final Random RANDOM = new Random();
 
     private final ActivationCodeProps activationCodeProps;
 
     public String generateCode() {
         StringBuilder stringBuilder = new StringBuilder();
-        Random random = new Random();
-        int length = ALLOWED_CHARS.length();
-        int count = 0;
-        while (count++ != activationCodeProps.length()) {
-            int index = random.nextInt(length);
-            char val = ALLOWED_CHARS.charAt(index);
-            stringBuilder.append(val);
+        for (int i = 0; i < activationCodeProps.length(); i++) {
+            char randomChar = getRandomCharacter();
+            stringBuilder.append(randomChar);
         }
         return stringBuilder.toString();
+    }
+
+    private char getRandomCharacter() {
+        int maxIndex = ALLOWED_CHARS.length();
+        int randomIndex = RANDOM.nextInt(maxIndex);
+        return ALLOWED_CHARS.charAt(randomIndex);
     }
 }
