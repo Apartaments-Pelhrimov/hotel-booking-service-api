@@ -201,11 +201,10 @@ public class Apartment {
                 .findFirst();
     }
 
-    public void addPrice(Price price) {
+    public void putPrice(Price price) {
         price.setApartment(this);
-        if (!prices.contains(price)) {
-            prices.add(price);
-        }
+        prices.remove(price);
+        prices.add(price);
     }
 
     public boolean deletePrice(Integer person) {

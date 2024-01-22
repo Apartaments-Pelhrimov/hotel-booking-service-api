@@ -82,7 +82,7 @@ class ApartmentMapper_UnitTest {
         List.of(
                 new Price(1, BigDecimal.ZERO, null),
                 new Price(6, BigDecimal.TEN, null)
-        ).forEach(apartment::addPrice);
+        ).forEach(apartment::putPrice);
         return BigDecimal.ZERO;
     }
 

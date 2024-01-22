@@ -45,10 +45,10 @@ public class PriceService {
     }
 
     @Transactional
-    public void create(Long id, PriceDto priceDto) {
+    public void put(Long apartmentId, PriceDto priceDto) {
         Price price = priceMapper.toEntity(priceDto);
-        Apartment apartment = apartmentService.getOneFetchPrices(id);
-        apartment.addPrice(price);
+        Apartment apartment = apartmentService.getOneFetchPrices(apartmentId);
+        apartment.putPrice(price);
     }
 
     @Transactional

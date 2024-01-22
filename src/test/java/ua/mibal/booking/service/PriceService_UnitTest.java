@@ -32,12 +32,12 @@ import ua.mibal.booking.model.entity.embeddable.Price;
 import ua.mibal.booking.model.exception.entity.PriceNotFoundException;
 import ua.mibal.booking.model.mapper.PriceMapper;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static ua.mibal.booking.testUtils.CustomAssertions.assertEqualsList;
 
@@ -102,13 +102,45 @@ class PriceService_UnitTest {
     }
 
     @Test
-    public void create() {
+    public void put_should_create_if_price_not_found() {
+        int people = 2;
+
+        Apartment apartment = new Apartment();
+        Price price = new Price(people, BigDecimal.TEN, apartment);
+
         Long id = 1L;
         when(priceMapper.toEntity(priceDto)).thenReturn(price);
         when(apartmentService.getOneFetchPrices(id)).thenReturn(apartment);
 
-        service.create(id, priceDto);
+        service.put(id, priceDto);
 
-        verify(apartment, times(1)).addPrice(price);
+        assertEquals(
+                price,
+                apartment.getPriceForPeople(people)
+                        .orElseThrow()
+        );
+    }
+
+    @Test
+    public void put_should_change_price_if_price_exists() {
+        int people = 2;
+
+        Apartment apartment = new Apartment();
+        Price addedPrice = new Price(people, BigDecimal.ONE, apartment);
+        apartment.putPrice(addedPrice);
+
+        Price newPrice = new Price(people, BigDecimal.ONE, apartment);
+
+        Long id = 1L;
+        when(priceMapper.toEntity(priceDto)).thenReturn(newPrice);
+        when(apartmentService.getOneFetchPrices(id)).thenReturn(apartment);
+
+        service.put(id, priceDto);
+
+        assertEquals(
+                newPrice,
+                apartment.getPriceForPeople(people)
+                        .orElseThrow()
+        );
     }
 }

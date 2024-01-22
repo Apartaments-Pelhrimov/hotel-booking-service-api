@@ -356,7 +356,7 @@ public class DataGenerator {
 
     public static Apartment testApartmentWithPriceFor(int personCount) {
         Apartment apartment = testApartment();
-        apartment.addPrice(new Price(personCount, BigDecimal.TEN, apartment));
+        apartment.putPrice(new Price(personCount, BigDecimal.TEN, apartment));
         return apartment;
     }
 }
