@@ -39,6 +39,8 @@ import ua.mibal.booking.service.email.model.EmailType;
 import ua.mibal.booking.testUtils.DataGenerator;
 import ua.mibal.booking.testUtils.EmailUtils;
 
+import javax.naming.OperationNotSupportedException;
+
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.eq;
@@ -57,18 +59,6 @@ import static org.mockito.Mockito.when;
 class EmailSendingService_UnitTest {
     private final User user = spy(DataGenerator.testUser());
 
-    // FIXME
-    //Exception in thread "Email-sending-Thread" java.lang.NullPointerException: Cannot invoke "Object.getClass()" because "obj" is null
-    //	at com.sun.mail.handlers.text_plain.writeTo(text_plain.java:109)
-    //	at jakarta.activation.ObjectDataContentHandler.writeTo(DataHandler.java:863)
-    //	at jakarta.activation.DataHandler.writeTo(DataHandler.java:290)
-    //	at jakarta.mail.internet.MimeUtility.getEncoding(MimeUtility.java:316)
-    //	at jakarta.mail.internet.MimeBodyPart.updateHeaders(MimeBodyPart.java:1551)
-    //	at jakarta.mail.internet.MimeMessage.updateHeaders(MimeMessage.java:2246)
-    //	at jakarta.mail.internet.MimeMessage.saveChanges(MimeMessage.java:2206)
-    //	at jakarta.mail.Transport.send(Transport.java:149)
-    //	at ua.mibal.booking.service.email.EmailSendingService.sendEmail(EmailSendingService.java:78)
-    //	at ua.mibal.booking.service.email.EmailSendingService.lambda$sendAsyncEmail$0(EmailSendingService.java:68)
     @Autowired
     private EmailSendingService service;
     @Autowired
@@ -84,28 +74,38 @@ class EmailSendingService_UnitTest {
 
     @ParameterizedTest
     @EnumSource(EmailType.class)
-    void sendAllCodesForUsers(EmailType emailType) throws InterruptedException {
+    void sendAllCodesForUsers(EmailType emailType)
+            throws InterruptedException, OperationNotSupportedException {
         when(user.getEmail()).thenReturn(emailProps.username());
         when(activationCode.getUser()).thenReturn(user);
         when(activationCode.getCode()).thenReturn("CODE");
         when(classpathFileReader.read(emailType.getTemplatePath()))
                 .thenReturn("TEMPLATE");
         when(templateEngine.insertIntoTemplate(eq("TEMPLATE"), anyMap()))
-                .thenReturn("INSERTED_TEMPLATE_" + emailType.name());
+                .thenReturn("TEST_INSERTED_TEMPLATE_" + emailType.name());
 
-        service.sendActivationCode(activationCode);
-        Thread.sleep(10 * 1000); // to be confident - the email was sent
+        if (emailType == EmailType.ACCOUNT_ACTIVATION) {
+            service.sendActivationCode(activationCode);
+        } else if (emailType == EmailType.PASSWORD_CHANGING) {
+            service.sendPasswordChangingCode(activationCode);
+        } else {
+            throw new OperationNotSupportedException();
+        }
+        Thread.sleep(20 * 1000); // 20sec to be confident - the email was sent
 
         assertTrue(emailUtils.messageReceived(emailType.getSubject()));
     }
 
     @Test
     void sendErrorEmailToDevelopers() throws InterruptedException {
-        InternalServerException e = new BookingComServiceException("message", null);
+        InternalServerException e =
+                new BookingComServiceException("TEST_message", null);
+        e.setStackTrace(new StackTraceElement[0]);
 
         service.sendErrorEmailToDevelopers(e);
-        Thread.sleep(10 * 1000); // to be confident - the email was sent
+        Thread.sleep(20 * 1000); // 20sec to be confident - the email was sent
 
-        assertTrue(emailUtils.messageReceived("Internal server error " + e.getClass()));
+        assertTrue(emailUtils.messageReceived(
+                "Internal server error " + e.getClass()));
     }
 }
