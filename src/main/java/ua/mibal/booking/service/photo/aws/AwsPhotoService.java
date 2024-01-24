@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.photo;
+package ua.mibal.booking.service.photo.aws;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,9 +24,7 @@ import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.entity.embeddable.Photo;
 import ua.mibal.booking.service.ApartmentService;
 import ua.mibal.booking.service.UserService;
-import ua.mibal.booking.service.photo.aws.ApartmentAwsPhoto;
-import ua.mibal.booking.service.photo.aws.AwsPhoto;
-import ua.mibal.booking.service.photo.aws.UserAwsPhoto;
+import ua.mibal.booking.service.photo.PhotoService;
 
 /**
  * @author Mykhailo Balakhon
