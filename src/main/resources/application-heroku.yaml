@@ -29,8 +29,6 @@ aws:
   region: eu-north-1
   bucket:
     name: hotel-booking-service-heroku
-    users-folder: users/
-    apartments-folder: apartments/
 
 calendar:
   i-cal:

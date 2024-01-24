@@ -27,6 +27,7 @@ import ua.mibal.booking.model.dto.request.ChangeUserDetailsDto;
 import ua.mibal.booking.model.dto.request.DeleteMeDto;
 import ua.mibal.booking.model.dto.response.UserDto;
 import ua.mibal.booking.model.entity.User;
+import ua.mibal.booking.model.entity.embeddable.Photo;
 import ua.mibal.booking.model.exception.IllegalPasswordException;
 import ua.mibal.booking.model.exception.entity.UserNotFoundException;
 import ua.mibal.booking.model.mapper.UserMapper;
@@ -101,6 +102,15 @@ public class UserService {
     public void activateUserById(Long userId) {
         User user = getOneById(userId);
         user.enable();
+    }
+
+    public void changeUserPhoto(String email, String photoLink) {
+        Photo photo = new Photo(photoLink);
+        userRepository.updateUserPhotoByEmail(photo, email);
+    }
+
+    public void deleteUserPhotoByEmail(String email) {
+        userRepository.deleteUserPhotoByEmail(email);
     }
 
     private User getOneById(Long userId) {

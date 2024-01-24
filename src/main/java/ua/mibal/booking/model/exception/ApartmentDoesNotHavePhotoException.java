@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,17 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.config.properties;
+package ua.mibal.booking.model.exception;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import software.amazon.awssdk.regions.Region;
+import ua.mibal.booking.model.exception.marker.BadRequestException;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@ConfigurationProperties(prefix = "aws")
-public record AwsProps(
-        String accessKeyId,
-        String secretAccessKey,
-        Region region,
-        AwsBucketProps bucket
-) {
-    @ConfigurationProperties(prefix = "aws.bucket")
-    public record AwsBucketProps(
-            String name
-    ) {
+public class ApartmentDoesNotHavePhotoException extends BadRequestException {
+
+    public ApartmentDoesNotHavePhotoException() {
+        super("bad-request-error.apartment-does-not-have-photo");
     }
 }

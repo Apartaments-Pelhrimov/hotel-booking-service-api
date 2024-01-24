@@ -29,8 +29,6 @@ aws:
   region: eu-north-1
   bucket:
     name: hotel-booking-service-dev
-    users-folder: users/
-    apartments-folder: apartments/
 
 server:
   port: 443

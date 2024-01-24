@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,22 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.photo;
+package ua.mibal.booking.service.photo.aws;
+
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public enum PhotoExtension {
+public class UserAwsPhoto extends AwsPhoto {
+    private static final String folder = "users";
 
-    PNG, JPG, JPEG;
+    public UserAwsPhoto(String email, MultipartFile photo) {
+        super(email, folder, photo);
+    }
 
-    public String getExtension() {
-        return name().toLowerCase();
+    public UserAwsPhoto(String email) {
+        super(email, folder);
     }
 }

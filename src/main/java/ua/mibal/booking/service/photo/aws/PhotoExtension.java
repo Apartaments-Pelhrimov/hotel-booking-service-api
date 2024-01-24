@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,26 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.photo;
-
-import org.springframework.web.multipart.MultipartFile;
+package ua.mibal.booking.service.photo.aws;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public interface PhotoStorageService {
+public enum PhotoExtension {
 
-    String changeUserPhoto(String email, MultipartFile photo);
+    PNG, JPG, JPEG, NONE;
 
-    void deleteUserPhoto(String email);
+    public static PhotoExtension ofExtension(String photoExtension) {
+        return valueOf(photoExtension.toUpperCase());
+    }
 
-    String createApartmentPhoto(Long id, MultipartFile photo);
-
-    void deleteApartmentPhoto(Long id, String link);
+    public String getExtension() {
+        if (this == NONE) {
+            throw new UnsupportedOperationException(
+                    "Trying to call PhotoExtension.getExtension() " +
+                    "on PhotoExtension.NONE instance");
+        }
+        return name().toLowerCase();
+    }
 }

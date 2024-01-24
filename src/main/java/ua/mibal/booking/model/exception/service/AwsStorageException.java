@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.util;
+package ua.mibal.booking.model.exception.service;
+
+import ua.mibal.booking.model.exception.marker.InternalServerException;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class AwsUrlUtils {
+public class AwsStorageException extends InternalServerException {
 
-    public static String getFileName(String link) {
-        String[] path = link.split("/");
-        return path[path.length - 1];
+    public AwsStorageException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

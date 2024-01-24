@@ -19,13 +19,16 @@ package ua.mibal.booking.service.photo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.core.exception.SdkException;
+import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetUrlRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import ua.mibal.booking.config.properties.AwsProps.AwsBucketProps;
+import ua.mibal.booking.model.exception.service.AwsStorageException;
+import ua.mibal.booking.service.photo.aws.AwsPhoto;
 
-import static software.amazon.awssdk.core.sync.RequestBody.fromBytes;
+import java.io.IOException;
 
 /**
  * @author Mykhailo Balakhon
@@ -37,44 +40,49 @@ public class AwsStorage {
     private final S3Client s3Client;
     private final AwsBucketProps awsBucketProps;
 
-    public String uploadImage(String folder,
-                              String name,
-                              byte[] image,
-                              PhotoExtension photoExtension) {
-        upload(folder, name, image, photoExtension);
-        return getLink(folder, name);
-    }
-
-    // TODO refactor
-    public boolean delete(String folder, String name) {
-        DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
-                .bucket(awsBucketProps.name())
-                .key(folder + name)
-                .build();
+    public void deletePhoto(AwsPhoto photo) {
         try {
-            s3Client.deleteObject(deleteObjectRequest);
-            return true;
+            deleteAwsPhoto(photo);
         } catch (SdkException e) {
-            return false;
+            throw new AwsStorageException(
+                    "Exception while deleting Photo by " +
+                    "key '%s'".formatted(photo.getKey()), e);
         }
     }
 
-    private void upload(String folder,
-                        String name,
-                        byte[] file,
-                        PhotoExtension photoExtension) {
-        PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-                .bucket(awsBucketProps.name())
-                .key(folder + name)
-                .contentType("image/" + photoExtension.getExtension())
-                .build();
-        s3Client.putObject(putObjectRequest, fromBytes(file));
+    public String uploadPhoto(AwsPhoto photo) {
+        try {
+            uploadAwsPhoto(photo);
+            return getLink(photo);
+        } catch (IOException | SdkException e) {
+            throw new AwsStorageException(
+                    "Exception while uploading Photo with " +
+                    "key '%s'".formatted(photo.getKey()), e);
+        }
     }
 
-    private String getLink(String folder, String name) {
+    private void deleteAwsPhoto(AwsPhoto photo) {
+        DeleteObjectRequest deleteRequest = DeleteObjectRequest.builder()
+                .bucket(awsBucketProps.name())
+                .key(photo.getKey())
+                .build();
+        s3Client.deleteObject(deleteRequest);
+    }
+
+    private void uploadAwsPhoto(AwsPhoto photo) throws IOException {
+        PutObjectRequest putRequest = PutObjectRequest.builder()
+                .bucket(awsBucketProps.name())
+                .key(photo.getKey())
+                .contentType(photo.getContentType())
+                .build();
+        RequestBody requestBody = RequestBody.fromBytes(photo.getPhoto());
+        s3Client.putObject(putRequest, requestBody);
+    }
+
+    private String getLink(AwsPhoto photo) {
         GetUrlRequest getUrlRequest = GetUrlRequest.builder()
                 .bucket(awsBucketProps.name())
-                .key(folder + name)
+                .key(photo.getKey())
                 .build();
         return s3Client.utilities()
                 .getUrl(getUrlRequest)

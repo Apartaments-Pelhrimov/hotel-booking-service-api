@@ -14,27 +14,21 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.util;
+package ua.mibal.booking.service.photo;
 
-import org.springframework.util.StringUtils;
-import ua.mibal.booking.model.exception.IllegalPhotoFormatException;
-import ua.mibal.booking.service.photo.PhotoExtension;
-
-import java.util.Objects;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class FileNameUtils {
+public interface PhotoService {
 
-    public static PhotoExtension getPhotoExtension(String fileName) {
-        String extension = null;
-        try {
-            extension = StringUtils.getFilenameExtension(fileName);
-            return PhotoExtension.valueOf(Objects.requireNonNull(extension).toUpperCase());
-        } catch (IllegalArgumentException | NullPointerException e) {
-            throw new IllegalPhotoFormatException(extension);
-        }
-    }
+    String changeUserPhoto(String email, MultipartFile photo);
+
+    void deleteUserPhoto(String email);
+
+    String createApartmentPhoto(Long id, MultipartFile photo);
+
+    void deleteApartmentPhoto(Long id, String link);
 }

@@ -19,6 +19,7 @@ package ua.mibal.booking.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ua.mibal.booking.model.entity.Apartment;
+import ua.mibal.booking.model.entity.embeddable.Photo;
 
 import java.util.List;
 import java.util.Optional;
@@ -51,4 +52,11 @@ public interface ApartmentRepository extends JpaRepository<Apartment, Long> {
             where a.id = ?1
             """)
     Optional<Apartment> findByIdFetchInstances(Long id);
+
+    @Query("""
+            select count(a.id) = 1 from Apartment a
+                left join a.photos p
+            where a.id = ?1 and p = ?2
+            """)
+    boolean doesApartmentHavePhoto(Long id, Photo photo);
 }

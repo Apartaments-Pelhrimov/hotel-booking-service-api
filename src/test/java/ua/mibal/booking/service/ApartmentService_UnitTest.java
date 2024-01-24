@@ -31,6 +31,8 @@ import ua.mibal.booking.model.dto.request.UpdateApartmentDto;
 import ua.mibal.booking.model.dto.response.ApartmentCardDto;
 import ua.mibal.booking.model.dto.response.ApartmentDto;
 import ua.mibal.booking.model.entity.Apartment;
+import ua.mibal.booking.model.entity.embeddable.Photo;
+import ua.mibal.booking.model.exception.ApartmentDoesNotHavePhotoException;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.model.mapper.ApartmentMapper;
 import ua.mibal.booking.repository.ApartmentRepository;
@@ -220,5 +222,66 @@ class ApartmentService_UnitTest {
 
         assertThrows(ApartmentNotFoundException.class,
                 () -> service.getOneFetchInstances(id));
+    }
+
+    @Test
+    void getOne() {
+        Long id = 1L;
+
+        when(apartmentRepository.findById(id))
+                .thenReturn(Optional.of(apartment));
+
+        var actual = service.getOne(id);
+
+        assertEquals(apartment, actual);
+    }
+
+    @Test
+    void getOne_should_throw_ApartmentNotFoundException() {
+        Long id = 1L;
+
+        when(apartmentRepository.findById(id))
+                .thenReturn(Optional.empty());
+
+        assertThrows(ApartmentNotFoundException.class,
+                () -> service.getOne(id));
+    }
+
+    @Test
+    void validateApartmentHasPhoto() {
+        Long id = 1L;
+        String link = "link";
+
+        when(apartmentRepository.doesApartmentHavePhoto(id, new Photo(link)))
+                .thenReturn(true);
+
+        assertDoesNotThrow(
+                () -> service.validateApartmentHasPhoto(id, link));
+    }
+
+    @Test
+    void validateApartmentHasPhoto_should_throw_() {
+        Long id = 1L;
+        String link = "link";
+
+        when(apartmentRepository.doesApartmentHavePhoto(id, new Photo(link)))
+                .thenReturn(false);
+
+        assertThrows(ApartmentDoesNotHavePhotoException.class,
+                () -> service.validateApartmentHasPhoto(id, link));
+    }
+
+    @Test
+    void deleteApartmentPhotoByLink() {
+        Long id = 1L;
+        String link = "link";
+
+        when(apartmentRepository.findById(id))
+                .thenReturn(Optional.of(apartment));
+
+        service.deleteApartmentPhotoByLink(id, link);
+
+        verify(apartment, times(1))
+                .deletePhoto(new Photo(link));
     }
 }

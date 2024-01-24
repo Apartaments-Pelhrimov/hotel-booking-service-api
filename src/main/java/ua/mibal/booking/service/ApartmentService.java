@@ -24,6 +24,8 @@ import ua.mibal.booking.model.dto.request.UpdateApartmentDto;
 import ua.mibal.booking.model.dto.response.ApartmentCardDto;
 import ua.mibal.booking.model.dto.response.ApartmentDto;
 import ua.mibal.booking.model.entity.Apartment;
+import ua.mibal.booking.model.entity.embeddable.Photo;
+import ua.mibal.booking.model.exception.ApartmentDoesNotHavePhotoException;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.model.mapper.ApartmentMapper;
 import ua.mibal.booking.repository.ApartmentRepository;
@@ -81,9 +83,21 @@ public class ApartmentService {
                 .orElseThrow(() -> new ApartmentNotFoundException(id));
     }
 
-    private Apartment getOne(Long id) {
+    public Apartment getOne(Long id) {
         return apartmentRepository.findById(id)
                 .orElseThrow(() -> new ApartmentNotFoundException(id));
+    }
+
+    public void validateApartmentHasPhoto(Long id, String link) {
+        if (!apartmentRepository.doesApartmentHavePhoto(id, new Photo(link))) {
+            throw new ApartmentDoesNotHavePhotoException();
+        }
+    }
+
+    @Transactional
+    public void deleteApartmentPhotoByLink(Long id, String link) {
+        Apartment apartment = getOne(id);
+        apartment.deletePhoto(new Photo(link));
     }
 
     private void validateExists(Long id) {

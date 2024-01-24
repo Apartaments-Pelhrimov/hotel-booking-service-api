@@ -37,6 +37,7 @@ import ua.mibal.booking.model.dto.request.DeleteMeDto;
 import ua.mibal.booking.model.dto.response.UserDto;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.entity.embeddable.NotificationSettings;
+import ua.mibal.booking.model.entity.embeddable.Photo;
 import ua.mibal.booking.model.exception.IllegalPasswordException;
 import ua.mibal.booking.model.exception.entity.UserNotFoundException;
 import ua.mibal.booking.model.mapper.UserMapper;
@@ -406,5 +407,26 @@ class UserService_UnitTest {
                 () -> service.activateUserById(userId));
 
         verify(user, never()).enable();
+    }
+
+    @Test
+    void changeUserPhoto() {
+        String email = "emaiil";
+        String link = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+
+        service.changeUserPhoto(email, link);
+
+        verify(userRepository, times(1))
+                .updateUserPhotoByEmail(new Photo(link), email);
+    }
+
+    @Test
+    void deleteUserPhotoByEmail() {
+        String email = "email";
+
+        service.deleteUserPhotoByEmail(email);
+
+        verify(userRepository, times(1))
+                .deleteUserPhotoByEmail(email);
     }
 }

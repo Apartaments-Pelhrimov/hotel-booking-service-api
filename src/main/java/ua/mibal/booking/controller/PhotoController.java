@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import ua.mibal.booking.service.photo.PhotoStorageService;
+import ua.mibal.booking.service.photo.PhotoService;
 
 /**
  * @author Mykhailo Balakhon
@@ -39,21 +39,21 @@ import ua.mibal.booking.service.photo.PhotoStorageService;
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class PhotoController {
-    private final PhotoStorageService photoStorageService;
+    private final PhotoService photoService;
 
     @RolesAllowed("USER")
     @PutMapping("/users/me/photo")
     @ResponseStatus(HttpStatus.CREATED)
     public String changeUserPhoto(@RequestParam("file") MultipartFile file,
                                   Authentication authentication) {
-        return photoStorageService.changeUserPhoto(authentication.getName(), file);
+        return photoService.changeUserPhoto(authentication.getName(), file);
     }
 
     @RolesAllowed("USER")
     @DeleteMapping("/users/me/photo")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUserPhoto(Authentication authentication) {
-        photoStorageService.deleteUserPhoto(authentication.getName());
+        photoService.deleteUserPhoto(authentication.getName());
     }
 
     @RolesAllowed("MANAGER")
@@ -61,7 +61,7 @@ public class PhotoController {
     @ResponseStatus(HttpStatus.CREATED)
     public String createApartmentPhoto(@PathVariable Long id,
                                        @RequestParam("file") MultipartFile file) {
-        return photoStorageService.createApartmentPhoto(id, file);
+        return photoService.createApartmentPhoto(id, file);
     }
 
     @RolesAllowed("MANAGER")
@@ -69,6 +69,6 @@ public class PhotoController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteApartmentPhoto(@PathVariable Long id,
                                      @RequestParam("link") String link) {
-        photoStorageService.deleteApartmentPhoto(id, link);
+        photoService.deleteApartmentPhoto(id, link);
     }
 }
