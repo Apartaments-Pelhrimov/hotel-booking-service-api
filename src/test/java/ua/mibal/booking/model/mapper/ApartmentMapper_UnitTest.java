@@ -80,8 +80,8 @@ class ApartmentMapper_UnitTest {
 
     private static BigDecimal addPricesGetMin(Apartment apartment) {
         List.of(
-                new Price(1, BigDecimal.ZERO, null),
-                new Price(6, BigDecimal.TEN, null)
+                new Price(1, BigDecimal.ZERO),
+                new Price(6, BigDecimal.TEN)
         ).forEach(apartment::putPrice);
         return BigDecimal.ZERO;
     }

@@ -22,8 +22,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Parent;
-import ua.mibal.booking.model.entity.Apartment;
 
 import java.math.BigDecimal;
 
@@ -44,9 +42,6 @@ public class Price {
     @Column(nullable = false)
     private BigDecimal cost;
 
-    @Parent
-    private Apartment apartment;
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -58,16 +53,11 @@ public class Price {
 
         Price price = (Price) o;
 
-        if (!person.equals(price.person)) {
-            return false;
-        }
-        return apartment.equals(price.apartment);
+        return person.equals(price.person);
     }
 
     @Override
     public int hashCode() {
-        int result = person.hashCode();
-        result = 31 * result + apartment.hashCode();
-        return result;
+        return person.hashCode();
     }
 }

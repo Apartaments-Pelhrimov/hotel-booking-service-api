@@ -202,7 +202,6 @@ public class Apartment {
     }
 
     public void putPrice(Price price) {
-        price.setApartment(this);
         prices.remove(price);
         prices.add(price);
     }

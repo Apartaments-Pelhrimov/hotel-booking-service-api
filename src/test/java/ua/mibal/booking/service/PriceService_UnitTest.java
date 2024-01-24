@@ -106,7 +106,7 @@ class PriceService_UnitTest {
         int people = 2;
 
         Apartment apartment = new Apartment();
-        Price price = new Price(people, BigDecimal.TEN, apartment);
+        Price price = new Price(people, BigDecimal.TEN);
 
         Long id = 1L;
         when(priceMapper.toEntity(priceDto)).thenReturn(price);
@@ -126,10 +126,10 @@ class PriceService_UnitTest {
         int people = 2;
 
         Apartment apartment = new Apartment();
-        Price addedPrice = new Price(people, BigDecimal.ONE, apartment);
+        Price addedPrice = new Price(people, BigDecimal.ONE);
         apartment.putPrice(addedPrice);
 
-        Price newPrice = new Price(people, BigDecimal.ONE, apartment);
+        Price newPrice = new Price(people, BigDecimal.ONE);
 
         Long id = 1L;
         when(priceMapper.toEntity(priceDto)).thenReturn(newPrice);
