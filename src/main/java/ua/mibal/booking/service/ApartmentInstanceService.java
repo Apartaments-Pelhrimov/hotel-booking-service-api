@@ -71,6 +71,11 @@ public class ApartmentInstanceService {
         apartmentInstanceRepository.deleteById(id);
     }
 
+    public ApartmentInstance getOneFetchReservations(Long id) {
+        return apartmentInstanceRepository.findByIdFetchReservations(id)
+                .orElseThrow(() -> new ApartmentInstanceNotFoundException(id));
+    }
+
     private List<ApartmentInstance> getFree(ReservationRequest reservationRequest) {
         List<ApartmentInstance> free = getFreeLocal(reservationRequest);
         filterFreeAtBookingCom(free, reservationRequest);

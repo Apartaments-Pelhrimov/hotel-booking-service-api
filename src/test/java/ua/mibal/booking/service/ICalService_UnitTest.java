@@ -61,6 +61,8 @@ class ICalService_UnitTest {
     @MockBean
     private CalendarProps.ICalProps iCalProps;
 
+    // FIXME divide into CalendarFormatMapper test and ICalService test
+
     @BeforeEach
     void setup() {
         when(calendarProps.zoneId()).thenReturn(zoneId);
@@ -78,7 +80,7 @@ class ICalService_UnitTest {
     }
 
     @Test
-    void eventsFromFile() {
+    void getEventsFromCalendarFile() {
         InputStream iCalFile = getClass().getResourceAsStream("/test.ics");
         List<Event> expected = DataGenerator.testEventsFromTestFile(zoneId);
 
@@ -88,7 +90,7 @@ class ICalService_UnitTest {
     }
 
     @Test
-    void eventsFromFile_should_throw_ICalServiceException() {
+    void getEventsFromCalendarFile_should_throw_ICalServiceException() {
         assertThrows(ICalServiceException.class,
                 () -> service.getEventsFromCalendarFile(null));
     }

@@ -42,6 +42,7 @@ import ua.mibal.booking.service.util.DateTimeUtils;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static java.time.LocalDateTime.MAX;
 import static java.time.LocalDateTime.MIN;
@@ -189,5 +190,28 @@ class ApartmentInstanceService_UnitTest {
         );
 
         verify(apartmentInstanceRepository, never()).deleteById(id);
+    }
+
+    @Test
+    void getOneFetchReservations() {
+        Long id = 1L;
+
+        when(apartmentInstanceRepository.findByIdFetchReservations(id))
+                .thenReturn(Optional.of(apartmentInstance));
+
+        var actual = service.getOneFetchReservations(id);
+
+        assertEquals(apartmentInstance, actual);
+    }
+
+    @Test
+    void getOneFetchReservations_should_throw_ApartmentInstanceNotFoundException() {
+        Long id = 1L;
+
+        when(apartmentInstanceRepository.findByIdFetchReservations(id))
+                .thenReturn(Optional.empty());
+
+        assertThrows(ApartmentInstanceNotFoundException.class,
+                () -> service.getOneFetchReservations(id));
     }
 }

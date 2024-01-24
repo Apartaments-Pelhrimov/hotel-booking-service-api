@@ -76,6 +76,11 @@ public class ApartmentService {
                 .orElseThrow(() -> new ApartmentNotFoundException(id));
     }
 
+    public Apartment getOneFetchInstances(Long id) {
+        return apartmentRepository.findByIdFetchInstances(id)
+                .orElseThrow(() -> new ApartmentNotFoundException(id));
+    }
+
     private Apartment getOne(Long id) {
         return apartmentRepository.findById(id)
                 .orElseThrow(() -> new ApartmentNotFoundException(id));

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,41 +16,36 @@
 
 package ua.mibal.booking.controller;
 
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ua.mibal.booking.model.dto.response.calendar.Calendar;
-import ua.mibal.booking.service.CalendarService;
-
-import java.util.List;
+import ua.mibal.booking.model.dto.request.TurnOffDto;
+import ua.mibal.booking.service.TurningOffService;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @RequiredArgsConstructor
+@RolesAllowed("MANAGER")
 @RestController
 @RequestMapping("/api")
-public class CalendarController {
-    private final CalendarService calendarService;
+public class TurnOffController {
+    private final TurningOffService turningOffService;
 
-    @GetMapping("/apartments/{id}/calendar")
-    public List<Calendar> getCalendarForApartment(@PathVariable Long id) {
-        return calendarService.getCalendarsForApartment(id);
+    @PatchMapping("/hotel/off")
+    public void turnOffHotel(@Valid @RequestBody TurnOffDto turnOffDto) {
+        turningOffService.turnOffHotel(turnOffDto);
     }
 
-    @GetMapping("/apartments/instances/{id}/calendar")
-    public Calendar getCalendarForApartmentInstance(@PathVariable Long id) {
-        return calendarService.getCalendarForApartmentInstance(id);
-    }
-
-    @GetMapping(
-            value = "/apartments/instances/{id}/calendar.ics",
-            produces = "text/calendar"
-    )
-    public String getICalForApartmentInstance(@PathVariable Long id) {
-        return calendarService.getICalForApartmentInstance(id);
+    @PatchMapping("/apartments/instances/{id}/off")
+    public void turnOffApartmentInstance(@PathVariable Long id,
+                                         @Valid @RequestBody TurnOffDto turnOffDto) {
+        turningOffService.turnOffApartmentInstance(id, turnOffDto);
     }
 }

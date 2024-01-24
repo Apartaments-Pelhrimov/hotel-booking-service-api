@@ -198,4 +198,27 @@ class ApartmentService_UnitTest {
                 actual
         );
     }
+
+    @Test
+    void getOneFetchInstances() {
+        Long id = 1L;
+
+        when(apartmentRepository.findByIdFetchInstances(id))
+                .thenReturn(Optional.of(apartment));
+
+        var actual = service.getOneFetchInstances(id);
+
+        assertEquals(apartment, actual);
+    }
+
+    @Test
+    void getOneFetchInstances_should_throw_ApartmentNotFoundException() {
+        Long id = 1L;
+
+        when(apartmentRepository.findByIdFetchInstances(id))
+                .thenReturn(Optional.empty());
+
+        assertThrows(ApartmentNotFoundException.class,
+                () -> service.getOneFetchInstances(id));
+    }
 }

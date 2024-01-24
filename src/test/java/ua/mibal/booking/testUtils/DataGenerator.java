@@ -42,12 +42,14 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
 import static java.math.BigDecimal.ONE;
 import static java.math.BigDecimal.ZERO;
 import static java.math.BigDecimal.valueOf;
+import static java.util.Collections.unmodifiableList;
 import static java.util.List.of;
 import static java.util.function.Function.identity;
 import static org.instancio.Select.field;
@@ -226,7 +228,7 @@ public class DataGenerator {
     }
 
     public static List<RoomDto> incorrectRooms() {
-        List<RoomDto> rooms = new java.util.ArrayList<>(
+        List<RoomDto> rooms = new ArrayList<>(
                 incorrectBeds().stream()
                         .map(bed -> new RoomDto("correctRoomName", of(bed), BEDROOM))
                         .toList()
@@ -326,12 +328,12 @@ public class DataGenerator {
     }
 
     public static ApartmentInstance testApartmentInstanceWithoutReservation(String name) {
-        return apartmentInstanceOf(name, List.of(), List.of());
+        return apartmentInstanceOf(name, of(), of());
     }
 
     public static ApartmentInstance testApartmentInstanceWithReservations(String name,
                                                                           List<Reservation> reservations) {
-        return apartmentInstanceOf(name, List.of(), reservations);
+        return apartmentInstanceOf(name, of(), reservations);
     }
 
     private static ApartmentInstance apartmentInstanceOf(String name,
@@ -348,7 +350,7 @@ public class DataGenerator {
         return Instancio.of(Reservation.class)
                 .set(field(Reservation::getId), null)
                 .set(field(Reservation::getUser), user)
-                .set(field(Reservation::getRejections), List.of())
+                .set(field(Reservation::getRejections), of())
                 .set(field(Reservation::getDetails), details)
                 .set(field(Reservation::getState), Reservation.State.PROCESSED)
                 .create();
@@ -358,5 +360,14 @@ public class DataGenerator {
         Apartment apartment = testApartment();
         apartment.putPrice(new Price(personCount, BigDecimal.TEN));
         return apartment;
+    }
+
+    public static List<Reservation> testReservations(int count) {
+        List<Reservation> reservations = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            var reservation = Instancio.of(Reservation.class).create();
+            reservations.add(reservation);
+        }
+        return unmodifiableList(reservations);
     }
 }

@@ -36,10 +36,14 @@ import lombok.Setter;
 import org.hibernate.annotations.BatchSize;
 import ua.mibal.booking.model.entity.embeddable.TurningOffTime;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
+import static java.time.LocalDateTime.now;
+import static java.util.Collections.unmodifiableList;
 import static lombok.AccessLevel.PRIVATE;
 
 /**
@@ -114,5 +118,36 @@ public class ApartmentInstance {
     public void addTurningOffTime(TurningOffTime turningOffTime) {
         turningOffTime.setApartmentInstance(this);
         this.turningOffTimes.add(turningOffTime);
+    }
+
+    public List<Event> getNotRejectedEventsForNow() {
+        Predicate<Event> isForNow =
+                event -> event.getEnd().isAfter(now());
+        return getAllNotRejectedEvents()
+                .stream()
+                .filter(isForNow)
+                .toList();
+    }
+
+    public boolean hasReservationsAt(LocalDateTime start, LocalDateTime end) {
+        Predicate<Reservation> intersectsWithRange =
+                r -> r.isNotRejected() &&
+                     r.getDetails().getReservedTo().isAfter(start) &&
+                     r.getDetails().getReservedFrom().isBefore(end);
+        return getReservations().stream()
+                .anyMatch(intersectsWithRange);
+    }
+
+    private List<Event> getAllNotRejectedEvents() {
+        List<Event> union = new ArrayList<>();
+        union.addAll(getNotRejectedReservations());
+        union.addAll(turningOffTimes);
+        return unmodifiableList(union);
+    }
+
+    private List<Reservation> getNotRejectedReservations() {
+        return reservations.stream()
+                .filter(Reservation::isNotRejected)
+                .toList();
     }
 }

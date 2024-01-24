@@ -44,4 +44,11 @@ public interface ApartmentRepository extends JpaRepository<Apartment, Long> {
             where a.id = ?1
             """)
     Optional<Apartment> findByIdFetchPrices(Long id);
+
+    @Query("""
+            select a from Apartment a
+                left join fetch a.apartmentInstances
+            where a.id = ?1
+            """)
+    Optional<Apartment> findByIdFetchInstances(Long id);
 }

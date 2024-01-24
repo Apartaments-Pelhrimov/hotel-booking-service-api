@@ -51,5 +51,5 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
                 r.state != 'REJECTED'
                 and r.details.reservedTo > ?1 and r.details.reservedFrom < ?2
             """)
-    boolean existsReservationThatIntersectRange(LocalDateTime start, LocalDateTime end);
+    boolean existsReservationThatIntersectsRange(LocalDateTime start, LocalDateTime end);
 }

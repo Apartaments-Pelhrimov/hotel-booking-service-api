@@ -19,33 +19,18 @@ package ua.mibal.booking.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ua.mibal.booking.model.dto.request.TurnOffDto;
 import ua.mibal.booking.model.dto.response.calendar.Calendar;
+import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.entity.ApartmentInstance;
 import ua.mibal.booking.model.entity.Event;
 import ua.mibal.booking.model.entity.HotelTurningOffTime;
-import ua.mibal.booking.model.entity.Reservation;
-import ua.mibal.booking.model.entity.embeddable.TurningOffTime;
-import ua.mibal.booking.model.exception.IllegalTurningOffTimeException;
-import ua.mibal.booking.model.exception.entity.ApartmentInstanceNotFoundException;
-import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
-import ua.mibal.booking.model.mapper.TurningOffTimeMapper;
-import ua.mibal.booking.repository.ApartmentInstanceRepository;
-import ua.mibal.booking.repository.ApartmentRepository;
 import ua.mibal.booking.repository.HotelTurningOffRepository;
-import ua.mibal.booking.repository.ReservationRepository;
 
-import java.time.LocalDateTime;
-import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.function.Predicate;
 
-import static java.time.LocalDateTime.MAX;
-import static java.time.LocalDateTime.now;
-import static org.apache.commons.collections4.CollectionUtils.union;
-import static ua.mibal.booking.service.util.DateTimeUtils.monthEndWithTime;
-import static ua.mibal.booking.service.util.DateTimeUtils.monthStartWithTime;
+import static java.util.Collections.unmodifiableList;
 
 /**
  * @author Mykhailo Balakhon
@@ -54,139 +39,72 @@ import static ua.mibal.booking.service.util.DateTimeUtils.monthStartWithTime;
 @RequiredArgsConstructor
 @Service
 public class CalendarService {
-    private final ApartmentRepository apartmentRepository;
-    private final ApartmentInstanceRepository apartmentInstanceRepository;
-    private final HotelTurningOffRepository hotelTurningOffRepository;
-    private final ReservationRepository reservationRepository;
-    private final ICalService iCalService;
     private final BookingComReservationService bookingComReservationService;
-    private final TurningOffTimeMapper turningOffTimeMapper;
-
-    // TODO refactor
+    private final ApartmentInstanceService apartmentInstanceService;
+    private final ApartmentService apartmentService;
+    private final TurningOffService turningOffService;
+    private final ICalService iCalService;
+    private final HotelTurningOffRepository hotelTurningOffRepository;
 
     @Transactional(readOnly = true)
-    public List<Calendar> getCalendarsForApartment(Long apartmentId, YearMonth yearMonth) {
-        validateApartmentExists(apartmentId);
-        List<ApartmentInstance> instances = apartmentInstanceRepository
-                .findByApartmentIdFetchReservations(apartmentId);
-        List<? extends Event> hotelEvents = hotelTurningOffTimes(yearMonth);
-        return instancesToCalendars(instances, hotelEvents, yearMonth);
+    public List<Calendar> getCalendarsForApartment(Long apartmentId) {
+        Apartment apartment =
+                apartmentService.getOneFetchInstances(apartmentId);
+        return calendarsForApartment(apartment);
     }
 
     @Transactional(readOnly = true)
-    public Calendar getCalendarForApartmentInstance(Long instanceId, YearMonth yearMonth) {
-        ApartmentInstance instance = apartmentInstanceRepository.findByIdFetchReservations(instanceId)
-                .orElseThrow(() -> new ApartmentInstanceNotFoundException(instanceId));
-        List<? extends Event> hotelEvents = hotelTurningOffTimes(yearMonth);
-        return instanceToCalendar(instance, hotelEvents, yearMonth);
+    public Calendar getCalendarForApartmentInstance(Long instanceId) {
+        ApartmentInstance instance =
+                apartmentInstanceService.getOneFetchReservations(instanceId);
+        List<? extends Event> hotelEvents =
+                turningOffService.getForHotelForNow();
+        return calendarForApartmentInstance(instance, hotelEvents);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true) // For LAZY ApartmentInstance.turningOffTimes loading
     public String getICalForApartmentInstance(Long instanceId) {
-        ApartmentInstance apartmentInstance = apartmentInstanceRepository.findByIdFetchReservations(instanceId)
-                .orElseThrow(() -> new ApartmentInstanceNotFoundException(instanceId));
-        List<? extends Event> hotelEvents = hotelTurningOffRepository.findFromNow();
-        return instanceToICal(apartmentInstance, hotelEvents);
+        ApartmentInstance apartmentInstance =
+                apartmentInstanceService.getOneFetchReservations(instanceId);
+        Collection<Event> allEvents =
+                getAllActualLocalEventsFor(apartmentInstance);
+        return iCalService.getCalendarFromEvents(allEvents);
     }
 
-    public void turnOffHotel(TurnOffDto turnOffDto) {
-        validateRangeToTurnOffHotel(turnOffDto.from(), turnOffDto.to());
-        HotelTurningOffTime turningOffTime = turningOffTimeMapper.hotelFromDto(turnOffDto);
-        hotelTurningOffRepository.save(turningOffTime);
+    private Collection<Event> getAllActualLocalEventsFor(ApartmentInstance apartmentInstance) {
+        List<HotelTurningOffTime> hotelEvents =
+                hotelTurningOffRepository.findFromNow();
+        List<Event> apartmentEvents =
+                apartmentInstance.getNotRejectedEventsForNow();
+        return getUnion(apartmentEvents, hotelEvents);
     }
 
-    @Transactional
-    public void turnOffApartmentInstance(Long id, TurnOffDto turnOffDto) {
-        ApartmentInstance instance = apartmentInstanceRepository.findByIdFetchReservations(id)
-                .orElseThrow(() -> new ApartmentInstanceNotFoundException(id));
-        validateRangeToTurnOffApartmentInstance(instance, turnOffDto.from(), turnOffDto.to());
-        TurningOffTime turningOffTime = turningOffTimeMapper.apartmentfromDto(turnOffDto);
-        instance.addTurningOffTime(turningOffTime);
-    }
-
-    private List<Calendar> instancesToCalendars(List<ApartmentInstance> instances,
-                                                List<? extends Event> hotelEvents,
-                                                YearMonth yearMonth) {
-        return instances.stream()
-                .map(instance -> instanceToCalendar(instance, hotelEvents, yearMonth))
+    private List<Calendar> calendarsForApartment(Apartment apartment) {
+        List<? extends Event> hotelEvents =
+                turningOffService.getForHotelForNow();
+        return apartment.getApartmentInstances()
+                .stream()
+                .map(instance ->
+                        calendarForApartmentInstance(instance, hotelEvents))
                 .toList();
     }
 
-    private Calendar instanceToCalendar(ApartmentInstance apartmentInstance,
-                                        List<? extends Event> hotelEvents,
-                                        YearMonth yearMonth) {
-        Collection<Event> apartmentEvents = apartmentEventsForDateRange(
-                apartmentInstance,
-                monthStartWithTime(yearMonth),
-                monthEndWithTime(yearMonth)
-        );
-        return Calendar.of(union(apartmentEvents, hotelEvents));
-    }
-
-    private String instanceToICal(ApartmentInstance apartmentInstance,
-                                  List<? extends Event> hotelEvents) {
-        Collection<Event> apartmentEvents = apartmentEventsForDateRange(
-                apartmentInstance, now(), MAX
-        );
-        return iCalService.getCalendarFromEvents(
-                union(apartmentEvents, hotelEvents)
-        );
-    }
-
-    private Collection<Event> apartmentEventsForDateRange(ApartmentInstance apartmentInstance,
-                                                          LocalDateTime start,
-                                                          LocalDateTime end) {
-        return apartmentEvents(apartmentInstance).stream()
-                .filter(ev -> ev.getEnd().isAfter(start) &&
-                              ev.getStart().isBefore(end))
-                .toList();
-    }
-
-    private Collection<Event> apartmentEvents(ApartmentInstance apartmentInstance) {
-        Collection<Event> reservations = apartmentReservations(apartmentInstance);
-        List<TurningOffTime> turningOffTimes = apartmentInstance.getTurningOffTimes();
-        return union(reservations, turningOffTimes);
-    }
-
-    private Collection<Event> apartmentReservations(ApartmentInstance apartmentInstance) {
-        List<Reservation> localReservations = apartmentInstance
-                .getReservations().stream()
-                .filter(Reservation::notRejected)
-                .toList();
-        List<Event> bookingComApartmentReservations =
+    private Calendar calendarForApartmentInstance(ApartmentInstance apartmentInstance,
+                                                  List<? extends Event> hotelEvents) {
+        List<Event> apartmentInstanceEvents =
+                apartmentInstance.getNotRejectedEventsForNow();
+        List<Event> bookingComEvents =
                 bookingComReservationService.getEventsFor(apartmentInstance);
-        return union(localReservations, bookingComApartmentReservations);
+        Collection<Event> eventUnion =
+                getUnion(apartmentInstanceEvents, hotelEvents, bookingComEvents);
+        return Calendar.of(eventUnion);
     }
 
-    private List<HotelTurningOffTime> hotelTurningOffTimes(YearMonth yearMonth) {
-        return hotelTurningOffRepository.findBetween(
-                monthStartWithTime(yearMonth),
-                monthEndWithTime(yearMonth)
-        );
-    }
-
-    private void validateApartmentExists(Long apartmentId) {
-        if (!apartmentRepository.existsById(apartmentId)) {
-            throw new ApartmentNotFoundException(apartmentId);
+    private Collection<Event> getUnion(List<? extends Event>... eventsToUnite) {
+        List<Event> union = new ArrayList<>();
+        for (List<? extends Event> events : eventsToUnite) {
+            union.addAll(events);
         }
-    }
-
-    private void validateRangeToTurnOffApartmentInstance(ApartmentInstance instance,
-                                                         LocalDateTime start,
-                                                         LocalDateTime end) {
-        Predicate<Reservation> intersectsWithRangeCondition =
-                r -> r.notRejected() &&
-                     r.getDetails().getReservedTo().isAfter(start) &&
-                     r.getDetails().getReservedFrom().isBefore(end);
-        if (instance.getReservations().stream()
-                .anyMatch(intersectsWithRangeCondition)) {
-            throw new IllegalTurningOffTimeException();
-        }
-    }
-
-    private void validateRangeToTurnOffHotel(LocalDateTime start, LocalDateTime end) {
-        if (reservationRepository.existsReservationThatIntersectRange(start, end)) {
-            throw new IllegalTurningOffTimeException();
-        }
+        return unmodifiableList(union);
     }
 }
