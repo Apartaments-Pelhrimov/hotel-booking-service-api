@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.email;
+package ua.mibal.booking.service.email.component;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -169,6 +169,18 @@ public class TemplateEngine {
             return "${" + token + "}";
         }
 
+        private Object getFieldValue(Object obj) {
+            try {
+                return getFieldValueFor(obj);
+            } catch (IllegalAccessException | NoSuchFieldException e) {
+                throw new TemplateEngineException(
+                        "Exception while retrieving value from field name=%s " +
+                        "from object by class='%s'",
+                        e, field, obj.getClass()
+                );
+            }
+        }
+
         private Object getFieldValueFor(Object obj)
                 throws NoSuchFieldException, IllegalAccessException {
             if (!this.isComplex()) {
@@ -187,18 +199,6 @@ public class TemplateEngine {
             Object fieldValue = field.get(obj);
             field.setAccessible(false);
             return fieldValue;
-        }
-
-        private Object getFieldValue(Object obj) {
-            try {
-                return getFieldValueFor(obj);
-            } catch (IllegalAccessException | NoSuchFieldException e) {
-                throw new TemplateEngineException(
-                        "Exception while retrieving value from field name=%s " +
-                        "from object by class='%s'",
-                        e, field, obj.getClass()
-                );
-            }
         }
     }
 }

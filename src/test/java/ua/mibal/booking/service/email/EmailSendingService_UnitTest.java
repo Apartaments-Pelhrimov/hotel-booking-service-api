@@ -35,6 +35,8 @@ import ua.mibal.booking.model.entity.ActivationCode;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.exception.marker.InternalServerException;
 import ua.mibal.booking.model.exception.service.BookingComServiceException;
+import ua.mibal.booking.service.email.component.ClasspathFileReader;
+import ua.mibal.booking.service.email.component.TemplateEngine;
 import ua.mibal.booking.service.email.model.EmailType;
 import ua.mibal.booking.testUtils.DataGenerator;
 import ua.mibal.booking.testUtils.EmailUtils;

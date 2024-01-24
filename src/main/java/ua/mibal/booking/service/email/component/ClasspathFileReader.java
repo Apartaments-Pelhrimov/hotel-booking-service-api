@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.email;
+package ua.mibal.booking.service.email.component;
 
 import org.springframework.stereotype.Component;
 import ua.mibal.booking.model.exception.ClasspathFileReaderException;
