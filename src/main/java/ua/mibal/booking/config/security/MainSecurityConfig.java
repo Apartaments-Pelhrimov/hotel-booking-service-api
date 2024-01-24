@@ -17,6 +17,7 @@
 package ua.mibal.booking.config.security;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,6 +34,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import ua.mibal.booking.config.properties.CorsProps;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -42,9 +44,11 @@ import static org.springframework.security.config.Customizer.withDefaults;
  */
 @RequiredArgsConstructor
 @Configuration
+@EnableConfigurationProperties(CorsProps.class)
 @EnableWebSecurity
 @EnableMethodSecurity(jsr250Enabled = true)
 public class MainSecurityConfig {
+    private final CorsProps corsProps;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -67,8 +71,8 @@ public class MainSecurityConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/api/**")
-                        .allowedOrigins("*")
-                        .allowedMethods("*");
+                        .allowedOrigins(corsProps.allowedOrigins())
+                        .allowedMethods(corsProps.allowedMethods());
             }
         };
     }

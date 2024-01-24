@@ -13,6 +13,10 @@ rsa:
   private-key: classpath:certs/private.pem
   public-key: classpath:certs/public.pem
 
+cors:
+  allowed-origins: "*"
+  allowed-methods: "*"
+
 jwt-token:
   expiring-days: 30
 
