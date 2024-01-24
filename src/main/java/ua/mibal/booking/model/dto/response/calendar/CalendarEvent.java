@@ -22,7 +22,6 @@ import lombok.Setter;
 import ua.mibal.booking.model.entity.Event;
 
 import java.time.LocalDateTime;
-import java.time.Month;
 
 /**
  * @author Mykhailo Balakhon
@@ -31,21 +30,46 @@ import java.time.Month;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Range {
-    private DateEntry start;
-    private DateEntry end;
+public class CalendarEvent {
+    private LocalDateTime start;
+    private LocalDateTime end;
+    private String name;
 
-    public Range(Event event) {
-        start = DateEntry.of(event.getStart());
-        end = DateEntry.of(event.getEnd());
+    private CalendarEvent(Event event) {
+        start = event.getStart();
+        end = event.getEnd();
+        name = event.getEventName();
     }
 
-    public record DateEntry(int day, Month month) {
+    public static CalendarEvent of(Event event) {
+        return new CalendarEvent(event);
+    }
 
-        public static DateEntry of(LocalDateTime date) {
-            Month month = date.getMonth();
-            int day = date.getDayOfMonth();
-            return new DateEntry(day, month);
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
         }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        CalendarEvent range = (CalendarEvent) o;
+
+        if (!start.equals(range.start)) {
+            return false;
+        }
+        if (!end.equals(range.end)) {
+            return false;
+        }
+        return name.equals(range.name);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = start.hashCode();
+        result = 31 * result + end.hashCode();
+        result = 31 * result + name.hashCode();
+        return result;
     }
 }
