@@ -56,3 +56,7 @@ mail:
     port: 587
     starttls:
       enable: true
+
+localized-bundles.paths:
+  - classpath:localized/mail
+  - classpath:localized/messages

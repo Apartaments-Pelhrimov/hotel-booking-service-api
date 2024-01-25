@@ -20,8 +20,10 @@ import jakarta.mail.Session;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
@@ -31,6 +33,7 @@ import ua.mibal.booking.config.properties.ActivationCodeProps;
 import ua.mibal.booking.config.properties.AwsProps;
 import ua.mibal.booking.config.properties.CalendarProps;
 import ua.mibal.booking.config.properties.EmailProps;
+import ua.mibal.booking.config.properties.LocalizedMessagesProps;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.entity.embeddable.Phone;
 import ua.mibal.booking.model.entity.embeddable.Role;
@@ -53,10 +56,12 @@ import java.util.Properties;
         CalendarProps.ICalProps.class,
         ActivationCodeProps.class,
         EmailProps.class,
+        LocalizedMessagesProps.class,
 })
 @Configuration
 public class RootConfig {
     private final AwsProps awsProps;
+    private final LocalizedMessagesProps localizedMessagesProps;
 
     @Bean
     public S3Client create() {
@@ -79,6 +84,16 @@ public class RootConfig {
         Optional.ofNullable(env.getProperty("mail.debug"))
                 .ifPresent(val -> props.put("mail.debug", val));
         return Session.getInstance(props);
+    }
+
+    @Bean
+    public MessageSource messageSource() {
+        ReloadableResourceBundleMessageSource messageSource =
+                new ReloadableResourceBundleMessageSource();
+        messageSource.setBasenames(localizedMessagesProps.paths());
+        messageSource.setDefaultEncoding("UTF-8");
+        messageSource.setCacheMillis(500);
+        return messageSource;
     }
 
     @Bean

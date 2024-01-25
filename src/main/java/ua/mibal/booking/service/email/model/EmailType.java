@@ -16,33 +16,45 @@
 
 package ua.mibal.booking.service.email.model;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
+
+import java.util.Locale;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @RequiredArgsConstructor
-@Getter
 public enum EmailType {
 
     ACCOUNT_ACTIVATION(
-            "templates/account_activation.html",
-            "Account activation request",
-            "https://apartmany-pe.com/activate?code=%s"
+            "mail.account-activation.template-path",
+            "mail.account-activation.subject",
+            "https://apartmany-pe.cz/activate?code=%s"
     ),
     PASSWORD_CHANGING(
-            "templates/password_changing.html",
-            "Password changing request",
-            "https://apartmany-pe.com/changePass?code=%s"
+            "mail.password-changing.template-path",
+            "mail.password-changing.subject",
+            "https://apartmany-pe.cz/changePass?code=%s"
     );
 
-    private final String templatePath;
-    private final String subject;
-    private final String frontLink;
+    private final String templatePathCode;
+    private final String subjectCode;
+    private final String frontLinkTemplate;
 
-    public String getFrontLink(String code) {
-        return frontLink.formatted(code);
+    public String getSubject(MessageSource messageSource) {
+        Locale locale = LocaleContextHolder.getLocale();
+        return messageSource.getMessage(subjectCode, new Object[0], locale);
+    }
+
+    public String getTemplatePath(MessageSource messageSource) {
+        Locale locale = LocaleContextHolder.getLocale();
+        return messageSource.getMessage(templatePathCode, new Object[0], locale);
+    }
+
+    public String getFrontLinkTemplate(String code) {
+        return frontLinkTemplate.formatted(code);
     }
 }

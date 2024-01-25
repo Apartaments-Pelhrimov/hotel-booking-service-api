@@ -21,6 +21,7 @@ import jakarta.mail.Session;
 import jakarta.mail.Transport;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import ua.mibal.booking.config.properties.EmailProps;
 import ua.mibal.booking.model.entity.ActivationCode;
@@ -47,6 +48,7 @@ public class EmailSendingService {
     private final ClasspathFileReader fileReader;
     private final TemplateEngine templateEngine;
     private final EmailProps emailProps;
+    private final MessageSource messageSource;
 
     public void sendActivationCode(ActivationCode activationCode) {
         sendCodeFor(ACCOUNT_ACTIVATION, activationCode);
@@ -97,15 +99,15 @@ public class EmailSendingService {
                 .recipient(code.getUser().getEmail())
                 .sender(emailProps.username())
                 .session(session)
-                .subject(type.getSubject())
+                .subject(type.getSubject(messageSource))
                 .content(emailContent);
     }
 
     private String getInsertedTemplateBy(EmailType type, ActivationCode code) {
-        String sourceHtmlTemplate = fileReader.read(type.getTemplatePath());
+        String sourceHtmlTemplate = fileReader.read(type.getTemplatePath(messageSource));
         return templateEngine.insertIntoTemplate(sourceHtmlTemplate, Map.of(
                 "user", code.getUser(),
-                "link", type.getFrontLink(code.getCode())
+                "link", type.getFrontLinkTemplate(code.getCode())
         ));
     }
 }
