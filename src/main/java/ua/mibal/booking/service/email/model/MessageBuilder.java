@@ -44,9 +44,9 @@ public class MessageBuilder {
         message.setFrom(senderEmail);
         Address[] addresses = emailsToAddresses(recipientEmails);
         message.setRecipients(Message.RecipientType.TO, addresses);
-        message.setSubject(subject);
+        message.setSubject(subject, "UTF-8");
         message.setSentDate(new Date());
-        message.setContent(content, "text/html");
+        message.setContent(content, "text/html; charset=UTF-8");
         return message;
     }
 
