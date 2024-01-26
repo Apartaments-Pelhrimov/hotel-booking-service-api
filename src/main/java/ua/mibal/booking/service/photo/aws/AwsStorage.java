@@ -24,7 +24,6 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetUrlRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-import ua.mibal.booking.config.properties.AwsProps.AwsBucketProps;
 import ua.mibal.booking.model.exception.service.AwsStorageException;
 
 import java.io.IOException;
@@ -37,17 +36,7 @@ import java.io.IOException;
 @Service
 public class AwsStorage {
     private final S3Client s3Client;
-    private final AwsBucketProps awsBucketProps;
-
-    public void deletePhoto(AwsPhoto photo) {
-        try {
-            deleteAwsPhoto(photo);
-        } catch (SdkException e) {
-            throw new AwsStorageException(
-                    "Exception while deleting Photo by " +
-                    "key '%s'".formatted(photo.getKey()), e);
-        }
-    }
+    private final AwsRequestGenerator requestGenerator;
 
     public String uploadPhoto(AwsPhoto photo) {
         try {
@@ -60,31 +49,31 @@ public class AwsStorage {
         }
     }
 
-    private void deleteAwsPhoto(AwsPhoto photo) {
-        DeleteObjectRequest deleteRequest = DeleteObjectRequest.builder()
-                .bucket(awsBucketProps.name())
-                .key(photo.getKey())
-                .build();
-        s3Client.deleteObject(deleteRequest);
+    public void deletePhoto(AwsPhoto photo) {
+        try {
+            deleteAwsPhoto(photo);
+        } catch (SdkException e) {
+            throw new AwsStorageException(
+                    "Exception while deleting Photo by " +
+                    "key '%s'".formatted(photo.getKey()), e);
+        }
     }
 
     private void uploadAwsPhoto(AwsPhoto photo) throws IOException {
-        PutObjectRequest putRequest = PutObjectRequest.builder()
-                .bucket(awsBucketProps.name())
-                .key(photo.getKey())
-                .contentType(photo.getContentType())
-                .build();
+        PutObjectRequest putRequest = requestGenerator.generatePutRequest(photo);
         RequestBody requestBody = RequestBody.fromBytes(photo.getPhoto());
         s3Client.putObject(putRequest, requestBody);
     }
 
     private String getLink(AwsPhoto photo) {
-        GetUrlRequest getUrlRequest = GetUrlRequest.builder()
-                .bucket(awsBucketProps.name())
-                .key(photo.getKey())
-                .build();
+        GetUrlRequest getUrlRequest = requestGenerator.generateGetUrlRequest(photo);
         return s3Client.utilities()
                 .getUrl(getUrlRequest)
                 .toExternalForm();
+    }
+
+    private void deleteAwsPhoto(AwsPhoto photo) {
+        DeleteObjectRequest deleteRequest = requestGenerator.generateDeleteRequest(photo);
+        s3Client.deleteObject(deleteRequest);
     }
 }
