@@ -76,13 +76,13 @@ class EmailSendingService_UnitTest {
     @ParameterizedTest
     @Disabled
     @EnumSource(EmailType.class)
-    void sendAccountActivationEmail_mocked_Transport(EmailType emailType) {
+    void sendAccountActivationEmail(EmailType emailType) {
         try (MockedStatic<Transport> mockedTransport = mockStatic(Transport.class)) {
-            sendAccountActivationEmail(emailType, mockedTransport);
+            sendAccountActivationEmail_mocked_Transport(emailType, mockedTransport);
         }
     }
 
-    void sendAccountActivationEmail(EmailType emailType, MockedStatic<Transport> mockedTransport) {
+    void sendAccountActivationEmail_mocked_Transport(EmailType emailType, MockedStatic<Transport> mockedTransport) {
         String username = "username228";
         String password = "pass";
 
@@ -111,13 +111,13 @@ class EmailSendingService_UnitTest {
 
     @Test
     @Disabled
-    void sendErrorEmailToDevelopers_mocked_Transport() {
+    void sendErrorEmailToDevelopers() {
         try (MockedStatic<Transport> mockedTransport = mockStatic(Transport.class)) {
-            sendErrorEmailToDevelopers(mockedTransport);
+            sendErrorEmailToDevelopers_mocked_Transport(mockedTransport);
         }
     }
 
-    void sendErrorEmailToDevelopers(MockedStatic<Transport> mockedTransport) {
+    void sendErrorEmailToDevelopers_mocked_Transport(MockedStatic<Transport> mockedTransport) {
         String username = "username228";
         String password = "pass";
 
