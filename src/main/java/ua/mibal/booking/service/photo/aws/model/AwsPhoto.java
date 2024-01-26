@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.photo.aws;
+package ua.mibal.booking.service.photo.aws.model;
 
 import lombok.Getter;
 import org.springframework.web.multipart.MultipartFile;

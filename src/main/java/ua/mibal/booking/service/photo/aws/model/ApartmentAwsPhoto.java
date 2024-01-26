@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.photo.aws;
+package ua.mibal.booking.service.photo.aws.model;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,14 +22,23 @@ import org.springframework.web.multipart.MultipartFile;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class UserAwsPhoto extends AwsPhoto {
-    private static final String folder = "users";
+public class ApartmentAwsPhoto extends AwsPhoto {
+    private static final String folder = "apartments";
 
-    public UserAwsPhoto(String email, MultipartFile photo) {
-        super(email, folder, photo);
+    public ApartmentAwsPhoto(Long id, MultipartFile photo) {
+        super(generatePhotoName(id, photo), folder, photo);
     }
 
-    public UserAwsPhoto(String email) {
-        super(email, folder);
+    public ApartmentAwsPhoto(String link) {
+        super(getFileName(link), folder);
+    }
+
+    private static String generatePhotoName(Long id, MultipartFile photo) {
+        return id + "_" + photo.hashCode() + "_" + photo.getOriginalFilename();
+    }
+
+    private static String getFileName(String link) {
+        String[] path = link.split("/");
+        return path[path.length - 1];
     }
 }

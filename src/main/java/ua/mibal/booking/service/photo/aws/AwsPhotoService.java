@@ -25,6 +25,10 @@ import ua.mibal.booking.model.entity.embeddable.Photo;
 import ua.mibal.booking.service.ApartmentService;
 import ua.mibal.booking.service.UserService;
 import ua.mibal.booking.service.photo.PhotoService;
+import ua.mibal.booking.service.photo.aws.components.AwsStorage;
+import ua.mibal.booking.service.photo.aws.model.ApartmentAwsPhoto;
+import ua.mibal.booking.service.photo.aws.model.AwsPhoto;
+import ua.mibal.booking.service.photo.aws.model.UserAwsPhoto;
 
 /**
  * @author Mykhailo Balakhon
