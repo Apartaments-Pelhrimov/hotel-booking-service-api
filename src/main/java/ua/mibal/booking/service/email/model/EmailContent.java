@@ -14,20 +14,14 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.config.properties;
-
-import org.springframework.boot.context.properties.ConfigurationProperties;
+package ua.mibal.booking.service.email.model;
 
 /**
- * @param developers comma separated address strings
- *
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@ConfigurationProperties("mail")
-public record EmailProps(
-        String username,
-        String password,
-        String developers
+public record EmailContent(
+        String subject,
+        String body
 ) {
 }

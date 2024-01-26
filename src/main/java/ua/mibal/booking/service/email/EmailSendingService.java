@@ -17,22 +17,16 @@
 package ua.mibal.booking.service.email;
 
 import jakarta.mail.MessagingException;
-import jakarta.mail.Session;
 import jakarta.mail.Transport;
-import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import ua.mibal.booking.config.properties.EmailProps;
 import ua.mibal.booking.model.entity.ActivationCode;
 import ua.mibal.booking.model.exception.marker.InternalServerException;
 import ua.mibal.booking.model.exception.service.EmailSentFailedException;
-import ua.mibal.booking.service.email.component.ClasspathFileReader;
-import ua.mibal.booking.service.email.component.TemplateEngine;
+import ua.mibal.booking.service.email.model.Email;
+import ua.mibal.booking.service.email.model.EmailBuilder;
 import ua.mibal.booking.service.email.model.EmailType;
-import ua.mibal.booking.service.email.model.MessageBuilder;
-
-import java.util.Map;
 
 import static ua.mibal.booking.service.email.model.EmailType.ACCOUNT_ACTIVATION;
 import static ua.mibal.booking.service.email.model.EmailType.PASSWORD_CHANGING;
@@ -44,70 +38,38 @@ import static ua.mibal.booking.service.email.model.EmailType.PASSWORD_CHANGING;
 @RequiredArgsConstructor
 @Service
 public class EmailSendingService {
-    private final Session session;
-    private final ClasspathFileReader fileReader;
-    private final TemplateEngine templateEngine;
+    private final EmailBuilder emailBuilder;
     private final EmailProps emailProps;
-    private final MessageSource messageSource;
 
-    public void sendActivationCode(ActivationCode activationCode) {
+    public void sendAccountActivationEmail(ActivationCode activationCode) {
         sendCodeFor(ACCOUNT_ACTIVATION, activationCode);
     }
 
-    public void sendPasswordChangingCode(ActivationCode activationCode) {
+    public void sendPasswordChangingEmail(ActivationCode activationCode) {
         sendCodeFor(PASSWORD_CHANGING, activationCode);
     }
 
     public void sendErrorEmailToDevelopers(InternalServerException e) {
-        MessageBuilder messageBuilder = getMessageBuilderForDevelopers(e);
-        sendAsyncEmail(messageBuilder);
+        Email email = emailBuilder.buildDeveloperEmail(e);
+        sendAsync(email);
     }
 
     private void sendCodeFor(EmailType type, ActivationCode code) {
-        MessageBuilder messageBuilder = getMessageBuilderBy(type, code);
-        sendAsyncEmail(messageBuilder);
+        Email email = emailBuilder.buildUserEmail(type, code);
+        sendAsync(email);
     }
 
-    private void sendAsyncEmail(MessageBuilder messageBuilder) {
+    private void sendAsync(Email email) {
         new Thread(() -> {
             try {
-                sendEmail(messageBuilder);
+                send(email);
             } catch (MessagingException e) {
                 throw new EmailSentFailedException(e);
             }
         }, "Email-sending-Thread").start();
     }
 
-    private synchronized void sendEmail(MessageBuilder messageBuilder)
-            throws MessagingException {
-        MimeMessage message = messageBuilder.buildMimeMessage();
-        Transport.send(message, emailProps.username(), emailProps.password());
-    }
-
-    private MessageBuilder getMessageBuilderForDevelopers(InternalServerException e) {
-        return new MessageBuilder()
-                .session(session)
-                .recipients(emailProps.developers())
-                .subject("Internal server error " + e.getClass())
-                .content(e.getFormattedStackTrace());
-    }
-
-    private MessageBuilder getMessageBuilderBy(EmailType type,
-                                               ActivationCode code) {
-        String emailContent = getInsertedTemplateBy(type, code);
-        return new MessageBuilder()
-                .recipient(code.getUser().getEmail())
-                .sender(emailProps.username())
-                .session(session)
-                .subject(type.getSubject(messageSource))
-                .content(emailContent);
-    }
-
-    private String getInsertedTemplateBy(EmailType type, ActivationCode code) {
-        String sourceHtmlTemplate = fileReader.read(type.getTemplatePath(messageSource));
-        return templateEngine.insertIntoTemplate(sourceHtmlTemplate, Map.of(
-                "user", code.getUser(),
-                "link", type.getFrontLinkTemplate(code.getCode())
-        ));
+    private synchronized void send(Email email) throws MessagingException {
+        Transport.send(email, emailProps.username(), emailProps.password());
     }
 }

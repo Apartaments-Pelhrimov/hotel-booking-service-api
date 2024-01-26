@@ -109,7 +109,7 @@ class AuthService_UnitTest {
         authService.register(registrationDto);
 
         verify(emailSendingService, times(1))
-                .sendActivationCode(activationCode);
+                .sendAccountActivationEmail(activationCode);
     }
 
     @Test
@@ -159,7 +159,7 @@ class AuthService_UnitTest {
                 () -> authService.restore(email)
         );
         verify(emailSendingService, times(1))
-                .sendPasswordChangingCode(activationCode);
+                .sendPasswordChangingEmail(activationCode);
     }
 
     @Test

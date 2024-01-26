@@ -49,7 +49,7 @@ public abstract class InternalServerException extends ApiException {
         return new Object[0];
     }
 
-    public String getFormattedStackTrace() {
+    public String getStackTraceMessage() {
         StringWriter stringWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(stringWriter);
         printStackTrace(printWriter);

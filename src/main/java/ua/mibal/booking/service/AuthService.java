@@ -54,7 +54,7 @@ public class AuthService {
         User user = userService.save(registrationDto);
         ActivationCode activationCode =
                 activationCodeService.generateAndSaveCodeFor(user);
-        emailSendingService.sendActivationCode(activationCode);
+        emailSendingService.sendAccountActivationEmail(activationCode);
     }
 
     public void activateNewAccountBy(String code) {
@@ -85,7 +85,7 @@ public class AuthService {
         User user = userService.getOne(email);
         ActivationCode activationCode =
                 activationCodeService.generateAndSaveCodeFor(user);
-        emailSendingService.sendPasswordChangingCode(activationCode);
+        emailSendingService.sendPasswordChangingEmail(activationCode);
     }
 
     private void validateEmailDoesNotExist(String email) {
