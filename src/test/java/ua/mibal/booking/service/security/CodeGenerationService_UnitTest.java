@@ -16,17 +16,17 @@
 
 package ua.mibal.booking.service.security;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import ua.mibal.booking.config.properties.ActivationCodeProps;
 
 import java.net.URLEncoder;
@@ -39,22 +39,26 @@ import static org.mockito.Mockito.when;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = CodeGenerationService.class)
-@TestPropertySource(locations = "classpath:application.yaml")
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class CodeGenerationService_UnitTest {
 
-    @Autowired
     private CodeGenerationService service;
 
-    @MockBean
+    @Mock
     private ActivationCodeProps activationCodeProps;
+
+    @BeforeEach
+    void setup() {
+        service = new CodeGenerationService(activationCodeProps);
+    }
 
     @ParameterizedTest
     @CsvSource({"0", "1", "10", "20", "100", "1_000", "100_000"})
     void generateCode_length_props(int codeLength) {
-        when(activationCodeProps.length()).thenReturn(codeLength);
+        when(activationCodeProps.length())
+                .thenReturn(codeLength);
 
         var actual = service.generateCode();
 
@@ -65,7 +69,8 @@ class CodeGenerationService_UnitTest {
     void generateCode_should_not_contain_url_specific_chars() {
         int codeLength = 100_000;
 
-        when(activationCodeProps.length()).thenReturn(codeLength);
+        when(activationCodeProps.length())
+                .thenReturn(codeLength);
 
         var actual = service.generateCode();
 

@@ -16,18 +16,17 @@
 
 package ua.mibal.booking.service.security;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.repository.UserRepository;
 
@@ -42,41 +41,48 @@ import static org.mockito.Mockito.when;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = UserDetailsSecurityService.class)
-@TestPropertySource(locations = "classpath:application.yaml")
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class UserDetailsSecurityService_UnitTest {
 
-    @Autowired
     private UserDetailsSecurityService service;
 
-    @MockBean
+    @Mock
     private UserRepository userRepository;
 
     @Mock
     private User user;
 
+    @BeforeEach
+    void setup() {
+        service = new UserDetailsSecurityService(userRepository);
+    }
+
     @Test
     void loadUserByUsername() {
-        when(userRepository.findByEmail("email"))
+        String existingEmail = "email";
+
+        when(userRepository.findByEmail(existingEmail))
                 .thenReturn(Optional.of(user));
 
-        UserDetails actual = service.loadUserByUsername("email");
+        UserDetails actual = service.loadUserByUsername(existingEmail);
 
         assertEquals(user, actual);
     }
 
     @Test
     void loadUserByUsername_should_throw_UsernameNotFoundException() {
-        when(userRepository.findByEmail("example@company.com"))
+        String notExistingEmail = "example@company.com";
+
+        when(userRepository.findByEmail(notExistingEmail))
                 .thenReturn(Optional.empty());
 
         UsernameNotFoundException e = assertThrows(
                 UsernameNotFoundException.class,
-                () -> service.loadUserByUsername("example@company.com")
+                () -> service.loadUserByUsername(notExistingEmail)
         );
 
-        assertTrue(e.getMessage().contains("example@company.com"));
+        assertTrue(e.getMessage().contains(notExistingEmail));
     }
 }
