@@ -16,6 +16,7 @@
 
 package ua.mibal.booking.config.properties;
 
+import jakarta.validation.constraints.NotNull;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
@@ -24,7 +25,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @ConfigurationProperties("cors")
 public record CorsProps(
+        @NotNull
         String[] allowedOrigins,
+        @NotNull
         String[] allowedMethods
 ) {
 }

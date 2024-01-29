@@ -16,22 +16,34 @@
 
 package ua.mibal.booking.config.properties;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.validation.annotation.Validated;
 import software.amazon.awssdk.regions.Region;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
+@Validated
 @ConfigurationProperties(prefix = "aws")
 public record AwsProps(
+        @NotNull
+        @NotBlank
         String accessKeyId,
+        @NotNull
+        @NotBlank
         String secretAccessKey,
+        @NotNull
         Region region,
+        @NotNull
         AwsBucketProps bucket
 ) {
     @ConfigurationProperties(prefix = "aws.bucket")
     public record AwsBucketProps(
+            @NotNull
+            @NotBlank
             String name
     ) {
     }

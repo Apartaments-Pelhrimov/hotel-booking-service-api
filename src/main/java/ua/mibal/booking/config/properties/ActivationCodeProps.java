@@ -16,6 +16,8 @@
 
 package ua.mibal.booking.config.properties;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
@@ -24,6 +26,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @ConfigurationProperties("activation-code")
 public record ActivationCodeProps(
+        @NotNull
+        @Size(min = 10, max = 1_000)
         int length
 ) {
 }

@@ -16,8 +16,13 @@
 
 package ua.mibal.booking.config.properties;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import net.fortuna.ical4j.model.property.ProdId;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -26,6 +31,7 @@ import java.time.ZoneId;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
+@Validated
 @ConfigurationProperties("calendar")
 public record CalendarProps(
         ZoneId zoneId,
@@ -33,9 +39,16 @@ public record CalendarProps(
         ICalProps iCal
 ) {
 
+    @Validated
     @ConfigurationProperties("calendar.reservation-hours")
     public record ReservationDateTimeProps(
+
+            @Min(0)
+            @Max(23)
             Integer start,
+
+            @Min(0)
+            @Max(23)
             Integer end
     ) {
         public LocalTime reservationStart() {
@@ -47,12 +60,19 @@ public record CalendarProps(
         }
     }
 
-    @ConfigurationProperties("i-cal")
-    public record ICalProps(
-            String prodIdName
-    ) {
+    @Validated
+    @ConfigurationProperties("calendar.i-cal")
+    public static final class ICalProps {
+        @NotNull
+        @NotBlank
+        private final String prodId;
+
+        public ICalProps(@NotNull @NotBlank String prodId) {
+            this.prodId = prodId;
+        }
+
         public ProdId prodId() {
-            return new ProdId("-//" + prodIdName + "//iCal4j 1.0//EN");
+            return new ProdId("-//" + prodId + "//iCal4j 1.0//EN");
         }
     }
 }

@@ -16,18 +16,26 @@
 
 package ua.mibal.booking.config.properties;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.validation.annotation.Validated;
 
 /**
  * @param developers comma separated address strings
- *
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
+@Validated
 @ConfigurationProperties("mail")
 public record EmailProps(
+        @NotNull
+        @NotBlank
         String username,
+        @NotNull
+        @NotBlank
         String password,
+        @NotBlank
         String developers
 ) {
 }

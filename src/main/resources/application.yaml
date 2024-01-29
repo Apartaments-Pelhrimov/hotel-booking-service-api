@@ -42,7 +42,7 @@ server:
 
 calendar:
   i-cal:
-    prod-id-name: Apartments Pelhrimov Booking service
+    prod-id: Apartments Pelhrimov Booking service
   zone-id: Europe/Prague
   reservation-hours:
     start: 15
