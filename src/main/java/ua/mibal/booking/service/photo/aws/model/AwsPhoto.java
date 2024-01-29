@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ua.mibal.booking.model.exception.IllegalPhotoFormatException;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import static java.util.Objects.requireNonNull;
 import static org.springframework.util.StringUtils.getFilenameExtension;
@@ -71,5 +72,33 @@ public class AwsPhoto {
 
     private String generateFileKey(String folder, String name) {
         return "%s/%s".formatted(folder, name);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        AwsPhoto photo = (AwsPhoto) o;
+
+        if (extension != photo.extension) {
+            return false;
+        }
+        if (!key.equals(photo.key)) {
+            return false;
+        }
+        return Objects.equals(file, photo.file);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = extension.hashCode();
+        result = 31 * result + key.hashCode();
+        result = 31 * result + (file != null ? file.hashCode() : 0);
+        return result;
     }
 }

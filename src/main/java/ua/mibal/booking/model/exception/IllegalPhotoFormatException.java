@@ -25,6 +25,9 @@ import ua.mibal.booking.model.exception.marker.BadRequestException;
 public class IllegalPhotoFormatException extends BadRequestException {
 
     public IllegalPhotoFormatException(String photoName) {
-        super("bad-request-error.illegal-photo-format", photoName);
+        super(
+                "Illegal photo format for file " + photoName,
+                "bad-request-error.illegal-photo-format", photoName
+        );
     }
 }

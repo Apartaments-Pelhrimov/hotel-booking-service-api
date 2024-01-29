@@ -31,6 +31,11 @@ public abstract class BadRequestException extends ApiException {
         this.args = args;
     }
 
+    public BadRequestException(String message, String code, Object... args) {
+        super(message, code, HttpStatus.BAD_REQUEST);
+        this.args = args;
+    }
+
     @Override
     public Object[] provideArgs() {
         return args;

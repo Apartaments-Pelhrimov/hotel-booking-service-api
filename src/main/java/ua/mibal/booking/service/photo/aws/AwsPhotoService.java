@@ -37,7 +37,7 @@ import ua.mibal.booking.service.photo.aws.model.UserAwsPhoto;
 @RequiredArgsConstructor
 @Service
 public class AwsPhotoService implements PhotoService {
-    private final AwsStorage awsStorage;
+    private final AwsStorage storage;
     private final UserService userService;
     private final ApartmentService apartmentService;
 
@@ -45,7 +45,7 @@ public class AwsPhotoService implements PhotoService {
     @Override
     public String changeUserPhoto(String email, MultipartFile photoFile) {
         AwsPhoto photo = new UserAwsPhoto(email, photoFile);
-        String link = awsStorage.uploadPhoto(photo);
+        String link = storage.uploadPhoto(photo);
         userService.changeUserPhoto(email, link);
         return link;
     }
@@ -53,7 +53,7 @@ public class AwsPhotoService implements PhotoService {
     @Transactional
     @Override
     public void deleteUserPhoto(String email) {
-        awsStorage.deletePhoto(new UserAwsPhoto(email));
+        storage.deletePhoto(new UserAwsPhoto(email));
         userService.deleteUserPhotoByEmail(email);
     }
 
@@ -62,7 +62,7 @@ public class AwsPhotoService implements PhotoService {
     public String createApartmentPhoto(Long id, MultipartFile photoFile) {
         Apartment apartment = apartmentService.getOne(id);
         AwsPhoto photo = new ApartmentAwsPhoto(id, photoFile);
-        String link = awsStorage.uploadPhoto(photo);
+        String link = storage.uploadPhoto(photo);
         apartment.addPhoto(new Photo(link));
         return link;
     }
@@ -71,7 +71,7 @@ public class AwsPhotoService implements PhotoService {
     @Override
     public void deleteApartmentPhoto(Long id, String link) {
         apartmentService.validateApartmentHasPhoto(id, link);
-        awsStorage.deletePhoto(new ApartmentAwsPhoto(link));
+        storage.deletePhoto(new ApartmentAwsPhoto(link));
         apartmentService.deleteApartmentPhotoByLink(id, link);
     }
 }

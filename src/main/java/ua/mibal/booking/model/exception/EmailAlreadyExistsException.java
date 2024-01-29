@@ -25,6 +25,9 @@ import ua.mibal.booking.model.exception.marker.BadRequestException;
 public class EmailAlreadyExistsException extends BadRequestException {
 
     public EmailAlreadyExistsException(String email) {
-        super("bad-request-error.email-exists", email);
+        super(
+                "bad-request-error.email-exists",
+                (Object) email // to call appropriate constructor
+        );
     }
 }
