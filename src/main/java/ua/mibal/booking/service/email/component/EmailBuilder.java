@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.email.model;
+package ua.mibal.booking.service.email.component;
 
 import jakarta.mail.Session;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,9 @@ import org.springframework.stereotype.Component;
 import ua.mibal.booking.config.properties.EmailProps;
 import ua.mibal.booking.model.entity.ActivationCode;
 import ua.mibal.booking.model.exception.marker.InternalServerException;
-import ua.mibal.booking.service.email.component.EmailContentProvider;
+import ua.mibal.booking.service.email.model.Email;
+import ua.mibal.booking.service.email.model.EmailContent;
+import ua.mibal.booking.service.email.model.EmailType;
 
 /**
  * @author Mykhailo Balakhon

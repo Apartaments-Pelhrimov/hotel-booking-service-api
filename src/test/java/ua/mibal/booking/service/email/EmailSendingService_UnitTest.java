@@ -33,8 +33,8 @@ import org.mockito.quality.Strictness;
 import ua.mibal.booking.config.properties.EmailProps;
 import ua.mibal.booking.model.entity.ActivationCode;
 import ua.mibal.booking.model.exception.marker.InternalServerException;
+import ua.mibal.booking.service.email.component.EmailBuilder;
 import ua.mibal.booking.service.email.model.Email;
-import ua.mibal.booking.service.email.model.EmailBuilder;
 import ua.mibal.booking.service.email.model.EmailType;
 
 import static org.mockito.Mockito.mockStatic;
