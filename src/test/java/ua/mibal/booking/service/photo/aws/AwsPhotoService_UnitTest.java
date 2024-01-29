@@ -72,7 +72,6 @@ class AwsPhotoService_UnitTest {
     private MockedStatic<UserAwsPhoto> mockedUserAwsPhoto;
     private MockedStatic<ApartmentAwsPhoto> mockedApartmentAwsPhoto;
 
-
     @BeforeEach
     void setup() {
         mockedUserAwsPhoto = mockStatic(UserAwsPhoto.class);
