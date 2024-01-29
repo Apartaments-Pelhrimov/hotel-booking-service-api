@@ -16,16 +16,15 @@
 
 package ua.mibal.booking.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import ua.mibal.booking.model.dto.request.CreateApartmentInstanceDto;
 import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.entity.ApartmentInstance;
@@ -58,26 +57,24 @@ import static org.mockito.Mockito.when;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = ApartmentInstanceService.class)
-@TestPropertySource(locations = "classpath:application.yaml")
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class ApartmentInstanceService_UnitTest {
 
-    @Autowired
     private ApartmentInstanceService service;
 
-    @MockBean
+    @Mock
     private ApartmentInstanceRepository apartmentInstanceRepository;
-    @MockBean
+    @Mock
     private ReservationRequestMapper reservationRequestMapper;
-    @MockBean
+    @Mock
     private ApartmentRepository apartmentRepository;
-    @MockBean
+    @Mock
     private DateTimeUtils dateTimeUtils;
-    @MockBean
+    @Mock
     private BookingComReservationService bookingComReservationService;
-    @MockBean
+    @Mock
     private ApartmentInstanceMapper apartmentInstanceMapper;
 
     @Mock
@@ -93,8 +90,13 @@ class ApartmentInstanceService_UnitTest {
     @Mock
     private LocalDate dateTo;
 
+    @BeforeEach
+    void setup() {
+        service = new ApartmentInstanceService(apartmentInstanceRepository, apartmentRepository, bookingComReservationService, apartmentInstanceMapper, reservationRequestMapper);
+    }
+
     @Test
-    public void getFreeOne() {
+    void getFreeOne() {
         Long id = 1L;
         int people = 1;
         ReservationRequest reservationRequest = new ReservationRequest(MIN, MAX, people, id);
@@ -118,7 +120,7 @@ class ApartmentInstanceService_UnitTest {
     }
 
     @Test
-    public void getFreeOne_should_throw_FreeApartmentsForDateNotFoundException() {
+    void getFreeOne_should_throw_FreeApartmentsForDateNotFoundException() {
         Long id = 1L;
         int people = 1;
         ReservationRequest reservationRequest = new ReservationRequest(MIN, MAX, people, id);
@@ -144,7 +146,7 @@ class ApartmentInstanceService_UnitTest {
 
 
     @Test
-    public void create() {
+    void create() {
         Long id = 1L;
         when(apartmentRepository.existsById(id)).thenReturn(true);
         when(apartmentInstanceMapper.toEntity(createApartmentInstanceDto)).thenReturn(apartmentInstance);
@@ -157,7 +159,7 @@ class ApartmentInstanceService_UnitTest {
     }
 
     @Test
-    public void create_should_throw_ApartmentNotFoundException() {
+    void create_should_throw_ApartmentNotFoundException() {
         Long id = 1L;
         when(apartmentRepository.existsById(id)).thenReturn(false);
 
@@ -170,7 +172,7 @@ class ApartmentInstanceService_UnitTest {
     }
 
     @Test
-    public void delete() {
+    void delete() {
         Long id = 1L;
         when(apartmentInstanceRepository.existsById(id)).thenReturn(true);
 
@@ -180,7 +182,7 @@ class ApartmentInstanceService_UnitTest {
     }
 
     @Test
-    public void delete_should_throw_ApartmentInstanceNotFoundException() {
+    void delete_should_throw_ApartmentInstanceNotFoundException() {
         Long id = 1L;
         when(apartmentInstanceRepository.existsById(id)).thenReturn(false);
 

@@ -16,15 +16,15 @@
 
 package ua.mibal.booking.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import ua.mibal.booking.model.exception.IllegalReservationDateRangeException;
 import ua.mibal.booking.model.exception.service.CostCalculationServiceException;
 
@@ -38,14 +38,17 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = CostCalculationService.class)
-@TestPropertySource(locations = "classpath:application.yaml")
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class CostCalculationService_UnitTest {
 
-    @Autowired
     private CostCalculationService service;
+
+    @BeforeEach
+    void setup() {
+        service = new CostCalculationService();
+    }
 
     @ParameterizedTest
     @MethodSource("ua.mibal.booking.testUtils.DataGenerator#correctPriceCalculation")

@@ -16,16 +16,15 @@
 
 package ua.mibal.booking.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import ua.mibal.booking.model.dto.response.calendar.Calendar;
 import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.entity.ApartmentInstance;
@@ -36,37 +35,35 @@ import ua.mibal.booking.repository.HotelTurningOffRepository;
 import java.util.List;
 
 import static java.time.LocalDateTime.now;
-import static org.apache.commons.collections4.CollectionUtils.union;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static ua.mibal.booking.service.util.CollectionUtils.union;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = CalendarService.class)
-@TestPropertySource(locations = "classpath:application.yaml")
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class CalendarService_UnitTest {
 
-    @Autowired
     private CalendarService service;
 
-    @MockBean
+    @Mock
     private BookingComReservationService bookingComReservationService;
-    @MockBean
+    @Mock
     private ApartmentInstanceService apartmentInstanceService;
-    @MockBean
+    @Mock
     private ApartmentService apartmentService;
-    @MockBean
+    @Mock
     private TurningOffService turningOffService;
-    @MockBean
+    @Mock
     private ICalService iCalService;
-    @MockBean
+    @Mock
     private HotelTurningOffRepository hotelTurningOffRepository;
 
     @Mock
@@ -83,6 +80,11 @@ class CalendarService_UnitTest {
     private HotelTurningOffTime hotelTurningOffTime = spy(new HotelTurningOffTime(
             1L, now(), now().plusDays(2), "Christmas holidays"
     ));
+
+    @BeforeEach
+    void setup() {
+        service = new CalendarService(bookingComReservationService, apartmentInstanceService, apartmentService, turningOffService, iCalService, hotelTurningOffRepository);
+    }
 
     @Test
     void getCalendarsForApartment() {

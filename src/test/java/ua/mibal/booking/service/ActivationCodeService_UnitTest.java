@@ -16,16 +16,15 @@
 
 package ua.mibal.booking.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import ua.mibal.booking.model.entity.ActivationCode;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.exception.entity.ActivationCodeNotFoundException;
@@ -45,18 +44,16 @@ import static org.mockito.Mockito.when;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = ActivationCodeService.class)
-@TestPropertySource(locations = "classpath:application.yaml")
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class ActivationCodeService_UnitTest {
 
-    @Autowired
     private ActivationCodeService service;
 
-    @MockBean
+    @Mock
     private ActivationCodeRepository activationCodeRepository;
-    @MockBean
+    @Mock
     private CodeGenerationService codeGenerationService;
 
     @Mock
@@ -64,15 +61,22 @@ class ActivationCodeService_UnitTest {
     @Mock
     private ActivationCode activationCode;
 
+    @BeforeEach
+    void setup() {
+        service = new ActivationCodeService(activationCodeRepository, codeGenerationService);
+    }
+
     @Test
     void generateAndSaveCodeFor_should_generate_and_save() {
+        String code = "code";
+
         when(codeGenerationService.generateCode())
-                .thenReturn("code");
+                .thenReturn(code);
 
         service.generateAndSaveCodeFor(user);
 
         verify(activationCodeRepository, times(1))
-                .save(new ActivationCode(any(), user, "code"));
+                .save(new ActivationCode(any(), user, code));
     }
 
     @Test

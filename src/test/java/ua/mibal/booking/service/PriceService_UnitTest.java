@@ -16,16 +16,15 @@
 
 package ua.mibal.booking.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import ua.mibal.booking.model.dto.request.PriceDto;
 import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.entity.embeddable.Price;
@@ -45,18 +44,16 @@ import static ua.mibal.booking.testUtils.CustomAssertions.assertEqualsList;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = PriceService.class)
-@TestPropertySource(locations = "classpath:application.yaml")
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class PriceService_UnitTest {
 
-    @Autowired
     private PriceService service;
 
-    @MockBean
+    @Mock
     private ApartmentService apartmentService;
-    @MockBean
+    @Mock
     private PriceMapper priceMapper;
 
     @Mock
@@ -65,6 +62,11 @@ class PriceService_UnitTest {
     private Price price;
     @Mock
     private PriceDto priceDto;
+
+    @BeforeEach
+    void setup() {
+        service = new PriceService(apartmentService, priceMapper);
+    }
 
     @Test
     public void getAllByApartment() {

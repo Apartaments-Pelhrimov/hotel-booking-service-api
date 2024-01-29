@@ -16,16 +16,15 @@
 
 package ua.mibal.booking.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import ua.mibal.booking.model.dto.request.CreateApartmentDto;
 import ua.mibal.booking.model.dto.request.UpdateApartmentDto;
 import ua.mibal.booking.model.dto.response.ApartmentCardDto;
@@ -53,18 +52,16 @@ import static org.mockito.Mockito.when;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = ApartmentService.class)
-@TestPropertySource(locations = "classpath:application.yaml")
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class ApartmentService_UnitTest {
 
-    @Autowired
     private ApartmentService service;
 
-    @MockBean
+    @Mock
     private ApartmentRepository apartmentRepository;
-    @MockBean
+    @Mock
     private ApartmentMapper apartmentMapper;
 
     @Mock
@@ -77,6 +74,11 @@ class ApartmentService_UnitTest {
     private CreateApartmentDto createApartmentDto;
     @Mock
     private UpdateApartmentDto updateApartmentDto;
+
+    @BeforeEach
+    void setup() {
+        service = new ApartmentService(apartmentRepository, apartmentMapper);
+    }
 
     @Test
     public void create() {

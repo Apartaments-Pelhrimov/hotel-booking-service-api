@@ -16,16 +16,15 @@
 
 package ua.mibal.booking.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import ua.mibal.booking.model.dto.auth.AuthResponseDto;
 import ua.mibal.booking.model.dto.auth.ForgetPasswordDto;
 import ua.mibal.booking.model.dto.auth.RegistrationDto;
@@ -50,24 +49,22 @@ import static org.mockito.Mockito.when;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = AuthService.class)
-@TestPropertySource(locations = "classpath:application.yaml")
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class AuthService_UnitTest {
 
-    @Autowired
-    private AuthService authService;
+    private AuthService service;
 
-    @MockBean
+    @Mock
     private JwtTokenService jwtTokenService;
-    @MockBean
+    @Mock
     private UserMapper userMapper;
-    @MockBean
+    @Mock
     private UserService userService;
-    @MockBean
+    @Mock
     private ActivationCodeService activationCodeService;
-    @MockBean
+    @Mock
     private EmailSendingService emailSendingService;
 
     @Mock
@@ -81,13 +78,18 @@ class AuthService_UnitTest {
     @Mock
     private ForgetPasswordDto forgetPasswordDto;
 
+    @BeforeEach
+    void setup() {
+        service = new AuthService(jwtTokenService, userMapper, userService, activationCodeService, emailSendingService);
+    }
+
     @Test
     void login() {
         String token = "test_token";
         when(jwtTokenService.generateJwtToken(user)).thenReturn(token);
         when(userMapper.toAuthResponse(user, token)).thenReturn(expectedAuthDto);
 
-        var actual = authService.login(user);
+        var actual = service.login(user);
 
         assertEquals(expectedAuthDto, actual);
     }
@@ -106,7 +108,7 @@ class AuthService_UnitTest {
         when(activationCodeService.generateAndSaveCodeFor(user))
                 .thenReturn(activationCode);
 
-        authService.register(registrationDto);
+        service.register(registrationDto);
 
         verify(emailSendingService, times(1))
                 .sendAccountActivationEmail(activationCode);
@@ -124,7 +126,7 @@ class AuthService_UnitTest {
 
         EmailAlreadyExistsException e = assertThrows(
                 EmailAlreadyExistsException.class,
-                () -> authService.register(registrationDto)
+                () -> service.register(registrationDto)
         );
         assertEquals(
                 new EmailAlreadyExistsException(existingEmail).getMessage(),
@@ -142,7 +144,7 @@ class AuthService_UnitTest {
         when(activationCode.getUser()).thenReturn(user);
         when(user.getId()).thenReturn(id);
 
-        authService.activateNewAccountBy(code);
+        service.activateNewAccountBy(code);
 
         verify(userService, times(1))
                 .activateUserById(id);
@@ -156,7 +158,7 @@ class AuthService_UnitTest {
                 .thenReturn(activationCode);
 
         assertDoesNotThrow(
-                () -> authService.restore(email)
+                () -> service.restore(email)
         );
         verify(emailSendingService, times(1))
                 .sendPasswordChangingEmail(activationCode);
@@ -170,7 +172,7 @@ class AuthService_UnitTest {
         verifyNoMoreInteractions(userService);
 
         assertDoesNotThrow(
-                () -> authService.restore(email)
+                () -> service.restore(email)
         );
 
         verifyNoInteractions(activationCodeService, emailSendingService);
@@ -188,7 +190,7 @@ class AuthService_UnitTest {
         when(activationCode.getUser()).thenReturn(user);
         when(user.getId()).thenReturn(id);
 
-        authService.setNewPassword(code, forgetPasswordDto);
+        service.setNewPassword(code, forgetPasswordDto);
 
         verify(userService, times(1))
                 .setNewPasswordForUser(id, password);

@@ -16,21 +16,20 @@
 
 package ua.mibal.booking.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
 import ua.mibal.booking.model.dto.request.CreateCommentDto;
 import ua.mibal.booking.model.dto.response.CommentDto;
 import ua.mibal.booking.model.entity.Apartment;
@@ -58,22 +57,20 @@ import static org.mockito.Mockito.when;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = CommentService.class)
-@TestPropertySource(locations = "classpath:application.yaml")
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class CommentService_UnitTest {
 
-    @Autowired
     private CommentService service;
 
-    @MockBean
+    @Mock
     private CommentRepository commentRepository;
-    @MockBean
+    @Mock
     private CommentMapper commentMapper;
-    @MockBean
+    @Mock
     private UserRepository userRepository;
-    @MockBean
+    @Mock
     private ApartmentRepository apartmentRepository;
 
     @Mock
@@ -86,6 +83,11 @@ class CommentService_UnitTest {
     private Apartment apartment;
     @Mock
     private User user;
+
+    @BeforeEach
+    void setup() {
+        service = new CommentService(commentRepository, commentMapper, userRepository, apartmentRepository);
+    }
 
     @Test
     void getAllByApartment() {
