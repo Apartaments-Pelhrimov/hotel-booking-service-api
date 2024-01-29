@@ -17,8 +17,9 @@ cors:
   allowed-origins: "*"
   allowed-methods: "*"
 
-jwt-token:
-  expiring-days: 30
+jwt:
+  validForDays: 30
+  issuer: https://apartmany-pe.cz/
 
 activation-code:
   length: 60

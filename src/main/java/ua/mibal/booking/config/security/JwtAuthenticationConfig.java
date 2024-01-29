@@ -32,6 +32,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
+import ua.mibal.booking.config.properties.JwtTokenProps;
 import ua.mibal.booking.config.properties.RsaProperties;
 
 /**
@@ -40,7 +41,10 @@ import ua.mibal.booking.config.properties.RsaProperties;
  */
 @RequiredArgsConstructor
 @Configuration
-@EnableConfigurationProperties(RsaProperties.class)
+@EnableConfigurationProperties({
+        RsaProperties.class,
+        JwtTokenProps.class,
+})
 public class JwtAuthenticationConfig {
     private final RsaProperties rsaProperties;
 

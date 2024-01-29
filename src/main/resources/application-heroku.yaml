@@ -13,8 +13,9 @@ rsa:
   private-key: classpath:certs/private.pem
   public-key: classpath:certs/public.pem
 
-jwt-token:
-  expiring-days: 30
+jwt:
+  validForDays: 30
+  issuer: https://apartmany-pe.cz/
 
 activation-code:
   length: 60

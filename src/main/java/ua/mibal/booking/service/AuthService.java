@@ -28,7 +28,7 @@ import ua.mibal.booking.model.exception.EmailAlreadyExistsException;
 import ua.mibal.booking.model.exception.entity.UserNotFoundException;
 import ua.mibal.booking.model.mapper.UserMapper;
 import ua.mibal.booking.service.email.EmailSendingService;
-import ua.mibal.booking.service.security.TokenService;
+import ua.mibal.booking.service.security.JwtTokenService;
 
 /**
  * @author Mykhailo Balakhon
@@ -37,14 +37,14 @@ import ua.mibal.booking.service.security.TokenService;
 @RequiredArgsConstructor
 @Service
 public class AuthService {
-    private final TokenService tokenService;
+    private final JwtTokenService jwtTokenService;
     private final UserMapper userMapper;
     private final UserService userService;
     private final ActivationCodeService activationCodeService;
     private final EmailSendingService emailSendingService;
 
     public AuthResponseDto login(User user) {
-        String token = tokenService.generateJwtToken(user);
+        String token = jwtTokenService.generateJwtToken(user);
         return userMapper.toAuthResponse(user, token);
     }
 

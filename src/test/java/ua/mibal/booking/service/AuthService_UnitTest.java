@@ -35,7 +35,7 @@ import ua.mibal.booking.model.exception.EmailAlreadyExistsException;
 import ua.mibal.booking.model.exception.entity.UserNotFoundException;
 import ua.mibal.booking.model.mapper.UserMapper;
 import ua.mibal.booking.service.email.EmailSendingService;
-import ua.mibal.booking.service.security.TokenService;
+import ua.mibal.booking.service.security.JwtTokenService;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -60,7 +60,7 @@ class AuthService_UnitTest {
     private AuthService authService;
 
     @MockBean
-    private TokenService tokenService;
+    private JwtTokenService jwtTokenService;
     @MockBean
     private UserMapper userMapper;
     @MockBean
@@ -84,7 +84,7 @@ class AuthService_UnitTest {
     @Test
     void login() {
         String token = "test_token";
-        when(tokenService.generateJwtToken(user)).thenReturn(token);
+        when(jwtTokenService.generateJwtToken(user)).thenReturn(token);
         when(userMapper.toAuthResponse(user, token)).thenReturn(expectedAuthDto);
 
         var actual = authService.login(user);
