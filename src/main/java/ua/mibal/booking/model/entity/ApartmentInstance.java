@@ -43,8 +43,8 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import static java.time.LocalDateTime.now;
-import static java.util.Collections.unmodifiableList;
 import static lombok.AccessLevel.PRIVATE;
+import static ua.mibal.booking.service.util.CollectionUtils.union;
 
 /**
  * @author Mykhailo Balakhon
@@ -139,10 +139,8 @@ public class ApartmentInstance {
     }
 
     private List<Event> getAllNotRejectedEvents() {
-        List<Event> union = new ArrayList<>();
-        union.addAll(getNotRejectedReservations());
-        union.addAll(turningOffTimes);
-        return unmodifiableList(union);
+        List<Reservation> reservations = getNotRejectedReservations();
+        return union(reservations, turningOffTimes);
     }
 
     private List<Reservation> getNotRejectedReservations() {

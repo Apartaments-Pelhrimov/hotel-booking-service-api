@@ -149,8 +149,8 @@ class CalendarService_UnitTest {
         service.getICalForApartmentInstance(instanceId);
 
         verify(iCalService, times(1)).getCalendarFromEvents(
-                union(List.of(hotelTurningOffTime, hotelTurningOffTime),
-                        List.of(apartmentInstanceEvent, apartmentInstanceEvent))
+                union(List.of(apartmentInstanceEvent, apartmentInstanceEvent),
+                        List.of(hotelTurningOffTime, hotelTurningOffTime))
         );
     }
 }

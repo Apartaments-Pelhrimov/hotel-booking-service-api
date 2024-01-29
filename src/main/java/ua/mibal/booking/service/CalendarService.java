@@ -26,11 +26,10 @@ import ua.mibal.booking.model.entity.Event;
 import ua.mibal.booking.model.entity.HotelTurningOffTime;
 import ua.mibal.booking.repository.HotelTurningOffRepository;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static java.util.Collections.unmodifiableList;
+import static ua.mibal.booking.service.util.CollectionUtils.union;
 
 /**
  * @author Mykhailo Balakhon
@@ -76,7 +75,7 @@ public class CalendarService {
                 hotelTurningOffRepository.findFromNow();
         List<Event> apartmentEvents =
                 apartmentInstance.getNotRejectedEventsForNow();
-        return getUnion(apartmentEvents, hotelEvents);
+        return union(apartmentEvents, hotelEvents);
     }
 
     private List<Calendar> calendarsForApartment(Apartment apartment) {
@@ -95,16 +94,8 @@ public class CalendarService {
                 apartmentInstance.getNotRejectedEventsForNow();
         List<Event> bookingComEvents =
                 bookingComReservationService.getEventsFor(apartmentInstance);
-        Collection<Event> eventUnion =
-                getUnion(apartmentInstanceEvents, hotelEvents, bookingComEvents);
-        return Calendar.of(eventUnion);
-    }
-
-    private Collection<Event> getUnion(List<? extends Event>... eventsToUnite) {
-        List<Event> union = new ArrayList<>();
-        for (List<? extends Event> events : eventsToUnite) {
-            union.addAll(events);
-        }
-        return unmodifiableList(union);
+        Collection<Event> events =
+                union(apartmentInstanceEvents, hotelEvents, bookingComEvents);
+        return Calendar.of(events);
     }
 }
