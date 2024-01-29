@@ -25,11 +25,19 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserAwsPhoto extends AwsPhoto {
     private static final String folder = "users";
 
-    public UserAwsPhoto(String email, MultipartFile photo) {
-        super(email, folder, photo);
+    protected UserAwsPhoto(String username, MultipartFile photo) {
+        super(username, folder, photo);
     }
 
-    public UserAwsPhoto(String email) {
-        super(email, folder);
+    protected UserAwsPhoto(String username) {
+        super(username, folder);
+    }
+
+    public static UserAwsPhoto getInstanceToUpload(String username, MultipartFile photo) {
+        return new UserAwsPhoto(username, photo);
+    }
+
+    public static UserAwsPhoto getInstanceToDelete(String username) {
+        return new UserAwsPhoto(username);
     }
 }

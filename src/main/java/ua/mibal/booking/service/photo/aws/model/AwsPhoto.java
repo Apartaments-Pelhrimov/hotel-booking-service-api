@@ -16,7 +16,6 @@
 
 package ua.mibal.booking.service.photo.aws.model;
 
-import lombok.Getter;
 import org.springframework.web.multipart.MultipartFile;
 import ua.mibal.booking.model.exception.IllegalPhotoFormatException;
 
@@ -30,7 +29,6 @@ import static org.springframework.util.StringUtils.getFilenameExtension;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Getter
 public class AwsPhoto {
     private final PhotoExtension extension;
     private final String key;
@@ -46,6 +44,10 @@ public class AwsPhoto {
         this.extension = PhotoExtension.NONE;
         this.key = generateFileKey(folder, name);
         this.file = null;
+    }
+
+    public String getKey() {
+        return key;
     }
 
     public String getContentType() {

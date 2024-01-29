@@ -16,30 +16,28 @@
 
 package ua.mibal.booking.service.photo.aws;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.web.multipart.MultipartFile;
 import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.entity.embeddable.Photo;
-import ua.mibal.booking.model.exception.IllegalPhotoFormatException;
 import ua.mibal.booking.service.ApartmentService;
 import ua.mibal.booking.service.UserService;
 import ua.mibal.booking.service.photo.aws.components.AwsStorage;
 import ua.mibal.booking.service.photo.aws.model.ApartmentAwsPhoto;
-import ua.mibal.booking.service.photo.aws.model.AwsPhoto;
 import ua.mibal.booking.service.photo.aws.model.UserAwsPhoto;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -66,23 +64,37 @@ class AwsPhotoService_UnitTest {
     private MultipartFile photoFile;
     @Mock
     private Apartment apartment;
+    @Mock
+    private UserAwsPhoto userPhoto;
+    @Mock
+    private ApartmentAwsPhoto apartmentPhoto;
+
+    private MockedStatic<UserAwsPhoto> mockedUserAwsPhoto;
+    private MockedStatic<ApartmentAwsPhoto> mockedApartmentAwsPhoto;
+
 
     @BeforeEach
     void setup() {
+        mockedUserAwsPhoto = mockStatic(UserAwsPhoto.class);
+        mockedApartmentAwsPhoto = mockStatic(ApartmentAwsPhoto.class);
         service = new AwsPhotoService(storage, userService, apartmentService);
     }
 
-    @ParameterizedTest
-    @CsvSource({"png", "jpg", "jpeg"})
-    void changeUserPhoto(String allowedExtension) {
+    @AfterEach
+    void after() {
+        mockedUserAwsPhoto.close();
+        mockedApartmentAwsPhoto.close();
+    }
+
+    @Test
+    void changeUserPhoto() {
         String email = "email";
-        String fileName = "fileName." + allowedExtension;
         String photoLink = "photoLink";
 
-        when(photoFile.getOriginalFilename())
-                .thenReturn(fileName);
-        AwsPhoto photo = new UserAwsPhoto(email, photoFile);
-        when(storage.uploadPhoto(photo))
+        mockedUserAwsPhoto.when(
+                        () -> UserAwsPhoto.getInstanceToUpload(email, photoFile))
+                .thenReturn(userPhoto);
+        when(storage.uploadPhoto(userPhoto))
                 .thenReturn(photoLink);
 
         String actual = service.changeUserPhoto(email, photoFile);
@@ -92,45 +104,33 @@ class AwsPhotoService_UnitTest {
                 .changeUserPhoto(email, photoLink);
     }
 
-    @ParameterizedTest
-    @CsvSource({"txt", "pdf", "svg", "''"})
-    void changeUserPhoto_should_throw_IllegalPhotoFormatException(String illegalExtension) {
-        String email = "email";
-        String fileName = "fileName." + illegalExtension;
-
-        when(photoFile.getOriginalFilename())
-                .thenReturn(fileName);
-
-        assertThrows(IllegalPhotoFormatException.class,
-                () -> service.changeUserPhoto(email, photoFile));
-    }
-
     @Test
     void deleteUserPhoto() {
         String email = "email@";
-        AwsPhoto photo = new UserAwsPhoto(email);
+
+        mockedUserAwsPhoto.when(
+                        () -> UserAwsPhoto.getInstanceToDelete(email))
+                .thenReturn(userPhoto);
 
         service.deleteUserPhoto(email);
 
         verify(storage, times(1))
-                .deletePhoto(photo);
+                .deletePhoto(userPhoto);
         verify(userService, times(1))
                 .deleteUserPhotoByEmail(email);
     }
 
-    @ParameterizedTest
-    @CsvSource({"png", "jpg", "jpeg"})
-    void createApartmentPhoto(String allowedExtension) {
+    @Test
+    void createApartmentPhoto() {
         Long id = 1L;
-        String fileName = "fileName." + allowedExtension;
         String photoLink = "link://";
 
         when(apartmentService.getOne(id))
                 .thenReturn(apartment);
-        when(photoFile.getOriginalFilename())
-                .thenReturn(fileName);
-        AwsPhoto photo = new ApartmentAwsPhoto(id, photoFile);
-        when(storage.uploadPhoto(photo))
+        mockedApartmentAwsPhoto.when(
+                        () -> ApartmentAwsPhoto.getInstanceToUpload(id, photoFile))
+                .thenReturn(apartmentPhoto);
+        when(storage.uploadPhoto(apartmentPhoto))
                 .thenReturn(photoLink);
 
         var actual = service.createApartmentPhoto(id, photoFile);
@@ -140,33 +140,21 @@ class AwsPhotoService_UnitTest {
                 .addPhoto(new Photo(photoLink));
     }
 
-    @ParameterizedTest
-    @CsvSource({"txt", "pdf", "svg", "''"})
-    void createApartmentPhoto_should_throw_IllegalPhotoFormatException(String illegalExtension) {
-        Long id = 1L;
-        String fileName = "fileName." + illegalExtension;
-
-        when(apartmentService.getOne(id))
-                .thenReturn(apartment);
-        when(photoFile.getOriginalFilename())
-                .thenReturn(fileName);
-
-        assertThrows(IllegalPhotoFormatException.class,
-                () -> service.createApartmentPhoto(id, photoFile));
-    }
-
     @Test
     void deleteApartmentPhoto() {
         Long id = 1L;
         String photoLink = "link://filename";
-        AwsPhoto photo = new ApartmentAwsPhoto(photoLink);
+
+        mockedApartmentAwsPhoto.when(
+                        () -> ApartmentAwsPhoto.getInstanceToDelete(photoLink))
+                .thenReturn(apartmentPhoto);
 
         service.deleteApartmentPhoto(id, photoLink);
 
         verify(apartmentService, times(1))
                 .validateApartmentHasPhoto(id, photoLink);
         verify(storage, times(1))
-                .deletePhoto(photo);
+                .deletePhoto(apartmentPhoto);
         verify(apartmentService, times(1))
                 .deleteApartmentPhotoByLink(id, photoLink);
     }

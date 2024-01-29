@@ -44,7 +44,7 @@ public class AwsPhotoService implements PhotoService {
     @Transactional
     @Override
     public String changeUserPhoto(String email, MultipartFile photoFile) {
-        AwsPhoto photo = new UserAwsPhoto(email, photoFile);
+        AwsPhoto photo = UserAwsPhoto.getInstanceToUpload(email, photoFile);
         String link = storage.uploadPhoto(photo);
         userService.changeUserPhoto(email, link);
         return link;
@@ -53,7 +53,8 @@ public class AwsPhotoService implements PhotoService {
     @Transactional
     @Override
     public void deleteUserPhoto(String email) {
-        storage.deletePhoto(new UserAwsPhoto(email));
+        AwsPhoto photo = UserAwsPhoto.getInstanceToDelete(email);
+        storage.deletePhoto(photo);
         userService.deleteUserPhotoByEmail(email);
     }
 
@@ -61,7 +62,7 @@ public class AwsPhotoService implements PhotoService {
     @Override
     public String createApartmentPhoto(Long id, MultipartFile photoFile) {
         Apartment apartment = apartmentService.getOne(id);
-        AwsPhoto photo = new ApartmentAwsPhoto(id, photoFile);
+        AwsPhoto photo = ApartmentAwsPhoto.getInstanceToUpload(id, photoFile);
         String link = storage.uploadPhoto(photo);
         apartment.addPhoto(new Photo(link));
         return link;
@@ -71,7 +72,8 @@ public class AwsPhotoService implements PhotoService {
     @Override
     public void deleteApartmentPhoto(Long id, String link) {
         apartmentService.validateApartmentHasPhoto(id, link);
-        storage.deletePhoto(new ApartmentAwsPhoto(link));
+        AwsPhoto photo = ApartmentAwsPhoto.getInstanceToDelete(link);
+        storage.deletePhoto(photo);
         apartmentService.deleteApartmentPhotoByLink(id, link);
     }
 }

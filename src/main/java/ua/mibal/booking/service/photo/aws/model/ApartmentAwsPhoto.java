@@ -25,12 +25,20 @@ import org.springframework.web.multipart.MultipartFile;
 public class ApartmentAwsPhoto extends AwsPhoto {
     private static final String folder = "apartments";
 
-    public ApartmentAwsPhoto(Long id, MultipartFile photo) {
+    protected ApartmentAwsPhoto(Long id, MultipartFile photo) {
         super(generatePhotoName(id, photo), folder, photo);
     }
 
-    public ApartmentAwsPhoto(String link) {
+    protected ApartmentAwsPhoto(String link) {
         super(getFileName(link), folder);
+    }
+
+    public static ApartmentAwsPhoto getInstanceToUpload(Long id, MultipartFile photo) {
+        return new ApartmentAwsPhoto(id, photo);
+    }
+
+    public static ApartmentAwsPhoto getInstanceToDelete(String link) {
+        return new ApartmentAwsPhoto(link);
     }
 
     private static String generatePhotoName(Long id, MultipartFile photo) {
