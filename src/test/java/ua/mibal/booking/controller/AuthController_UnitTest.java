@@ -36,7 +36,7 @@ import org.springframework.web.context.WebApplicationContext;
 import ua.mibal.booking.model.dto.auth.AuthResponseDto;
 import ua.mibal.booking.model.dto.auth.ForgetPasswordDto;
 import ua.mibal.booking.model.dto.auth.RegistrationDto;
-import ua.mibal.booking.service.AuthService;
+import ua.mibal.booking.service.security.AuthService;
 import ua.mibal.booking.testUtils.RegistrationDtoArgumentConverter;
 
 import static org.mockito.ArgumentMatchers.any;

@@ -32,7 +32,7 @@ import ua.mibal.booking.model.dto.auth.AuthResponseDto;
 import ua.mibal.booking.model.dto.auth.ForgetPasswordDto;
 import ua.mibal.booking.model.dto.auth.RegistrationDto;
 import ua.mibal.booking.model.entity.User;
-import ua.mibal.booking.service.AuthService;
+import ua.mibal.booking.service.security.AuthService;
 
 /**
  * @author Mykhailo Balakhon

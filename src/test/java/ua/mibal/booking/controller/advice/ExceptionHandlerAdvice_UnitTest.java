@@ -43,7 +43,7 @@ import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.model.exception.marker.ApiException;
 import ua.mibal.booking.model.exception.service.CostCalculationServiceException;
 import ua.mibal.booking.service.ApartmentService;
-import ua.mibal.booking.service.AuthService;
+import ua.mibal.booking.service.security.AuthService;
 
 import java.util.List;
 import java.util.Locale;

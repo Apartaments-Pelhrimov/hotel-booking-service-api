@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service;
+package ua.mibal.booking.service.security;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -29,7 +29,6 @@ import ua.mibal.booking.model.entity.ActivationCode;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.exception.entity.ActivationCodeNotFoundException;
 import ua.mibal.booking.repository.ActivationCodeRepository;
-import ua.mibal.booking.service.security.CodeGenerationService;
 
 import java.util.Optional;
 
