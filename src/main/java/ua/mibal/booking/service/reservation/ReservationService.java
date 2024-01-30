@@ -68,7 +68,7 @@ public class ReservationService {
     }
 
     @Transactional
-    public void create(ReservationRequest request) {
+    public void reserve(ReservationRequest request) {
         Reservation reservation = reservationBuilder.buildBy(request);
         reservationRepository.save(reservation);
     }

@@ -177,11 +177,11 @@ class ReservationService_UnitTest {
     }
 
     @Test
-    void create() {
+    void reserve() {
         when(reservationBuilder.buildBy(request))
                 .thenReturn(reservation);
 
-        service.create(request);
+        service.reserve(request);
 
         verify(reservationRepository, times(1))
                 .save(reservation);

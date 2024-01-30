@@ -48,15 +48,10 @@ public class ReservationController {
     private final ReservationService reservationService;
     private final ReservationRequestMapper reservationRequestMapper;
 
-    @RolesAllowed("USER")
-    @PatchMapping("/apartments/{id}/reserve")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void create(@PathVariable Long id,
-                       @Valid ReservationRequestDto requestDto,
-                       Authentication authentication) {
-        ReservationRequest request =
-                reservationRequestMapper.toRequest(requestDto, id, authentication.getName());
-        reservationService.create(request);
+    @RolesAllowed("MANAGER")
+    @GetMapping("/reservations")
+    public Page<ReservationDto> getAll(Pageable pageable) {
+        return reservationService.getAll(pageable);
     }
 
     @RolesAllowed("USER")
@@ -66,17 +61,22 @@ public class ReservationController {
     }
 
     @RolesAllowed("USER")
+    @PatchMapping("/apartments/{id}/reserve")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void reserve(@PathVariable Long id,
+                        @Valid ReservationRequestDto requestDto,
+                        Authentication authentication) {
+        ReservationRequest request =
+                reservationRequestMapper.toRequest(requestDto, id, authentication.getName());
+        reservationService.reserve(request);
+    }
+
+    @RolesAllowed("USER")
     @PatchMapping("/reservations/{id}/reject")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void rejectByUser(@PathVariable("id") Long id,
+    public void rejectReservation(@PathVariable("id") Long id,
                              @Valid @RequestBody ReservationRejectingFormDto reservationRejectingFormDto,
                              Authentication authentication) {
         reservationService.rejectReservation(id, authentication.getName(), reservationRejectingFormDto.reason());
-    }
-
-    @RolesAllowed("MANAGER")
-    @GetMapping("/reservations")
-    public Page<ReservationDto> getAll(Pageable pageable) {
-        return reservationService.getAll(pageable);
     }
 }
