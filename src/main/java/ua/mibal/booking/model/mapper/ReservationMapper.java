@@ -16,40 +16,18 @@
 
 package ua.mibal.booking.model.mapper;
 
-import lombok.RequiredArgsConstructor;
-import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import ua.mibal.booking.model.dto.response.ReservationDto;
-import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.entity.Reservation;
-import ua.mibal.booking.model.entity.embeddable.Price;
-import ua.mibal.booking.model.entity.embeddable.ReservationDetails;
-import ua.mibal.booking.model.request.ReservationRequest;
-import ua.mibal.booking.service.reservation.component.CostCalculationService;
-
-import java.math.BigDecimal;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@RequiredArgsConstructor
 @Mapper(uses = PhotoMapper.class,
-        componentModel = MappingConstants.ComponentModel.SPRING,
-        injectionStrategy = InjectionStrategy.CONSTRUCTOR)
-public abstract class ReservationMapper {
-    private final CostCalculationService costCalculationService;
+        componentModel = MappingConstants.ComponentModel.SPRING)
+public interface ReservationMapper {
 
-    @Mapping(target = "date", source = "dateTime")
-    public abstract ReservationDto toDto(Reservation reservation);
-
-    public ReservationDetails toDetails(Apartment apartment,
-                                        ReservationRequest request) {
-        Price oneNightPriceOption = apartment.getPriceForPeople(request.people());
-        BigDecimal reservationPrice = costCalculationService
-                .calculatePrice(oneNightPriceOption.getCost(), request);
-        return ReservationDetails.of(request, reservationPrice, oneNightPriceOption);
-    }
+    ReservationDto toDto(Reservation reservation);
 }
