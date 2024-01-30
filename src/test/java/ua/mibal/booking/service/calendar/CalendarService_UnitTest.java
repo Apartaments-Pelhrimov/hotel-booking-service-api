@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service;
+package ua.mibal.booking.service.calendar;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -31,6 +31,9 @@ import ua.mibal.booking.model.entity.ApartmentInstance;
 import ua.mibal.booking.model.entity.Event;
 import ua.mibal.booking.model.entity.HotelTurningOffTime;
 import ua.mibal.booking.repository.HotelTurningOffRepository;
+import ua.mibal.booking.service.ApartmentInstanceService;
+import ua.mibal.booking.service.ApartmentService;
+import ua.mibal.booking.service.TurningOffService;
 import ua.mibal.booking.service.reservation.BookingComReservationService;
 
 import java.util.List;

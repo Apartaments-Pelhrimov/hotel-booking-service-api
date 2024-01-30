@@ -22,7 +22,7 @@ import ua.mibal.booking.model.entity.ApartmentInstance;
 import ua.mibal.booking.model.entity.Event;
 import ua.mibal.booking.model.exception.service.BookingComServiceException;
 import ua.mibal.booking.model.request.ReservationRequest;
-import ua.mibal.booking.service.ICalService;
+import ua.mibal.booking.service.calendar.ICalService;
 
 import java.io.IOException;
 import java.io.InputStream;

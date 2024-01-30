@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service;
+package ua.mibal.booking.service.calendar;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,6 +25,9 @@ import ua.mibal.booking.model.entity.ApartmentInstance;
 import ua.mibal.booking.model.entity.Event;
 import ua.mibal.booking.model.entity.HotelTurningOffTime;
 import ua.mibal.booking.repository.HotelTurningOffRepository;
+import ua.mibal.booking.service.ApartmentInstanceService;
+import ua.mibal.booking.service.ApartmentService;
+import ua.mibal.booking.service.TurningOffService;
 import ua.mibal.booking.service.reservation.BookingComReservationService;
 
 import java.util.Collection;
