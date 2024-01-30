@@ -39,7 +39,7 @@ import java.math.BigDecimal;
 public class ReservationBuilder {
     private final ApartmentInstanceService apartmentInstanceService;
     private final UserService userService;
-    private final CostCalculationService costCalculationService;
+    private final PriceCalculator priceCalculator;
 
     public Reservation buildBy(ReservationRequest request) {
         User user = userService.getOne(request.userEmail());
@@ -50,9 +50,9 @@ public class ReservationBuilder {
     }
 
     private ReservationDetails toDetails(Apartment apartment, ReservationRequest request) {
-        Price oneNightPriceOption = apartment.getPriceForPeople(request.people());
-        BigDecimal reservationPrice = costCalculationService
-                .calculatePrice(oneNightPriceOption.getCost(), request);
+        Price oneNightPriceOption = apartment.getPriceFor(request.people());
+        BigDecimal reservationPrice = priceCalculator
+                .calculateReservationPrice(oneNightPriceOption.getAmount(), request);
         return ReservationDetails.of(request, reservationPrice, oneNightPriceOption);
     }
 }

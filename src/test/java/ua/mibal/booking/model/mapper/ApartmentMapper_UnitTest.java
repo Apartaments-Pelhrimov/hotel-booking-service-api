@@ -93,26 +93,26 @@ class ApartmentMapper_UnitTest {
     }
 
     @Test
-    void toDto_correct_maps_cost_and_beds() {
+    void toDto_correct_maps_price_and_beds() {
         Apartment apartment = new Apartment();
         BigDecimal expectedMinPrice = addPricesGetMin(apartment);
         List<Bed> expectedBedList = addRoomsGetBeds(apartment);
 
         ApartmentDto actual = apartmentMapper.toDto(apartment);
 
-        assertEquals(expectedMinPrice, actual.cost());
+        assertEquals(expectedMinPrice, actual.price());
         assertEqualsList(expectedBedList, actual.beds());
     }
 
     @Test
-    void toCardDto_correct_maps_cost_and_beds() {
+    void toCardDto_correct_maps_price_and_beds() {
         Apartment apartment = new Apartment();
         BigDecimal expectedMinPrice = addPricesGetMin(apartment);
         Integer expectedSeatsCount = addRoomsGetSeats(apartment);
 
         ApartmentCardDto actual = apartmentMapper.toCardDto(apartment);
 
-        assertEquals(expectedMinPrice, actual.cost());
+        assertEquals(expectedMinPrice, actual.price());
         assertEquals(expectedSeatsCount, actual.people());
     }
 

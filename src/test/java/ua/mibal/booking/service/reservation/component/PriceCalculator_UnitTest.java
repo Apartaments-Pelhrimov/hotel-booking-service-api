@@ -27,7 +27,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import ua.mibal.booking.model.exception.IllegalReservationDateRangeException;
-import ua.mibal.booking.model.exception.service.CostCalculationServiceException;
+import ua.mibal.booking.model.exception.service.PriceCalculatorException;
 import ua.mibal.booking.model.request.ReservationRequest;
 
 import java.math.BigDecimal;
@@ -44,16 +44,16 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-class CostCalculationService_UnitTest {
+class PriceCalculator_UnitTest {
 
-    private CostCalculationService service;
+    private PriceCalculator service;
 
     @Mock
     private ReservationRequest request;
 
     @BeforeEach
     void setup() {
-        service = new CostCalculationService();
+        service = new PriceCalculator();
     }
 
     @ParameterizedTest
@@ -62,21 +62,21 @@ class CostCalculationService_UnitTest {
         when(request.from()).thenReturn(from.atStartOfDay());
         when(request.to()).thenReturn(to.atStartOfDay());
 
-        var actual = service.calculatePrice(oneNightPrice, request);
+        var actual = service.calculateReservationPrice(oneNightPrice, request);
         assertEquals(expected, actual);
     }
 
     @ParameterizedTest
     @MethodSource("ua.mibal.booking.testUtils.DataGenerator#incorrectPriceForCalculation")
-    void calculatePrice_should_throw_CostCalculationServiceException(BigDecimal oneNightPrice,
+    void calculatePrice_should_throw_PriceCalculatorException(BigDecimal oneNightPrice,
                                                                      LocalDate from,
                                                                      LocalDate to) {
         when(request.from()).thenReturn(from.atStartOfDay());
         when(request.to()).thenReturn(to.atStartOfDay());
 
         assertThrows(
-                CostCalculationServiceException.class,
-                () -> service.calculatePrice(oneNightPrice, request)
+                PriceCalculatorException.class,
+                () -> service.calculateReservationPrice(oneNightPrice, request)
         );
     }
 
@@ -90,7 +90,7 @@ class CostCalculationService_UnitTest {
 
         assertThrows(
                 IllegalReservationDateRangeException.class,
-                () -> service.calculatePrice(oneNightPrice, request)
+                () -> service.calculateReservationPrice(oneNightPrice, request)
         );
     }
 }

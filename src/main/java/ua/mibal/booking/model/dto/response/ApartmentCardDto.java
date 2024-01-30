@@ -31,6 +31,6 @@ public record ApartmentCardDto(
         ApartmentOptions options,
         Double rating,
         Integer people,
-        BigDecimal cost
+        BigDecimal price
 ) {
 }

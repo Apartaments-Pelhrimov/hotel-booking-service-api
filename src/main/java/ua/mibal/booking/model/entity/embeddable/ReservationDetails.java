@@ -48,7 +48,7 @@ public class ReservationDetails {
     private LocalDateTime reservedTo;
 
     @Column(nullable = false)
-    private BigDecimal fullCost;
+    private BigDecimal fullPrice;
 
     @Embedded
     private Price price;

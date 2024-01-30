@@ -39,8 +39,8 @@ public class Price {
     @Column(nullable = false)
     private Integer person;
 
-    @Column(nullable = false)
-    private BigDecimal cost;
+    @Column(name = "price", nullable = false)
+    private BigDecimal amount;
 
     @Override
     public boolean equals(Object o) {

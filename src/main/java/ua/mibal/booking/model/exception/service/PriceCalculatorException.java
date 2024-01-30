@@ -22,9 +22,9 @@ import ua.mibal.booking.model.exception.marker.InternalServerException;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class CostCalculationServiceException extends InternalServerException {
+public class PriceCalculatorException extends InternalServerException {
 
-    public CostCalculationServiceException(String message) {
+    public PriceCalculatorException(String message) {
         super(message);
     }
 }

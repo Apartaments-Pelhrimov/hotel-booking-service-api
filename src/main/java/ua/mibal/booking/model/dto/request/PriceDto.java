@@ -36,6 +36,6 @@ public record PriceDto(
         @NotNull
         @DecimalMin("0")
         @DecimalMax("100000")
-        BigDecimal cost
+        BigDecimal amount
 ) {
 }

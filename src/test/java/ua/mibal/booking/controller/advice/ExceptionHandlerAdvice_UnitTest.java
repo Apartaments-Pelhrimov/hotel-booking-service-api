@@ -41,7 +41,7 @@ import ua.mibal.booking.model.dto.auth.RegistrationDto;
 import ua.mibal.booking.model.exception.EmailAlreadyExistsException;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.model.exception.marker.ApiException;
-import ua.mibal.booking.model.exception.service.CostCalculationServiceException;
+import ua.mibal.booking.model.exception.service.PriceCalculatorException;
 import ua.mibal.booking.service.ApartmentService;
 import ua.mibal.booking.service.security.AuthService;
 
@@ -166,8 +166,8 @@ class ExceptionHandlerAdvice_UnitTest {
     @Test
     void handleInternalServerException() throws Exception {
         Long id = 1L;
-        CostCalculationServiceException e =
-                new CostCalculationServiceException("test_message");
+        PriceCalculatorException e =
+                new PriceCalculatorException("test_message");
         ApiError expectedError = fromApiException(e);
         doThrow(e).when(apartmentService).delete(id);
 

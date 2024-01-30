@@ -46,11 +46,11 @@ import static java.math.BigDecimal.valueOf;
         componentModel = MappingConstants.ComponentModel.SPRING)
 public abstract class ApartmentMapper {
 
-    @Mapping(target = "cost", source = "prices")
+    @Mapping(target = "price", source = "prices")
     @Mapping(target = "beds", source = "rooms")
     public abstract ApartmentDto toDto(Apartment apartment);
 
-    @Mapping(target = "cost", source = "prices")
+    @Mapping(target = "price", source = "prices")
     @Mapping(target = "people", source = "rooms")
     public abstract ApartmentCardDto toCardDto(Apartment apartment);
 
@@ -82,7 +82,7 @@ public abstract class ApartmentMapper {
             return null;
         }
         return prices.stream()
-                .map(Price::getCost)
+                .map(Price::getAmount)
                 .reduce(valueOf(MAX_VALUE), BigDecimal::min);
     }
 }

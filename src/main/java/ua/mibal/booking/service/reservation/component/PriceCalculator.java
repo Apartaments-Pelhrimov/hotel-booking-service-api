@@ -16,9 +16,9 @@
 
 package ua.mibal.booking.service.reservation.component;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import ua.mibal.booking.model.exception.IllegalReservationDateRangeException;
-import ua.mibal.booking.model.exception.service.CostCalculationServiceException;
+import ua.mibal.booking.model.exception.service.PriceCalculatorException;
 import ua.mibal.booking.model.request.ReservationRequest;
 
 import java.math.BigDecimal;
@@ -31,13 +31,11 @@ import static java.math.BigDecimal.ZERO;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Service
-public class CostCalculationService {
+@Component
+public class PriceCalculator {
 
-    // TODO rename cost to price
-
-    public BigDecimal calculatePrice(BigDecimal oneNightPrice,
-                                     ReservationRequest request) {
+    public BigDecimal calculateReservationPrice(BigDecimal oneNightPrice,
+                                                ReservationRequest request) {
         validatePriceIsPositive(oneNightPrice);
         validateReservationDates(request);
         BigDecimal nights = calculateNights(request);
@@ -53,7 +51,7 @@ public class CostCalculationService {
 
     private void validatePriceIsPositive(BigDecimal price) {
         if (price.compareTo(ZERO) < 0) {
-            throw new CostCalculationServiceException(
+            throw new PriceCalculatorException(
                     "Illegal one night price=" + price
             );
         }

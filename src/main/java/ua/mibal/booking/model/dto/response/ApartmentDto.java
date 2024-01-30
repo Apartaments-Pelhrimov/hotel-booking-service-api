@@ -33,6 +33,6 @@ public record ApartmentDto(
         ApartmentOptions options,
         Double rating,
         List<Bed> beds,
-        BigDecimal cost
+        BigDecimal price
 ) {
 }
