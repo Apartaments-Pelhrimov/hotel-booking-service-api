@@ -18,7 +18,7 @@ package ua.mibal.booking.model.dto.response;
 
 import ua.mibal.booking.model.entity.embeddable.ReservationDetails;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 /**
@@ -28,7 +28,7 @@ import java.util.Set;
 public record ReservationDto(
         ReservationApartmentDto apartment,
         ReservationDetails details,
-        LocalDate date
+        LocalDateTime dateTime
 ) {
     public record ReservationApartmentDto(
             String name,
