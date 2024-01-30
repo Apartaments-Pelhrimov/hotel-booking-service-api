@@ -195,7 +195,7 @@ public class Apartment {
         return this.photos.remove(photo);
     }
 
-    public Price getPriceForPeople(Integer people) {
+    public Price getPriceFor(Integer people) {
         return getPrices().stream()
                 .filter(pr -> people.equals(pr.getPerson()))
                 .findFirst()

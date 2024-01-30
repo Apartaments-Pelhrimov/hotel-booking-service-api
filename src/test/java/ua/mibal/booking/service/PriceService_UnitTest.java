@@ -118,7 +118,7 @@ class PriceService_UnitTest {
 
         assertEquals(
                 price,
-                apartment.getPriceForPeople(people)
+                apartment.getPriceFor(people)
         );
     }
 
@@ -140,7 +140,7 @@ class PriceService_UnitTest {
 
         assertEquals(
                 newPrice,
-                apartment.getPriceForPeople(people)
+                apartment.getPriceFor(people)
         );
     }
 }
