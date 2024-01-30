@@ -81,7 +81,7 @@ class ApartmentService_UnitTest {
     }
 
     @Test
-    public void create() {
+    void create() {
         when(apartmentMapper.toEntity(createApartmentDto)).thenReturn(apartment);
 
         service.create(createApartmentDto);
@@ -90,7 +90,7 @@ class ApartmentService_UnitTest {
     }
 
     @Test
-    public void update() {
+    void update() {
         Long id = 1L;
         when(apartmentRepository.findById(id)).thenReturn(Optional.of(apartment));
 
@@ -100,7 +100,7 @@ class ApartmentService_UnitTest {
     }
 
     @Test
-    public void update_should_throw_ApartmentNotFoundException() {
+    void update_should_throw_ApartmentNotFoundException() {
         Long id = 1L;
         when(apartmentRepository.findById(id)).thenReturn(Optional.empty());
 
@@ -113,7 +113,7 @@ class ApartmentService_UnitTest {
     }
 
     @Test
-    public void delete() {
+    void delete() {
         Long id = 1L;
         when(apartmentRepository.existsById(id)).thenReturn(true);
 
@@ -123,7 +123,7 @@ class ApartmentService_UnitTest {
     }
 
     @Test
-    public void delete_should_throw_ApartmentNotFoundException() {
+    void delete_should_throw_ApartmentNotFoundException() {
         Long id = 1L;
         when(apartmentRepository.existsById(id)).thenReturn(false);
 
@@ -136,7 +136,7 @@ class ApartmentService_UnitTest {
     }
 
     @Test
-    public void getOneFetchPrices() {
+    void getOneFetchPrices() {
         Long id = 1L;
         when(apartmentRepository.findByIdFetchPrices(id)).thenReturn(Optional.of(apartment));
 
@@ -146,7 +146,7 @@ class ApartmentService_UnitTest {
     }
 
     @Test
-    public void getOneFetchPrices_should_throw_ApartmentNotFoundException() {
+    void getOneFetchPrices_should_throw_ApartmentNotFoundException() {
         Long id = 1L;
         when(apartmentRepository.findByIdFetchPrices(id)).thenReturn(Optional.empty());
 
