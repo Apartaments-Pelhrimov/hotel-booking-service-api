@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service;
+package ua.mibal.booking.service.reservation;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +22,7 @@ import ua.mibal.booking.model.entity.ApartmentInstance;
 import ua.mibal.booking.model.entity.Event;
 import ua.mibal.booking.model.exception.service.BookingComServiceException;
 import ua.mibal.booking.model.request.ReservationRequest;
+import ua.mibal.booking.service.ICalService;
 
 import java.io.IOException;
 import java.io.InputStream;

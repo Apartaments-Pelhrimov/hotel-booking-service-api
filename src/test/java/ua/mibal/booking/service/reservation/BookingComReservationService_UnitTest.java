@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service;
+package ua.mibal.booking.service.reservation;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -35,6 +35,7 @@ import ua.mibal.booking.model.entity.ApartmentInstance;
 import ua.mibal.booking.model.entity.Event;
 import ua.mibal.booking.model.exception.service.BookingComServiceException;
 import ua.mibal.booking.model.request.ReservationRequest;
+import ua.mibal.booking.service.ICalService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -122,7 +123,7 @@ class BookingComReservationService_UnitTest {
         when(iCalService.getEventsFromCalendarFile(any()))
                 .thenReturn(events);
 
-        boolean actual = service.isFreeForReservation(apartmentInstance, new ReservationRequest(from, to, -1, -1L));
+        boolean actual = service.isFreeForReservation(apartmentInstance, new ReservationRequest(from, to, -1, -1L, "ignored"));
 
         assertEquals(expected, actual);
     }

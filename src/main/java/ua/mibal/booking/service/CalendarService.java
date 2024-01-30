@@ -25,6 +25,7 @@ import ua.mibal.booking.model.entity.ApartmentInstance;
 import ua.mibal.booking.model.entity.Event;
 import ua.mibal.booking.model.entity.HotelTurningOffTime;
 import ua.mibal.booking.repository.HotelTurningOffRepository;
+import ua.mibal.booking.service.reservation.BookingComReservationService;
 
 import java.util.Collection;
 import java.util.List;

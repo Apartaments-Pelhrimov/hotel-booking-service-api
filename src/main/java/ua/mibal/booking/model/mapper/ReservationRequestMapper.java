@@ -33,14 +33,15 @@ import java.time.LocalDateTime;
 public class ReservationRequestMapper {
     private final DateTimeUtils dateTimeUtils;
 
-    public ReservationRequest toReservationRequest(ReservationRequestDto reservationRequestDto, Long apartmentId) {
+    public ReservationRequest toRequest(ReservationRequestDto reservationRequestDto, Long apartmentId, String userEmail) {
         LocalDateTime from = dateTimeUtils.reserveFrom(reservationRequestDto.from());
         LocalDateTime to = dateTimeUtils.reserveTo(reservationRequestDto.to());
         return new ReservationRequest(
                 from,
                 to,
                 reservationRequestDto.people(),
-                apartmentId
+                apartmentId,
+                userEmail
         );
     }
 }

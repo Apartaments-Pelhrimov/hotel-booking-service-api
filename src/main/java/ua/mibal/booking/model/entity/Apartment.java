@@ -42,11 +42,11 @@ import org.hibernate.type.NumericBooleanConverter;
 import ua.mibal.booking.model.entity.embeddable.ApartmentOptions;
 import ua.mibal.booking.model.entity.embeddable.Photo;
 import ua.mibal.booking.model.entity.embeddable.Price;
+import ua.mibal.booking.model.exception.entity.PriceNotFoundException;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 
 import static lombok.AccessLevel.PRIVATE;
 
@@ -195,10 +195,11 @@ public class Apartment {
         return this.photos.remove(photo);
     }
 
-    public Optional<Price> getPriceForPeople(Integer people) {
+    public Price getPriceForPeople(Integer people) {
         return getPrices().stream()
                 .filter(pr -> people.equals(pr.getPerson()))
-                .findFirst();
+                .findFirst()
+                .orElseThrow(() -> new PriceNotFoundException(people));
     }
 
     public void putPrice(Price price) {

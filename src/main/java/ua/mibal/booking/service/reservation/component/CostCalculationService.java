@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service;
+package ua.mibal.booking.service.reservation.component;
 
 import org.springframework.stereotype.Service;
 import ua.mibal.booking.model.exception.IllegalReservationDateRangeException;
 import ua.mibal.booking.model.exception.service.CostCalculationServiceException;
+import ua.mibal.booking.model.request.ReservationRequest;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -33,24 +34,33 @@ import static java.math.BigDecimal.ZERO;
 @Service
 public class CostCalculationService {
 
-    public BigDecimal calculatePrice(BigDecimal oneNightPrice, LocalDate from, LocalDate to) {
-        validate(oneNightPrice, from, to);
-        BigDecimal nights = calculateNights(from, to);
-        return oneNightPrice.multiply(nights);
+    // TODO rename cost to price
+
+    public BigDecimal calculatePrice(BigDecimal oneNightPrice,
+                                     ReservationRequest request) {
+        validatePriceIsPositive(oneNightPrice);
+        validateReservationDates(request);
+        BigDecimal nights = calculateNights(request);
+        return nights.multiply(oneNightPrice);
     }
 
-    private BigDecimal calculateNights(LocalDate from, LocalDate to) {
+    private BigDecimal calculateNights(ReservationRequest request) {
+        LocalDate from = request.from().toLocalDate();
+        LocalDate to = request.to().toLocalDate();
         int nights = Period.between(from, to).getDays();
         return BigDecimal.valueOf(nights);
     }
 
-    private void validate(BigDecimal price, LocalDate from, LocalDate to) {
+    private void validatePriceIsPositive(BigDecimal price) {
         if (price.compareTo(ZERO) < 0) {
             throw new CostCalculationServiceException(
                     "Illegal one night price=" + price
             );
         }
-        if (!from.isBefore(to)) {
+    }
+
+    private void validateReservationDates(ReservationRequest request) {
+        if (!request.from().isBefore(request.to())) {
             throw new IllegalReservationDateRangeException();
         }
     }

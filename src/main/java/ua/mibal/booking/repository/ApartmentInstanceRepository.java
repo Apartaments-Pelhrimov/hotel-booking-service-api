@@ -19,6 +19,7 @@ package ua.mibal.booking.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ua.mibal.booking.model.entity.ApartmentInstance;
+import ua.mibal.booking.model.request.ReservationRequest;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -33,6 +34,8 @@ public interface ApartmentInstanceRepository extends JpaRepository<ApartmentInst
     @Query("""
             select ai
                 from ApartmentInstance ai
+                left join fetch ai.apartment a
+                left join fetch a.prices
             where
                 ai.apartment.id = ?1
                 and (select (count(r.id) = 0)
@@ -52,7 +55,16 @@ public interface ApartmentInstanceRepository extends JpaRepository<ApartmentInst
                         where a.id = ?1
                             and p.person = ?4)
             """)
-    List<ApartmentInstance> findFreeByRequest(Long id, LocalDateTime from, LocalDateTime to, int people);
+    List<ApartmentInstance> findFreeByRequestFetchApartmentAndPrices(Long id, LocalDateTime from, LocalDateTime to, int people);
+
+    default List<ApartmentInstance> findFreeByRequestFetchApartmentAndPrices(ReservationRequest request) {
+        return findFreeByRequestFetchApartmentAndPrices(
+                request.apartmentId(),
+                request.from(),
+                request.to(),
+                request.people()
+        );
+    }
 
     @Query("""
             select ai

@@ -24,6 +24,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ua.mibal.booking.model.request.ReservationRequest;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -51,4 +52,8 @@ public class ReservationDetails {
 
     @Embedded
     private Price price;
+
+    public static ReservationDetails of(ReservationRequest request, BigDecimal reservationPrice, Price oneNightPriceOption) {
+        return new ReservationDetails(request.from(), request.to(), reservationPrice, oneNightPriceOption);
+    }
 }

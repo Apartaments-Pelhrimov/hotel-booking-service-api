@@ -25,11 +25,10 @@ import ua.mibal.booking.model.exception.ApartmentIsNotAvailableForReservation;
 import ua.mibal.booking.model.exception.entity.ApartmentInstanceNotFoundException;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.model.mapper.ApartmentInstanceMapper;
-import ua.mibal.booking.model.mapper.ReservationRequestMapper;
 import ua.mibal.booking.model.request.ReservationRequest;
-import ua.mibal.booking.model.request.ReservationRequestDto;
 import ua.mibal.booking.repository.ApartmentInstanceRepository;
 import ua.mibal.booking.repository.ApartmentRepository;
+import ua.mibal.booking.service.reservation.BookingComReservationService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,12 +45,8 @@ public class ApartmentInstanceService {
     private final ApartmentRepository apartmentRepository;
     private final BookingComReservationService bookingComReservationService;
     private final ApartmentInstanceMapper apartmentInstanceMapper;
-    private final ReservationRequestMapper reservationRequestMapper;
 
-    public ApartmentInstance getFreeOne(Long apartmentId,
-                                        ReservationRequestDto requestDto) {
-        ReservationRequest request =
-                reservationRequestMapper.toReservationRequest(requestDto, apartmentId);
+    public ApartmentInstance getFreeOneFetchApartmentAndPrices(ReservationRequest request) {
         List<ApartmentInstance> free = getFree(request);
         return selectMostSuitable(free, request);
     }
@@ -83,12 +78,8 @@ public class ApartmentInstanceService {
     }
 
     private List<ApartmentInstance> getFreeLocal(ReservationRequest reservationRequest) {
-        List<ApartmentInstance> freeLocal = apartmentInstanceRepository.findFreeByRequest(
-                reservationRequest.apartmentId(),
-                reservationRequest.from(),
-                reservationRequest.to(),
-                reservationRequest.people()
-        );
+        List<ApartmentInstance> freeLocal =
+                apartmentInstanceRepository.findFreeByRequestFetchApartmentAndPrices(reservationRequest);
         return new ArrayList<>(freeLocal);
     }
 

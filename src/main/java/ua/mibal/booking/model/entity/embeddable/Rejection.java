@@ -48,4 +48,8 @@ public class Rejection {
 
     @Column(nullable = false)
     private String reason;
+
+    public static Rejection of(User user, String reason) {
+        return new Rejection(user, reason);
+    }
 }

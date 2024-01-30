@@ -33,9 +33,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OrderColumn;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ua.mibal.booking.model.entity.embeddable.Rejection;
 import ua.mibal.booking.model.entity.embeddable.ReservationDetails;
@@ -44,12 +43,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static ua.mibal.booking.model.entity.Reservation.State.PROCESSED;
+
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Builder
-@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -105,8 +105,20 @@ public class Reservation implements Event {
     @Column(nullable = false)
     private State state;
 
-    public Reservation() {
-        this.setState(State.PROCESSED);
+    private Reservation(User user,
+                        ApartmentInstance apartmentInstance,
+                        ReservationDetails details) {
+        this.user = user;
+        this.apartmentInstance = apartmentInstance;
+        this.details = details;
+        this.dateTime = LocalDateTime.now();
+        this.state = PROCESSED;
+    }
+
+    public static Reservation of(User user,
+                                 ApartmentInstance apartmentInstance,
+                                 ReservationDetails details) {
+        return new Reservation(user, apartmentInstance, details);
     }
 
     @Override
@@ -125,9 +137,9 @@ public class Reservation implements Event {
         return getClass().hashCode();
     }
 
-    public void reject(Rejection rejection) {
+    public void reject(User user, String reason) {
         this.state = State.REJECTED;
-        this.rejections.add(rejection);
+        this.rejections.add(Rejection.of(user, reason));
     }
 
     @Override

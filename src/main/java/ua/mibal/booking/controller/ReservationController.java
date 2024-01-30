@@ -32,8 +32,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ua.mibal.booking.model.dto.request.ReservationRejectingFormDto;
 import ua.mibal.booking.model.dto.response.ReservationDto;
+import ua.mibal.booking.model.mapper.ReservationRequestMapper;
+import ua.mibal.booking.model.request.ReservationRequest;
 import ua.mibal.booking.model.request.ReservationRequestDto;
-import ua.mibal.booking.service.ReservationService;
+import ua.mibal.booking.service.reservation.ReservationService;
 
 /**
  * @author Mykhailo Balakhon
@@ -44,14 +46,17 @@ import ua.mibal.booking.service.ReservationService;
 @RequestMapping("/api")
 public class ReservationController {
     private final ReservationService reservationService;
+    private final ReservationRequestMapper reservationRequestMapper;
 
     @RolesAllowed("USER")
     @PatchMapping("/apartments/{id}/reserve")
     @ResponseStatus(HttpStatus.CREATED)
     public void create(@PathVariable Long id,
-                       @Valid ReservationRequestDto request,
+                       @Valid ReservationRequestDto requestDto,
                        Authentication authentication) {
-        reservationService.create(id, authentication.getName(), request);
+        ReservationRequest request =
+                reservationRequestMapper.toRequest(requestDto, id, authentication.getName());
+        reservationService.create(request);
     }
 
     @RolesAllowed("USER")
@@ -61,21 +66,12 @@ public class ReservationController {
     }
 
     @RolesAllowed("USER")
-    @PatchMapping("/users/me/reservations/{id}/reject")
+    @PatchMapping("/reservations/{id}/reject")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void rejectByUser(@PathVariable("id") Long id,
                              @Valid @RequestBody ReservationRejectingFormDto reservationRejectingFormDto,
                              Authentication authentication) {
-        reservationService.rejectByUser(id, reservationRejectingFormDto, authentication.getName());
-    }
-
-    @RolesAllowed("MANAGER")
-    @PatchMapping("/reservations/{id}/reject")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void rejectByManager(@PathVariable("id") Long id,
-                                @Valid @RequestBody ReservationRejectingFormDto reservationRejectingFormDto,
-                                Authentication authentication) {
-        reservationService.rejectByManager(id, reservationRejectingFormDto, authentication.getName());
+        reservationService.rejectReservation(id, authentication.getName(), reservationRejectingFormDto.reason());
     }
 
     @RolesAllowed("MANAGER")

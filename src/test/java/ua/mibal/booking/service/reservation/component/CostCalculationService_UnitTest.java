@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service;
+package ua.mibal.booking.service.reservation.component;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -22,17 +22,20 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import ua.mibal.booking.model.exception.IllegalReservationDateRangeException;
 import ua.mibal.booking.model.exception.service.CostCalculationServiceException;
+import ua.mibal.booking.model.request.ReservationRequest;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Mykhailo Balakhon
@@ -45,6 +48,9 @@ class CostCalculationService_UnitTest {
 
     private CostCalculationService service;
 
+    @Mock
+    private ReservationRequest request;
+
     @BeforeEach
     void setup() {
         service = new CostCalculationService();
@@ -53,7 +59,10 @@ class CostCalculationService_UnitTest {
     @ParameterizedTest
     @MethodSource("ua.mibal.booking.testUtils.DataGenerator#correctPriceCalculation")
     void calculatePrice(BigDecimal oneNightPrice, LocalDate from, LocalDate to, BigDecimal expected) {
-        var actual = service.calculatePrice(oneNightPrice, from, to);
+        when(request.from()).thenReturn(from.atStartOfDay());
+        when(request.to()).thenReturn(to.atStartOfDay());
+
+        var actual = service.calculatePrice(oneNightPrice, request);
         assertEquals(expected, actual);
     }
 
@@ -62,9 +71,12 @@ class CostCalculationService_UnitTest {
     void calculatePrice_should_throw_CostCalculationServiceException(BigDecimal oneNightPrice,
                                                                      LocalDate from,
                                                                      LocalDate to) {
+        when(request.from()).thenReturn(from.atStartOfDay());
+        when(request.to()).thenReturn(to.atStartOfDay());
+
         assertThrows(
                 CostCalculationServiceException.class,
-                () -> service.calculatePrice(oneNightPrice, from, to)
+                () -> service.calculatePrice(oneNightPrice, request)
         );
     }
 
@@ -73,9 +85,12 @@ class CostCalculationService_UnitTest {
     void calculatePrice_should_throw_IllegalReservationDateRangeException(BigDecimal oneNightPrice,
                                                                           LocalDate from,
                                                                           LocalDate to) {
+        when(request.from()).thenReturn(from.atStartOfDay());
+        when(request.to()).thenReturn(to.atStartOfDay());
+
         assertThrows(
                 IllegalReservationDateRangeException.class,
-                () -> service.calculatePrice(oneNightPrice, from, to)
+                () -> service.calculatePrice(oneNightPrice, request)
         );
     }
 }

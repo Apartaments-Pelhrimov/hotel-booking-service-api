@@ -32,11 +32,10 @@ import ua.mibal.booking.model.exception.ApartmentIsNotAvailableForReservation;
 import ua.mibal.booking.model.exception.entity.ApartmentInstanceNotFoundException;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.model.mapper.ApartmentInstanceMapper;
-import ua.mibal.booking.model.mapper.ReservationRequestMapper;
 import ua.mibal.booking.model.request.ReservationRequest;
-import ua.mibal.booking.model.request.ReservationRequestDto;
 import ua.mibal.booking.repository.ApartmentInstanceRepository;
 import ua.mibal.booking.repository.ApartmentRepository;
+import ua.mibal.booking.service.reservation.BookingComReservationService;
 import ua.mibal.booking.service.util.DateTimeUtils;
 
 import java.time.LocalDate;
@@ -67,8 +66,6 @@ class ApartmentInstanceService_UnitTest {
     @Mock
     private ApartmentInstanceRepository apartmentInstanceRepository;
     @Mock
-    private ReservationRequestMapper reservationRequestMapper;
-    @Mock
     private ApartmentRepository apartmentRepository;
     @Mock
     private DateTimeUtils dateTimeUtils;
@@ -92,21 +89,19 @@ class ApartmentInstanceService_UnitTest {
 
     @BeforeEach
     void setup() {
-        service = new ApartmentInstanceService(apartmentInstanceRepository, apartmentRepository, bookingComReservationService, apartmentInstanceMapper, reservationRequestMapper);
+        service = new ApartmentInstanceService(apartmentInstanceRepository, apartmentRepository, bookingComReservationService, apartmentInstanceMapper);
     }
 
     @Test
     void getFreeOne() {
+        String userEmail = "userEmail";
         Long id = 1L;
         int people = 1;
-        ReservationRequest reservationRequest = new ReservationRequest(MIN, MAX, people, id);
-        ReservationRequestDto reservationRequestDto = new ReservationRequestDto(dateFrom, dateTo, people);
+        ReservationRequest reservationRequest = new ReservationRequest(MIN, MAX, people, id, userEmail);
 
         when(dateTimeUtils.reserveFrom(dateFrom)).thenReturn(MIN);
         when(dateTimeUtils.reserveTo(dateTo)).thenReturn(MAX);
-        when(reservationRequestMapper.toReservationRequest(reservationRequestDto, id))
-                .thenReturn(reservationRequest);
-        when(apartmentInstanceRepository.findFreeByRequest(id, MIN, MAX, people))
+        when(apartmentInstanceRepository.findFreeByRequestFetchApartmentAndPrices(id, MIN, MAX, people))
                 .thenReturn(List.of(apartmentInstance2, apartmentInstance));
         when(bookingComReservationService.isFreeForReservation(apartmentInstance2, reservationRequest))
                 .thenReturn(false);
@@ -114,28 +109,26 @@ class ApartmentInstanceService_UnitTest {
                 .thenReturn(true);
 
         ApartmentInstance actual = service
-                .getFreeOne(id, reservationRequestDto);
+                .getFreeOneFetchApartmentAndPrices(reservationRequest);
 
         assertEquals(apartmentInstance, actual);
     }
 
     @Test
     void getFreeOne_should_throw_FreeApartmentsForDateNotFoundException() {
+        String userEmail = "userEmail";
         Long id = 1L;
         int people = 1;
-        ReservationRequest reservationRequest = new ReservationRequest(MIN, MAX, people, id);
-        ReservationRequestDto reservationRequestDto = new ReservationRequestDto(dateFrom, dateTo, people);
+        ReservationRequest reservationRequest = new ReservationRequest(MIN, MAX, people, id, userEmail);
 
         when(dateTimeUtils.reserveFrom(dateFrom)).thenReturn(MIN);
         when(dateTimeUtils.reserveTo(dateTo)).thenReturn(MAX);
-        when(reservationRequestMapper.toReservationRequest(reservationRequestDto, id))
-                .thenReturn(reservationRequest);
-        when(apartmentInstanceRepository.findFreeByRequest(id, MIN, MAX, people))
+        when(apartmentInstanceRepository.findFreeByRequestFetchApartmentAndPrices(id, MIN, MAX, people))
                 .thenReturn(List.of());
 
         ApartmentIsNotAvailableForReservation e = assertThrows(
                 ApartmentIsNotAvailableForReservation.class,
-                () -> service.getFreeOne(id, reservationRequestDto)
+                () -> service.getFreeOneFetchApartmentAndPrices(reservationRequest)
         );
 
         assertEquals(

@@ -136,7 +136,7 @@ class ApartmentInstanceRepository_UnitTest {
                 prepareCaseWithoutReservationsAndWithIntersectingReservaitons(
                         5, requestFrom, requestTo);
 
-        List<ApartmentInstance> freeByRequest = repo.findFreeByRequest(
+        List<ApartmentInstance> freeByRequest = repo.findFreeByRequestFetchApartmentAndPrices(
                 apartment.getId(), requestFrom, requestTo, people);
 
         assertThat(freeByRequest).isEmpty();
@@ -150,7 +150,7 @@ class ApartmentInstanceRepository_UnitTest {
 
         Apartment apartment = prepareCaseWithoutApartmentInstances(people);
 
-        List<ApartmentInstance> freeByRequest = repo.findFreeByRequest(
+        List<ApartmentInstance> freeByRequest = repo.findFreeByRequestFetchApartmentAndPrices(
                 apartment.getId(), requestFrom, requestTo, people);
 
         assertThat(freeByRequest).isEmpty();
@@ -165,7 +165,7 @@ class ApartmentInstanceRepository_UnitTest {
         Apartment apartment =
                 prepareCaseWithIntersectingReservations(people, requestFrom, requestTo);
 
-        List<ApartmentInstance> freeByRequest = repo.findFreeByRequest(
+        List<ApartmentInstance> freeByRequest = repo.findFreeByRequestFetchApartmentAndPrices(
                 apartment.getId(), requestFrom, requestTo, people);
 
         assertThat(freeByRequest).isEmpty();
@@ -179,7 +179,7 @@ class ApartmentInstanceRepository_UnitTest {
 
         Apartment apartment = prepareCaseWithoutReservations(people);
 
-        List<ApartmentInstance> freeByRequest = repo.findFreeByRequest(
+        List<ApartmentInstance> freeByRequest = repo.findFreeByRequestFetchApartmentAndPrices(
                 apartment.getId(), requestFrom, requestTo, people);
 
         assertThat(freeByRequest).hasSize(1);
@@ -195,7 +195,7 @@ class ApartmentInstanceRepository_UnitTest {
                 prepareCaseWithoutReservationsAndWithIntersectingReservaitons(
                         people, requestFrom, requestTo);
 
-        List<ApartmentInstance> freeByRequest = repo.findFreeByRequest(
+        List<ApartmentInstance> freeByRequest = repo.findFreeByRequestFetchApartmentAndPrices(
                 apartment.getId(), requestFrom, requestTo, people);
 
         Assertions.assertTrue(freeByRequest.stream()

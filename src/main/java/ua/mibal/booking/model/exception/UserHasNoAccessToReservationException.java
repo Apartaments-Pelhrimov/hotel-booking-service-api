@@ -14,19 +14,17 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.request;
+package ua.mibal.booking.model.exception;
 
-import java.time.LocalDateTime;
+import ua.mibal.booking.model.exception.marker.BadRequestException;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public record ReservationRequest(
-        LocalDateTime from,
-        LocalDateTime to,
-        int people,
-        Long apartmentId,
-        String userEmail
-) {
+public class UserHasNoAccessToReservationException extends BadRequestException {
+
+    public UserHasNoAccessToReservationException() {
+        super("bad-request-error.user-has-no-access-to-reservation");
+    }
 }

@@ -22,7 +22,6 @@ import ua.mibal.booking.config.properties.CalendarProps.ReservationDateTimeProps
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.YearMonth;
 
 /**
  * @author Mykhailo Balakhon
@@ -32,14 +31,6 @@ import java.time.YearMonth;
 @Component
 public class DateTimeUtils {
     private final ReservationDateTimeProps reservationDateTimeProps;
-
-    public static LocalDateTime monthStartWithTime(YearMonth yearMonth) {
-        return yearMonth.atDay(1).atStartOfDay();
-    }
-
-    public static LocalDateTime monthEndWithTime(YearMonth yearMonth) {
-        return yearMonth.atEndOfMonth().atTime(23, 59);
-    }
 
     public LocalDateTime reserveFrom(LocalDate from) {
         return LocalDateTime.of(from, reservationDateTimeProps.reservationStart());
