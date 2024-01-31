@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.security.component;
+package ua.mibal.booking.service.security.jwt.component;
 
 import lombok.Getter;
 import org.junit.jupiter.api.BeforeEach;
