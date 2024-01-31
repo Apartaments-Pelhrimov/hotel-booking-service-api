@@ -18,7 +18,7 @@ package ua.mibal.booking.service.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ua.mibal.booking.config.properties.ActivationCodeProps;
+import ua.mibal.booking.config.properties.TokenProps;
 
 import java.util.Random;
 
@@ -28,25 +28,25 @@ import java.util.Random;
  */
 @RequiredArgsConstructor
 @Service
-public class CodeGenerationService {
+public class TokenGenerationService {
     private static final String ALLOWED_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
                                                 "abcdefghijklmnopqrstuvwxyz" +
                                                 "0123456789" + "0123456789" +
                                                 "0123456789" + "0123456789";
     private static final Random RANDOM = new Random();
 
-    private final ActivationCodeProps activationCodeProps;
+    private final TokenProps tokenProps;
 
-    public String generateCode() {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < activationCodeProps.length(); i++) {
-            char randomChar = getRandomCharacter();
-            stringBuilder.append(randomChar);
+    public String generateTokenValue() {
+        StringBuilder token = new StringBuilder();
+        for (int i = 0; i < tokenProps.length(); i++) {
+            char randomChar = getRandomChar();
+            token.append(randomChar);
         }
-        return stringBuilder.toString();
+        return token.toString();
     }
 
-    private char getRandomCharacter() {
+    private char getRandomChar() {
         int maxIndex = ALLOWED_CHARS.length();
         int randomIndex = RANDOM.nextInt(maxIndex);
         return ALLOWED_CHARS.charAt(randomIndex);

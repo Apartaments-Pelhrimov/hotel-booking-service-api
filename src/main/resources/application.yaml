@@ -21,8 +21,9 @@ jwt:
   validForDays: 30
   issuer: https://apartmany-pe.cz/
 
-activation-code:
+token:
   length: 60
+  valid-for-minutes: 30
 
 aws:
   access-key-id: ${AWS_ACCESS_KEY_ID}

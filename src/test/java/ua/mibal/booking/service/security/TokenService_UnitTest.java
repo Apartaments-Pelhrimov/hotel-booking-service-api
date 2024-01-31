@@ -25,6 +25,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import ua.mibal.booking.config.properties.TokenProps;
 import ua.mibal.booking.model.entity.Token;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.exception.entity.TokenNotFoundException;
@@ -52,7 +53,9 @@ class TokenService_UnitTest {
     @Mock
     private TokenRepository tokenRepository;
     @Mock
-    private CodeGenerationService codeGenerationService;
+    private TokenGenerationService tokenGenerationService;
+    @Mock
+    private TokenProps tokenProps;
 
     @Mock
     private User user;
@@ -61,20 +64,23 @@ class TokenService_UnitTest {
 
     @BeforeEach
     void setup() {
-        service = new TokenService(tokenRepository, codeGenerationService);
+        service = new TokenService(tokenRepository, tokenGenerationService, tokenProps);
     }
 
     @Test
     void generateAndSaveTokenFor_should_generate_and_save() {
         String tokenValue = "code";
+        int validForMinutes = 100500;
 
-        when(codeGenerationService.generateCode())
+        when(tokenGenerationService.generateTokenValue())
                 .thenReturn(tokenValue);
+        when(tokenProps.validForMinutes())
+                .thenReturn(validForMinutes);
 
         service.generateAndSaveTokenFor(user);
 
         verify(tokenRepository, times(1))
-                .save(Token.of(tokenValue, user));
+                .save(Token.of(tokenValue, user, validForMinutes));
     }
 
     @Test

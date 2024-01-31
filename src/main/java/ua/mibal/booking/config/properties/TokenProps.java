@@ -17,6 +17,7 @@
 package ua.mibal.booking.config.properties;
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -24,10 +25,15 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@ConfigurationProperties("activation-code")
-public record ActivationCodeProps(
+@ConfigurationProperties("token")
+public record TokenProps(
+
         @NotNull
         @Size(min = 10, max = 1_000)
-        int length
+        int length,
+
+        @NotNull
+        @Positive
+        int validForMinutes
 ) {
 }

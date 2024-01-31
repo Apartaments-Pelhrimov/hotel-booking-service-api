@@ -32,6 +32,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.NaturalId;
 
+import java.time.LocalDateTime;
+
+import static java.time.LocalDateTime.now;
+
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
@@ -62,12 +66,24 @@ public class Token {
     @Column(nullable = false, unique = true, length = 511)
     private String value;
 
-    private Token(String value, User user) {
-        this.value = value;
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
+
+    @Column(nullable = false)
+    private LocalDateTime expiresAt;
+
+    private Token(String value, User user, int validForMinutes) {
+        this.createdAt = now();
+        this.expiresAt = createdAt.plusMinutes(validForMinutes);
         this.user = user;
+        this.value = value;
     }
 
-    public static Token of(String value, User user) {
-        return new Token(value, user);
+    public static Token of(String value, User user, int validForMinutes) {
+        return new Token(value, user, validForMinutes);
+    }
+
+    public boolean isExpired() {
+        return expiresAt.isBefore(now());
     }
 }

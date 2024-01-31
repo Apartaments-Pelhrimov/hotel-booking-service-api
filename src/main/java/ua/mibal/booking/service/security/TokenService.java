@@ -19,8 +19,10 @@ package ua.mibal.booking.service.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ua.mibal.booking.config.properties.TokenProps;
 import ua.mibal.booking.model.entity.Token;
 import ua.mibal.booking.model.entity.User;
+import ua.mibal.booking.model.exception.TokenExpiredException;
 import ua.mibal.booking.model.exception.entity.TokenNotFoundException;
 import ua.mibal.booking.repository.TokenRepository;
 
@@ -32,7 +34,8 @@ import ua.mibal.booking.repository.TokenRepository;
 @Service
 public class TokenService {
     private final TokenRepository tokenRepository;
-    private final CodeGenerationService codeGenerationService;
+    private final TokenGenerationService tokenGenerationService;
+    private final TokenProps tokenProps;
 
     @Transactional
     public Token generateAndSaveTokenFor(User user) {
@@ -40,13 +43,19 @@ public class TokenService {
         return tokenRepository.save(token);
     }
 
-    public Token getOneByValue(String code) {
-        return tokenRepository.findByValue(code)
-                .orElseThrow(() -> new TokenNotFoundException(code));
+    @Transactional
+    public Token getOneByValue(String tokenValue) {
+        Token token = tokenRepository.findByValue(tokenValue)
+                .orElseThrow(() -> new TokenNotFoundException(tokenValue));
+        if (token.isExpired()) {
+            tokenRepository.delete(token);
+            throw new TokenExpiredException(tokenValue);
+        }
+        return token;
     }
 
     private Token generateTokenFor(User user) {
-        String value = codeGenerationService.generateCode();
-        return Token.of(value, user);
+        String value = tokenGenerationService.generateTokenValue();
+        return Token.of(value, user, tokenProps.validForMinutes());
     }
 }

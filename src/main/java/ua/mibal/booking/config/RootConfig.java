@@ -29,11 +29,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.services.s3.S3Client;
-import ua.mibal.booking.config.properties.ActivationCodeProps;
 import ua.mibal.booking.config.properties.AwsProps;
 import ua.mibal.booking.config.properties.CalendarProps;
 import ua.mibal.booking.config.properties.EmailProps;
 import ua.mibal.booking.config.properties.LocalizedMessagesProps;
+import ua.mibal.booking.config.properties.TokenProps;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.entity.embeddable.Phone;
 import ua.mibal.booking.model.entity.embeddable.Role;
@@ -54,7 +54,7 @@ import java.util.Properties;
         CalendarProps.class,
         CalendarProps.ReservationDateTimeProps.class,
         CalendarProps.ICalProps.class,
-        ActivationCodeProps.class,
+        TokenProps.class,
         EmailProps.class,
         LocalizedMessagesProps.class,
 })

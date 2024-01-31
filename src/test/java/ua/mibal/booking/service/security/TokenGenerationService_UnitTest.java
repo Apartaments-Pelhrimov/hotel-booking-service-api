@@ -27,7 +27,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import ua.mibal.booking.config.properties.ActivationCodeProps;
+import ua.mibal.booking.config.properties.TokenProps;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -42,37 +42,37 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-class CodeGenerationService_UnitTest {
+class TokenGenerationService_UnitTest {
 
-    private CodeGenerationService service;
+    private TokenGenerationService service;
 
     @Mock
-    private ActivationCodeProps activationCodeProps;
+    private TokenProps tokenProps;
 
     @BeforeEach
     void setup() {
-        service = new CodeGenerationService(activationCodeProps);
+        service = new TokenGenerationService(tokenProps);
     }
 
     @ParameterizedTest
     @CsvSource({"0", "1", "10", "20", "100", "1_000", "100_000"})
-    void generateCode_length_props(int codeLength) {
-        when(activationCodeProps.length())
+    void generateTokenValue_length_props(int codeLength) {
+        when(tokenProps.length())
                 .thenReturn(codeLength);
 
-        var actual = service.generateCode();
+        var actual = service.generateTokenValue();
 
         assertEquals(codeLength, actual.length());
     }
 
     @Test
-    void generateCode_should_not_contain_url_specific_chars() {
+    void generateTokenValue_should_not_contain_url_specific_chars() {
         int codeLength = 100_000;
 
-        when(activationCodeProps.length())
+        when(tokenProps.length())
                 .thenReturn(codeLength);
 
-        var actual = service.generateCode();
+        var actual = service.generateTokenValue();
 
         String encodedCode = URLEncoder.encode(actual, StandardCharsets.UTF_8);
         assertEquals(actual, encodedCode);
