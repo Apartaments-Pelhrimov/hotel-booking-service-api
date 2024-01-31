@@ -29,7 +29,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import ua.mibal.booking.config.properties.EmailProps;
-import ua.mibal.booking.model.entity.ActivationCode;
+import ua.mibal.booking.model.entity.Token;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.exception.marker.InternalServerException;
 import ua.mibal.booking.service.email.model.Email;
@@ -61,7 +61,7 @@ class EmailBuilder_UnitTest {
     @Mock
     private EmailType type;
     @Mock
-    private ActivationCode activationCode;
+    private Token token;
     @Mock
     private User user;
     @Mock
@@ -89,18 +89,18 @@ class EmailBuilder_UnitTest {
         String recipient = "recipientEmail";
         String sender = "senderEmail";
 
-        when(activationCode.getUser())
+        when(token.getUser())
                 .thenReturn(user);
         when(user.getEmail())
                 .thenReturn(recipient);
-        when(contentProvider.getEmailContentBy(type, activationCode))
+        when(contentProvider.getEmailContentBy(type, token))
                 .thenReturn(content);
         when(props.username())
                 .thenReturn(sender);
         when(Email.of(session, sender, recipient, content))
                 .thenReturn(email);
 
-        Email actual = builder.buildUserEmail(type, activationCode);
+        Email actual = builder.buildUserEmail(type, token);
 
         assertEquals(email, actual);
     }

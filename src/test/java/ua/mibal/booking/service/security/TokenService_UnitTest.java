@@ -25,16 +25,15 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import ua.mibal.booking.model.entity.ActivationCode;
+import ua.mibal.booking.model.entity.Token;
 import ua.mibal.booking.model.entity.User;
-import ua.mibal.booking.model.exception.entity.ActivationCodeNotFoundException;
-import ua.mibal.booking.repository.ActivationCodeRepository;
+import ua.mibal.booking.model.exception.entity.TokenNotFoundException;
+import ua.mibal.booking.repository.TokenRepository;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -46,56 +45,56 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-class ActivationCodeService_UnitTest {
+class TokenService_UnitTest {
 
-    private ActivationCodeService service;
+    private TokenService service;
 
     @Mock
-    private ActivationCodeRepository activationCodeRepository;
+    private TokenRepository tokenRepository;
     @Mock
     private CodeGenerationService codeGenerationService;
 
     @Mock
     private User user;
     @Mock
-    private ActivationCode activationCode;
+    private Token token;
 
     @BeforeEach
     void setup() {
-        service = new ActivationCodeService(activationCodeRepository, codeGenerationService);
+        service = new TokenService(tokenRepository, codeGenerationService);
     }
 
     @Test
-    void generateAndSaveCodeFor_should_generate_and_save() {
-        String code = "code";
+    void generateAndSaveTokenFor_should_generate_and_save() {
+        String tokenValue = "code";
 
         when(codeGenerationService.generateCode())
-                .thenReturn(code);
+                .thenReturn(tokenValue);
 
-        service.generateAndSaveCodeFor(user);
+        service.generateAndSaveTokenFor(user);
 
-        verify(activationCodeRepository, times(1))
-                .save(new ActivationCode(any(), user, code));
+        verify(tokenRepository, times(1))
+                .save(Token.of(tokenValue, user));
     }
 
     @Test
-    void getOneByCode() {
-        String code = "code";
-        when(activationCodeRepository.findByCode(code))
-                .thenReturn(Optional.of(activationCode));
+    void getOneByValue() {
+        String tokenValue = "code";
+        when(tokenRepository.findByValue(tokenValue))
+                .thenReturn(Optional.of(token));
 
-        var actual = service.getOneByCode(code);
+        var actual = service.getOneByValue(tokenValue);
 
-        assertEquals(activationCode, actual);
+        assertEquals(token, actual);
     }
 
     @Test
-    void getOneByCode_should_throw_ActivationCodeNotFoundException() {
-        String code = "code";
-        when(activationCodeRepository.findByCode(code))
+    void getOneByValue_should_throw_TokenNotFoundException() {
+        String tokenValue = "code";
+        when(tokenRepository.findByValue(tokenValue))
                 .thenReturn(Optional.empty());
 
-        assertThrows(ActivationCodeNotFoundException.class,
-                () -> service.getOneByCode(code));
+        assertThrows(TokenNotFoundException.class,
+                () -> service.getOneByValue(tokenValue));
     }
 }

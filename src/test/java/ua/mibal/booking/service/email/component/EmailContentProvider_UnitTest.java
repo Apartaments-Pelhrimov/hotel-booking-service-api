@@ -26,7 +26,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.context.MessageSource;
-import ua.mibal.booking.model.entity.ActivationCode;
+import ua.mibal.booking.model.entity.Token;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.exception.marker.InternalServerException;
 import ua.mibal.booking.service.email.model.EmailContent;
@@ -59,7 +59,7 @@ class EmailContentProvider_UnitTest {
     @Mock
     private EmailType emailType;
     @Mock
-    private ActivationCode activationCode;
+    private Token token;
     @Mock
     private InternalServerException e;
 
@@ -84,9 +84,9 @@ class EmailContentProvider_UnitTest {
 
         when(classpathFileReader.read(templatePath))
                 .thenReturn(templateContent);
-        when(activationCode.getUser())
+        when(token.getUser())
                 .thenReturn(new User());
-        when(activationCode.getCode())
+        when(token.getValue())
                 .thenReturn(code);
         when(emailType.getFrontLinkTemplate(code))
                 .thenReturn(frontLink);
@@ -94,7 +94,7 @@ class EmailContentProvider_UnitTest {
                 .thenReturn(insertedTemplate);
 
         EmailContent actual =
-                emailContentProvider.getEmailContentBy(emailType, activationCode);
+                emailContentProvider.getEmailContentBy(emailType, token);
 
         assertEquals(subject, actual.subject());
         assertEquals(insertedTemplate, actual.body());

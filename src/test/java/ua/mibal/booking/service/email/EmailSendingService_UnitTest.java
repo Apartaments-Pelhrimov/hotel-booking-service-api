@@ -31,7 +31,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import ua.mibal.booking.config.properties.EmailProps;
-import ua.mibal.booking.model.entity.ActivationCode;
+import ua.mibal.booking.model.entity.Token;
 import ua.mibal.booking.model.exception.marker.InternalServerException;
 import ua.mibal.booking.service.email.component.EmailBuilder;
 import ua.mibal.booking.service.email.model.Email;
@@ -60,7 +60,7 @@ class EmailSendingService_UnitTest {
     private EmailProps emailProps;
 
     @Mock
-    private ActivationCode activationCode;
+    private Token token;
     @Mock
     private Email email;
     @Mock
@@ -90,13 +90,13 @@ class EmailSendingService_UnitTest {
                 .thenReturn(username);
         when(emailProps.password())
                 .thenReturn(password);
-        when(emailBuilder.buildUserEmail(emailType, activationCode))
+        when(emailBuilder.buildUserEmail(emailType, token))
                 .thenReturn(email);
 
         if (emailType == ACCOUNT_ACTIVATION) {
-            service.sendAccountActivationEmail(activationCode);
+            service.sendAccountActivationEmail(token);
         } else if (emailType == PASSWORD_CHANGING) {
-            service.sendPasswordChangingEmail(activationCode);
+            service.sendPasswordChangingEmail(token);
         } else {
             throw new UnsupportedOperationException("Unsupported %s=%S".formatted(
                     emailType.getClass().getSimpleName(), emailType

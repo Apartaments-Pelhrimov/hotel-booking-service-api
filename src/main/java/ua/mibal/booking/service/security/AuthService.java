@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.model.dto.auth.AuthResponseDto;
 import ua.mibal.booking.model.dto.auth.ForgetPasswordDto;
 import ua.mibal.booking.model.dto.auth.RegistrationDto;
-import ua.mibal.booking.model.entity.ActivationCode;
+import ua.mibal.booking.model.entity.Token;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.exception.EmailAlreadyExistsException;
 import ua.mibal.booking.model.exception.entity.UserNotFoundException;
@@ -41,7 +41,7 @@ public class AuthService {
     private final JwtTokenService jwtTokenService;
     private final UserMapper userMapper;
     private final UserService userService;
-    private final ActivationCodeService activationCodeService;
+    private final TokenService tokenService;
     private final EmailSendingService emailSendingService;
 
     public AuthResponseDto login(User user) {
@@ -53,15 +53,15 @@ public class AuthService {
     public void register(RegistrationDto registrationDto) {
         validateEmailDoesNotExist(registrationDto.email());
         User user = userService.save(registrationDto);
-        ActivationCode activationCode =
-                activationCodeService.generateAndSaveCodeFor(user);
-        emailSendingService.sendAccountActivationEmail(activationCode);
+        Token token =
+                tokenService.generateAndSaveTokenFor(user);
+        emailSendingService.sendAccountActivationEmail(token);
     }
 
-    public void activateNewAccountBy(String code) {
-        ActivationCode activationCode =
-                activationCodeService.getOneByCode(code);
-        Long userId = activationCode.getUser().getId();
+    public void activateNewAccountBy(String tokenValue) {
+        Token token =
+                tokenService.getOneByValue(tokenValue);
+        Long userId = token.getUser().getId();
         userService.activateUserById(userId);
     }
 
@@ -76,17 +76,17 @@ public class AuthService {
     @Transactional
     public void setNewPassword(String code,
                                ForgetPasswordDto forgetPasswordDto) {
-        ActivationCode activationCode =
-                activationCodeService.getOneByCode(code);
-        Long userId = activationCode.getUser().getId();
+        Token token =
+                tokenService.getOneByValue(code);
+        Long userId = token.getUser().getId();
         userService.setNewPasswordForUser(userId, forgetPasswordDto.password());
     }
 
     private void restoreUserPassword(String email) {
         User user = userService.getOne(email);
-        ActivationCode activationCode =
-                activationCodeService.generateAndSaveCodeFor(user);
-        emailSendingService.sendPasswordChangingEmail(activationCode);
+        Token token =
+                tokenService.generateAndSaveTokenFor(user);
+        emailSendingService.sendPasswordChangingEmail(token);
     }
 
     private void validateEmailDoesNotExist(String email) {

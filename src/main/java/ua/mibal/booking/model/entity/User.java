@@ -107,7 +107,7 @@ public class User implements UserDetails {
     private List<Comment> comments = new ArrayList<>();
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private ActivationCode activationCode;
+    private Token token;
 
     public User() {
         this.setNotificationSettings(NotificationSettings.DEFAULT);

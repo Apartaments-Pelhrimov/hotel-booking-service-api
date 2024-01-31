@@ -20,7 +20,7 @@ import jakarta.mail.Session;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ua.mibal.booking.config.properties.EmailProps;
-import ua.mibal.booking.model.entity.ActivationCode;
+import ua.mibal.booking.model.entity.Token;
 import ua.mibal.booking.model.exception.marker.InternalServerException;
 import ua.mibal.booking.service.email.model.Email;
 import ua.mibal.booking.service.email.model.EmailContent;
@@ -38,9 +38,9 @@ public class EmailBuilder {
     private final EmailProps emailProps;
 
     public Email buildUserEmail(EmailType type,
-                                ActivationCode code) {
-        String recipient = code.getUser().getEmail();
-        EmailContent emailContent = emailContentProvider.getEmailContentBy(type, code);
+                                Token token) {
+        String recipient = token.getUser().getEmail();
+        EmailContent emailContent = emailContentProvider.getEmailContentBy(type, token);
         return buildEmailMessageOf(recipient, emailContent);
     }
 

@@ -19,7 +19,7 @@ package ua.mibal.booking.service.email.component;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
-import ua.mibal.booking.model.entity.ActivationCode;
+import ua.mibal.booking.model.entity.Token;
 import ua.mibal.booking.model.exception.marker.InternalServerException;
 import ua.mibal.booking.service.email.model.EmailContent;
 import ua.mibal.booking.service.email.model.EmailType;
@@ -37,9 +37,9 @@ public class EmailContentProvider {
     private final TemplateEngine templateEngine;
     private final MessageSource messageSource;
 
-    public EmailContent getEmailContentBy(EmailType type, ActivationCode code) {
+    public EmailContent getEmailContentBy(EmailType type, Token token) {
         String subject = type.getSubject(messageSource);
-        String body = generateBody(type, code);
+        String body = generateBody(type, token);
         return new EmailContent(subject, body);
     }
 
@@ -49,12 +49,12 @@ public class EmailContentProvider {
         return new EmailContent(subject, body);
     }
 
-    private String generateBody(EmailType type, ActivationCode code) {
+    private String generateBody(EmailType type, Token token) {
         String templatePath = type.getTemplatePath(messageSource);
         String sourceHtmlTemplate = fileReader.read(templatePath);
         return templateEngine.insertIntoTemplate(sourceHtmlTemplate, Map.of(
-                "user", code.getUser(),
-                "link", type.getFrontLinkTemplate(code.getCode())
+                "user", token.getUser(),
+                "link", type.getFrontLinkTemplate(token.getValue())
         ));
     }
 

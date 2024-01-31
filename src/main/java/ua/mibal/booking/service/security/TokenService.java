@@ -19,10 +19,10 @@ package ua.mibal.booking.service.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ua.mibal.booking.model.entity.ActivationCode;
+import ua.mibal.booking.model.entity.Token;
 import ua.mibal.booking.model.entity.User;
-import ua.mibal.booking.model.exception.entity.ActivationCodeNotFoundException;
-import ua.mibal.booking.repository.ActivationCodeRepository;
+import ua.mibal.booking.model.exception.entity.TokenNotFoundException;
+import ua.mibal.booking.repository.TokenRepository;
 
 /**
  * @author Mykhailo Balakhon
@@ -30,26 +30,23 @@ import ua.mibal.booking.repository.ActivationCodeRepository;
  */
 @RequiredArgsConstructor
 @Service
-public class ActivationCodeService {
-    private final ActivationCodeRepository activationCodeRepository;
+public class TokenService {
+    private final TokenRepository tokenRepository;
     private final CodeGenerationService codeGenerationService;
 
     @Transactional
-    public ActivationCode generateAndSaveCodeFor(User user) {
-        ActivationCode activationCode = generateActivationCodeFor(user);
-        return activationCodeRepository.save(activationCode);
+    public Token generateAndSaveTokenFor(User user) {
+        Token token = generateTokenFor(user);
+        return tokenRepository.save(token);
     }
 
-    public ActivationCode getOneByCode(String code) {
-        return activationCodeRepository.findByCode(code)
-                .orElseThrow(() -> new ActivationCodeNotFoundException(code));
+    public Token getOneByValue(String code) {
+        return tokenRepository.findByValue(code)
+                .orElseThrow(() -> new TokenNotFoundException(code));
     }
 
-    private ActivationCode generateActivationCodeFor(User user) {
-        String code = codeGenerationService.generateCode();
-        return ActivationCode.builder()
-                .user(user)
-                .code(code)
-                .build();
+    private Token generateTokenFor(User user) {
+        String value = codeGenerationService.generateCode();
+        return Token.of(value, user);
     }
 }

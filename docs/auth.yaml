@@ -4,7 +4,7 @@ info:
   description: "hotel_booking_service API"
   version: "1.0.0"
 servers:
-  - url: "https://localhost"
+  - url: "https://https://hotel-booking-service-48a284839852.herokuapp.com/"
 paths:
   /api/auth/login:
     get:
@@ -35,9 +35,9 @@ paths:
   /api/auth/activate:
     post:
       summary: "POST api/auth/activate"
-      operationId: "activateAccountRegistration"
+      operationId: "activateNewAccount"
       parameters:
-        - name: "code"
+        - name: "token"
           in: "query"
           required: true
           schema:
@@ -61,9 +61,9 @@ paths:
   /api/auth/forget/password:
     put:
       summary: "PUT api/auth/forget/password"
-      operationId: "setNewPassword"
+      operationId: "forgetPassword"
       parameters:
-        - name: "code"
+        - name: "token"
           in: "query"
           required: true
           schema:

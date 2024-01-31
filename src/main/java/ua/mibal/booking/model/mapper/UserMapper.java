@@ -41,6 +41,7 @@ public interface UserMapper {
     @Mapping(target = "password", source = "password")
     User toEntity(RegistrationDto registrationDto, String password);
 
+    @Mapping(target = "token", source = "token")
     AuthResponseDto toAuthResponse(User user, String token);
 
     @Mapping(target = "phone", source = "phone.number")

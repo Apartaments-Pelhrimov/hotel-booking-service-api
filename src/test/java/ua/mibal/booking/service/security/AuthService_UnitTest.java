@@ -28,7 +28,7 @@ import org.mockito.quality.Strictness;
 import ua.mibal.booking.model.dto.auth.AuthResponseDto;
 import ua.mibal.booking.model.dto.auth.ForgetPasswordDto;
 import ua.mibal.booking.model.dto.auth.RegistrationDto;
-import ua.mibal.booking.model.entity.ActivationCode;
+import ua.mibal.booking.model.entity.Token;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.exception.EmailAlreadyExistsException;
 import ua.mibal.booking.model.exception.entity.UserNotFoundException;
@@ -64,14 +64,14 @@ class AuthService_UnitTest {
     @Mock
     private UserService userService;
     @Mock
-    private ActivationCodeService activationCodeService;
+    private TokenService tokenService;
     @Mock
     private EmailSendingService emailSendingService;
 
     @Mock
     private User user;
     @Mock
-    private ActivationCode activationCode;
+    private Token token;
     @Mock
     private AuthResponseDto expectedAuthDto;
     @Mock
@@ -81,7 +81,7 @@ class AuthService_UnitTest {
 
     @BeforeEach
     void setup() {
-        service = new AuthService(jwtTokenService, userMapper, userService, activationCodeService, emailSendingService);
+        service = new AuthService(jwtTokenService, userMapper, userService, tokenService, emailSendingService);
     }
 
     @Test
@@ -106,13 +106,13 @@ class AuthService_UnitTest {
                 .thenReturn(false);
         when(userService.save(registrationDto))
                 .thenReturn(user);
-        when(activationCodeService.generateAndSaveCodeFor(user))
-                .thenReturn(activationCode);
+        when(tokenService.generateAndSaveTokenFor(user))
+                .thenReturn(token);
 
         service.register(registrationDto);
 
         verify(emailSendingService, times(1))
-                .sendAccountActivationEmail(activationCode);
+                .sendAccountActivationEmail(token);
     }
 
     @Test
@@ -133,16 +133,16 @@ class AuthService_UnitTest {
                 new EmailAlreadyExistsException(existingEmail).getMessage(),
                 e.getMessage()
         );
-        verifyNoInteractions(activationCodeService, emailSendingService);
+        verifyNoInteractions(tokenService, emailSendingService);
     }
 
     @Test
     void activateNewAccountBy() {
         String code = "CODE";
         long id = 1L;
-        when(activationCodeService.getOneByCode(code))
-                .thenReturn(activationCode);
-        when(activationCode.getUser()).thenReturn(user);
+        when(tokenService.getOneByValue(code))
+                .thenReturn(token);
+        when(token.getUser()).thenReturn(user);
         when(user.getId()).thenReturn(id);
 
         service.activateNewAccountBy(code);
@@ -155,14 +155,14 @@ class AuthService_UnitTest {
     void restore() {
         String email = "email";
         when(userService.getOne(email)).thenReturn(user);
-        when(activationCodeService.generateAndSaveCodeFor(user))
-                .thenReturn(activationCode);
+        when(tokenService.generateAndSaveTokenFor(user))
+                .thenReturn(token);
 
         assertDoesNotThrow(
                 () -> service.restore(email)
         );
         verify(emailSendingService, times(1))
-                .sendPasswordChangingEmail(activationCode);
+                .sendPasswordChangingEmail(token);
     }
 
     @Test
@@ -176,7 +176,7 @@ class AuthService_UnitTest {
                 () -> service.restore(email)
         );
 
-        verifyNoInteractions(activationCodeService, emailSendingService);
+        verifyNoInteractions(tokenService, emailSendingService);
     }
 
     @Test
@@ -186,9 +186,9 @@ class AuthService_UnitTest {
 
         String code = "CODE";
         long id = 1L;
-        when(activationCodeService.getOneByCode(code))
-                .thenReturn(activationCode);
-        when(activationCode.getUser()).thenReturn(user);
+        when(tokenService.getOneByValue(code))
+                .thenReturn(token);
+        when(token.getUser()).thenReturn(user);
         when(user.getId()).thenReturn(id);
 
         service.setNewPassword(code, forgetPasswordDto);

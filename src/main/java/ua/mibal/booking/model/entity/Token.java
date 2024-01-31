@@ -27,7 +27,6 @@ import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -37,16 +36,15 @@ import org.hibernate.annotations.NaturalId;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Entity
-@Table(name = "activation_codes", indexes = {
-        @Index(name = "activation_codes_user_id_idx", columnList = "user_id")
+@Table(name = "tokens", indexes = {
+        @Index(name = "tokens_user_id_idx", columnList = "user_id")
 })
-public class ActivationCode {
+public class Token {
 
     @Id
     private Long id;
@@ -56,11 +54,20 @@ public class ActivationCode {
     @JoinColumn(
             name = "user_id",
             nullable = false,
-            foreignKey = @ForeignKey(name = "activation_codes_user_id_fk")
+            foreignKey = @ForeignKey(name = "tokens_user_id_fk")
     )
     private User user;
 
     @NaturalId
     @Column(nullable = false, unique = true, length = 511)
-    private String code;
+    private String value;
+
+    private Token(String value, User user) {
+        this.value = value;
+        this.user = user;
+    }
+
+    public static Token of(String value, User user) {
+        return new Token(value, user);
+    }
 }

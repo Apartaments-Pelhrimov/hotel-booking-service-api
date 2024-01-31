@@ -21,7 +21,7 @@ import jakarta.mail.Transport;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ua.mibal.booking.config.properties.EmailProps;
-import ua.mibal.booking.model.entity.ActivationCode;
+import ua.mibal.booking.model.entity.Token;
 import ua.mibal.booking.model.exception.marker.InternalServerException;
 import ua.mibal.booking.model.exception.service.EmailSentFailedException;
 import ua.mibal.booking.service.email.component.EmailBuilder;
@@ -41,12 +41,12 @@ public class EmailSendingService {
     private final EmailBuilder emailBuilder;
     private final EmailProps emailProps;
 
-    public void sendAccountActivationEmail(ActivationCode activationCode) {
-        sendCodeFor(ACCOUNT_ACTIVATION, activationCode);
+    public void sendAccountActivationEmail(Token token) {
+        sendToken(ACCOUNT_ACTIVATION, token);
     }
 
-    public void sendPasswordChangingEmail(ActivationCode activationCode) {
-        sendCodeFor(PASSWORD_CHANGING, activationCode);
+    public void sendPasswordChangingEmail(Token token) {
+        sendToken(PASSWORD_CHANGING, token);
     }
 
     public void sendErrorEmailToDevelopers(InternalServerException e) {
@@ -54,7 +54,7 @@ public class EmailSendingService {
         sendAsync(email);
     }
 
-    private void sendCodeFor(EmailType type, ActivationCode code) {
+    private void sendToken(EmailType type, Token code) {
         Email email = emailBuilder.buildUserEmail(type, code);
         sendAsync(email);
     }
