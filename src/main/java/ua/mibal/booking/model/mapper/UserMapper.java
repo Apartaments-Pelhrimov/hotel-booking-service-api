@@ -34,22 +34,19 @@ import ua.mibal.booking.model.entity.embeddable.NotificationSettings;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+@Mapper(uses = {PhotoMapper.class, PhoneMapper.class},
+        componentModel = MappingConstants.ComponentModel.SPRING)
 public interface UserMapper {
 
-    @Mapping(target = "phone.number", source = "registrationDto.phone")
-    @Mapping(target = "password", source = "password")
-    User toEntity(RegistrationDto registrationDto, String password);
+    @Mapping(target = "password", source = "encodedPassword")
+    User toEntity(RegistrationDto registrationDto, String encodedPassword);
 
     @Mapping(target = "token", source = "token")
     AuthResponseDto toAuthResponse(User user, String token);
 
-    @Mapping(target = "phone", source = "phone.number")
-    @Mapping(target = "photo", source = "photo.photoLink")
     UserDto toDto(User user);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(target = "phone.number", source = "phone")
     void update(@MappingTarget User user, ChangeUserDetailsDto changeUserDetailsDto);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

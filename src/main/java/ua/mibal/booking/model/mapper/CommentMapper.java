@@ -27,11 +27,11 @@ import ua.mibal.booking.model.entity.Comment;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+@Mapper(uses = PhotoMapper.class,
+        componentModel = MappingConstants.ComponentModel.SPRING)
 public interface CommentMapper {
 
     @Mapping(target = ".", source = "comment.user")
-    @Mapping(target = "userPhotoLink", source = "comment.user.photo.photoLink")
     CommentDto toDto(Comment comment);
 
     Comment toEntity(CreateCommentDto createCommentDto);
