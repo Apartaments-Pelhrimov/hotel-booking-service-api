@@ -6,8 +6,7 @@ spring:
   jpa:
     open-in-view: false
     show-sql: true
-    hibernate:
-      ddl-auto: update
+    hibernate.ddl-auto: validate
 
 rsa:
   private-key: classpath:certs/private.pem
@@ -18,7 +17,7 @@ cors:
   allowed-methods: "*"
 
 jwt:
-  validForDays: 30
+  valid-for-days: 30
   issuer: https://apartmany-pe.cz/
 
 token:
@@ -29,8 +28,7 @@ aws:
   access-key-id: ${AWS_ACCESS_KEY_ID}
   secret-access-key: ${AWS_SECRET_ACCESS_KEY}
   region: eu-north-1
-  bucket:
-    name: hotel-booking-service-dev
+  bucket.name: hotel-booking-service-dev
 
 server:
   port: 443
@@ -42,8 +40,7 @@ server:
     key-alias: hotel-booking-service
 
 calendar:
-  i-cal:
-    prod-id: Apartments Pelhrimov Booking service
+  i-cal.prod-id: Apartments Pelhrimov Booking service
   zone-id: Europe/Prague
   reservation-hours:
     start: 15
@@ -56,8 +53,7 @@ mail:
   smtp:
     host: smtp.gmail.com
     port: 587
-    starttls:
-      enable: true
+    starttls.enable: true
 
 localized-bundles.paths:
   - classpath:localized/mail

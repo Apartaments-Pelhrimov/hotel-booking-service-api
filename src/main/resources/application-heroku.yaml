@@ -6,15 +6,14 @@ spring:
   jpa:
     open-in-view: false
     show-sql: true
-    hibernate:
-      ddl-auto: validate
+    hibernate.ddl-auto: validate
 
 rsa:
   private-key: classpath:certs/private.pem
   public-key: classpath:certs/public.pem
 
 jwt:
-  validForDays: 30
+  valid-for-days: 30
   issuer: https://apartmany-pe.cz/
 
 token:
@@ -29,21 +28,16 @@ aws:
   access-key-id: ${AWS_ACCESS_KEY_ID}
   secret-access-key: ${AWS_SECRET_ACCESS_KEY}
   region: eu-north-1
-  bucket:
-    name: hotel-booking-service-heroku
+  bucket.name: hotel-booking-service-heroku
 
 calendar:
-  i-cal:
-    prod-id: Apartments Pelhrimov Booking service
+  i-cal.prod-id: Apartments Pelhrimov Booking service
   zone-id: Europe/Prague
   reservation-hours:
     start: 15
     end: 11
 
-server:
-  ssl:
-    enabled: false
-
+server.ssl.enabled: false
 
 mail:
   username: ${MAIL_USERNAME}
@@ -52,8 +46,7 @@ mail:
   smtp:
     host: smtp.gmail.com
     port: 587
-    starttls:
-      enable: true
+    starttls.enable: true
 
 localized-bundles.paths:
   - classpath:localized/mail
