@@ -56,6 +56,8 @@ public class HotelTurningOffTime implements Event {
     @Column
     private String event;
 
+    // TODO rename
+
     @Override
     public LocalDateTime getStart() {
         return from;

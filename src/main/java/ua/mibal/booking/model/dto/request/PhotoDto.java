@@ -27,6 +27,6 @@ public record PhotoDto(
 
         @NotBlank
         @Link
-        String photoLink
+        String link
 ) {
 }

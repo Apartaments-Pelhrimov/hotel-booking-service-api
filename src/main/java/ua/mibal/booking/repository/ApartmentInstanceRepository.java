@@ -41,7 +41,7 @@ public interface ApartmentInstanceRepository extends JpaRepository<ApartmentInst
                 and (select (count(r.id) = 0)
                         from Reservation r
                         where r.apartmentInstance.id = ai.id
-                            and not (r.state = 'REJECTED' or r.details.reservedTo < ?2 or r.details.reservedFrom > ?3))
+                            and not (r.state = 'REJECTED' or r.details.to < ?2 or r.details.from > ?3))
                 and (select (count(distinct tot) = 0)
                         from ApartmentInstance ai
                             left join ai.turningOffTimes tot

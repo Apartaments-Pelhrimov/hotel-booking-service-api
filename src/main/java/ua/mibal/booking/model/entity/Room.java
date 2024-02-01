@@ -46,7 +46,7 @@ import static lombok.AccessLevel.PRIVATE;
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @NoArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructor(staticName = "of")
 @Getter
 @Setter
 @Entity
@@ -60,6 +60,18 @@ public class Room {
     @Column(nullable = false)
     private String name;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Type type;
+
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "apartment_id",
+            nullable = false,
+            foreignKey = @ForeignKey(name = "rooms_apartment_id_fk")
+    )
+    private Apartment apartment;
+
     @ElementCollection
     @BatchSize(size = 100)
     @CollectionTable(
@@ -72,19 +84,7 @@ public class Room {
     @Setter(PRIVATE)
     private List<Bed> beds = new LinkedList<>();
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private RoomType type;
-
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "apartment_id",
-            nullable = false,
-            foreignKey = @ForeignKey(name = "rooms_apartment_id_fk")
-    )
-    private Apartment apartment;
-
-    public enum RoomType {
+    public enum Type {
         BEDROOM, LIVING_ROOM, MEETING_ROOM
     }
 }

@@ -26,7 +26,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -41,7 +40,6 @@ import static java.time.LocalDateTime.now;
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -79,8 +77,8 @@ public class Token {
         this.value = value;
     }
 
-    public static Token of(String value, User user, int validForMinutes) {
-        return new Token(value, user, validForMinutes);
+    public static Token of(String token, User user, int validForMinutes) {
+        return new Token(token, user, validForMinutes);
     }
 
     public boolean isExpired() {

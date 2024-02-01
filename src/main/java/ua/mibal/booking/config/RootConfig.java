@@ -105,7 +105,7 @@ public class RootConfig {
             testUser.setEmail("user@company.com");
             testUser.setPhone(new Phone("+380951234567"));
             testUser.setPassword(passwordEncoder.encode("password1"));
-            testUser.setRole(Role.ROLE_USER);
+            testUser.setRole(Role.USER);
             testUser.setEnabled(true);
 
             User testAdmin = new User();
@@ -114,7 +114,7 @@ public class RootConfig {
             testAdmin.setEmail("admin@company.com");
             testAdmin.setPhone(new Phone("+380951234567"));
             testAdmin.setPassword(passwordEncoder.encode("password1"));
-            testAdmin.setRole(Role.ROLE_MANAGER);
+            testAdmin.setRole(Role.MANAGER);
             testAdmin.setEnabled(true);
 
             if (!userRepository.existsByEmail(testUser.getEmail())) {

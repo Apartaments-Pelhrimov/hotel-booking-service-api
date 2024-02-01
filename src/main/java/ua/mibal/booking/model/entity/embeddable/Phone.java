@@ -34,6 +34,6 @@ import lombok.Setter;
 @Embeddable
 public class Phone {
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "phone")
     private String number;
 }

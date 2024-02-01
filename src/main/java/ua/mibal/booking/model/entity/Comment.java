@@ -26,19 +26,19 @@ import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+
+import static java.time.LocalDateTime.now;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Builder
-@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -69,23 +69,13 @@ public class Comment {
     private Apartment apartment;
 
     @Column(nullable = false)
-    private LocalDateTime creationDateTime;
+    private LocalDateTime createdAt = now();
 
     @Column(nullable = false)
     private Double rate;
 
     @Column(nullable = false)
     private String body;
-
-    public Comment() {
-        this.creationDateTime = LocalDateTime.now();
-    }
-
-    public Comment(String body, Double rate) {
-        this();
-        this.rate = rate;
-        this.body = body;
-    }
 
     @Override
     public boolean equals(Object o) {

@@ -45,7 +45,7 @@ class ApartmentInstance_UnitTest {
         List<Reservation> expected = reservations.stream()
                 .filter(Reservation::isNotRejected)
                 .filter(res -> res.getDetails()
-                        .getReservedTo().isAfter(now()))
+                        .getTo().isAfter(now()))
                 .toList();
 
         List<Event> actual = apartmentInstance.getNotRejectedEventsForNow();
@@ -65,8 +65,8 @@ class ApartmentInstance_UnitTest {
                 .filter(Reservation::isNotRejected)
                 .anyMatch(reservation -> {
                     ReservationDetails details = reservation.getDetails();
-                    return details.getReservedFrom().isBefore(end) &&
-                           details.getReservedTo().isAfter(start);
+                    return details.getFrom().isBefore(end) &&
+                           details.getTo().isAfter(start);
                 });
 
         boolean actual = apartmentInstance.hasReservationsAt(start, end);

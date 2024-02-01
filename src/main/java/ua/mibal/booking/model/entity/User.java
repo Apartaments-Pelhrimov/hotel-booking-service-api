@@ -28,8 +28,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.proxy.HibernateProxy;
@@ -41,20 +41,20 @@ import ua.mibal.booking.model.entity.embeddable.Phone;
 import ua.mibal.booking.model.entity.embeddable.Photo;
 import ua.mibal.booking.model.entity.embeddable.Role;
 
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
 import static lombok.AccessLevel.PRIVATE;
-import static ua.mibal.booking.model.entity.embeddable.Role.ROLE_USER;
+import static ua.mibal.booking.model.entity.embeddable.NotificationSettings.DEFAULT;
+import static ua.mibal.booking.model.entity.embeddable.Role.USER;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -85,18 +85,15 @@ public class User implements UserDetails {
     private Photo photo;
 
     @Embedded
-    private NotificationSettings notificationSettings;
+    private NotificationSettings notificationSettings = DEFAULT;
 
     @Convert(converter = NumericBooleanConverter.class)
     @Column(nullable = false)
-    private Boolean enabled;
-
-    @Column(nullable = false)
-    private ZonedDateTime creationDateTime;
+    private boolean enabled = false;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Role role;
+    private Role role = USER;
 
     @OneToMany(mappedBy = "user")
     @Setter(PRIVATE)
@@ -108,26 +105,6 @@ public class User implements UserDetails {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
     private Token token;
-
-    public User() {
-        this.setNotificationSettings(NotificationSettings.DEFAULT);
-        this.setCreationDateTime(ZonedDateTime.now());
-        this.setEnabled(false);
-        this.setRole(ROLE_USER);
-    }
-
-    public User(final String firstName,
-                final String lastName,
-                final String email,
-                final String password,
-                final String phone) {
-        this();
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
-        this.phone = new Phone(phone);
-    }
 
     public void addReservation(Reservation reservation) {
         reservation.setUser(this);
@@ -154,11 +131,50 @@ public class User implements UserDetails {
     }
 
     public void enable() {
-        this.setEnabled(true);
+        this.enabled = true;
     }
 
     public boolean is(Role role) {
-        return getRole().equals(role);
+        return this.role == role;
+    }
+
+    public void deletePhoto() {
+        this.photo = null;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return role.getGrantedAuthorities();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
     }
 
     @Override
@@ -188,44 +204,5 @@ public class User implements UserDetails {
     @Override
     public final int hashCode() {
         return Objects.hash(email);
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return role.getGrantedAuthorities();
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void deletePhoto() {
-        this.photo = null;
     }
 }

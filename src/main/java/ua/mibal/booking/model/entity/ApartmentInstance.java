@@ -51,14 +51,14 @@ import static ua.mibal.booking.service.util.CollectionUtils.union;
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @NoArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructor(staticName = "of")
 @Getter
 @Setter
 @Entity
 @Table(
-        name = "apartment_instances",
-        indexes = @Index(name = "apartment_instances_apartment_id_idx", columnList = "apartment_id")
-)
+        name = "apartment_instances", indexes = {
+        @Index(name = "apartment_instances_apartment_id_idx", columnList = "apartment_id")
+})
 public class ApartmentInstance {
 
     @Id
@@ -132,8 +132,8 @@ public class ApartmentInstance {
     public boolean hasReservationsAt(LocalDateTime start, LocalDateTime end) {
         Predicate<Reservation> intersectsWithRange =
                 r -> r.isNotRejected() &&
-                     r.getDetails().getReservedTo().isAfter(start) &&
-                     r.getDetails().getReservedFrom().isBefore(end);
+                     r.getDetails().getTo().isAfter(start) &&
+                     r.getDetails().getFrom().isBefore(end);
         return getReservations().stream()
                 .anyMatch(intersectsWithRange);
     }

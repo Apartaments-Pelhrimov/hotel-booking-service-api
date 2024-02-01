@@ -45,7 +45,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.data.domain.Pageable.unpaged;
-import static ua.mibal.booking.model.entity.embeddable.Role.ROLE_MANAGER;
+import static ua.mibal.booking.model.entity.embeddable.Role.MANAGER;
 
 /**
  * @author Mykhailo Balakhon
@@ -126,7 +126,7 @@ class ReservationService_UnitTest {
                 .thenReturn(Optional.of(reservation));
         when(userService.getOne(email))
                 .thenReturn(user);
-        when(user.is(ROLE_MANAGER))
+        when(user.is(MANAGER))
                 .thenReturn(true);
 
         service.rejectReservation(id, email, reason);
@@ -146,7 +146,7 @@ class ReservationService_UnitTest {
                 .thenReturn(Optional.of(reservation));
         when(userService.getOne(email))
                 .thenReturn(user);
-        when(user.is(ROLE_MANAGER))
+        when(user.is(MANAGER))
                 .thenReturn(false);
         when(reservation.getUser())
                 .thenReturn(user);
@@ -167,7 +167,7 @@ class ReservationService_UnitTest {
                 .thenReturn(Optional.of(reservation));
         when(userService.getOne(email))
                 .thenReturn(user);
-        when(user.is(ROLE_MANAGER))
+        when(user.is(MANAGER))
                 .thenReturn(false);
         when(reservation.getUser())
                 .thenReturn(anotherUser);

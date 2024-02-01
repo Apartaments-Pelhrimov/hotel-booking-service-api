@@ -43,6 +43,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.time.LocalDateTime.now;
 import static ua.mibal.booking.model.entity.Reservation.State.PROCESSED;
 
 /**
@@ -64,7 +65,7 @@ public class Reservation implements Event {
     private Long id;
 
     @Column(nullable = false)
-    private LocalDateTime dateTime;
+    private LocalDateTime createdAt = now();
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(
@@ -82,6 +83,13 @@ public class Reservation implements Event {
     )
     private ApartmentInstance apartmentInstance;
 
+    @Embedded
+    private ReservationDetails details;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private State state = PROCESSED;
+
     @ElementCollection
     @CollectionTable(
             name = "reservation_rejections",
@@ -98,27 +106,42 @@ public class Reservation implements Event {
     @Setter(AccessLevel.PRIVATE)
     private List<Rejection> rejections = new ArrayList<>();
 
-    @Embedded
-    private ReservationDetails details;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private State state;
-
     private Reservation(User user,
                         ApartmentInstance apartmentInstance,
                         ReservationDetails details) {
         this.user = user;
         this.apartmentInstance = apartmentInstance;
         this.details = details;
-        this.dateTime = LocalDateTime.now();
-        this.state = PROCESSED;
     }
 
     public static Reservation of(User user,
                                  ApartmentInstance apartmentInstance,
                                  ReservationDetails details) {
         return new Reservation(user, apartmentInstance, details);
+    }
+
+    public void reject(User user, String reason) {
+        this.state = State.REJECTED;
+        this.rejections.add(Rejection.of(user, reason));
+    }
+
+    @Override
+    public LocalDateTime getStart() {
+        return details.getFrom();
+    }
+
+    @Override
+    public LocalDateTime getEnd() {
+        return details.getTo();
+    }
+
+    @Override
+    public String getEventName() {
+        return apartmentInstance.getName() + " reservation";
+    }
+
+    public boolean isNotRejected() {
+        return state != State.REJECTED;
     }
 
     @Override
@@ -135,30 +158,6 @@ public class Reservation implements Event {
     @Override
     public int hashCode() {
         return getClass().hashCode();
-    }
-
-    public void reject(User user, String reason) {
-        this.state = State.REJECTED;
-        this.rejections.add(Rejection.of(user, reason));
-    }
-
-    @Override
-    public LocalDateTime getStart() {
-        return details.getReservedFrom();
-    }
-
-    @Override
-    public LocalDateTime getEnd() {
-        return details.getReservedTo();
-    }
-
-    @Override
-    public String getEventName() {
-        return apartmentInstance.getName() + " reservation";
-    }
-
-    public boolean isNotRejected() {
-        return state != State.REJECTED;
     }
 
     public enum State {

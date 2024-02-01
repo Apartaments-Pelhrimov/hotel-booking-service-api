@@ -28,7 +28,7 @@ import java.util.Set;
 public record ReservationDto(
         ReservationApartmentDto apartment,
         ReservationDetails details,
-        LocalDateTime dateTime
+        LocalDateTime createdAt
 ) {
     public record ReservationApartmentDto(
             String name,

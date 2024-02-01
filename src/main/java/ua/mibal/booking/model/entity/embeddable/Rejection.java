@@ -31,7 +31,7 @@ import ua.mibal.booking.model.entity.User;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@AllArgsConstructor
+@AllArgsConstructor(staticName = "of")
 @NoArgsConstructor
 @Getter
 @Setter
@@ -48,8 +48,4 @@ public class Rejection {
 
     @Column(nullable = false)
     private String reason;
-
-    public static Rejection of(User user, String reason) {
-        return new Rejection(user, reason);
-    }
 }

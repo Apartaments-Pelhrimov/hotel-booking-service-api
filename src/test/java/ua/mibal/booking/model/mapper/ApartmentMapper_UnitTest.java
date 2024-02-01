@@ -54,7 +54,7 @@ import static ua.mibal.booking.testUtils.CustomAssertions.assertEqualsList;
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = ApartmentMapperImpl.class)
+@SpringBootTest(classes = ApartmentMapper.class)
 @TestPropertySource(locations = "classpath:application.yaml")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class ApartmentMapper_UnitTest {
@@ -72,10 +72,10 @@ class ApartmentMapper_UnitTest {
 
     private static List<Bed> addRoomsGetBeds(Apartment apartment) {
         List.of(
-                new Room(null, "test room", List.of(new Bed(1, Bed.BedType.BUNK)), Room.RoomType.BEDROOM, null),
-                new Room(null, "test room", List.of(new Bed(2, Bed.BedType.TRANSFORMER)), Room.RoomType.BEDROOM, null)
+                Room.of(null, "test room", Room.Type.BEDROOM, null, List.of(new Bed(1, Bed.Type.BUNK))),
+                Room.of(null, "test room",  Room.Type.BEDROOM, null, List.of(new Bed(2, Bed.Type.TRANSFORMER)))
         ).forEach(r -> apartment.getRooms().add(r));
-        return List.of(new Bed(1, Bed.BedType.BUNK), new Bed(2, Bed.BedType.TRANSFORMER));
+        return List.of(new Bed(1, Bed.Type.BUNK), new Bed(2, Bed.Type.TRANSFORMER));
     }
 
     private static BigDecimal addPricesGetMin(Apartment apartment) {

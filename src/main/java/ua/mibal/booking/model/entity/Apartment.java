@@ -18,7 +18,6 @@ package ua.mibal.booking.model.entity;
 
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -35,10 +34,10 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Formula;
-import org.hibernate.type.NumericBooleanConverter;
 import ua.mibal.booking.model.entity.embeddable.ApartmentOptions;
 import ua.mibal.booking.model.entity.embeddable.Photo;
 import ua.mibal.booking.model.entity.embeddable.Price;
@@ -49,12 +48,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static lombok.AccessLevel.PRIVATE;
+import static ua.mibal.booking.model.entity.embeddable.ApartmentOptions.DEFAULT;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@AllArgsConstructor
+@AllArgsConstructor(staticName = "of")
+@NoArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -67,6 +68,20 @@ public class Apartment {
 
     @Column(nullable = false)
     private String name;
+
+    @Embedded
+    private ApartmentOptions options = DEFAULT;
+
+    @Formula("""
+                 (select avg(c.rate)
+                    from comments c
+                  where c.apartment_id = id)
+            """)
+    private Double rating;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "class", nullable = false)
+    private ApartmentClass apartmentClass;
 
     @ElementCollection
     @BatchSize(size = 100)
@@ -87,24 +102,6 @@ public class Apartment {
             ))
     @Setter(PRIVATE)
     private List<Price> prices = new LinkedList<>();
-
-    @Embedded
-    private ApartmentOptions options;
-
-    @Convert(converter = NumericBooleanConverter.class)
-    @Column(nullable = false)
-    private Boolean published;
-
-    @Formula("""
-                 (select avg(c.rate)
-                    from comments c
-                  where c.apartment_id = id)
-            """)
-    private Double rating;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private ApartmentClass apartmentClass;
 
     @ElementCollection
     @BatchSize(size = 100)
@@ -136,17 +133,6 @@ public class Apartment {
     @Setter(PRIVATE)
     private List<Comment> comments = new ArrayList<>();
 
-    public Apartment() {
-        this.setOptions(ApartmentOptions.DEFAULT);
-        this.setPublished(false);
-    }
-
-    public Apartment(String name, ApartmentClass apartmentClass) {
-        this();
-        this.name = name;
-        this.apartmentClass = apartmentClass;
-    }
-
     public void addApartmentInstance(ApartmentInstance apartmentInstance) {
         apartmentInstance.setApartment(this);
         this.apartmentInstances.add(apartmentInstance);
@@ -171,22 +157,6 @@ public class Apartment {
         }
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Apartment that)) {
-            return false;
-        }
-        return id != null && id.equals(that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
-
     public void addPhoto(Photo photo) {
         this.photos.add(photo);
     }
@@ -209,6 +179,22 @@ public class Apartment {
 
     public boolean deletePrice(Integer person) {
         return prices.removeIf(price -> price.getPerson().equals(person));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Apartment that)) {
+            return false;
+        }
+        return id != null && id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 
     public enum ApartmentClass {

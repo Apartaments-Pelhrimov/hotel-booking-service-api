@@ -41,6 +41,8 @@ import java.time.LocalDateTime;
 @Embeddable
 public class TurningOffTime implements Event {
 
+    // TODO rename
+
     @Column(nullable = false, name = "\"from\"")
     private LocalDateTime from;
 

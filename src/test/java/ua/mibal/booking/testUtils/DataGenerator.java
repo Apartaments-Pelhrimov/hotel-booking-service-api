@@ -54,8 +54,8 @@ import static java.util.List.of;
 import static java.util.function.Function.identity;
 import static org.instancio.Select.field;
 import static ua.mibal.booking.model.entity.Apartment.ApartmentClass.COMFORT;
-import static ua.mibal.booking.model.entity.Room.RoomType.BEDROOM;
-import static ua.mibal.booking.model.entity.Room.RoomType.LIVING_ROOM;
+import static ua.mibal.booking.model.entity.Room.Type.BEDROOM;
+import static ua.mibal.booking.model.entity.Room.Type.LIVING_ROOM;
 import static ua.mibal.booking.model.entity.embeddable.ApartmentOptions.DEFAULT;
 
 /**
@@ -150,7 +150,7 @@ public class DataGenerator {
         return Stream.of(Arguments.of(new CreateApartmentDto("correctName", COMFORT, DEFAULT,
                 of(new PriceDto(1, valueOf(10000))),
                 of(new PhotoDto("https://apple.com")),
-                of(new RoomDto("correctRoomName", of(new BedDto(1, Bed.BedType.TRANSFORMER)), LIVING_ROOM)),
+                of(new RoomDto("correctRoomName", of(new BedDto(1, Bed.Type.TRANSFORMER)), LIVING_ROOM)),
                 of()
         )));
     }
@@ -241,8 +241,8 @@ public class DataGenerator {
 
     public static List<BedDto> incorrectBeds() {
         return of(
-                new BedDto(null, Bed.BedType.CONNECTED),
-                new BedDto(0, Bed.BedType.CONNECTED),
+                new BedDto(null, Bed.Type.CONNECTED),
+                new BedDto(0, Bed.Type.CONNECTED),
 
                 new BedDto(1, null)
         );
@@ -339,13 +339,13 @@ public class DataGenerator {
     private static ApartmentInstance apartmentInstanceOf(String name,
                                                          List<TurningOffTime> turningOffTimes,
                                                          List<Reservation> reservations) {
-        return new ApartmentInstance(null, name, null, null, turningOffTimes, reservations);
+        return ApartmentInstance.of(null, name, null, null, turningOffTimes, reservations);
     }
 
     public static Reservation testReservationOf(LocalDateTime from, LocalDateTime to, User user) {
         ReservationDetails details = Instancio.of(ReservationDetails.class)
-                .set(field(ReservationDetails::getReservedFrom), from)
-                .set(field(ReservationDetails::getReservedTo), to)
+                .set(field(ReservationDetails::getFrom), from)
+                .set(field(ReservationDetails::getTo), to)
                 .create();
         return Instancio.of(Reservation.class)
                 .set(field(Reservation::getId), null)

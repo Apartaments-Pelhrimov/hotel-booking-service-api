@@ -41,7 +41,7 @@ public class Bed {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private BedType type;
+    private Type type;
 
     @Override
     public boolean equals(Object o) {
@@ -65,7 +65,7 @@ public class Bed {
         return result;
     }
 
-    public enum BedType {
+    public enum Type {
         BUNK, CONNECTED, TRANSFORMER
     }
 }

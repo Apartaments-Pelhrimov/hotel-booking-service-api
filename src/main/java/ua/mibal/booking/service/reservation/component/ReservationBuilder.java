@@ -53,6 +53,6 @@ public class ReservationBuilder {
         Price oneNightPriceOption = apartment.getPriceFor(request.people());
         BigDecimal reservationPrice = priceCalculator
                 .calculateReservationPrice(oneNightPriceOption.getAmount(), request);
-        return ReservationDetails.of(request, reservationPrice, oneNightPriceOption);
+        return ReservationDetails.of(request, oneNightPriceOption, reservationPrice);
     }
 }

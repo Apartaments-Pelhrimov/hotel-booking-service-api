@@ -20,7 +20,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,27 +32,26 @@ import java.time.LocalDateTime;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Builder
-@AllArgsConstructor
+@AllArgsConstructor(staticName = "of")
 @NoArgsConstructor
 @Getter
 @Setter
 @Embeddable
 public class ReservationDetails {
 
-    @Column(nullable = false)
-    private LocalDateTime reservedFrom;
+    @Column(nullable = false, name = "\"from\"")
+    private LocalDateTime from;
 
-    @Column(nullable = false)
-    private LocalDateTime reservedTo;
-
-    @Column(nullable = false)
-    private BigDecimal fullPrice;
+    @Column(nullable = false, name = "\"to\"")
+    private LocalDateTime to;
 
     @Embedded
     private Price price;
 
-    public static ReservationDetails of(ReservationRequest request, BigDecimal reservationPrice, Price oneNightPriceOption) {
-        return new ReservationDetails(request.from(), request.to(), reservationPrice, oneNightPriceOption);
+    @Column(nullable = false)
+    private BigDecimal fullPrice;
+
+    public static ReservationDetails of(ReservationRequest request, Price oneNightPriceOption,  BigDecimal reservationPrice) {
+        return new ReservationDetails(request.from(), request.to(), oneNightPriceOption, reservationPrice);
     }
 }

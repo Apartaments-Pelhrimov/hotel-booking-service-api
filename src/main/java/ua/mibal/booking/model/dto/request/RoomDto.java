@@ -20,7 +20,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import ua.mibal.booking.model.entity.Room.RoomType;
+import ua.mibal.booking.model.entity.Room.Type;
 
 import java.util.List;
 
@@ -38,6 +38,6 @@ public record RoomDto(
         List<BedDto> beds,
 
         @NotNull
-        RoomType type
+        Type type
 ) {
 }

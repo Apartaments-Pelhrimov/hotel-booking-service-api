@@ -18,7 +18,7 @@ package ua.mibal.booking.model.dto.request;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import ua.mibal.booking.model.entity.embeddable.Bed.BedType;
+import ua.mibal.booking.model.entity.embeddable.Bed.Type;
 
 /**
  * @author Mykhailo Balakhon
@@ -31,6 +31,6 @@ public record BedDto(
         Integer size,
 
         @NotNull
-        BedType type
+        Type type
 ) {
 }

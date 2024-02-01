@@ -32,7 +32,7 @@ import ua.mibal.booking.repository.ReservationRepository;
 import ua.mibal.booking.service.UserService;
 import ua.mibal.booking.service.reservation.component.ReservationBuilder;
 
-import static ua.mibal.booking.model.entity.embeddable.Role.ROLE_MANAGER;
+import static ua.mibal.booking.model.entity.embeddable.Role.MANAGER;
 
 /**
  * @author Mykhailo Balakhon
@@ -83,7 +83,7 @@ public class ReservationService {
     }
 
     private void validateUserHasAccessToReservation(User user, Reservation reservation) {
-        if (user.is(ROLE_MANAGER)) {
+        if (user.is(MANAGER)) {
             return;
         }
         User reservationOwner = reservation.getUser();

@@ -35,7 +35,7 @@ import lombok.Setter;
 public class Photo {
 
     @Column(name = "photo_link")
-    private String photoLink;
+    private String link;
 
     @Override
     public boolean equals(Object o) {
@@ -46,13 +46,13 @@ public class Photo {
             return false;
         }
         Photo photo = (Photo) o;
-        return photoLink != null && photoLink.equals(photo.photoLink);
+        return link != null && link.equals(photo.link);
     }
 
     @Override
     public int hashCode() {
-        return photoLink != null
-                ? photoLink.hashCode()
+        return link != null
+                ? link.hashCode()
                 : getClass().hashCode();
     }
 }

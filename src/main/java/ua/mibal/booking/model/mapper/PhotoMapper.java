@@ -28,6 +28,6 @@ import ua.mibal.booking.model.entity.embeddable.Photo;
 public class PhotoMapper {
 
     public String toLinkString(Photo photo) {
-        return photo.getPhotoLink();
+        return photo.getLink();
     }
 }

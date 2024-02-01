@@ -14,37 +14,24 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.entity.embeddable;
+package ua.mibal.booking.model.mapper;
 
-import lombok.Getter;
-import org.springframework.security.core.GrantedAuthority;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import org.mapstruct.Mapper;
+import org.mapstruct.MappingConstants;
+import ua.mibal.booking.model.entity.embeddable.Phone;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Getter
-public enum Role implements GrantedAuthority {
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+public class PhoneMapper {
 
-    USER("ROLE_USER"),
-    MANAGER("ROLE_MANAGER", USER);
-
-    private final String authority;
-    private final List<Role> children;
-
-    Role(String authority, Role... children) {
-        this.authority = authority;
-        this.children = Arrays.stream(children).toList();
+    public String toNumberString(Phone phone) {
+        return phone.getNumber();
     }
 
-    public Collection<? extends GrantedAuthority> getGrantedAuthorities() {
-        List<Role> roles = new ArrayList<>(children);
-        roles.add(this);
-        return roles;
+    public Phone toNumberString(String number) {
+        return new Phone(number);
     }
 }
