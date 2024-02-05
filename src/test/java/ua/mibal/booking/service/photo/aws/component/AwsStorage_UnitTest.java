@@ -43,7 +43,6 @@ import java.io.IOException;
 import java.net.URL;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -94,7 +93,6 @@ class AwsStorage_UnitTest {
 
     void uploadPhoto_mocked_RequestBody(MockedStatic<RequestBody> mockedRequestBody) throws IOException {
         byte[] photoBytes = "BYTES".getBytes(UTF_8);
-        String photoLink = "test photo link";
 
         when(requestGenerator.generatePutRequest(photo))
                 .thenReturn(putRequest);
@@ -105,20 +103,10 @@ class AwsStorage_UnitTest {
         when(RequestBody.fromBytes(photoBytes))
                 .thenReturn(requestBody);
 
-        when(requestGenerator.generateGetUrlRequest(photo))
-                .thenReturn(getUrlRequest);
-        when(s3Client.utilities())
-                .thenReturn(s3Utilities);
-        when(s3Utilities.getUrl(getUrlRequest))
-                .thenReturn(url);
-        when(url.toExternalForm())
-                .thenReturn(photoLink);
-
-        var actual = storage.uploadPhoto(photo);
+        storage.uploadPhoto(photo);
 
         verify(s3Client, times(1))
                 .putObject(putRequest, requestBody);
-        assertEquals(photoLink, actual);
     }
 
     @Test
@@ -149,10 +137,12 @@ class AwsStorage_UnitTest {
 
     @Test
     void deletePhoto() {
-        when(requestGenerator.generateDeleteRequest(photo))
+        String key = "key";
+
+        when(requestGenerator.generateDeleteRequest(key))
                 .thenReturn(deleteRequest);
 
-        storage.deletePhoto(photo);
+        storage.deletePhotoBy(key);
 
         verify(s3Client, times(1))
                 .deleteObject(deleteRequest);
@@ -160,12 +150,14 @@ class AwsStorage_UnitTest {
 
     @Test
     void deletePhoto_should_throw_AwsStorageException() {
-        when(requestGenerator.generateDeleteRequest(photo))
+        String key = "key";
+
+        when(requestGenerator.generateDeleteRequest(key))
                 .thenReturn(deleteRequest);
         when(s3Client.deleteObject(deleteRequest))
                 .thenThrow(SdkException.class);
 
         assertThrows(AwsStorageException.class,
-                () -> storage.deletePhoto(photo));
+                () -> storage.deletePhotoBy(key));
     }
 }

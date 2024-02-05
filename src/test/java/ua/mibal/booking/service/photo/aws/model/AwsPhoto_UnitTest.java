@@ -48,7 +48,6 @@ import static org.mockito.Mockito.when;
 class AwsPhoto_UnitTest {
 
     private AwsPhoto uploadPhoto;
-    private AwsPhoto deletePhoto;
 
     private String name = "name";
     private String folder = "folder";
@@ -65,8 +64,7 @@ class AwsPhoto_UnitTest {
         when(file.getBytes())
                 .thenReturn(fileBytes);
 
-        uploadPhoto = new AwsPhoto(name, folder, file);
-        deletePhoto = new AwsPhoto(name, folder);
+        uploadPhoto = new AwsPhoto(file);
     }
 
     @ParameterizedTest
@@ -78,7 +76,7 @@ class AwsPhoto_UnitTest {
                 .thenReturn(legalFileName);
 
         assertDoesNotThrow(
-                () -> new AwsPhoto("name", "folder", file));
+                () -> new AwsPhoto(file));
     }
 
     @ParameterizedTest
@@ -90,7 +88,7 @@ class AwsPhoto_UnitTest {
                 .thenReturn(illegalFileName);
 
         assertThrows(IllegalPhotoFormatException.class,
-                () -> new AwsPhoto("name", "folder", file));
+                () -> new AwsPhoto(file));
     }
 
     @Test
@@ -101,22 +99,10 @@ class AwsPhoto_UnitTest {
         String contentType = "image/jpg";
 
         assertEquals(contentType, uploadPhoto.getContentType());
-        assertThrows(RuntimeException.class,
-                () -> deletePhoto.getContentType());
     }
 
     @Test
     void getPhoto() throws IOException {
         assertEquals(fileBytes, uploadPhoto.getPhoto());
-        assertThrows(RuntimeException.class,
-                () -> deletePhoto.getPhoto());
-    }
-
-    @Test
-    void getKey() {
-        String key = folder + "/" + name;
-
-        assertEquals(key, uploadPhoto.getKey());
-        assertEquals(key, deletePhoto.getKey());
     }
 }

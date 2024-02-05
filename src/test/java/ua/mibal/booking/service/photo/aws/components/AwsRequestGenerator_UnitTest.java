@@ -76,27 +76,21 @@ class AwsRequestGenerator_UnitTest {
 
     @Test
     void generateDeleteRequest() {
-        String photoKey = "photoKey";
+        String key = "photoKey";
 
-        when(photo.getKey())
-                .thenReturn(photoKey);
-
-        var actual = requestGenerator.generateDeleteRequest(photo);
+        var actual = requestGenerator.generateDeleteRequest(key);
 
         assertEquals(bucketName, actual.getValueForField("Bucket", String.class).get());
-        assertEquals(photoKey, actual.getValueForField("Key", String.class).get());
+        assertEquals(key, actual.getValueForField("Key", String.class).get());
     }
 
     @Test
-    void generateGetUrlRequest() {
-        String photoKey = "photoKey";
+    void generateGetRequest() {
+        String key = "photoKey";
 
-        when(photo.getKey())
-                .thenReturn(photoKey);
-
-        var actual = requestGenerator.generateGetUrlRequest(photo);
+        var actual = requestGenerator.generateGetRequest(key);
 
         assertEquals(bucketName, actual.getValueForField("Bucket", String.class).get());
-        assertEquals(photoKey, actual.getValueForField("Key", String.class).get());
+        assertEquals(key, actual.getValueForField("Key", String.class).get());
     }
 }

@@ -272,18 +272,4 @@ class ApartmentService_UnitTest {
         assertThrows(ApartmentDoesNotHavePhotoException.class,
                 () -> service.validateApartmentHasPhoto(id, link));
     }
-
-    @Test
-    void deleteApartmentPhotoByLink() {
-        Long id = 1L;
-        String link = "link";
-
-        when(apartmentRepository.findById(id))
-                .thenReturn(Optional.of(apartment));
-
-        service.deleteApartmentPhotoByLink(id, link);
-
-        verify(apartment, times(1))
-                .deletePhoto(new Photo(link));
-    }
 }
