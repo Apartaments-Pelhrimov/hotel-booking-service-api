@@ -113,6 +113,10 @@ public class UserService {
         userRepository.deleteUserPhotoByEmail(email);
     }
 
+    public int clearNotEnabledWithNoTokens() {
+        return userRepository.deleteNotEnabledWithNoTokens();
+    }
+
     private User getOneById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));

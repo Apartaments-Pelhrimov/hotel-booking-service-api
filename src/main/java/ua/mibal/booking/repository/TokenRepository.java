@@ -17,7 +17,9 @@
 package ua.mibal.booking.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.model.entity.Token;
 
 import java.util.Optional;
@@ -29,4 +31,12 @@ public interface TokenRepository extends JpaRepository<Token, Long> {
             where t.value = ?1
             """)
     Optional<Token> findByValue(String tokenValue);
+
+    @Transactional
+    @Modifying
+    @Query("""
+            delete Token t
+            where t.expiresAt < now()
+            """)
+    int deleteExpired();
 }

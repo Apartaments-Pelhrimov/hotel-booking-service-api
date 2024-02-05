@@ -54,6 +54,10 @@ public class TokenService {
         return token;
     }
 
+    public int clearExpiredTokens() {
+        return tokenRepository.deleteExpired();
+    }
+
     private Token generateTokenFor(User user) {
         String value = tokenGenerationService.generateTokenValue();
         return Token.of(value, user, tokenProps.validForMinutes());

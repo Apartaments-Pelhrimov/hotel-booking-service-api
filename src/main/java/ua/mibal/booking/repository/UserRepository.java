@@ -19,6 +19,7 @@ package ua.mibal.booking.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.entity.embeddable.Photo;
 import ua.mibal.booking.repository.custom.CustomUserRepository;
@@ -82,4 +83,18 @@ public interface UserRepository extends JpaRepository<User, Long>, CustomUserRep
             where u.email = ?1 and c.id = ?2
             """)
     boolean userHasComment(String email, Long commentId);
+
+    @Transactional
+    @Modifying
+    @Query("""
+            delete from User u
+            where
+                u.enabled = false
+            and (
+                    select count(t.id)
+                        from Token t
+                    where t.user.id = u.id
+            ) = 0
+            """)
+    int deleteNotEnabledWithNoTokens();
 }
