@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,8 +34,8 @@ import lombok.Setter;
 @Embeddable
 public class Photo {
 
-    @Column(name = "photo_link")
-    private String link;
+    @Column(name = "aws_photo_key")
+    private String key;
 
     @Override
     public boolean equals(Object o) {
@@ -46,13 +46,11 @@ public class Photo {
             return false;
         }
         Photo photo = (Photo) o;
-        return link != null && link.equals(photo.link);
+        return key.equals(photo.key);
     }
 
     @Override
     public int hashCode() {
-        return link != null
-                ? link.hashCode()
-                : getClass().hashCode();
+        return key.hashCode();
     }
 }

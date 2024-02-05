@@ -31,6 +31,7 @@ import ua.mibal.booking.model.entity.Room;
 import ua.mibal.booking.model.entity.embeddable.ApartmentOptions;
 import ua.mibal.booking.model.entity.embeddable.Bed;
 import ua.mibal.booking.model.entity.embeddable.Price;
+import ua.mibal.booking.model.mapper.linker.ApartmentPhotoLinker;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -42,16 +43,18 @@ import static java.math.BigDecimal.valueOf;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Mapper(uses = PhotoMapper.class,
+@Mapper(uses = ApartmentPhotoLinker.class,
         componentModel = MappingConstants.ComponentModel.SPRING)
 public abstract class ApartmentMapper {
 
     @Mapping(target = "price", source = "prices")
     @Mapping(target = "beds", source = "rooms")
+    @Mapping(target = "photos", source = "apartment")
     public abstract ApartmentDto toDto(Apartment apartment);
 
     @Mapping(target = "price", source = "prices")
     @Mapping(target = "people", source = "rooms")
+    @Mapping(target = "photos", source = "apartment")
     public abstract ApartmentCardDto toCardDto(Apartment apartment);
 
     public abstract Apartment toEntity(CreateApartmentDto createApartmentDto);

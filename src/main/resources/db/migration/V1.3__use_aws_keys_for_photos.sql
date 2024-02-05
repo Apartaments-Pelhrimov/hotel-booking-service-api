@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,13 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.dto.response;
+alter table apartment_photos
+    rename column photo_link to aws_photo_key;
 
-import ua.mibal.booking.model.entity.embeddable.ApartmentOptions;
+alter index apartment_photos_photo_link_idx rename to apartment_photos_aws_photo_key_idx;
 
-import java.math.BigDecimal;
-import java.util.List;
+alter table users
+    rename column photo_link to aws_photo_key;
 
-/**
- * @author Mykhailo Balakhon
- * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
- */
-public record ApartmentCardDto(
-        String name,
-        List<String> photos,
-        ApartmentOptions options,
-        Double rating,
-        Integer people,
-        BigDecimal price
-) {
-}
+create index users_aws_photo_key_idx
+    on users (aws_photo_key);

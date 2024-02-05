@@ -17,17 +17,21 @@
 package ua.mibal.booking.model.mapper;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import ua.mibal.booking.model.dto.response.ReservationDto;
 import ua.mibal.booking.model.entity.Reservation;
+import ua.mibal.booking.model.mapper.linker.ApartmentPhotoLinker;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Mapper(uses = PhotoMapper.class,
+@Mapper(uses = ApartmentPhotoLinker.class,
         componentModel = MappingConstants.ComponentModel.SPRING)
 public interface ReservationMapper {
 
+    @Mapping(target = "apartment.photos",
+            source = "reservation.apartmentInstance.apartment")
     ReservationDto toDto(Reservation reservation);
 }

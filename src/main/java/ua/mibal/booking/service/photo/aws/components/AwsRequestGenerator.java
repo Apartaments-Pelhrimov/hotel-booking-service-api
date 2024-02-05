@@ -19,7 +19,7 @@ package ua.mibal.booking.service.photo.aws.components;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
-import software.amazon.awssdk.services.s3.model.GetUrlRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import ua.mibal.booking.config.properties.AwsProps.AwsBucketProps;
 import ua.mibal.booking.service.photo.aws.model.AwsPhoto;
@@ -41,17 +41,17 @@ public class AwsRequestGenerator {
                 .build();
     }
 
-    public DeleteObjectRequest generateDeleteRequest(AwsPhoto photo) {
+    public DeleteObjectRequest generateDeleteRequest(String key) {
         return DeleteObjectRequest.builder()
                 .bucket(awsBucketProps.name())
-                .key(photo.getKey())
+                .key(key)
                 .build();
     }
 
-    public GetUrlRequest generateGetUrlRequest(AwsPhoto photo) {
-        return GetUrlRequest.builder()
+    public GetObjectRequest generateGetRequest(String key) {
+        return GetObjectRequest.builder()
                 .bucket(awsBucketProps.name())
-                .key(photo.getKey())
+                .key(key)
                 .build();
     }
 }

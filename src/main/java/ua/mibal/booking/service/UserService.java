@@ -104,8 +104,8 @@ public class UserService {
         user.enable();
     }
 
-    public void changeUserPhoto(String email, String photoLink) {
-        Photo photo = new Photo(photoLink);
+    public void changeUserPhoto(String email, String key) {
+        Photo photo = new Photo(key);
         userRepository.updateUserPhotoByEmail(photo, email);
     }
 

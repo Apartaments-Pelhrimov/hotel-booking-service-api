@@ -16,28 +16,25 @@
 
 package ua.mibal.booking.service.photo.aws.model;
 
-import org.springframework.web.multipart.MultipartFile;
+import lombok.Getter;
+import org.springframework.http.MediaType;
+import ua.mibal.booking.service.photo.model.PhotoResponse;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class UserAwsPhoto extends AwsPhoto {
-    private static final String folder = "users";
+@Getter
+public class AwsPhotoResponse implements PhotoResponse {
+    private final byte[] bytes;
+    private final MediaType contentType;
 
-    protected UserAwsPhoto(String username, MultipartFile photo) {
-        super(username, folder, photo);
+    protected AwsPhotoResponse(byte[] bytes, String contentType) {
+        this.bytes = bytes;
+        this.contentType = MediaType.parseMediaType(contentType);
     }
 
-    protected UserAwsPhoto(String username) {
-        super(username, folder);
-    }
-
-    public static UserAwsPhoto getInstanceToUpload(String username, MultipartFile photo) {
-        return new UserAwsPhoto(username, photo);
-    }
-
-    public static UserAwsPhoto getInstanceToDelete(String username) {
-        return new UserAwsPhoto(username);
+    public static AwsPhotoResponse of(byte[] bytes, String contentType) {
+        return new AwsPhotoResponse(bytes, contentType);
     }
 }

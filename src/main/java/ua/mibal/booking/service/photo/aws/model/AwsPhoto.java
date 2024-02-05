@@ -22,6 +22,7 @@ import ua.mibal.booking.model.exception.IllegalPhotoFormatException;
 import java.io.IOException;
 import java.util.Objects;
 
+import static java.time.LocalDateTime.now;
 import static java.util.Objects.requireNonNull;
 import static org.springframework.util.StringUtils.getFilenameExtension;
 
@@ -34,16 +35,15 @@ public class AwsPhoto {
     private final String key;
     private final MultipartFile file;
 
-    public AwsPhoto(String name, String folder, MultipartFile file) {
+    protected AwsPhoto(MultipartFile file) {
+        Objects.requireNonNull(file);
         this.extension = getPhotoExtension(file.getOriginalFilename());
-        this.key = generateFileKey(folder, name);
+        this.key = generateFileKey(file.getOriginalFilename());
         this.file = file;
     }
 
-    public AwsPhoto(String name, String folder) {
-        this.extension = PhotoExtension.NONE;
-        this.key = generateFileKey(folder, name);
-        this.file = null;
+    public static AwsPhoto getInstanceToUpload(MultipartFile photo) {
+        return new AwsPhoto(photo);
     }
 
     public String getKey() {
@@ -56,24 +56,6 @@ public class AwsPhoto {
 
     public byte[] getPhoto() throws IOException {
         return file.getBytes();
-    }
-
-    private PhotoExtension getPhotoExtension(String photoName) {
-        try {
-            return getPhotoExtensionFrom(photoName);
-        } catch (IllegalArgumentException | NullPointerException e) {
-            throw new IllegalPhotoFormatException(photoName);
-        }
-    }
-
-    private PhotoExtension getPhotoExtensionFrom(String photoName) {
-        String photoExtension = getFilenameExtension(photoName);
-        requireNonNull(photoExtension);
-        return PhotoExtension.ofExtension(photoExtension);
-    }
-
-    private String generateFileKey(String folder, String name) {
-        return "%s/%s".formatted(folder, name);
     }
 
     @Override
@@ -102,5 +84,23 @@ public class AwsPhoto {
         result = 31 * result + key.hashCode();
         result = 31 * result + (file != null ? file.hashCode() : 0);
         return result;
+    }
+
+    private PhotoExtension getPhotoExtension(String photoName) {
+        try {
+            return getPhotoExtensionFrom(photoName);
+        } catch (IllegalArgumentException | NullPointerException e) {
+            throw new IllegalPhotoFormatException(photoName);
+        }
+    }
+
+    private PhotoExtension getPhotoExtensionFrom(String photoName) {
+        String photoExtension = getFilenameExtension(photoName);
+        requireNonNull(photoExtension);
+        return PhotoExtension.ofExtension(photoExtension);
+    }
+
+    private String generateFileKey(String originalFilename) {
+        return "" + now().hashCode() + originalFilename.hashCode();
     }
 }

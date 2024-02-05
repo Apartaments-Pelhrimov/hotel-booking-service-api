@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,26 +14,17 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.photo;
+package ua.mibal.booking.service.photo.model;
 
-import org.springframework.web.multipart.MultipartFile;
-import ua.mibal.booking.service.photo.model.PhotoResponse;
+import org.springframework.http.MediaType;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public interface PhotoService {
+public interface PhotoResponse {
 
-    PhotoResponse getUserPhoto(String email);
+    byte[] getBytes();
 
-    void changeUserPhoto(String email, MultipartFile photo);
-
-    void deleteUserPhoto(String email);
-
-    PhotoResponse getApartmentPhoto(Long apartmentId, Integer photoOrderIndex);
-
-    void createApartmentPhoto(Long id, MultipartFile photo);
-
-    void deleteApartmentPhoto(Long apartmentId, Integer photoOrderIndex);
+    MediaType getContentType();
 }

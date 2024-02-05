@@ -45,7 +45,7 @@ import static org.mockito.Mockito.when;
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = UserMapperImpl.class)
+@SpringBootTest(classes = UserMapper.class)
 @TestPropertySource(locations = "classpath:application.yaml")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class UserMapper_UnitTest {

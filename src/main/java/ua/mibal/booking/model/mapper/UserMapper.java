@@ -29,12 +29,13 @@ import ua.mibal.booking.model.dto.request.ChangeUserDetailsDto;
 import ua.mibal.booking.model.dto.response.UserDto;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.entity.embeddable.NotificationSettings;
+import ua.mibal.booking.model.mapper.linker.UserPhotoLinker;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Mapper(uses = {PhotoMapper.class, PhoneMapper.class},
+@Mapper(uses = {UserPhotoLinker.class, PhoneMapper.class},
         componentModel = MappingConstants.ComponentModel.SPRING)
 public interface UserMapper {
 
@@ -44,6 +45,7 @@ public interface UserMapper {
     @Mapping(target = "token", source = "token")
     AuthResponseDto toAuthResponse(User user, String token);
 
+    @Mapping(target = "photo", source = "user")
     UserDto toDto(User user);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

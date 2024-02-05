@@ -19,8 +19,10 @@ package ua.mibal.booking.controller;
 import jakarta.annotation.security.RolesAllowed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -30,6 +32,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import ua.mibal.booking.service.photo.PhotoService;
+import ua.mibal.booking.service.photo.model.PhotoResponse;
 
 /**
  * @author Mykhailo Balakhon
@@ -42,33 +45,56 @@ public class PhotoController {
     private final PhotoService photoService;
 
     @RolesAllowed("USER")
+    @GetMapping("/users/me/photo")
+    public ResponseEntity<byte[]> getMyPhoto(Authentication authentication) {
+        return getUserPhoto(authentication.getName());
+    }
+
+    @GetMapping("/users/{email}/photo")
+    public ResponseEntity<byte[]> getUserPhoto(@PathVariable String email) {
+        PhotoResponse photo = photoService.getUserPhoto(email);
+        return ResponseEntity.ok()
+                .contentType(photo.getContentType())
+                .body(photo.getBytes());
+    }
+
+    @RolesAllowed("USER")
     @PutMapping("/users/me/photo")
     @ResponseStatus(HttpStatus.CREATED)
-    public String changeUserPhoto(@RequestParam("file") MultipartFile file,
-                                  Authentication authentication) {
-        return photoService.changeUserPhoto(authentication.getName(), file);
+    public void changeMyPhoto(@RequestParam("file") MultipartFile file,
+                              Authentication authentication) {
+        photoService.changeUserPhoto(authentication.getName(), file);
     }
 
     @RolesAllowed("USER")
     @DeleteMapping("/users/me/photo")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUserPhoto(Authentication authentication) {
+    public void deleteMyPhoto(Authentication authentication) {
         photoService.deleteUserPhoto(authentication.getName());
+    }
+
+    @GetMapping("/apartments/{apartmentId}/photos/{photoOrderIndex}")
+    public ResponseEntity<byte[]> getApartmentPhoto(@PathVariable Long apartmentId,
+                                                    @PathVariable Integer photoOrderIndex) {
+        PhotoResponse photo = photoService.getApartmentPhoto(apartmentId, photoOrderIndex);
+        return ResponseEntity.ok()
+                .contentType(photo.getContentType())
+                .body(photo.getBytes());
     }
 
     @RolesAllowed("MANAGER")
     @PostMapping("/apartments/{id}/photos")
     @ResponseStatus(HttpStatus.CREATED)
-    public String createApartmentPhoto(@PathVariable Long id,
-                                       @RequestParam("file") MultipartFile file) {
-        return photoService.createApartmentPhoto(id, file);
+    public void createApartmentPhoto(@PathVariable Long id,
+                                     @RequestParam("file") MultipartFile file) {
+        photoService.createApartmentPhoto(id, file);
     }
 
     @RolesAllowed("MANAGER")
-    @DeleteMapping("/apartments/{id}/photos")
+    @DeleteMapping("/apartments/{apartmentId}/photos/{photoOrderIndex}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteApartmentPhoto(@PathVariable Long id,
-                                     @RequestParam("link") String link) {
-        photoService.deleteApartmentPhoto(id, link);
+    public void deleteApartmentPhoto(@PathVariable Long apartmentId,
+                                     @PathVariable Integer photoOrderIndex) {
+        photoService.deleteApartmentPhoto(apartmentId, photoOrderIndex);
     }
 }

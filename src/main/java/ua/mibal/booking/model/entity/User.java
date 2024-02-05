@@ -16,6 +16,7 @@
 
 package ua.mibal.booking.model.entity;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -36,15 +37,17 @@ import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.type.NumericBooleanConverter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import ua.mibal.booking.model.entity.embeddable.Photo;
 import ua.mibal.booking.model.entity.embeddable.NotificationSettings;
 import ua.mibal.booking.model.entity.embeddable.Phone;
-import ua.mibal.booking.model.entity.embeddable.Photo;
 import ua.mibal.booking.model.entity.embeddable.Role;
+import ua.mibal.booking.model.exception.PhotoNotFoundException;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static lombok.AccessLevel.PRIVATE;
 import static ua.mibal.booking.model.entity.embeddable.NotificationSettings.DEFAULT;
@@ -71,6 +74,7 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String lastName;
 
+    // make email lowerCase
     @NaturalId
     @Column(nullable = false, unique = true)
     private String email;
@@ -82,7 +86,7 @@ public class User implements UserDetails {
     private Phone phone;
 
     @Embedded
-    private Photo photo;
+    private @Nullable Photo photo;
 
     @Embedded
     private NotificationSettings notificationSettings = DEFAULT;
@@ -105,6 +109,10 @@ public class User implements UserDetails {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
     private Token token;
+
+    public Optional<Photo> getPhoto() {
+        return Optional.ofNullable(photo);
+    }
 
     public void addReservation(Reservation reservation) {
         reservation.setUser(this);
@@ -140,6 +148,12 @@ public class User implements UserDetails {
 
     public void deletePhoto() {
         this.photo = null;
+    }
+
+    public String getPhotoKey() {
+        return Optional.ofNullable(photo)
+                .map(Photo::getKey)
+                .orElseThrow(PhotoNotFoundException::new);
     }
 
     @Override

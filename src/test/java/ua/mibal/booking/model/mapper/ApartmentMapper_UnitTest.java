@@ -36,6 +36,7 @@ import ua.mibal.booking.model.entity.Room;
 import ua.mibal.booking.model.entity.embeddable.ApartmentOptions;
 import ua.mibal.booking.model.entity.embeddable.Bed;
 import ua.mibal.booking.model.entity.embeddable.Price;
+import ua.mibal.booking.model.mapper.linker.ApartmentPhotoLinker;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -63,7 +64,7 @@ class ApartmentMapper_UnitTest {
     private ApartmentMapper apartmentMapper;
 
     @MockBean
-    private PhotoMapper photoMapper;
+    private ApartmentPhotoLinker apartmentPhotoLinker;
 
     @Mock
     private Apartment apartment;
@@ -73,7 +74,7 @@ class ApartmentMapper_UnitTest {
     private static List<Bed> addRoomsGetBeds(Apartment apartment) {
         List.of(
                 Room.of(null, "test room", Room.Type.BEDROOM, null, List.of(new Bed(1, Bed.Type.BUNK))),
-                Room.of(null, "test room",  Room.Type.BEDROOM, null, List.of(new Bed(2, Bed.Type.TRANSFORMER)))
+                Room.of(null, "test room", Room.Type.BEDROOM, null, List.of(new Bed(2, Bed.Type.TRANSFORMER)))
         ).forEach(r -> apartment.getRooms().add(r));
         return List.of(new Bed(1, Bed.Type.BUNK), new Bed(2, Bed.Type.TRANSFORMER));
     }

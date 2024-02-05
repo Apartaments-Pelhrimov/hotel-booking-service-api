@@ -41,11 +41,13 @@ import org.hibernate.annotations.Formula;
 import ua.mibal.booking.model.entity.embeddable.ApartmentOptions;
 import ua.mibal.booking.model.entity.embeddable.Photo;
 import ua.mibal.booking.model.entity.embeddable.Price;
+import ua.mibal.booking.model.exception.PhotoNotFoundException;
 import ua.mibal.booking.model.exception.entity.PriceNotFoundException;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 import static lombok.AccessLevel.PRIVATE;
 import static ua.mibal.booking.model.entity.embeddable.ApartmentOptions.DEFAULT;
@@ -113,8 +115,8 @@ public class Apartment {
                     foreignKey = @ForeignKey(name = "apartment_photos_apartment_id_fk")
             ),
             indexes = @Index(
-                    name = "apartment_photos_photo_link_idx",
-                    columnList = "photo_link",
+                    name = "apartment_photos_aws_photo_key_idx",
+                    columnList = "aws_photo_key",
                     unique = true
             ))
     @OrderColumn
@@ -157,12 +159,19 @@ public class Apartment {
         }
     }
 
-    public void addPhoto(Photo photo) {
+    public String getPhotoKey(Integer photoIndex) {
+        checkPhotoIndexForBounds(photoIndex);
+        Photo photo = photos.get(photoIndex);
+        return photo.getKey();
+    }
+
+    public void addPhoto(String key) {
+        Photo photo = new Photo(key);
         this.photos.add(photo);
     }
 
-    public boolean deletePhoto(Photo photo) {
-        return this.photos.remove(photo);
+    public boolean deletePhoto(String key) {
+        return this.photos.removeIf(ph -> Objects.equals(ph.getKey(), key));
     }
 
     public Price getPriceFor(Integer people) {
@@ -195,6 +204,12 @@ public class Apartment {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    private void checkPhotoIndexForBounds(Integer photoIndex) {
+        if (photoIndex < 0 || photoIndex >= photos.size()) {
+            throw new PhotoNotFoundException();
+        }
     }
 
     public enum ApartmentClass {

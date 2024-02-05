@@ -22,16 +22,18 @@ import org.mapstruct.MappingConstants;
 import ua.mibal.booking.model.dto.request.CreateCommentDto;
 import ua.mibal.booking.model.dto.response.CommentDto;
 import ua.mibal.booking.model.entity.Comment;
+import ua.mibal.booking.model.mapper.linker.UserPhotoLinker;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Mapper(uses = PhotoMapper.class,
+@Mapper(uses = UserPhotoLinker.class,
         componentModel = MappingConstants.ComponentModel.SPRING)
 public interface CommentMapper {
 
     @Mapping(target = ".", source = "comment.user")
+    @Mapping(target = "userPhotoLink", source = "comment.user")
     CommentDto toDto(Comment comment);
 
     Comment toEntity(CreateCommentDto createCommentDto);

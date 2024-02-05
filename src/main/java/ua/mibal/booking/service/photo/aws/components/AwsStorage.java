@@ -22,10 +22,11 @@ import software.amazon.awssdk.core.exception.SdkException;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
-import software.amazon.awssdk.services.s3.model.GetUrlRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import ua.mibal.booking.model.exception.service.AwsStorageException;
 import ua.mibal.booking.service.photo.aws.model.AwsPhoto;
+import ua.mibal.booking.service.photo.aws.model.AwsPhotoResponse;
 
 import java.io.IOException;
 
@@ -39,10 +40,19 @@ public class AwsStorage {
     private final S3Client s3Client;
     private final AwsRequestGenerator requestGenerator;
 
-    public String uploadPhoto(AwsPhoto photo) {
+    public AwsPhotoResponse getPhotoBy(String key) {
+        try {
+            return getAwsPhotoBy(key);
+        } catch (IOException e) {
+            throw new AwsStorageException(
+                    "Exception while getting Photo with " +
+                    "key '%s'".formatted(key), e);
+        }
+    }
+
+    public void uploadPhoto(AwsPhoto photo) {
         try {
             uploadAwsPhoto(photo);
-            return getLink(photo);
         } catch (IOException | SdkException e) {
             throw new AwsStorageException(
                     "Exception while uploading Photo with " +
@@ -50,14 +60,23 @@ public class AwsStorage {
         }
     }
 
-    public void deletePhoto(AwsPhoto photo) {
+    public void deletePhotoBy(String key) {
         try {
-            deleteAwsPhoto(photo);
+            deleteAwsPhotoBy(key);
         } catch (SdkException e) {
             throw new AwsStorageException(
                     "Exception while deleting Photo by " +
-                    "key '%s'".formatted(photo.getKey()), e);
+                    "key '%s'".formatted(key), e);
         }
+    }
+
+    private AwsPhotoResponse getAwsPhotoBy(String key) throws IOException {
+        GetObjectRequest getRequest = requestGenerator.generateGetRequest(key);
+        var response = s3Client.getObject(getRequest);
+        return AwsPhotoResponse.of(
+                response.readAllBytes(),
+                response.response().contentType()
+        );
     }
 
     private void uploadAwsPhoto(AwsPhoto photo) throws IOException {
@@ -66,15 +85,8 @@ public class AwsStorage {
         s3Client.putObject(putRequest, requestBody);
     }
 
-    private String getLink(AwsPhoto photo) {
-        GetUrlRequest getUrlRequest = requestGenerator.generateGetUrlRequest(photo);
-        return s3Client.utilities()
-                .getUrl(getUrlRequest)
-                .toExternalForm();
-    }
-
-    private void deleteAwsPhoto(AwsPhoto photo) {
-        DeleteObjectRequest deleteRequest = requestGenerator.generateDeleteRequest(photo);
+    private void deleteAwsPhotoBy(String key) {
+        DeleteObjectRequest deleteRequest = requestGenerator.generateDeleteRequest(key);
         s3Client.deleteObject(deleteRequest);
     }
 }

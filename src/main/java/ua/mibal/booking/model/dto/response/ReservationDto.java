@@ -19,6 +19,7 @@ package ua.mibal.booking.model.dto.response;
 import ua.mibal.booking.model.entity.embeddable.ReservationDetails;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -32,7 +33,7 @@ public record ReservationDto(
 ) {
     public record ReservationApartmentDto(
             String name,
-            Set<String> photos
+            List<String> photos
     ) {
     }
 }

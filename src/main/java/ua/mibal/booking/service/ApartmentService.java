@@ -57,6 +57,11 @@ public class ApartmentService {
                 .toList();
     }
 
+    public Apartment getOneFetchPhotos(Long id) {
+        return apartmentRepository.findByIdFetchPhotos(id)
+                .orElseThrow(() -> new ApartmentNotFoundException(id));
+    }
+
     public void create(CreateApartmentDto createApartmentDto) {
         Apartment apartment = apartmentMapper.toEntity(createApartmentDto);
         apartmentRepository.save(apartment);
@@ -92,12 +97,6 @@ public class ApartmentService {
         if (!apartmentRepository.doesApartmentHavePhoto(id, new Photo(link))) {
             throw new ApartmentDoesNotHavePhotoException();
         }
-    }
-
-    @Transactional
-    public void deleteApartmentPhotoByLink(Long id, String link) {
-        Apartment apartment = getOne(id);
-        apartment.deletePhoto(new Photo(link));
     }
 
     private void validateExists(Long id) {

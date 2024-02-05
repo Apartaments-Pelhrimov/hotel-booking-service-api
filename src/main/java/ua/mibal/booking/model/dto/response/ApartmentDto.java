@@ -21,7 +21,6 @@ import ua.mibal.booking.model.entity.embeddable.Bed;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author Mykhailo Balakhon
@@ -29,7 +28,7 @@ import java.util.Set;
  */
 public record ApartmentDto(
         String name,
-        Set<String> photos,
+        List<String> photos,
         ApartmentOptions options,
         Double rating,
         List<Bed> beds,
