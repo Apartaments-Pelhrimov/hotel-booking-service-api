@@ -84,6 +84,9 @@ public class AuthService {
 
     private void restoreUserPassword(String email) {
         User user = userService.getOne(email);
+        if (!user.isEnabled()) {
+            return;
+        }
         Token token =
                 tokenService.generateAndSaveTokenFor(user);
         emailSendingService.sendPasswordChangingEmail(token);
