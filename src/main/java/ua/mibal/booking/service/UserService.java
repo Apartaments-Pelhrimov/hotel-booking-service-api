@@ -109,10 +109,6 @@ public class UserService {
         userRepository.updateUserPhotoByEmail(photo, email);
     }
 
-    public void deleteUserPhotoByEmail(String email) {
-        userRepository.deleteUserPhotoByEmail(email);
-    }
-
     public int clearNotEnabledWithNoTokens() {
         return userRepository.deleteNotEnabledWithNoTokens();
     }

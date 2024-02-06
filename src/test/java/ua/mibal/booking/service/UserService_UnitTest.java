@@ -421,14 +421,4 @@ class UserService_UnitTest {
         verify(userRepository, times(1))
                 .updateUserPhotoByEmail(new Photo(link), email);
     }
-
-    @Test
-    void deleteUserPhotoByEmail() {
-        String email = "email";
-
-        service.deleteUserPhotoByEmail(email);
-
-        verify(userRepository, times(1))
-                .deleteUserPhotoByEmail(email);
-    }
 }
