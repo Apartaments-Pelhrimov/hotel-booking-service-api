@@ -27,10 +27,14 @@ import java.util.Optional;
 public interface TokenRepository extends JpaRepository<Token, Long> {
 
     @Query("""
-            select t from Token t
-            where t.value = ?1
+            select t
+                from Token t
+            where
+                t.value = ?1
+            and
+                t.expiresAt > now()
             """)
-    Optional<Token> findByValue(String tokenValue);
+    Optional<Token> findNotExpiredByValue(String tokenValue);
 
     @Transactional
     @Modifying
