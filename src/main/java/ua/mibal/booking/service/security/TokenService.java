@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.config.properties.TokenProps;
 import ua.mibal.booking.model.entity.Token;
 import ua.mibal.booking.model.entity.User;
-import ua.mibal.booking.model.exception.TokenExpiredException;
 import ua.mibal.booking.model.exception.entity.TokenNotFoundException;
 import ua.mibal.booking.repository.TokenRepository;
 
@@ -45,13 +44,8 @@ public class TokenService {
 
     @Transactional
     public Token getOneByValue(String tokenValue) {
-        Token token = tokenRepository.findByValue(tokenValue)
+        return tokenRepository.findNotExpiredByValue(tokenValue)
                 .orElseThrow(() -> new TokenNotFoundException(tokenValue));
-        if (token.isExpired()) {
-            tokenRepository.delete(token);
-            throw new TokenExpiredException(tokenValue);
-        }
-        return token;
     }
 
     public int clearExpiredTokens() {
