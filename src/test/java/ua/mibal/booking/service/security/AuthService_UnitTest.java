@@ -154,7 +154,10 @@ class AuthService_UnitTest {
     @Test
     void restore() {
         String email = "email";
-        when(userService.getOne(email)).thenReturn(user);
+        when(userService.getOne(email))
+                .thenReturn(user);
+        when(user.isEnabled())
+                .thenReturn(true);
         when(tokenService.generateAndSaveTokenFor(user))
                 .thenReturn(token);
 
