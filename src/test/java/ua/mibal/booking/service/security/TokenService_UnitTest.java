@@ -86,7 +86,7 @@ class TokenService_UnitTest {
     @Test
     void getOneByValue() {
         String tokenValue = "code";
-        when(tokenRepository.findByValue(tokenValue))
+        when(tokenRepository.findNotExpiredByValue(tokenValue))
                 .thenReturn(Optional.of(token));
 
         var actual = service.getOneByValue(tokenValue);
@@ -97,10 +97,22 @@ class TokenService_UnitTest {
     @Test
     void getOneByValue_should_throw_TokenNotFoundException() {
         String tokenValue = "code";
-        when(tokenRepository.findByValue(tokenValue))
+        when(tokenRepository.findNotExpiredByValue(tokenValue))
                 .thenReturn(Optional.empty());
 
         assertThrows(TokenNotFoundException.class,
                 () -> service.getOneByValue(tokenValue));
+    }
+
+    @Test
+    void clearExpiredTokens() {
+        int deletedCount = 123;
+
+        when(tokenRepository.deleteExpired())
+                .thenReturn(deletedCount);
+
+        int actual = service.clearExpiredTokens();
+
+        assertEquals(deletedCount, actual);
     }
 }
