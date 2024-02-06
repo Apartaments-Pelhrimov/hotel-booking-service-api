@@ -84,4 +84,21 @@ public class Token {
     public boolean isExpired() {
         return expiresAt.isBefore(now());
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Token token = (Token) o;
+        return value.equals(token.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return value.hashCode();
+    }
 }
