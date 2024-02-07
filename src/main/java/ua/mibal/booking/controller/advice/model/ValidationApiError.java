@@ -26,19 +26,19 @@ import java.util.stream.Collectors;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class MethodValidationApiError extends ApiError {
+public class ValidationApiError extends ApiError {
 
-    protected MethodValidationApiError(HttpStatus status,
-                                       String message) {
+    protected ValidationApiError(HttpStatus status,
+                                 String message) {
         super(status, "bad-request-error.validation", message);
     }
 
-    public static MethodValidationApiError of(HttpStatus status,
-                                              MethodArgumentNotValidException e) {
+    public static ValidationApiError of(HttpStatus status,
+                                        MethodArgumentNotValidException e) {
         String objectErrors = getObjectErrorsMessage(e);
         String fieldErrors = getFieldErrorsMessage(e);
         String message = (objectErrors + " " + fieldErrors).trim();
-        return new MethodValidationApiError(status, message);
+        return new ValidationApiError(status, message);
     }
 
     private static String getFieldErrorsMessage(MethodArgumentNotValidException e) {

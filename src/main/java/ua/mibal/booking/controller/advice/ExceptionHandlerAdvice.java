@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MultipartException;
 import ua.mibal.booking.controller.advice.model.ApiError;
-import ua.mibal.booking.controller.advice.model.MethodValidationApiError;
+import ua.mibal.booking.controller.advice.model.ValidationApiError;
 import ua.mibal.booking.model.exception.marker.ApiException;
 import ua.mibal.booking.model.exception.marker.InternalServerException;
 
@@ -49,13 +49,14 @@ public class ExceptionHandlerAdvice {
     public ResponseEntity<ApiError> handleValidationException(MethodArgumentNotValidException e) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         return ResponseEntity.status(status)
-                .body(MethodValidationApiError.of(status, e));
+                .body(ValidationApiError.of(status, e));
     }
 
-    @ExceptionHandler({
-            MultipartException.class, // Exception while load so big photo file to server
-    })
-    public ResponseEntity<ApiError> handleBadRequestException(Exception e) {
+    // FIXME
+    //  MultipartException when user load so big photo file to server
+    //  Implement preventive size validation
+    @ExceptionHandler(MultipartException.class)
+    public ResponseEntity<ApiError> handleMultipartException(Exception e) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         return ResponseEntity.status(status)
                 .body(ApiError.ofException(status, e));
