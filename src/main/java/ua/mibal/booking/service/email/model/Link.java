@@ -19,6 +19,9 @@ package ua.mibal.booking.service.email.model;
 import lombok.AllArgsConstructor;
 
 /**
+ * Structure class used to associate {@link Link} related data into one structure.
+ * Used only in HTML templates.
+ *
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
