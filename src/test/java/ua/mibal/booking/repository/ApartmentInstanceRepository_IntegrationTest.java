@@ -25,9 +25,13 @@ import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.TestPropertySource;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.entity.ApartmentInstance;
 import ua.mibal.booking.model.entity.Reservation;
@@ -39,6 +43,7 @@ import java.util.List;
 import static java.time.LocalDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace.NONE;
 import static ua.mibal.booking.testUtils.DataGenerator.testApartment;
 import static ua.mibal.booking.testUtils.DataGenerator.testApartmentInstance;
 import static ua.mibal.booking.testUtils.DataGenerator.testApartmentInstanceWithReservations;
@@ -47,11 +52,21 @@ import static ua.mibal.booking.testUtils.DataGenerator.testApartmentWithPriceFor
 import static ua.mibal.booking.testUtils.DataGenerator.testReservationOf;
 import static ua.mibal.booking.testUtils.DataGenerator.testUser;
 
-
+/**
+ * @author Mykhailo Balakhon
+ * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
+ */
 @DataJpaTest
-@TestPropertySource(locations = "classpath:application.yaml")
+@AutoConfigureTestDatabase(replace = NONE)
+@Testcontainers
+@TestPropertySource("classpath:application.yaml")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-class ApartmentInstanceRepository_UnitTest {
+class ApartmentInstanceRepository_IntegrationTest {
+
+    @Container
+    private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(
+            "postgres:15"
+    );
 
     @Autowired
     private ApartmentInstanceRepository repo;
@@ -91,6 +106,9 @@ class ApartmentInstanceRepository_UnitTest {
                 .isEqualTo(stats.getQueryExecutionCount() + stats.getEntityFetchCount());
     }
 
+    // FIXME
+    //  org.hibernate.exception.ConstraintViolationException: could not execute statement [ERROR: duplicate key value violates unique constraint "prices_apartment_id_and_person_uq"
+    //  Detail: Key (apartment_id, person)=(261, 7442) already exists.] [insert into prices (apartment_id,price,person) values (?,?,?)]
     @Test
     void findByApartmentIdFetchReservations() {
         Long apartmentId = apartmentInstance.getApartment().getId();
@@ -171,6 +189,7 @@ class ApartmentInstanceRepository_UnitTest {
         assertThat(freeByRequest).isEmpty();
     }
 
+    // TODO fixme
     @Test
     void findFreeByRequest_without_reservations_ApartmentInstance() {
         LocalDateTime requestFrom = now().plusYears(1);
@@ -185,6 +204,7 @@ class ApartmentInstanceRepository_UnitTest {
         assertThat(freeByRequest).hasSize(1);
     }
 
+    // TODO fixme
     @Test
     void findFreeByRequest_with_intersecting_and_without_reservations() {
         LocalDateTime requestFrom = now().plusYears(1);
