@@ -26,7 +26,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import ua.mibal.booking.model.dto.auth.AuthResponseDto;
-import ua.mibal.booking.model.dto.auth.ForgetPasswordDto;
 import ua.mibal.booking.model.dto.auth.RegistrationDto;
 import ua.mibal.booking.model.entity.Token;
 import ua.mibal.booking.model.entity.User;
@@ -76,8 +75,6 @@ class AuthService_UnitTest {
     private AuthResponseDto expectedAuthDto;
     @Mock
     private RegistrationDto registrationDto;
-    @Mock
-    private ForgetPasswordDto forgetPasswordDto;
 
     @BeforeEach
     void setup() {
@@ -185,8 +182,6 @@ class AuthService_UnitTest {
     @Test
     void setNewPassword() {
         String password = "pass";
-        when(forgetPasswordDto.password()).thenReturn(password);
-
         String code = "CODE";
         long id = 1L;
         when(tokenService.getOneByValue(code))
@@ -194,7 +189,7 @@ class AuthService_UnitTest {
         when(token.getUser()).thenReturn(user);
         when(user.getId()).thenReturn(id);
 
-        service.setNewPassword(code, forgetPasswordDto);
+        service.setNewPassword(code, password);
 
         verify(userService, times(1))
                 .setNewPasswordForUser(id, password);

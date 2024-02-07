@@ -20,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.model.dto.auth.AuthResponseDto;
-import ua.mibal.booking.model.dto.auth.ForgetPasswordDto;
 import ua.mibal.booking.model.dto.auth.RegistrationDto;
 import ua.mibal.booking.model.entity.Token;
 import ua.mibal.booking.model.entity.User;
@@ -74,12 +73,10 @@ public class AuthService {
     }
 
     @Transactional
-    public void setNewPassword(String code,
-                               ForgetPasswordDto forgetPasswordDto) {
-        Token token =
-                tokenService.getOneByValue(code);
+    public void setNewPassword(String tokenValue, String newPassword) {
+        Token token = tokenService.getOneByValue(tokenValue);
         Long userId = token.getUser().getId();
-        userService.setNewPasswordForUser(userId, forgetPasswordDto.password());
+        userService.setNewPasswordForUser(userId, newPassword);
     }
 
     private void restoreUserPassword(String email) {

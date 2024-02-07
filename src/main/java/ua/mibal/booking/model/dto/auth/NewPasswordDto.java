@@ -23,5 +23,5 @@ import ua.mibal.booking.model.validation.constraints.Password;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public record ForgetPasswordDto(@NotNull @Password String password) {
+public record NewPasswordDto(@NotNull @Password String password) {
 }

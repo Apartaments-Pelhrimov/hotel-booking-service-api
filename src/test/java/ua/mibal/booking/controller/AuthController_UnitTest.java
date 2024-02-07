@@ -18,6 +18,7 @@ package ua.mibal.booking.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.instancio.junit.InstancioSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -34,7 +35,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import ua.mibal.booking.model.dto.auth.AuthResponseDto;
-import ua.mibal.booking.model.dto.auth.ForgetPasswordDto;
+import ua.mibal.booking.model.dto.auth.NewPasswordDto;
 import ua.mibal.booking.model.dto.auth.RegistrationDto;
 import ua.mibal.booking.service.security.AuthService;
 import ua.mibal.booking.testUtils.RegistrationDtoArgumentConverter;
@@ -135,26 +136,37 @@ class AuthController_UnitTest {
     }
 
     @ParameterizedTest
-    @CsvSource({"code", "27kRW,2FUvh$4zghVEF8GO0uJ=~e=A"})
-    void activateAccountRegistration_should_delegate_activation_code_to_AuthService(String code) throws Exception {
+    @InstancioSource
+    void activateNewAccount_should_delegate_token_to_AuthService(String token) throws Exception {
         mvc.perform(post("/api/auth/activate")
-                        .param("code", code))
+                        .param("token", token))
                 .andExpect(status().isNoContent());
 
         verify(authService, times(1))
-                .activateNewAccountBy(code);
+                .activateNewAccountBy(token);
     }
 
     @Test
-    void activateAccountRegistration_should_throw_exception_if_code_was_not_passed() throws Exception {
+    void activateNewAccount_should_throw_exception_if_token_was_not_passed() throws Exception {
         mvc.perform(post("/api/auth/activate"))
                 .andExpect(status().isBadRequest());
 
         verifyNoInteractions(authService);
     }
 
+    @ParameterizedTest
+    @InstancioSource
+    void forgetPassword_should_delegate_email_to_AuthService(String email) throws Exception {
+        mvc.perform(get("/api/auth/forget")
+                        .param("email", email))
+                .andExpect(status().isNoContent());
+
+        verify(authService, times(1))
+                .restore(email);
+    }
+
     @Test
-    void resetPassword_should_throw_exception_if_code_was_not_passed() throws Exception {
+    void forgetPassword_should_throw_exception_if_token_was_not_passed() throws Exception {
         mvc.perform(get("/api/auth/forget"))
                 .andExpect(status().isBadRequest());
 
@@ -162,17 +174,22 @@ class AuthController_UnitTest {
     }
 
     @Test
-    void resetPassword_should_delegate_email_to_AuthService() throws Exception {
-        mvc.perform(get("/api/auth/forget")
-                        .param("email", "email"))
+    void setNewPassword_should_delegate_params_to_AuthService() throws Exception {
+        String newPass ="password1";
+        String token = "token";
+
+        mvc.perform(put("/api/auth/forget/password")
+                        .param("token", token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new NewPasswordDto(newPass))))
                 .andExpect(status().isNoContent());
 
         verify(authService, times(1))
-                .restore("email");
+                .setNewPassword(token, newPass);
     }
 
     @Test
-    void updatePassword_should_throw_exception_if_code_was_not_passed() throws Exception {
+    void setNewPassword_should_throw_exception_if_token_was_not_passed() throws Exception {
         mvc.perform(put("/api/auth/forget/password"))
                 .andExpect(status().isBadRequest());
 
@@ -180,42 +197,28 @@ class AuthController_UnitTest {
     }
 
     @Test
-    void updatePassword_should_throw_exception_if_request_body_is_empty() throws Exception {
+    void setNewPassword_should_throw_exception_if_request_body_is_empty() throws Exception {
         mvc.perform(put("/api/auth/forget/password")
-                        .param("code", "code"))
+                        .param("token", "some_token"))
                 .andExpect(status().isBadRequest());
 
         verifyNoInteractions(authService);
     }
 
-    @Test
-    void updatePassword_should_delegate_params_to_AuthService() throws Exception {
-        ForgetPasswordDto forgetPasswordDto = new ForgetPasswordDto("password1");
-
-        mvc.perform(put("/api/auth/forget/password")
-                        .param("code", "code")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(forgetPasswordDto)))
-                .andExpect(status().isNoContent());
-
-        verify(authService, times(1))
-                .setNewPassword("code", forgetPasswordDto);
-    }
-
     @ParameterizedTest
     @CsvSource(value = {
-            "null, null",
-            "code, null",
-            "null, aaaa1234",
-            "code, aaaaaaa",
+            "null,                          null",
+            "token,                         null",
+            "null,                          aaaa1234",
+            "token,                         aaaaaaa",
             "27kRW2FUvh$4zghVEF8GO0uJ=~e=A, 1234567",
-            "code, aaa123"
+            "token,                         aaa123"
     }, nullValues = "null")
-    void setNewPassword_should_throw_ValidationException_while_pass_incorrect_ForgetPasswordDto(String code, String password) throws Exception {
+    void setNewPassword_should_throw_ValidationException_while_pass_incorrect_ForgetPasswordDto(String token, String password) throws Exception {
         mvc.perform(put("/api/auth/forget/password")
-                        .param("code", code)
+                        .param("token", token)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new ForgetPasswordDto(password))))
+                        .content(objectMapper.writeValueAsString(new NewPasswordDto(password))))
                 .andExpect(status().isBadRequest());
 
         verifyNoInteractions(authService);

@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ua.mibal.booking.model.dto.auth.AuthResponseDto;
-import ua.mibal.booking.model.dto.auth.ForgetPasswordDto;
+import ua.mibal.booking.model.dto.auth.NewPasswordDto;
 import ua.mibal.booking.model.dto.auth.RegistrationDto;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.service.security.AuthService;
@@ -63,14 +63,14 @@ public class AuthController {
 
     @GetMapping("/forget")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void resetPassword(@RequestParam("email") String email) {
+    public void forgetPassword(@RequestParam("email") String email) {
         authService.restore(email);
     }
 
     @PutMapping("/forget/password")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void forgetPassword(@RequestParam("token") String activationToken,
-                               @Valid @RequestBody ForgetPasswordDto forgetPasswordDto) {
-        authService.setNewPassword(activationToken, forgetPasswordDto);
+    public void setNewPassword(@RequestParam("token") String activationToken,
+                               @Valid @RequestBody NewPasswordDto newPasswordDto) {
+        authService.setNewPassword(activationToken, newPasswordDto.password());
     }
 }
