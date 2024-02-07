@@ -145,7 +145,7 @@ class UserRepository_IntegrationTest {
 
         entityManager.clear();
         User mergedUser = entityManager.find(User.class, user.getId());
-        assertSame(newPass, mergedUser.getPassword());
+        assertEquals(newPass, mergedUser.getPassword());
     }
 
     @Test
@@ -156,7 +156,7 @@ class UserRepository_IntegrationTest {
 
         entityManager.clear();
         User mergedUser = entityManager.find(User.class, user.getId());
-        assertEquals(newPhoto, mergedUser.getPhoto());
+        assertEquals(Optional.of(newPhoto), mergedUser.getPhoto());
 
     }
 
@@ -166,7 +166,7 @@ class UserRepository_IntegrationTest {
 
         entityManager.clear();
         User mergedUser = entityManager.find(User.class, user.getId());
-        assertNull(mergedUser.getPhoto());
+        assertEquals(Optional.empty(), mergedUser.getPhoto());
     }
 
     @Test
