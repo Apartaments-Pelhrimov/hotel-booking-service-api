@@ -88,7 +88,7 @@ class EmailContentProvider_UnitTest {
                 .thenReturn(new User());
         when(token.getValue())
                 .thenReturn(code);
-        when(emailType.getFrontLinkTemplate(code))
+        when(emailType.getFrontLinkFor(code))
                 .thenReturn(frontLink);
         when(templateEngine.insertIntoTemplate(eq(templateContent), anyMap()))
                 .thenReturn(insertedTemplate);

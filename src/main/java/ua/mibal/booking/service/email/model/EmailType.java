@@ -54,7 +54,7 @@ public enum EmailType {
         return messageSource.getMessage(templatePathCode, new Object[0], locale);
     }
 
-    public String getFrontLinkTemplate(String code) {
+    public String getFrontLinkFor(String code) {
         return frontLinkTemplate.formatted(code);
     }
 }

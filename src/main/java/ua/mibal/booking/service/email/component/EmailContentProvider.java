@@ -58,7 +58,7 @@ public class EmailContentProvider {
         return templateEngine.insertIntoTemplate(sourceHtmlTemplate, Map.of(
                 "user", token.getUser(),
                 "link", new Link(
-                        type.getFrontLinkTemplate(token.getValue()),
+                        type.getFrontLinkFor(token.getValue()),
                         tokenProps.validForMinutes()
                 )
         ));
