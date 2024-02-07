@@ -19,6 +19,7 @@ package ua.mibal.booking.service.email.model;
 import jakarta.mail.MessagingException;
 import jakarta.mail.Session;
 import jakarta.mail.internet.MimeMessage;
+import ua.mibal.booking.model.exception.EmailCreationException;
 
 import static jakarta.mail.Message.RecipientType.TO;
 
@@ -31,25 +32,26 @@ public class Email extends MimeMessage {
     protected Email(Session session,
                     String sender,
                     String recipients,
-                    EmailContent emailContent) throws MessagingException {
+                    EmailContent content) throws MessagingException {
         super(session);
         setFrom(sender);
         setRecipients(TO, recipients);
-        setSubject(emailContent.subject(), "UTF-8");
-        setContent(emailContent.body(), "text/html; charset=UTF-8");
+        setSubject(content.subject(), "UTF-8");
+        setContent(content.body(), "text/html; charset=UTF-8");
     }
 
     /**
+     * @param sender     comma separated address strings
      * @param recipients comma separated address strings
      */
     public static Email of(Session session,
-                           String senderEmail,
+                           String sender,
                            String recipients,
-                           EmailContent emailContent) {
+                           EmailContent content) {
         try {
-            return new Email(session, senderEmail, recipients, emailContent);
+            return new Email(session, sender, recipients, content);
         } catch (MessagingException e) {
-            throw new RuntimeException(e);
+            throw new EmailCreationException(e);
         }
     }
 }
