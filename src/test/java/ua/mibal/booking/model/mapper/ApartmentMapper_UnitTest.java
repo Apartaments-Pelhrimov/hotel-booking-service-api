@@ -55,7 +55,7 @@ import static ua.mibal.booking.testUtils.CustomAssertions.assertEqualsList;
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = ApartmentMapper.class)
+@SpringBootTest(classes = ApartmentMapperImpl.class)
 @TestPropertySource(locations = "classpath:application.yaml")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class ApartmentMapper_UnitTest {
