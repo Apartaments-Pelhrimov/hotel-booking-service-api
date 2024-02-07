@@ -26,6 +26,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.context.MessageSource;
+import ua.mibal.booking.config.properties.TokenProps;
 import ua.mibal.booking.model.entity.Token;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.exception.marker.InternalServerException;
@@ -55,6 +56,8 @@ class EmailContentProvider_UnitTest {
     private TemplateEngine templateEngine;
     @Mock
     private MessageSource messageSource;
+    @Mock
+    private TokenProps tokenProps;
 
     @Mock
     private EmailType emailType;
@@ -65,7 +68,7 @@ class EmailContentProvider_UnitTest {
 
     @BeforeEach
     void setup() {
-        emailContentProvider = new EmailContentProvider(classpathFileReader, templateEngine, messageSource);
+        emailContentProvider = new EmailContentProvider(classpathFileReader, templateEngine, messageSource, tokenProps);
     }
 
     @Test
