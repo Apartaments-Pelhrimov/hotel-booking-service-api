@@ -16,116 +16,171 @@
 
 package ua.mibal.booking.model.mapper;
 
+import org.instancio.junit.InstancioSource;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
+import ua.mibal.booking.model.dto.auth.AuthResponseDto;
+import ua.mibal.booking.model.dto.auth.RegistrationDto;
 import ua.mibal.booking.model.dto.request.ChangeNotificationSettingsDto;
 import ua.mibal.booking.model.dto.request.ChangeUserDetailsDto;
+import ua.mibal.booking.model.dto.response.UserDto;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.entity.embeddable.NotificationSettings;
 import ua.mibal.booking.model.entity.embeddable.Phone;
+import ua.mibal.booking.model.mapper.linker.UserPhotoLinker;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
+import static java.util.Optional.empty;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.when;
+import static ua.mibal.booking.model.entity.embeddable.NotificationSettings.DEFAULT;
+import static ua.mibal.booking.model.entity.embeddable.Role.USER;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = UserMapperImpl.class)
-@TestPropertySource(locations = "classpath:application.yaml")
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class UserMapper_UnitTest {
 
-    @Autowired
-    private UserMapper userMapper;
+    private UserMapper mapper;
 
     @Mock
-    private User user;
+    private UserPhotoLinker photoLinker;
     @Mock
-    private Phone phone;
+    private PhoneMapper phoneMapper;
+
     @Mock
-    private NotificationSettings notificationSettings;
+    private Phone mappedPhone;
 
-    // TODO
-    @Test
-    void toEntity() {
-    }
-
-    @Test
-    void toAuthResponse() {
-    }
-
-    @Test
-    void toDto() {
+    @BeforeEach
+    public void setup() {
+        mapper = new UserMapperImpl(photoLinker, phoneMapper);
     }
 
     @ParameterizedTest
-    @CsvSource({
-            "firstName, lastName, phone",
-            "firstName, lastName, null",
-            "firstName, null,     null",
-            "null,      null,     null",
-            "null,      null,     phone",
-            "null,      lastName, phone",
-            "null,      lastName, phone",
-    })
-    void update_User(String firstName, String lastName, String number) {
-        when(user.getPhone()).thenReturn(phone);
+    @InstancioSource
+    void toEntity(RegistrationDto registrationDto, String encodedPassword) {
+        when(phoneMapper.toNumberString(registrationDto.phone()))
+                .thenReturn(mappedPhone);
 
-        userMapper.update(user, new ChangeUserDetailsDto(firstName, lastName, number));
+        User user = mapper.toEntity(registrationDto, encodedPassword);
 
-        if (firstName == null) {
-            verify(user, never()).setFirstName(any());
-        } else {
-            verify(user, times(1)).setFirstName(firstName);
-        }
-        if (lastName == null) {
-            verify(user, never()).setLastName(any());
-        } else {
-            verify(user, times(1)).setLastName(lastName);
-        }
-        if (number == null) {
-            verify(user, never()).setPhone(any());
-            verify(user, never()).getPhone();
-            verifyNoInteractions(phone);
-        } else {
-            verify(phone, times(1)).setNumber(number);
-        }
+        assertThat(user.getId(), nullValue());
+        assertThat(user.getFirstName(), is(registrationDto.firstName()));
+        assertThat(user.getLastName(), is(registrationDto.lastName()));
+        assertThat(user.getEmail(), is(registrationDto.email()));
+        assertThat(user.getPassword(), is(encodedPassword));
+        assertThat(user.getPhone(), is(mappedPhone));
+        assertThat(user.getPhoto(), is(empty()));
+        assertThat(user.getNotificationSettings(), is(DEFAULT));
+        assertThat(user.isEnabled(), is(false));
+        assertThat(user.getRole(), is(USER));
+        assertThat(user.getReservations(), hasSize(0));
+        assertThat(user.getComments(), hasSize(0));
+        assertThat(user.getToken(), nullValue());
+    }
+
+    @Test
+    void toEntity_should_return_null_if_arguments_are_null() {
+        User user = mapper.toEntity(null, null);
+
+        assertThat(user, nullValue());
     }
 
     @ParameterizedTest
-    @CsvSource({
-            "true, false",
-            "true, null",
-            "null, null",
-            "null, true",
-    })
-    void update_NotificationSettings(Boolean receiveOrderEmails, Boolean receiveNewsEmails) {
-        userMapper.update(notificationSettings, new ChangeNotificationSettingsDto(receiveOrderEmails, receiveNewsEmails));
+    @InstancioSource
+    void toAuthResponse(User user, String jwtToken) {
+        AuthResponseDto authResponseDto = mapper.toAuthResponse(user, jwtToken);
 
-        if (receiveOrderEmails == null) {
-            verify(notificationSettings, never()).setReceiveOrderEmails(any());
-        } else {
-            verify(notificationSettings, times(1)).setReceiveOrderEmails(receiveOrderEmails);
-        }
-        if (receiveNewsEmails == null) {
-            verify(notificationSettings, never()).setReceiveNewsEmails(any());
-        } else {
-            verify(notificationSettings, times(1)).setReceiveNewsEmails(receiveNewsEmails);
-        }
+        assertThat(authResponseDto.firstName(), is(user.getFirstName()));
+        assertThat(authResponseDto.lastName(), is(user.getLastName()));
+        assertThat(authResponseDto.token(), is(jwtToken));
+    }
+
+    @Test
+    void toAuthResponse_should_return_null_if_arguments_are_null() {
+        AuthResponseDto authResponseDto = mapper.toAuthResponse(null, null);
+
+        assertThat(authResponseDto, nullValue());
+    }
+
+    @ParameterizedTest
+    @InstancioSource
+    void toDto(User user, String photoUrl) {
+        when(photoLinker.toLink(user))
+                .thenReturn(photoUrl);
+        when(phoneMapper.toNumberString(user.getPhone()))
+                .thenReturn(user.getPhone().getNumber());
+
+        UserDto userDto = mapper.toDto(user);
+
+        assertThat(userDto.firstName(), is(user.getFirstName()));
+        assertThat(userDto.lastName(), is(user.getLastName()));
+        assertThat(userDto.photo(), is(photoUrl));
+        assertThat(userDto.phone(), is(user.getPhone().getNumber()));
+        assertThat(userDto.email(), is(user.getEmail()));
+        assertThat(userDto.role(), is(user.getRole()));
+        assertThat(userDto.notificationSettings(), is(user.getNotificationSettings()));
+    }
+
+    @Test
+    void toDto_should_return_null_if_arguments_are_null() {
+        UserDto userDto = mapper.toDto(null);
+
+        assertThat(userDto, nullValue());
+    }
+
+    @ParameterizedTest
+    @MethodSource("ua.mibal.booking.testUtils.DataGenerator#testUsers")
+    void update_User(User source, ChangeUserDetailsDto userChanges) {
+        when(phoneMapper.toNumberString(userChanges.phone()))
+                .thenReturn(mappedPhone);
+
+        mapper.update(source, userChanges);
+
+        String expectedFirstName = userChanges.firstName() == null
+                ? source.getFirstName()
+                : userChanges.firstName();
+        String expectedLastName = userChanges.lastName() == null
+                ? source.getLastName()
+                : userChanges.lastName();
+        Phone expectedPhone = userChanges.phone() == null
+                ? source.getPhone()
+                : mappedPhone;
+
+        assertThat(source.getFirstName(), is(expectedFirstName));
+        assertThat(source.getLastName(), is(expectedLastName));
+        assertThat(source.getPhone(), is(expectedPhone));
+    }
+
+    @ParameterizedTest
+    @MethodSource("ua.mibal.booking.testUtils.DataGenerator#testNotificationSettings")
+    void update_NotificationSettings(NotificationSettings source,
+                                     ChangeNotificationSettingsDto userChanges) {
+        mapper.update(source, userChanges);
+
+        boolean expectedOrderEmails = userChanges.receiveOrderEmails() == null
+                ? source.isReceiveOrderEmails()
+                : userChanges.receiveOrderEmails();
+        boolean expectedNewsEmails = userChanges.receiveNewsEmails() == null
+                ? source.isReceiveNewsEmails()
+                : userChanges.receiveNewsEmails();
+
+        assertThat(source.isReceiveOrderEmails(), is(expectedOrderEmails));
+        assertThat(source.isReceiveNewsEmails(), is(expectedNewsEmails));
     }
 }

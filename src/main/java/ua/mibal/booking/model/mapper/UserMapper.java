@@ -19,9 +19,7 @@ package ua.mibal.booking.model.mapper;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingConstants;
 import org.mapstruct.MappingTarget;
-import org.mapstruct.NullValuePropertyMappingStrategy;
 import ua.mibal.booking.model.dto.auth.AuthResponseDto;
 import ua.mibal.booking.model.dto.auth.RegistrationDto;
 import ua.mibal.booking.model.dto.request.ChangeNotificationSettingsDto;
@@ -31,27 +29,34 @@ import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.entity.embeddable.NotificationSettings;
 import ua.mibal.booking.model.mapper.linker.UserPhotoLinker;
 
+import static org.mapstruct.InjectionStrategy.CONSTRUCTOR;
+import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
+import static org.mapstruct.NullValuePropertyMappingStrategy.IGNORE;
+
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Mapper(uses = {UserPhotoLinker.class, PhoneMapper.class},
-        componentModel = MappingConstants.ComponentModel.SPRING)
+@Mapper(
+        componentModel = SPRING,
+        injectionStrategy = CONSTRUCTOR, uses = {
+        UserPhotoLinker.class, PhoneMapper.class
+})
 public interface UserMapper {
 
     @Mapping(target = "password", source = "encodedPassword")
     User toEntity(RegistrationDto registrationDto, String encodedPassword);
 
-    @Mapping(target = "token", source = "token")
-    AuthResponseDto toAuthResponse(User user, String token);
+    @Mapping(target = "token", source = "jwtToken")
+    AuthResponseDto toAuthResponse(User user, String jwtToken);
 
     @Mapping(target = "photo", source = "user")
     UserDto toDto(User user);
 
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @BeanMapping(nullValuePropertyMappingStrategy = IGNORE)
     void update(@MappingTarget User user, ChangeUserDetailsDto changeUserDetailsDto);
 
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @BeanMapping(nullValuePropertyMappingStrategy = IGNORE)
     void update(@MappingTarget NotificationSettings notificationSettings,
                 ChangeNotificationSettingsDto changeNotificationSettingsDto);
 }

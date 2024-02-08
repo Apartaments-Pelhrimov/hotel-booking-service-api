@@ -17,9 +17,13 @@
 package ua.mibal.booking.testUtils;
 
 import org.instancio.Instancio;
+import org.instancio.settings.Keys;
+import org.instancio.settings.Settings;
 import org.junit.jupiter.params.provider.Arguments;
 import ua.mibal.booking.model.dto.auth.RegistrationDto;
 import ua.mibal.booking.model.dto.request.BedDto;
+import ua.mibal.booking.model.dto.request.ChangeNotificationSettingsDto;
+import ua.mibal.booking.model.dto.request.ChangeUserDetailsDto;
 import ua.mibal.booking.model.dto.request.CreateApartmentDto;
 import ua.mibal.booking.model.dto.request.CreateApartmentInstanceDto;
 import ua.mibal.booking.model.dto.request.PhotoDto;
@@ -32,6 +36,7 @@ import ua.mibal.booking.model.entity.Event;
 import ua.mibal.booking.model.entity.Reservation;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.entity.embeddable.Bed;
+import ua.mibal.booking.model.entity.embeddable.NotificationSettings;
 import ua.mibal.booking.model.entity.embeddable.Price;
 import ua.mibal.booking.model.entity.embeddable.ReservationDetails;
 import ua.mibal.booking.model.entity.embeddable.TurningOffTime;
@@ -53,6 +58,7 @@ import static java.util.Collections.unmodifiableList;
 import static java.util.List.of;
 import static java.util.function.Function.identity;
 import static org.instancio.Select.field;
+import static org.instancio.settings.Keys.BOOLEAN_NULLABLE;
 import static ua.mibal.booking.model.entity.Apartment.ApartmentClass.COMFORT;
 import static ua.mibal.booking.model.entity.Room.Type.BEDROOM;
 import static ua.mibal.booking.model.entity.Room.Type.LIVING_ROOM;
@@ -369,5 +375,29 @@ public class DataGenerator {
             reservations.add(reservation);
         }
         return unmodifiableList(reservations);
+    }
+
+    public static Stream<Arguments> testUsers() {
+        Settings settings = Settings.create()
+                .set(Keys.STRING_NULLABLE, true);
+        return Instancio.ofMap(User.class, ChangeUserDetailsDto.class)
+                .size(50)
+                .withSettings(settings)
+                .create()
+                .entrySet()
+                .stream()
+                .map(entry -> Arguments.of(entry.getKey(), entry.getValue()));
+    }
+
+    public static Stream<Arguments> testNotificationSettings() {
+        Settings settings = Settings.create()
+                .set(BOOLEAN_NULLABLE, true);
+        return Instancio.ofMap(NotificationSettings.class, ChangeNotificationSettingsDto.class)
+                .size(50)
+                .withSettings(settings)
+                .create()
+                .entrySet()
+                .stream()
+                .map(entry -> Arguments.of(entry.getKey(), entry.getValue()));
     }
 }
