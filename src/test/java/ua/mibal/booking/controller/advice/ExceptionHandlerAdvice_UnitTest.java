@@ -18,17 +18,11 @@ package ua.mibal.booking.controller.advice;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +32,7 @@ import org.springframework.web.multipart.MultipartException;
 import ua.mibal.booking.controller.advice.model.ApiError;
 import ua.mibal.booking.controller.advice.model.ValidationApiError;
 import ua.mibal.booking.model.exception.marker.ApiException;
+import ua.mibal.booking.test.annotations.UnitTest;
 
 import java.util.Locale;
 
@@ -52,9 +47,7 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@ExtendWith(MockitoExtension.class)
-@MockitoSettings(strictness = Strictness.LENIENT)
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@UnitTest
 class ExceptionHandlerAdvice_UnitTest {
 
     private ExceptionHandlerAdvice exceptionHandler;

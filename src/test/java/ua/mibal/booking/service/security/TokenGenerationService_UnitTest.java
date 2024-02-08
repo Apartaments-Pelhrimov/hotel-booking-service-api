@@ -17,17 +17,12 @@
 package ua.mibal.booking.service.security;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 import ua.mibal.booking.config.properties.TokenProps;
+import ua.mibal.booking.test.annotations.UnitTest;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -39,9 +34,7 @@ import static org.mockito.Mockito.when;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@ExtendWith(MockitoExtension.class)
-@MockitoSettings(strictness = Strictness.LENIENT)
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@UnitTest
 class TokenGenerationService_UnitTest {
 
     private TokenGenerationService service;

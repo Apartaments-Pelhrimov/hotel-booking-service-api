@@ -17,14 +17,8 @@
 package ua.mibal.booking.service.email.component;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 import org.springframework.context.MessageSource;
 import ua.mibal.booking.config.properties.TokenProps;
 import ua.mibal.booking.model.entity.Token;
@@ -32,6 +26,7 @@ import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.exception.marker.InternalServerException;
 import ua.mibal.booking.service.email.model.EmailContent;
 import ua.mibal.booking.service.email.model.EmailType;
+import ua.mibal.booking.test.annotations.UnitTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -43,9 +38,7 @@ import static org.mockito.Mockito.when;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@ExtendWith(MockitoExtension.class)
-@MockitoSettings(strictness = Strictness.LENIENT)
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@UnitTest
 class EmailContentProvider_UnitTest {
 
     private EmailContentProvider emailContentProvider;

@@ -17,25 +17,20 @@
 package ua.mibal.booking.service.reservation;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 import ua.mibal.booking.model.entity.ApartmentInstance;
 import ua.mibal.booking.model.entity.Event;
 import ua.mibal.booking.model.exception.service.BookingComServiceException;
 import ua.mibal.booking.model.request.ReservationRequest;
 import ua.mibal.booking.service.calendar.ICalService;
+import ua.mibal.booking.test.annotations.UnitTest;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -53,9 +48,7 @@ import static org.mockito.Mockito.when;
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @TestMethodOrder(OrderAnnotation.class)
-@ExtendWith(MockitoExtension.class)
-@MockitoSettings(strictness = Strictness.LENIENT)
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@UnitTest
 class BookingComReservationService_UnitTest {
     private final static String calendarUrl =
             "file:/Users/admin/IdeaProjects/hotel-booking-service/" +

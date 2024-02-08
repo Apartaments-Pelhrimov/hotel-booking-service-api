@@ -17,14 +17,8 @@
 package ua.mibal.booking.service;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 import ua.mibal.booking.model.dto.request.RoomDto;
 import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.entity.Room;
@@ -33,6 +27,7 @@ import ua.mibal.booking.model.exception.entity.RoomNotFoundException;
 import ua.mibal.booking.model.mapper.RoomMapper;
 import ua.mibal.booking.repository.ApartmentRepository;
 import ua.mibal.booking.repository.RoomRepository;
+import ua.mibal.booking.test.annotations.UnitTest;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
@@ -45,9 +40,7 @@ import static org.mockito.Mockito.when;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@ExtendWith(MockitoExtension.class)
-@MockitoSettings(strictness = Strictness.LENIENT)
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@UnitTest
 class RoomService_UnitTest {
 
     private RoomService service;

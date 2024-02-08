@@ -18,16 +18,10 @@ package ua.mibal.booking.model.mapper;
 
 import org.instancio.junit.InstancioSource;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 import ua.mibal.booking.model.dto.auth.AuthResponseDto;
 import ua.mibal.booking.model.dto.auth.RegistrationDto;
 import ua.mibal.booking.model.dto.request.ChangeNotificationSettingsDto;
@@ -37,6 +31,7 @@ import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.entity.embeddable.NotificationSettings;
 import ua.mibal.booking.model.entity.embeddable.Phone;
 import ua.mibal.booking.model.mapper.linker.UserPhotoLinker;
+import ua.mibal.booking.test.annotations.UnitTest;
 
 import static java.util.Optional.empty;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -51,9 +46,7 @@ import static ua.mibal.booking.model.entity.embeddable.Role.USER;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@ExtendWith(MockitoExtension.class)
-@MockitoSettings(strictness = Strictness.LENIENT)
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@UnitTest
 class UserMapper_UnitTest {
 
     private UserMapper mapper;

@@ -59,6 +59,7 @@ public class EmailSendingService {
         sendAsync(email);
     }
 
+    // TODO use ExecutorService
     private void sendAsync(Email email) {
         new Thread(() -> {
             try {

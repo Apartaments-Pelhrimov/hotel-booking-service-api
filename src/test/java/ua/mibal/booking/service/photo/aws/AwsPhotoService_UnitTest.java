@@ -18,15 +18,9 @@ package ua.mibal.booking.service.photo.aws;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 import org.springframework.web.multipart.MultipartFile;
 import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.entity.User;
@@ -36,6 +30,7 @@ import ua.mibal.booking.service.photo.aws.components.AwsStorage;
 import ua.mibal.booking.service.photo.aws.model.AwsPhoto;
 import ua.mibal.booking.service.photo.aws.model.AwsPhotoResponse;
 import ua.mibal.booking.service.photo.model.PhotoResponse;
+import ua.mibal.booking.test.annotations.UnitTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.clearAllCaches;
@@ -48,9 +43,7 @@ import static org.mockito.Mockito.when;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@ExtendWith(MockitoExtension.class)
-@MockitoSettings(strictness = Strictness.LENIENT)
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@UnitTest
 class AwsPhotoService_UnitTest {
 
     private AwsPhotoService service;

@@ -17,14 +17,8 @@
 package ua.mibal.booking.service.reservation;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 import org.springframework.data.domain.PageImpl;
 import ua.mibal.booking.model.dto.response.ReservationDto;
 import ua.mibal.booking.model.entity.Reservation;
@@ -35,6 +29,7 @@ import ua.mibal.booking.model.request.ReservationRequest;
 import ua.mibal.booking.repository.ReservationRepository;
 import ua.mibal.booking.service.UserService;
 import ua.mibal.booking.service.reservation.component.ReservationBuilder;
+import ua.mibal.booking.test.annotations.UnitTest;
 
 import java.util.List;
 import java.util.Optional;
@@ -51,9 +46,7 @@ import static ua.mibal.booking.model.entity.embeddable.Role.MANAGER;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@ExtendWith(MockitoExtension.class)
-@MockitoSettings(strictness = Strictness.LENIENT)
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@UnitTest
 class ReservationService_UnitTest {
 
     private ReservationService service;

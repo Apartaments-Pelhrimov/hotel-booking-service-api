@@ -17,14 +17,8 @@
 package ua.mibal.booking.service;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 import ua.mibal.booking.model.dto.request.CreateApartmentInstanceDto;
 import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.entity.ApartmentInstance;
@@ -37,6 +31,7 @@ import ua.mibal.booking.repository.ApartmentInstanceRepository;
 import ua.mibal.booking.repository.ApartmentRepository;
 import ua.mibal.booking.service.reservation.BookingComReservationService;
 import ua.mibal.booking.service.util.DateTimeUtils;
+import ua.mibal.booking.test.annotations.UnitTest;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -56,9 +51,7 @@ import static org.mockito.Mockito.when;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@ExtendWith(MockitoExtension.class)
-@MockitoSettings(strictness = Strictness.LENIENT)
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@UnitTest
 class ApartmentInstanceService_UnitTest {
 
     private ApartmentInstanceService service;

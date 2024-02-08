@@ -17,14 +17,8 @@
 package ua.mibal.booking.service.calendar;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 import ua.mibal.booking.model.dto.response.calendar.Calendar;
 import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.entity.ApartmentInstance;
@@ -35,6 +29,7 @@ import ua.mibal.booking.service.ApartmentInstanceService;
 import ua.mibal.booking.service.ApartmentService;
 import ua.mibal.booking.service.TurningOffService;
 import ua.mibal.booking.service.reservation.BookingComReservationService;
+import ua.mibal.booking.test.annotations.UnitTest;
 
 import java.util.List;
 
@@ -50,9 +45,7 @@ import static ua.mibal.booking.service.util.CollectionUtils.union;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@ExtendWith(MockitoExtension.class)
-@MockitoSettings(strictness = Strictness.LENIENT)
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@UnitTest
 class CalendarService_UnitTest {
 
     private CalendarService service;

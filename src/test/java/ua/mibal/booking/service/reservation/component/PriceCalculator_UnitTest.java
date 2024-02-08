@@ -17,18 +17,13 @@
 package ua.mibal.booking.service.reservation.component;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 import ua.mibal.booking.model.exception.IllegalReservationDateRangeException;
 import ua.mibal.booking.model.exception.service.PriceCalculatorException;
 import ua.mibal.booking.model.request.ReservationRequest;
+import ua.mibal.booking.test.annotations.UnitTest;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -41,9 +36,7 @@ import static org.mockito.Mockito.when;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@ExtendWith(MockitoExtension.class)
-@MockitoSettings(strictness = Strictness.LENIENT)
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@UnitTest
 class PriceCalculator_UnitTest {
 
     private PriceCalculator service;
@@ -69,8 +62,8 @@ class PriceCalculator_UnitTest {
     @ParameterizedTest
     @MethodSource("ua.mibal.booking.testUtils.DataGenerator#incorrectPriceForCalculation")
     void calculatePrice_should_throw_PriceCalculatorException(BigDecimal oneNightPrice,
-                                                                     LocalDate from,
-                                                                     LocalDate to) {
+                                                              LocalDate from,
+                                                              LocalDate to) {
         when(request.from()).thenReturn(from.atStartOfDay());
         when(request.to()).thenReturn(to.atStartOfDay());
 
