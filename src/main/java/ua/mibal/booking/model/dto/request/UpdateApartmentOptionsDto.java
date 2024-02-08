@@ -14,24 +14,17 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.mapper;
-
-import org.mapstruct.Mapper;
-import ua.mibal.booking.model.dto.request.CreateApartmentInstanceDto;
-import ua.mibal.booking.model.entity.ApartmentInstance;
-
-import java.util.List;
-
-import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
+package ua.mibal.booking.model.dto.request;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Mapper(componentModel = SPRING)
-public interface ApartmentInstanceMapper {
-
-    ApartmentInstance toEntity(CreateApartmentInstanceDto createApartmentInstanceDto);
-
-    List<ApartmentInstance> toEntities(List<CreateApartmentInstanceDto> createApartmentInstanceDtos);
+public record UpdateApartmentOptionsDto(
+        Boolean mealsIncluded,
+        Boolean kitchen,
+        Boolean bathroom,
+        Boolean wifi,
+        Boolean refrigerator
+) {
 }

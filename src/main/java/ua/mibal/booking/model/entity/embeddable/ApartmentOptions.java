@@ -41,21 +41,21 @@ public class ApartmentOptions {
 
     @Convert(converter = NumericBooleanConverter.class)
     @Column(nullable = false)
-    private Boolean mealsIncluded;
+    private boolean mealsIncluded;
 
     @Convert(converter = NumericBooleanConverter.class)
     @Column(nullable = false)
-    private Boolean kitchen;
+    private boolean kitchen;
 
     @Convert(converter = NumericBooleanConverter.class)
     @Column(nullable = false)
-    private Boolean bathroom;
+    private boolean bathroom;
 
     @Convert(converter = NumericBooleanConverter.class)
     @Column(nullable = false)
-    private Boolean wifi;
+    private boolean wifi;
 
     @Convert(converter = NumericBooleanConverter.class)
     @Column(nullable = false)
-    private Boolean refrigerator;
+    private boolean refrigerator;
 }

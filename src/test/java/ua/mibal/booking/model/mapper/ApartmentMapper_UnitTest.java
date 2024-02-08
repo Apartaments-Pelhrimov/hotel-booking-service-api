@@ -16,22 +16,27 @@
 
 package ua.mibal.booking.model.mapper;
 
+import org.instancio.junit.InstancioSource;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
+import ua.mibal.booking.model.dto.request.CreateApartmentDto;
 import ua.mibal.booking.model.dto.request.UpdateApartmentDto;
+import ua.mibal.booking.model.dto.request.UpdateApartmentOptionsDto;
 import ua.mibal.booking.model.dto.response.ApartmentCardDto;
 import ua.mibal.booking.model.dto.response.ApartmentDto;
 import ua.mibal.booking.model.entity.Apartment;
+import ua.mibal.booking.model.entity.Apartment.ApartmentClass;
+import ua.mibal.booking.model.entity.ApartmentInstance;
 import ua.mibal.booking.model.entity.Room;
 import ua.mibal.booking.model.entity.embeddable.ApartmentOptions;
 import ua.mibal.booking.model.entity.embeddable.Bed;
@@ -39,165 +44,175 @@ import ua.mibal.booking.model.entity.embeddable.Price;
 import ua.mibal.booking.model.mapper.linker.ApartmentPhotoLinker;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.when;
-import static ua.mibal.booking.testUtils.CustomAssertions.assertEqualsList;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = ApartmentMapperImpl.class)
-@TestPropertySource(locations = "classpath:application.yaml")
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class ApartmentMapper_UnitTest {
 
-    @Autowired
-    private ApartmentMapper apartmentMapper;
-
-    @MockBean
-    private ApartmentPhotoLinker apartmentPhotoLinker;
+    private ApartmentMapper mapper;
 
     @Mock
-    private Apartment apartment;
+    private ApartmentInstanceMapper apartmentInstanceMapper;
     @Mock
-    private ApartmentOptions options;
+    private ApartmentPhotoLinker photoLinker;
+    @Mock
+    private RoomMapper roomMapper;
+    @Mock
+    private PriceMapper priceMapper;
 
-    private static List<Bed> addRoomsGetBeds(Apartment apartment) {
-        List.of(
-                Room.of(null, "test room", Room.Type.BEDROOM, null, List.of(new Bed(1, Bed.Type.BUNK))),
-                Room.of(null, "test room", Room.Type.BEDROOM, null, List.of(new Bed(2, Bed.Type.TRANSFORMER)))
-        ).forEach(r -> apartment.getRooms().add(r));
-        return List.of(new Bed(1, Bed.Type.BUNK), new Bed(2, Bed.Type.TRANSFORMER));
-    }
+    @Mock
+    private List<String> photos;
+    @Mock
+    private List<Bed> beds;
 
-    private static BigDecimal addPricesGetMin(Apartment apartment) {
-        List.of(
-                new Price(1, BigDecimal.ZERO),
-                new Price(6, BigDecimal.TEN)
-        ).forEach(apartment::putPrice);
-        return BigDecimal.ZERO;
-    }
+    private Integer people = 1_000_003;
+    @Mock
+    private BigDecimal price;
+    @Spy
+    private List<Price> prices = new ArrayList<>();
+    @Spy
+    private List<Room> rooms = new ArrayList<>();
+    @Spy
+    private List<ApartmentInstance> apartmentInstances = new ArrayList<>();
 
-    private static Integer addRoomsGetSeats(Apartment apartment) {
-        return addRoomsGetBeds(apartment).stream()
-                .mapToInt(Bed::getSize)
-                .sum();
-    }
-
-    @Test
-    void toDto_correct_maps_price_and_beds() {
-        Apartment apartment = new Apartment();
-        BigDecimal expectedMinPrice = addPricesGetMin(apartment);
-        List<Bed> expectedBedList = addRoomsGetBeds(apartment);
-
-        ApartmentDto actual = apartmentMapper.toDto(apartment);
-
-        assertEquals(expectedMinPrice, actual.price());
-        assertEqualsList(expectedBedList, actual.beds());
-    }
-
-    @Test
-    void toCardDto_correct_maps_price_and_beds() {
-        Apartment apartment = new Apartment();
-        BigDecimal expectedMinPrice = addPricesGetMin(apartment);
-        Integer expectedSeatsCount = addRoomsGetSeats(apartment);
-
-        ApartmentCardDto actual = apartmentMapper.toCardDto(apartment);
-
-        assertEquals(expectedMinPrice, actual.price());
-        assertEquals(expectedSeatsCount, actual.people());
-    }
-
-    // TODO
-    @Test
-    void toEntity() {
-    }
-
-    @Test
-    void toInstance() {
+    @BeforeEach
+    public void setup() {
+        mapper = new ApartmentMapperImpl(apartmentInstanceMapper, photoLinker, roomMapper, priceMapper);
     }
 
     @ParameterizedTest
-    @CsvSource(value = {
-            "name, COMFORT, true, true, true , true, true , false",
-            "name, COMFORT, true, true, true , true, true , false",
-            "name, COMFORT, true, true, true , true, false, false",
-            "name, COMFORT, true, true, false, null, null , false",
-            "name, COMFORT, true, true, false, null, null , false",
-            "name, null   , true, true, false, null, null , false",
-            "null, COMFORT, true, true, false, null, null , false",
-            "name, COMFORT, true, true, true , true, true , true",
-            "name, COMFORT, true, true, true , true, true , true",
-            "null, COMFORT, true, true, true , true, true , true",
-    }, nullValues = "null")
-    void update(String name,
-                Apartment.ApartmentClass apartmentClass,
-                Boolean mealsIncluded,
-                Boolean kitchen,
-                Boolean bathroom,
-                Boolean wifi,
-                Boolean refrigerator,
-                boolean sourceApartmentOptionsIsNull) {
+    @InstancioSource
+    void toDto(Apartment source) {
+        when(photoLinker.toLinks(source))
+                .thenReturn(photos);
+        when(roomMapper.roomsToBeds(source.getRooms()))
+                .thenReturn(beds);
+        when(priceMapper.findMinPrice(source.getPrices()))
+                .thenReturn(price);
 
-        ApartmentOptions apartmentOptions = sourceApartmentOptionsIsNull
-                ? null
-                : new ApartmentOptions(mealsIncluded, kitchen, bathroom, wifi, refrigerator);
-        when(apartment.getOptions()).thenReturn(options);
+        ApartmentDto actual = mapper.toDto(source);
 
-        apartmentMapper.update(
-                apartment,
-                new UpdateApartmentDto(name, apartmentClass, apartmentOptions)
-        );
+        assertThat(actual.name(), is(source.getName()));
+        assertThat(actual.photos(), is(photos));
+        assertThat(actual.options(), is(source.getOptions()));
+        assertThat(actual.beds(), is(beds));
+        assertThat(actual.price(), is(price));
+    }
 
-        if (name == null) {
-            verify(apartment, never()).setName(any());
-        } else {
-            verify(apartment, times(1)).setName(name);
-        }
-        if (apartmentClass == null) {
-            verify(apartment, never()).setApartmentClass(any());
-        } else {
-            verify(apartment, times(1)).setApartmentClass(apartmentClass);
-        }
-        if (sourceApartmentOptionsIsNull) {
-            verify(apartment, never()).setOptions(any());
-            verify(apartment, never()).getOptions();
-            verifyNoInteractions(options);
-        } else {
-            if (mealsIncluded == null) {
-                verify(options, never()).setMealsIncluded(any());
-            } else {
-                verify(options, times(1)).setMealsIncluded(mealsIncluded);
-            }
-            if (kitchen == null) {
-                verify(options, never()).setKitchen(any());
-            } else {
-                verify(options, times(1)).setKitchen(kitchen);
-            }
-            if (bathroom == null) {
-                verify(options, never()).setBathroom(any());
-            } else {
-                verify(options, times(1)).setBathroom(bathroom);
-            }
-            if (wifi == null) {
-                verify(options, never()).setWifi(any());
-            } else {
-                verify(options, times(1)).setWifi(wifi);
-            }
-            if (refrigerator == null) {
-                verify(options, never()).setRefrigerator(any());
-            } else {
-                verify(options, times(1)).setRefrigerator(refrigerator);
-            }
-        }
+    @Test
+    void toDto_should_return_null() {
+        ApartmentDto actual = mapper.toDto(null);
+
+        assertThat(actual, nullValue());
+    }
+
+    @ParameterizedTest
+    @InstancioSource
+    void toCardDto(Apartment source) {
+        when(photoLinker.toLinks(source))
+                .thenReturn(photos);
+        when(roomMapper.roomsToPeopleCount(source.getRooms()))
+                .thenReturn(people);
+        when(priceMapper.findMinPrice(source.getPrices()))
+                .thenReturn(price);
+
+        ApartmentCardDto actual = mapper.toCardDto(source);
+
+        assertThat(actual.name(), is(source.getName()));
+        assertThat(actual.photos(), is(photos));
+        assertThat(actual.options(), is(source.getOptions()));
+        assertThat(actual.rating(), is(source.getRating()));
+        assertThat(actual.people(), is(people));
+        assertThat(actual.price(), is(price));
+    }
+
+    @Test
+    void toCardDto_should_return_null() {
+        ApartmentCardDto actual = mapper.toCardDto(null);
+
+        assertThat(actual, nullValue());
+    }
+
+    @ParameterizedTest
+    @InstancioSource
+    void toEntity(CreateApartmentDto source) {
+        when(priceMapper.toEntities(source.prices()))
+                .thenReturn(prices);
+        when(roomMapper.toEntities(source.rooms()))
+                .thenReturn(rooms);
+        when(apartmentInstanceMapper.toEntities(source.instances()))
+                .thenReturn(apartmentInstances);
+
+        Apartment actual = mapper.toEntity(source);
+
+        assertThat(actual.getName(), is(source.name()));
+        assertThat(actual.getApartmentClass(), is(source.apartmentClass()));
+        assertThat(actual.getOptions(), is(source.options()));
+        assertThat(actual.getPrices(), is(prices));
+        assertThat(actual.getRooms(), is(rooms));
+        assertThat(actual.getApartmentInstances(), is(apartmentInstances));
+    }
+
+    @Test
+    void toEntity() {
+        Apartment actual = mapper.toEntity(null);
+
+        assertThat(actual, nullValue());
+    }
+
+    @ParameterizedTest
+    @MethodSource("ua.mibal.booking.testUtils.DataGenerator#testApartments")
+    void update_Apartment(Apartment original, UpdateApartmentDto changes) {
+        mapper.update(original, changes);
+
+        String expectedName = changes.name() == null
+                ? original.getName()
+                : changes.name();
+        ApartmentClass expectedClass = changes.apartmentClass() == null
+                ? original.getApartmentClass()
+                : changes.apartmentClass();
+
+        assertThat(original.getName(), is(expectedName));
+        assertThat(original.getApartmentClass(), is(expectedClass));
+    }
+
+    @ParameterizedTest
+    @MethodSource("ua.mibal.booking.testUtils.DataGenerator#testApartmentOptions")
+    void update_ApartmentOptions(ApartmentOptions original, UpdateApartmentOptionsDto changes) {
+        mapper.update(original, changes);
+
+        boolean expectedMealsIncluded = changes.mealsIncluded() == null
+                ? original.isMealsIncluded()
+                : changes.mealsIncluded();
+        boolean expectedKitchen = changes.kitchen() == null
+                ? original.isKitchen()
+                : changes.kitchen();
+        boolean expectedBathroom = changes.bathroom() == null
+                ? original.isBathroom()
+                : changes.bathroom();
+        boolean expectedWifi = changes.wifi() == null
+                ? original.isWifi()
+                : changes.wifi();
+        boolean expectedRefrigerator = changes.refrigerator() == null
+                ? original.isRefrigerator()
+                : changes.refrigerator();
+
+        assertThat(original.isMealsIncluded(), is(expectedMealsIncluded));
+        assertThat(original.isKitchen(), is(expectedKitchen));
+        assertThat(original.isBathroom(), is(expectedBathroom));
+        assertThat(original.isWifi(), is(expectedWifi));
+        assertThat(original.isRefrigerator(), is(expectedRefrigerator));
     }
 }

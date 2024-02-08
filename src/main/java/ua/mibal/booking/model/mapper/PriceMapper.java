@@ -21,6 +21,12 @@ import org.mapstruct.MappingConstants;
 import ua.mibal.booking.model.dto.request.PriceDto;
 import ua.mibal.booking.model.entity.embeddable.Price;
 
+import java.math.BigDecimal;
+import java.util.List;
+
+import static java.lang.Integer.MAX_VALUE;
+import static java.math.BigDecimal.valueOf;
+
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
@@ -30,5 +36,16 @@ public interface PriceMapper {
 
     Price toEntity(PriceDto priceDto);
 
+    List<Price> toEntities(List<PriceDto> priceDtos);
+
     PriceDto toDto(Price price);
+
+    default BigDecimal findMinPrice(List<Price> prices) {
+        if (prices == null || prices.isEmpty()) {
+            return null;
+        }
+        return prices.stream()
+                .map(Price::getAmount)
+                .reduce(valueOf(MAX_VALUE), BigDecimal::min);
+    }
 }

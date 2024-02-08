@@ -16,9 +16,8 @@
 
 package ua.mibal.booking.model.dto.request;
 
-import jakarta.validation.constraints.Size;
-import ua.mibal.booking.model.entity.Apartment;
-import ua.mibal.booking.model.entity.embeddable.ApartmentOptions;
+import ua.mibal.booking.model.entity.Apartment.ApartmentClass;
+import ua.mibal.booking.model.validation.constraints.Name;
 
 /**
  * @author Mykhailo Balakhon
@@ -26,11 +25,9 @@ import ua.mibal.booking.model.entity.embeddable.ApartmentOptions;
  */
 public record UpdateApartmentDto(
 
-        @Size(min = 3)
+        @Name
         String name,
 
-        Apartment.ApartmentClass apartmentClass,
-
-        ApartmentOptions options
+        ApartmentClass apartmentClass
 ) {
 }

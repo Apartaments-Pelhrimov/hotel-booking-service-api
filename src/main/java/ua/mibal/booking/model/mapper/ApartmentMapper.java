@@ -19,73 +19,51 @@ package ua.mibal.booking.model.mapper;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingConstants;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import ua.mibal.booking.model.dto.request.CreateApartmentDto;
 import ua.mibal.booking.model.dto.request.UpdateApartmentDto;
+import ua.mibal.booking.model.dto.request.UpdateApartmentOptionsDto;
 import ua.mibal.booking.model.dto.response.ApartmentCardDto;
 import ua.mibal.booking.model.dto.response.ApartmentDto;
 import ua.mibal.booking.model.entity.Apartment;
-import ua.mibal.booking.model.entity.Room;
 import ua.mibal.booking.model.entity.embeddable.ApartmentOptions;
-import ua.mibal.booking.model.entity.embeddable.Bed;
-import ua.mibal.booking.model.entity.embeddable.Price;
 import ua.mibal.booking.model.mapper.linker.ApartmentPhotoLinker;
 
-import java.math.BigDecimal;
-import java.util.List;
-
-import static java.lang.Integer.MAX_VALUE;
-import static java.math.BigDecimal.valueOf;
+import static org.mapstruct.InjectionStrategy.CONSTRUCTOR;
+import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Mapper(uses = ApartmentPhotoLinker.class,
-        componentModel = MappingConstants.ComponentModel.SPRING)
-public abstract class ApartmentMapper {
+@Mapper(
+        componentModel = SPRING,
+        injectionStrategy = CONSTRUCTOR,
+        uses = {
+                ApartmentInstanceMapper.class,
+                ApartmentPhotoLinker.class,
+                RoomMapper.class,
+                PriceMapper.class
+        })
+public interface ApartmentMapper {
 
     @Mapping(target = "price", source = "prices")
     @Mapping(target = "beds", source = "rooms")
     @Mapping(target = "photos", source = "apartment")
-    public abstract ApartmentDto toDto(Apartment apartment);
+    ApartmentDto toDto(Apartment apartment);
 
     @Mapping(target = "price", source = "prices")
     @Mapping(target = "people", source = "rooms")
     @Mapping(target = "photos", source = "apartment")
-    public abstract ApartmentCardDto toCardDto(Apartment apartment);
+    ApartmentCardDto toCardDto(Apartment apartment);
 
-    public abstract Apartment toEntity(CreateApartmentDto createApartmentDto);
-
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    public abstract void update(@MappingTarget Apartment apartment, UpdateApartmentDto updateApartmentDto);
+    @Mapping(target = "apartmentInstances", source = "instances")
+    Apartment toEntity(CreateApartmentDto createApartmentDto);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    public abstract void update(@MappingTarget ApartmentOptions target, ApartmentOptions source);
+    void update(@MappingTarget Apartment apartment, UpdateApartmentDto updateApartmentDto);
 
-    protected List<Bed> roomsToBeds(List<Room> rooms) {
-        return rooms.stream()
-                .flatMap(room -> room.getBeds().stream())
-                .toList();
-    }
-
-    protected Integer roomsToPeopleCount(List<Room> rooms) {
-        return rooms.stream()
-                .map(Room::getBeds)
-                .mapToInt(beds -> beds.stream()
-                        .mapToInt(Bed::getSize)
-                        .sum()
-                ).sum();
-    }
-
-    protected BigDecimal findMinPrice(List<Price> prices) {
-        if (prices == null || prices.isEmpty()) {
-            return null;
-        }
-        return prices.stream()
-                .map(Price::getAmount)
-                .reduce(valueOf(MAX_VALUE), BigDecimal::min);
-    }
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void update(@MappingTarget ApartmentOptions target, UpdateApartmentOptionsDto source);
 }

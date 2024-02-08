@@ -17,16 +17,37 @@
 package ua.mibal.booking.model.mapper;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.MappingConstants;
 import ua.mibal.booking.model.dto.request.RoomDto;
 import ua.mibal.booking.model.entity.Room;
+import ua.mibal.booking.model.entity.embeddable.Bed;
+
+import java.util.List;
+
+import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+@Mapper(componentModel = SPRING)
 public interface RoomMapper {
 
     Room toEntity(RoomDto roomDto);
+
+    List<Room> toEntities(List<RoomDto> roomDtos);
+
+    default List<Bed> roomsToBeds(List<Room> rooms) {
+        return rooms.stream()
+                .flatMap(room -> room.getBeds().stream())
+                .toList();
+    }
+
+    default Integer roomsToPeopleCount(List<Room> rooms) {
+        return rooms.stream()
+                .map(Room::getBeds)
+                .mapToInt(beds -> beds.stream()
+                        .mapToInt(Bed::getSize)
+                        .sum()
+                ).sum();
+    }
 }

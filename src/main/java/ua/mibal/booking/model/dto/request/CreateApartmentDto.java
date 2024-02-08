@@ -17,11 +17,10 @@
 package ua.mibal.booking.model.dto.request;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import ua.mibal.booking.model.entity.Apartment.ApartmentClass;
 import ua.mibal.booking.model.entity.embeddable.ApartmentOptions;
+import ua.mibal.booking.model.validation.constraints.Name;
 
 import java.util.List;
 
@@ -31,8 +30,8 @@ import java.util.List;
  */
 public record CreateApartmentDto(
 
-        @NotBlank
-        @Size(min = 3)
+        @Name
+        @NotNull
         String name,
 
         @NotNull
@@ -42,9 +41,6 @@ public record CreateApartmentDto(
 
         @Valid
         List<PriceDto> prices,
-
-        @Valid
-        List<PhotoDto> photos,
 
         @Valid
         List<RoomDto> rooms,
