@@ -28,12 +28,12 @@ import java.util.List;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Getter
 public enum Role implements GrantedAuthority {
 
     USER("ROLE_USER"),
     MANAGER("ROLE_MANAGER", USER);
 
+    @Getter
     private final String authority;
     private final List<Role> children;
 
