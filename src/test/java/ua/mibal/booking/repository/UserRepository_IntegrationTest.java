@@ -17,30 +17,22 @@
 package ua.mibal.booking.repository;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.test.context.TestPropertySource;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.entity.ApartmentInstance;
 import ua.mibal.booking.model.entity.Comment;
 import ua.mibal.booking.model.entity.Reservation;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.entity.embeddable.Photo;
+import ua.mibal.booking.test.annotations.JpaTest;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace.NONE;
 import static ua.mibal.booking.testUtils.DataGenerator.testApartment;
 import static ua.mibal.booking.testUtils.DataGenerator.testApartmentInstance;
 import static ua.mibal.booking.testUtils.DataGenerator.testComment;
@@ -51,17 +43,8 @@ import static ua.mibal.booking.testUtils.DataGenerator.testUser;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@DataJpaTest
-@AutoConfigureTestDatabase(replace = NONE)
-@Testcontainers
-@TestPropertySource("classpath:application.yaml")
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@JpaTest
 class UserRepository_IntegrationTest {
-
-    @Container
-    private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(
-            "postgres:15"
-    );
 
     private static final User user = testUser();
 
