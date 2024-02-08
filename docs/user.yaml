@@ -11,7 +11,7 @@ paths:
       security:
         - bearer: [ ]
       summary: "GET api/users/me"
-      operationId: "getMe"
+      operationId: "getOne"
       responses:
         "200":
           description: "OK"
@@ -23,7 +23,7 @@ paths:
       security:
         - bearer: [ ]
       summary: "DELETE api/users/me"
-      operationId: "deleteMe"
+      operationId: "delete"
       requestBody:
         content:
           application/json:
@@ -107,8 +107,8 @@ components:
         role:
           type: "string"
           enum:
-            - "ROLE_USER"
-            - "ROLE_MANAGER"
+            - "USER"
+            - "MANAGER"
         notificationSettings:
           $ref: "#/components/schemas/NotificationSettings"
     DeleteMeDto:
