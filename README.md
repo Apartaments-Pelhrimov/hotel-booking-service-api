@@ -26,15 +26,15 @@ aspects of accommodation booking.
 This back-end Java Spring project allows for the management and utilization of information related to hotels and rooms,
 making it convenient for users to book and enjoy their accommodations.
 
-## Docker deploy configuration
+## Docker container configuration
 
 To build executable `.jar` file
 ```shell
-mvn package spring-boot:repackage
+mvn package
 ```
-To build and run Docker composite container with db:
+To build and run Docker composed container with db:
 ```shell
-mvn package spring-boot:repackage
+mvn package
 ```
 ```shell
 docker compose up
