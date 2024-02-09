@@ -27,7 +27,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,6 +36,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import ua.mibal.booking.config.properties.CorsProps;
 
 import static org.springframework.security.config.Customizer.withDefaults;
+import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 /**
  * @author Mykhailo Balakhon
@@ -58,9 +58,9 @@ public class MainSecurityConfig {
                         .anyRequest().permitAll()
                 )
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .oauth2ResourceServer(oauth -> oauth.
-                        jwt(withDefaults()))
+                        .sessionCreationPolicy(STATELESS))
+                .oauth2ResourceServer(oauth -> oauth
+                        .jwt(withDefaults()))
                 .httpBasic(withDefaults())
                 .build();
     }
