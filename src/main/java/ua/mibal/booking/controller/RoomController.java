@@ -16,7 +16,6 @@
 
 package ua.mibal.booking.controller;
 
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import ua.mibal.booking.config.security.annotation.ManagerAllowed;
 import ua.mibal.booking.model.dto.request.RoomDto;
 import ua.mibal.booking.service.RoomService;
 
@@ -36,11 +36,11 @@ import ua.mibal.booking.service.RoomService;
  */
 @RequiredArgsConstructor
 @RestController
+@ManagerAllowed
 @RequestMapping("/api/apartments")
 public class RoomController {
     private final RoomService roomService;
 
-    @RolesAllowed("MANAGER")
     @PostMapping("/{apartmentId}/rooms")
     @ResponseStatus(HttpStatus.CREATED)
     public void create(@PathVariable Long apartmentId,
@@ -48,7 +48,6 @@ public class RoomController {
         roomService.create(apartmentId, roomDto);
     }
 
-    @RolesAllowed("MANAGER")
     @DeleteMapping("/rooms/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {

@@ -16,7 +16,6 @@
 
 package ua.mibal.booking.controller;
 
-import jakarta.annotation.security.RolesAllowed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +30,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import ua.mibal.booking.config.security.annotation.ManagerAllowed;
+import ua.mibal.booking.config.security.annotation.UserAllowed;
 import ua.mibal.booking.controller.model.PhotoResponseEntity;
 import ua.mibal.booking.service.photo.PhotoService;
 import ua.mibal.booking.service.photo.model.PhotoResponse;
@@ -45,7 +46,7 @@ import ua.mibal.booking.service.photo.model.PhotoResponse;
 public class PhotoController {
     private final PhotoService photoService;
 
-    @RolesAllowed("USER")
+    @UserAllowed
     @GetMapping("/users/me/photo")
     public ResponseEntity<byte[]> getMyPhoto(Authentication authentication) {
         return getUserPhoto(authentication.getName());
@@ -57,7 +58,7 @@ public class PhotoController {
         return PhotoResponseEntity.of(photo);
     }
 
-    @RolesAllowed("USER")
+    @UserAllowed
     @PutMapping("/users/me/photo")
     @ResponseStatus(HttpStatus.CREATED)
     public void changeMyPhoto(@RequestParam("file") MultipartFile file,
@@ -65,7 +66,7 @@ public class PhotoController {
         photoService.changeUserPhoto(authentication.getName(), file);
     }
 
-    @RolesAllowed("USER")
+    @UserAllowed
     @DeleteMapping("/users/me/photo")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteMyPhoto(Authentication authentication) {
@@ -79,7 +80,7 @@ public class PhotoController {
         return PhotoResponseEntity.of(photo);
     }
 
-    @RolesAllowed("MANAGER")
+    @ManagerAllowed
     @PostMapping("/apartments/{id}/photos")
     @ResponseStatus(HttpStatus.CREATED)
     public void createApartmentPhoto(@PathVariable Long id,
@@ -87,7 +88,7 @@ public class PhotoController {
         photoService.createApartmentPhoto(id, file);
     }
 
-    @RolesAllowed("MANAGER")
+    @ManagerAllowed
     @DeleteMapping("/apartments/{apartmentId}/photos/{photoOrderIndex}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteApartmentPhoto(@PathVariable Long apartmentId,

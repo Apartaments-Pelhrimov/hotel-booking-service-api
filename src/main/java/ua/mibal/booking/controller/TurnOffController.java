@@ -16,7 +16,6 @@
 
 package ua.mibal.booking.controller;
 
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -24,6 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ua.mibal.booking.config.security.annotation.ManagerAllowed;
 import ua.mibal.booking.model.dto.request.TurnOffDto;
 import ua.mibal.booking.service.TurningOffService;
 
@@ -32,7 +32,7 @@ import ua.mibal.booking.service.TurningOffService;
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @RequiredArgsConstructor
-@RolesAllowed("MANAGER")
+@ManagerAllowed
 @RestController
 @RequestMapping("/api")
 public class TurnOffController {

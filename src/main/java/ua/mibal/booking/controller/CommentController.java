@@ -16,7 +16,6 @@
 
 package ua.mibal.booking.controller;
 
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -31,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import ua.mibal.booking.config.security.annotation.UserAllowed;
 import ua.mibal.booking.model.dto.request.CreateCommentDto;
 import ua.mibal.booking.model.dto.response.CommentDto;
 import ua.mibal.booking.service.CommentService;
@@ -51,7 +51,7 @@ public class CommentController {
         return commentService.getAllByApartment(apartmentId, pageable);
     }
 
-    @RolesAllowed("USER")
+    @UserAllowed
     @PostMapping("/{apartmentId}/comments")
     @ResponseStatus(HttpStatus.CREATED)
     public void create(@PathVariable Long apartmentId,
@@ -60,7 +60,7 @@ public class CommentController {
         commentService.create(createCommentDto, authentication.getName(), apartmentId);
     }
 
-    @RolesAllowed("USER")
+    @UserAllowed
     @DeleteMapping("/comments/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id,

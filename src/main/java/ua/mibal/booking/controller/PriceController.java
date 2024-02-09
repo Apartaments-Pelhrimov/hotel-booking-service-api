@@ -16,7 +16,6 @@
 
 package ua.mibal.booking.controller;
 
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -29,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import ua.mibal.booking.config.security.annotation.ManagerAllowed;
 import ua.mibal.booking.model.dto.request.PriceDto;
 import ua.mibal.booking.service.PriceService;
 
@@ -49,7 +49,7 @@ public class PriceController {
         return priceService.getAllByApartment(apartmentId);
     }
 
-    @RolesAllowed("MANAGER")
+    @ManagerAllowed
     @PutMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void put(@PathVariable Long apartmentId,
@@ -57,7 +57,7 @@ public class PriceController {
         priceService.put(apartmentId, priceDto);
     }
 
-    @RolesAllowed("MANAGER")
+    @ManagerAllowed
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long apartmentId,

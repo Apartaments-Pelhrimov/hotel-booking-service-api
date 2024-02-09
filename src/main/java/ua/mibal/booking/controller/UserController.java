@@ -16,7 +16,6 @@
 
 package ua.mibal.booking.controller;
 
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -29,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import ua.mibal.booking.config.security.annotation.UserAllowed;
 import ua.mibal.booking.model.dto.request.ChangeNotificationSettingsDto;
 import ua.mibal.booking.model.dto.request.ChangePasswordDto;
 import ua.mibal.booking.model.dto.request.ChangeUserDetailsDto;
@@ -42,7 +42,7 @@ import ua.mibal.booking.service.UserService;
  */
 @RequiredArgsConstructor
 @RestController
-@RolesAllowed("USER")
+@UserAllowed
 @RequestMapping("/api/users")
 public class UserController {
     private final UserService userService;

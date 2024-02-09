@@ -16,7 +16,6 @@
 
 package ua.mibal.booking.controller;
 
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -30,6 +29,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import ua.mibal.booking.config.security.annotation.ManagerAllowed;
+import ua.mibal.booking.config.security.annotation.UserAllowed;
 import ua.mibal.booking.model.dto.request.ReservationRejectingFormDto;
 import ua.mibal.booking.model.dto.response.ReservationDto;
 import ua.mibal.booking.model.mapper.ReservationRequestMapper;
@@ -48,19 +49,19 @@ public class ReservationController {
     private final ReservationService reservationService;
     private final ReservationRequestMapper reservationRequestMapper;
 
-    @RolesAllowed("MANAGER")
+    @ManagerAllowed
     @GetMapping("/reservations")
     public Page<ReservationDto> getAll(Pageable pageable) {
         return reservationService.getAll(pageable);
     }
 
-    @RolesAllowed("USER")
+    @UserAllowed
     @GetMapping("/users/me/reservations")
     public Page<ReservationDto> getAllByUser(Authentication authentication, Pageable pageable) {
         return reservationService.getAllByUser(authentication.getName(), pageable);
     }
 
-    @RolesAllowed("USER")
+    @UserAllowed
     @PatchMapping("/apartments/{id}/reserve")
     @ResponseStatus(HttpStatus.CREATED)
     public void reserve(@PathVariable Long id,
@@ -71,12 +72,12 @@ public class ReservationController {
         reservationService.reserve(request);
     }
 
-    @RolesAllowed("USER")
+    @UserAllowed
     @PatchMapping("/reservations/{id}/reject")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void rejectReservation(@PathVariable("id") Long id,
-                             @Valid @RequestBody ReservationRejectingFormDto reservationRejectingFormDto,
-                             Authentication authentication) {
+                                  @Valid @RequestBody ReservationRejectingFormDto reservationRejectingFormDto,
+                                  Authentication authentication) {
         reservationService.rejectReservation(id, authentication.getName(), reservationRejectingFormDto.reason());
     }
 }
