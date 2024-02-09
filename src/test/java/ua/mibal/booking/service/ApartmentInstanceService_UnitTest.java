@@ -92,9 +92,11 @@ class ApartmentInstanceService_UnitTest {
         int people = 1;
         ReservationRequest reservationRequest = new ReservationRequest(MIN, MAX, people, id, userEmail);
 
-        when(dateTimeUtils.reserveFrom(dateFrom)).thenReturn(MIN);
-        when(dateTimeUtils.reserveTo(dateTo)).thenReturn(MAX);
-        when(apartmentInstanceRepository.findFreeByRequestFetchApartmentAndPrices(id, MIN, MAX, people))
+        when(dateTimeUtils.reserveFrom(dateFrom))
+                .thenReturn(MIN);
+        when(dateTimeUtils.reserveTo(dateTo))
+                .thenReturn(MAX);
+        when(apartmentInstanceRepository.findFreeByRequestFetchApartmentAndPrices(reservationRequest))
                 .thenReturn(List.of(apartmentInstance2, apartmentInstance));
         when(bookingComReservationService.isFreeForReservation(apartmentInstance2, reservationRequest))
                 .thenReturn(false);
