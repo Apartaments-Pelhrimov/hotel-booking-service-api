@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import ua.mibal.booking.controller.model.PhotoResponseEntity;
 import ua.mibal.booking.service.photo.PhotoService;
 import ua.mibal.booking.service.photo.model.PhotoResponse;
 
@@ -53,9 +54,7 @@ public class PhotoController {
     @GetMapping("/users/{email}/photo")
     public ResponseEntity<byte[]> getUserPhoto(@PathVariable String email) {
         PhotoResponse photo = photoService.getUserPhoto(email);
-        return ResponseEntity.ok()
-                .contentType(photo.getContentType())
-                .body(photo.getBytes());
+        return PhotoResponseEntity.of(photo);
     }
 
     @RolesAllowed("USER")
@@ -77,9 +76,7 @@ public class PhotoController {
     public ResponseEntity<byte[]> getApartmentPhoto(@PathVariable Long apartmentId,
                                                     @PathVariable Integer photoOrderIndex) {
         PhotoResponse photo = photoService.getApartmentPhoto(apartmentId, photoOrderIndex);
-        return ResponseEntity.ok()
-                .contentType(photo.getContentType())
-                .body(photo.getBytes());
+        return PhotoResponseEntity.of(photo);
     }
 
     @RolesAllowed("MANAGER")
