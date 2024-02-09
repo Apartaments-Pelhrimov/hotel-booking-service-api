@@ -24,19 +24,19 @@ import org.springframework.stereotype.Component;
 
 // TODO
 /**
- * Custom {@link FlywayBeanPostProcessor} used to start Flyway migration
- * just after {@link Flyway} bean initialization
+ * Custom {@link BeanPostProcessor} that used to start Flyway migration
+ * just after {@link Flyway} bean initialization.
  *
- * {@link FlywayBeanPostProcessor} used only in {@code "production"} Spring profile
- * because of different schema validation and db migration order
- * at Spring boot app startup
+ * {@link BeanPostProcessor} used only in {@code .jar} packaging because
+ * Spring Boot calls at startup schema validation before than
+ * {@link Flyway} migration
  *
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @Profile("heroku")
 @Component
-public class FlywayBeanPostProcessor implements BeanPostProcessor {
+public class RunFlywayMigrationBeforeSchemaValidationBeanPostProcessor implements BeanPostProcessor {
 
     @Override
     public Object postProcessAfterInitialization(Object bean,
