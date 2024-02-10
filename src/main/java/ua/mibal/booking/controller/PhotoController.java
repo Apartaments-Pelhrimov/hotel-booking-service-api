@@ -46,12 +46,6 @@ import ua.mibal.booking.service.photo.model.PhotoResponse;
 public class PhotoController {
     private final PhotoService photoService;
 
-    @UserAllowed
-    @GetMapping("/users/me/photo")
-    public ResponseEntity<byte[]> getMyPhoto(Authentication authentication) {
-        return getUserPhoto(authentication.getName());
-    }
-
     @GetMapping("/users/{email}/photo")
     public ResponseEntity<byte[]> getUserPhoto(@PathVariable String email) {
         PhotoResponse photo = photoService.getUserPhoto(email);
