@@ -17,14 +17,18 @@
 package ua.mibal.booking.service.security;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ua.mibal.booking.model.dto.auth.AuthResponseDto;
+import ua.mibal.booking.model.dto.LoginDto;
 import ua.mibal.booking.model.dto.auth.RegistrationDto;
+import ua.mibal.booking.model.dto.auth.TokenDto;
 import ua.mibal.booking.model.entity.Token;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.exception.EmailAlreadyExistsException;
+import ua.mibal.booking.model.exception.IllegalPasswordException;
 import ua.mibal.booking.model.exception.entity.UserNotFoundException;
+import ua.mibal.booking.model.exception.marker.NotAuthorizedException;
 import ua.mibal.booking.model.mapper.UserMapper;
 import ua.mibal.booking.service.UserService;
 import ua.mibal.booking.service.email.EmailSendingService;
@@ -42,10 +46,15 @@ public class AuthService {
     private final UserService userService;
     private final TokenService tokenService;
     private final EmailSendingService emailSendingService;
+    private final PasswordEncoder passwordEncoder;
 
-    public AuthResponseDto login(User user) {
-        String token = jwtTokenService.generateJwtToken(user);
-        return userMapper.toAuthResponse(user, token);
+    public TokenDto login(LoginDto login) {
+        try {
+            return loginByCredentials(login);
+        } catch (UserNotFoundException | IllegalPasswordException hidden) {
+            // To hide from a client what is incorrect: username or password
+            throw new NotAuthorizedException();
+        }
     }
 
     @Transactional
@@ -66,7 +75,8 @@ public class AuthService {
     public void restore(String email) {
         try {
             restoreUserPassword(email);
-        } catch (UserNotFoundException ignored) {
+        } catch (UserNotFoundException hidden) {
+            // To hide from a client that user not found
         }
     }
 
@@ -84,6 +94,19 @@ public class AuthService {
         }
         Token token = tokenService.generateAndSaveTokenFor(user);
         emailSendingService.sendPasswordChangingEmail(token);
+    }
+
+    private TokenDto loginByCredentials(LoginDto login) {
+        User user = userService.getOne(login.username());
+        validatePasswordCorrect(login.password(), user.getPassword());
+        String token = jwtTokenService.generateJwtToken(user);
+        return userMapper.toToken(user, token);
+    }
+
+    private void validatePasswordCorrect(String raw, String encoded) {
+        if (!passwordEncoder.matches(raw, encoded)) {
+            throw new IllegalPasswordException();
+        }
     }
 
     private void validateEmailDoesNotExist(String email) {

@@ -20,8 +20,8 @@ import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import ua.mibal.booking.model.dto.auth.AuthResponseDto;
 import ua.mibal.booking.model.dto.auth.RegistrationDto;
+import ua.mibal.booking.model.dto.auth.TokenDto;
 import ua.mibal.booking.model.dto.request.ChangeNotificationSettingsDto;
 import ua.mibal.booking.model.dto.request.ChangeUserDetailsDto;
 import ua.mibal.booking.model.dto.response.UserDto;
@@ -48,7 +48,7 @@ public interface UserMapper {
     User toEntity(RegistrationDto registrationDto, String encodedPassword);
 
     @Mapping(target = "token", source = "jwtToken")
-    AuthResponseDto toAuthResponse(User user, String jwtToken);
+    TokenDto toToken(User user, String jwtToken);
 
     @Mapping(target = "photo", source = "user")
     UserDto toDto(User user);

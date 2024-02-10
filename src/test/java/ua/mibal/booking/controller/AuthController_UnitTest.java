@@ -29,23 +29,22 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import ua.mibal.booking.model.dto.auth.AuthResponseDto;
+import ua.mibal.booking.model.dto.LoginDto;
 import ua.mibal.booking.model.dto.auth.NewPasswordDto;
 import ua.mibal.booking.model.dto.auth.RegistrationDto;
+import ua.mibal.booking.model.dto.auth.TokenDto;
 import ua.mibal.booking.service.security.AuthService;
 import ua.mibal.booking.testUtils.RegistrationDtoArgumentConverter;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -77,19 +76,35 @@ class AuthController_UnitTest {
         this.mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
     }
 
-    @Test
-    void login_should_handle_call_AuthService() throws Exception {
-        AuthResponseDto expectedResponse = new AuthResponseDto("first", "last", "token");
-        when(authService.login(any()))
-                .thenReturn(expectedResponse);
+    @ParameterizedTest
+    @InstancioSource
+    void login(LoginDto loginDto, TokenDto expectedTokenDto) throws Exception {
+        when(authService.login(loginDto))
+                .thenReturn(expectedTokenDto);
 
-        mvc.perform(get("/api/auth/login")
-                        .with(httpBasic("username", "password")))
+        mvc.perform(post("/api/auth/login")
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginDto)))
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(expectedResponse)));
+                .andExpect(content().json(objectMapper.writeValueAsString(expectedTokenDto)));
     }
 
-    @ParameterizedTest(name = "[{index}] {arguments}")
+    @ParameterizedTest
+    @CsvSource(nullValues = "null", value = {
+            "null,    null",
+            "null,    correct",
+            "correct, null",
+    })
+    void login_should_return_BAD_REQUEST(String username, String password) throws Exception {
+        LoginDto incorrectLoginDto = new LoginDto(username, password);
+
+        mvc.perform(post("/api/auth/login")
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(incorrectLoginDto)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @ParameterizedTest
     @CsvSource(nullValues = "null", value = {
             // firstName
             "12345 Test +380951234567 example@example.com password1",
@@ -115,7 +130,7 @@ class AuthController_UnitTest {
     void register_should_throw_ValidationException_while_pass_incorrect_RegistrationDto(@ConvertWith(RegistrationDtoArgumentConverter.class)
                                                                                         RegistrationDto registrationDto) throws Exception {
         mvc.perform(post("/api/auth/register")
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(registrationDto)))
                 .andExpect(status().isBadRequest());
 
@@ -127,7 +142,7 @@ class AuthController_UnitTest {
     void register_should_accept_correct_RegistrationDto(@ConvertWith(RegistrationDtoArgumentConverter.class)
                                                         RegistrationDto registrationDto) throws Exception {
         mvc.perform(post("/api/auth/register")
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(registrationDto)))
                 .andExpect(status().isCreated());
 
@@ -175,12 +190,12 @@ class AuthController_UnitTest {
 
     @Test
     void setNewPassword_should_delegate_params_to_AuthService() throws Exception {
-        String newPass ="password1";
+        String newPass = "password1";
         String token = "token";
 
         mvc.perform(put("/api/auth/forget/password")
                         .param("token", token)
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new NewPasswordDto(newPass))))
                 .andExpect(status().isNoContent());
 
@@ -217,7 +232,7 @@ class AuthController_UnitTest {
     void setNewPassword_should_throw_ValidationException_while_pass_incorrect_ForgetPasswordDto(String token, String password) throws Exception {
         mvc.perform(put("/api/auth/forget/password")
                         .param("token", token)
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new NewPasswordDto(password))))
                 .andExpect(status().isBadRequest());
 

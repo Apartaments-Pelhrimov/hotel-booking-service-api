@@ -16,15 +16,21 @@
 
 package ua.mibal.booking.service.security;
 
+import org.instancio.junit.InstancioSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
-import ua.mibal.booking.model.dto.auth.AuthResponseDto;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import ua.mibal.booking.model.dto.LoginDto;
 import ua.mibal.booking.model.dto.auth.RegistrationDto;
+import ua.mibal.booking.model.dto.auth.TokenDto;
 import ua.mibal.booking.model.entity.Token;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.exception.EmailAlreadyExistsException;
 import ua.mibal.booking.model.exception.entity.UserNotFoundException;
+import ua.mibal.booking.model.exception.marker.NotAuthorizedException;
 import ua.mibal.booking.model.mapper.UserMapper;
 import ua.mibal.booking.service.UserService;
 import ua.mibal.booking.service.email.EmailSendingService;
@@ -59,30 +65,73 @@ class AuthService_UnitTest {
     private TokenService tokenService;
     @Mock
     private EmailSendingService emailSendingService;
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @Mock
     private User user;
     @Mock
     private Token token;
     @Mock
-    private AuthResponseDto expectedAuthDto;
+    private TokenDto expectedAuthDto;
     @Mock
     private RegistrationDto registrationDto;
 
     @BeforeEach
     void setup() {
-        service = new AuthService(jwtTokenService, userMapper, userService, tokenService, emailSendingService);
+        service = new AuthService(jwtTokenService, userMapper, userService, tokenService, emailSendingService, passwordEncoder);
     }
 
-    @Test
-    void login() {
-        String token = "test_token";
-        when(jwtTokenService.generateJwtToken(user)).thenReturn(token);
-        when(userMapper.toAuthResponse(user, token)).thenReturn(expectedAuthDto);
+    @ParameterizedTest
+    @InstancioSource
+    void login(LoginDto loginDto, String token, String originalUserPassword) {
 
-        var actual = service.login(user);
+        when(userService.getOne(loginDto.username()))
+                .thenReturn(user);
+        when(user.getPassword())
+                .thenReturn(originalUserPassword);
+        when(passwordEncoder.matches(loginDto.password(), originalUserPassword))
+                .thenReturn(true);
+        when(jwtTokenService.generateJwtToken(user))
+                .thenReturn(token);
+        when(userMapper.toToken(user, token))
+                .thenReturn(expectedAuthDto);
+
+        var actual = service.login(loginDto);
 
         assertEquals(expectedAuthDto, actual);
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            // Username          Password                   Token      Correct username  Correct password
+            "incorrect_username, correct_password,          any_token, correct_username, correct_password",
+            "incorrect_username, incorrect_password,        any_token, correct_username, correct_password",
+            "correct_username,   incorrect_password,        any_token, correct_username, correct_password",
+    })
+    void login_should_wrap_UserNotFoundException_and_IllegalPasswordException_into_NotAuthorizedException(
+            String username, String password, String token, String correctUsername, String correctPassword
+    ) {
+        LoginDto loginDto = new LoginDto(username, password);
+
+        if (username.equals(correctUsername)) {
+            when(userService.getOne(username))
+                    .thenReturn(user);
+        } else {
+            when(userService.getOne(username))
+                    .thenThrow(UserNotFoundException.class);
+        }
+        when(user.getPassword())
+                .thenReturn(correctPassword);
+        when(passwordEncoder.matches(password, correctPassword))
+                .thenReturn(password.equals(correctPassword));
+        when(jwtTokenService.generateJwtToken(user))
+                .thenReturn(token);
+        when(userMapper.toToken(user, token))
+                .thenReturn(expectedAuthDto);
+
+        assertThrows(NotAuthorizedException.class,
+                () -> service.login(loginDto));
     }
 
     @Test

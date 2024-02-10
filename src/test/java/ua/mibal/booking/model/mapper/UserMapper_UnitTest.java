@@ -22,8 +22,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
-import ua.mibal.booking.model.dto.auth.AuthResponseDto;
 import ua.mibal.booking.model.dto.auth.RegistrationDto;
+import ua.mibal.booking.model.dto.auth.TokenDto;
 import ua.mibal.booking.model.dto.request.ChangeNotificationSettingsDto;
 import ua.mibal.booking.model.dto.request.ChangeUserDetailsDto;
 import ua.mibal.booking.model.dto.response.UserDto;
@@ -96,19 +96,19 @@ class UserMapper_UnitTest {
 
     @ParameterizedTest
     @InstancioSource
-    void toAuthResponse(User user, String jwtToken) {
-        AuthResponseDto authResponseDto = mapper.toAuthResponse(user, jwtToken);
+    void toToken(User user, String jwtToken) {
+        TokenDto tokenDto = mapper.toToken(user, jwtToken);
 
-        assertThat(authResponseDto.firstName(), is(user.getFirstName()));
-        assertThat(authResponseDto.lastName(), is(user.getLastName()));
-        assertThat(authResponseDto.token(), is(jwtToken));
+        assertThat(tokenDto.firstName(), is(user.getFirstName()));
+        assertThat(tokenDto.lastName(), is(user.getLastName()));
+        assertThat(tokenDto.token(), is(jwtToken));
     }
 
     @Test
-    void toAuthResponse_should_return_null_if_arguments_are_null() {
-        AuthResponseDto authResponseDto = mapper.toAuthResponse(null, null);
+    void toToken_should_return_null_if_arguments_are_null() {
+        TokenDto tokenDto = mapper.toToken(null, null);
 
-        assertThat(authResponseDto, nullValue());
+        assertThat(tokenDto, nullValue());
     }
 
     @ParameterizedTest
