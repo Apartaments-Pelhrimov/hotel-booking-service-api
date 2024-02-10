@@ -52,14 +52,12 @@ public class AuthService {
     public void register(RegistrationDto registrationDto) {
         validateEmailDoesNotExist(registrationDto.email());
         User user = userService.save(registrationDto);
-        Token token =
-                tokenService.generateAndSaveTokenFor(user);
+        Token token = tokenService.generateAndSaveTokenFor(user);
         emailSendingService.sendAccountActivationEmail(token);
     }
 
     public void activateNewAccountBy(String tokenValue) {
-        Token token =
-                tokenService.getOneByValue(tokenValue);
+        Token token = tokenService.getOneByValue(tokenValue);
         Long userId = token.getUser().getId();
         userService.activateUserById(userId);
     }
@@ -84,8 +82,7 @@ public class AuthService {
         if (!user.isEnabled()) {
             return;
         }
-        Token token =
-                tokenService.generateAndSaveTokenFor(user);
+        Token token = tokenService.generateAndSaveTokenFor(user);
         emailSendingService.sendPasswordChangingEmail(token);
     }
 
