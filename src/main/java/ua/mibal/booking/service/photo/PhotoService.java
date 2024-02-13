@@ -25,15 +25,57 @@ import ua.mibal.booking.service.photo.model.PhotoResponse;
  */
 public interface PhotoService {
 
+    /**
+     * Returns {@link PhotoResponse} with user's profile photo
+     *
+     * @param email user's email used as user identifier
+     * @return {@link PhotoResponse} with user's profile photo
+     */
     PhotoResponse getUserPhoto(String email);
 
+    /**
+     * Deletes user's previous (old) photo from photo storage.
+     * Deletes old photo identifier from user entity.
+     * Uploads new {@link MultipartFile} into photo storage.
+     * Adds new photo identifier to user entity.
+     *
+     * @param email user's email used as user identifier
+     * @param photo photo to upload
+     */
     void changeUserPhoto(String email, MultipartFile photo);
 
+    /**
+     * Method deletes user's photo from photo storage and
+     * deletes previous (old) photo identifier from user entity.
+     *
+     * @param email user's email used as user identifier
+     */
     void deleteUserPhoto(String email);
 
-    PhotoResponse getApartmentPhoto(Long apartmentId, Integer photoOrderIndex);
+    /**
+     * Returns {@link PhotoResponse} with the apartment photo
+     *
+     * @param apartmentId identifier of the wanted apartment
+     * @param photoIndex  index of the wanted apartment photo
+     * @return {@link PhotoResponse} with the apartment photo
+     */
+    PhotoResponse getApartmentPhoto(Long apartmentId, Integer photoIndex);
 
-    void createApartmentPhoto(Long id, MultipartFile photo);
+    /**
+     * Uploads new {@link MultipartFile} photo into photo storage.
+     * Adds the new photo to the apartment entity.
+     *
+     * @param apartmentId identifier of the wanted apartment
+     * @param photo       photo to upload
+     */
+    void createApartmentPhoto(Long apartmentId, MultipartFile photo);
 
-    void deleteApartmentPhoto(Long apartmentId, Integer photoOrderIndex);
+    /**
+     * Method deletes apartment's photo from photo storage and
+     * deletes photo identifier from apartment entity.
+     *
+     * @param apartmentId identifier of the wanted apartment
+     * @param photoIndex  index of the wanted apartment photo
+     */
+    void deleteApartmentPhoto(Long apartmentId, Integer photoIndex);
 }
