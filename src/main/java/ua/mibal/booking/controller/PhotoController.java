@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import ua.mibal.booking.config.security.annotation.ManagerAllowed;
 import ua.mibal.booking.config.security.annotation.UserAllowed;
-import ua.mibal.booking.controller.model.PhotoResponseEntity;
+import ua.mibal.booking.controller.model.PhotoResponse;
 import ua.mibal.booking.service.photo.PhotoService;
 import ua.mibal.booking.service.photo.model.PhotoResource;
 
@@ -49,7 +49,7 @@ public class PhotoController {
     @GetMapping("/users/{email}/photo")
     public ResponseEntity<byte[]> getUserPhoto(@PathVariable String email) {
         PhotoResource photo = photoService.getUserPhoto(email);
-        return PhotoResponseEntity.of(photo);
+        return PhotoResponse.of(photo);
     }
 
     @UserAllowed
@@ -71,7 +71,7 @@ public class PhotoController {
     public ResponseEntity<byte[]> getApartmentPhoto(@PathVariable Long apartmentId,
                                                     @PathVariable Integer photoOrderIndex) {
         PhotoResource photo = photoService.getApartmentPhoto(apartmentId, photoOrderIndex);
-        return PhotoResponseEntity.of(photo);
+        return PhotoResponse.of(photo);
     }
 
     @ManagerAllowed

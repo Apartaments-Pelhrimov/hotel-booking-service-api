@@ -25,14 +25,14 @@ import ua.mibal.booking.service.photo.model.PhotoResource;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class PhotoResponseEntity extends ResponseEntity<byte[]> {
+public class PhotoResponse extends ResponseEntity<byte[]> {
 
-    protected PhotoResponseEntity(byte[] body, MediaType mediaType) {
+    protected PhotoResponse(byte[] body, MediaType mediaType) {
         super(body, HttpStatus.OK);
         getHeaders().setContentType(mediaType);
     }
 
-    public static PhotoResponseEntity of(PhotoResource photo) {
-        return new PhotoResponseEntity(photo.getBytes(), photo.getContentType());
+    public static PhotoResponse of(PhotoResource photo) {
+        return new PhotoResponse(photo.getBytes(), photo.getContentType());
     }
 }
