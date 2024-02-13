@@ -16,19 +16,31 @@
 
 package ua.mibal.booking.service.email.component;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ua.mibal.booking.model.entity.Token;
-import ua.mibal.booking.service.email.model.EmailType;
+import org.thymeleaf.context.Context;
+
+import static org.springframework.context.i18n.LocaleContextHolder.getLocale;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
+@RequiredArgsConstructor
 @Component
 public class TemplateEngine {
+    private final org.thymeleaf.TemplateEngine thymeleafTemplateEngine;
 
-    public String generate(EmailType type, Token token) {
-        // TODO
-        return "";
+    // TODO
+    //  implement localization
+    //  rename components
+    //  tests
+
+    public String generate(String template, Object... args) {
+        Context context = new Context(getLocale());
+        for (Object arg : args) {
+            context.setVariable(arg.getClass().getSimpleName(), arg);
+        }
+        return thymeleafTemplateEngine.process(template, context);
     }
 }

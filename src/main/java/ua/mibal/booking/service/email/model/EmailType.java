@@ -16,6 +16,7 @@
 
 package ua.mibal.booking.service.email.model;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -30,31 +31,24 @@ import java.util.Locale;
 public enum EmailType {
 
     ACCOUNT_ACTIVATION(
-            "mail.account-activation.template-path",
             "mail.account-activation.subject",
-            "https://apartmany-pe.cz/activate?code=%s"
+            "https://apartmany-pe.cz/activate"
     ),
     PASSWORD_CHANGING(
-            "mail.password-changing.template-path",
             "mail.password-changing.subject",
-            "https://apartmany-pe.cz/changePass?code=%s"
+            "https://apartmany-pe.cz/changePass"
     );
 
-    private final String templatePathCode;
     private final String subjectCode;
-    private final String frontLinkTemplate;
+    @Getter
+    private final String frontLink;
 
     public String getSubject(MessageSource messageSource) {
         Locale locale = LocaleContextHolder.getLocale();
         return messageSource.getMessage(subjectCode, new Object[0], locale);
     }
 
-    public String getTemplatePath(MessageSource messageSource) {
-        Locale locale = LocaleContextHolder.getLocale();
-        return messageSource.getMessage(templatePathCode, new Object[0], locale);
-    }
-
-    public String getFrontLinkFor(String code) {
-        return frontLinkTemplate.formatted(code);
+    public String getTemplateName() {
+        return name().toLowerCase();
     }
 }
