@@ -17,8 +17,8 @@
 package ua.mibal.booking.service.email;
 
 import jakarta.mail.Transport;
+import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -42,6 +42,7 @@ import static ua.mibal.booking.service.email.model.EmailType.PASSWORD_CHANGING;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
+@Ignore("Static Mocks are not allowed in MultiThreading")
 @UnitTest
 class EmailSendingService_UnitTest {
 
@@ -64,10 +65,7 @@ class EmailSendingService_UnitTest {
         service = new EmailSendingService(emailBuilder, emailProps);
     }
 
-    // TODO fixme static mocks in another Thread
-
     @ParameterizedTest
-    @Disabled
     @EnumSource(EmailType.class)
     void sendAccountActivationEmail(EmailType emailType) {
         try (MockedStatic<Transport> mockedTransport = mockStatic(Transport.class)) {
@@ -103,7 +101,6 @@ class EmailSendingService_UnitTest {
     }
 
     @Test
-    @Disabled
     void sendErrorEmailToDevelopers() {
         try (MockedStatic<Transport> mockedTransport = mockStatic(Transport.class)) {
             sendErrorEmailToDevelopers_mocked_Transport(mockedTransport);

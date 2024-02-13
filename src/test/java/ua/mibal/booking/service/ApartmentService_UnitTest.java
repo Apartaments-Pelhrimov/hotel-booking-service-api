@@ -74,58 +74,87 @@ class ApartmentService_UnitTest {
     }
 
     @Test
-    void create() {
-        when(apartmentMapper.toEntity(createApartmentDto)).thenReturn(apartment);
+    void getAllFetchPhotosBeds() {
+        when(apartmentRepository.findAllFetchPhotos())
+                .thenReturn(List.of(apartment, apartment));
+        when(apartmentMapper.toCardDto(apartment))
+                .thenReturn(apartmentCardDto);
 
-        service.create(createApartmentDto);
+        List<ApartmentCardDto> actual = service.getAllFetchPhotosBeds();
 
-        verify(apartmentRepository).save(apartment);
-    }
-
-    @Test
-    void update() {
-        Long id = 1L;
-        when(apartmentRepository.findById(id)).thenReturn(Optional.of(apartment));
-
-        service.update(updateApartmentDto, id);
-
-        verify(apartmentMapper, times(1)).update(apartment, updateApartmentDto);
-    }
-
-    @Test
-    void update_should_throw_ApartmentNotFoundException() {
-        Long id = 1L;
-        when(apartmentRepository.findById(id)).thenReturn(Optional.empty());
-
-        assertThrows(
-                ApartmentNotFoundException.class,
-                () -> service.update(updateApartmentDto, id)
+        assertEquals(
+                List.of(apartmentCardDto, apartmentCardDto),
+                actual
         );
-
-        verifyNoInteractions(apartmentMapper);
     }
 
     @Test
-    void delete() {
+    void getOne() {
         Long id = 1L;
-        when(apartmentRepository.existsById(id)).thenReturn(true);
 
-        service.delete(id);
+        when(apartmentRepository.findById(id))
+                .thenReturn(Optional.of(apartment));
 
-        verify(apartmentRepository, times(1)).deleteById(id);
+        var actual = service.getOne(id);
+
+        assertEquals(apartment, actual);
     }
 
     @Test
-    void delete_should_throw_ApartmentNotFoundException() {
+    void getOne_should_throw_ApartmentNotFoundException() {
         Long id = 1L;
-        when(apartmentRepository.existsById(id)).thenReturn(false);
 
-        assertThrows(
-                ApartmentNotFoundException.class,
-                () -> service.delete(id)
-        );
+        when(apartmentRepository.findById(id))
+                .thenReturn(Optional.empty());
 
-        verify(apartmentRepository, never()).deleteById(id);
+        assertThrows(ApartmentNotFoundException.class,
+                () -> service.getOne(id));
+    }
+
+    @Test
+    void getOneFetchPhotos() {
+        Long id = 1L;
+
+        when(apartmentRepository.findByIdFetchPhotos(id))
+                .thenReturn(Optional.of(apartment));
+
+        var actual = service.getOneFetchPhotos(id);
+
+        assertEquals(apartment, actual);
+    }
+
+    @Test
+    void getOneFetchPhotos_should_throw_ApartmentNotFoundException() {
+        Long id = 1L;
+
+        when(apartmentRepository.findByIdFetchPhotos(id))
+                .thenReturn(Optional.empty());
+
+        assertThrows(ApartmentNotFoundException.class,
+                () -> service.getOneFetchPhotos(id));
+    }
+
+    @Test
+    void getOneFetchInstances() {
+        Long id = 1L;
+
+        when(apartmentRepository.findByIdFetchInstances(id))
+                .thenReturn(Optional.of(apartment));
+
+        var actual = service.getOneFetchInstances(id);
+
+        assertEquals(apartment, actual);
+    }
+
+    @Test
+    void getOneFetchInstances_should_throw_ApartmentNotFoundException() {
+        Long id = 1L;
+
+        when(apartmentRepository.findByIdFetchInstances(id))
+                .thenReturn(Optional.empty());
+
+        assertThrows(ApartmentNotFoundException.class,
+                () -> service.getOneFetchInstances(id));
     }
 
     @Test
@@ -182,64 +211,58 @@ class ApartmentService_UnitTest {
     }
 
     @Test
-    void getAllFetchPhotosBeds() {
-        when(apartmentRepository.findAllFetchPhotos())
-                .thenReturn(List.of(apartment, apartment));
-        when(apartmentMapper.toCardDto(apartment))
-                .thenReturn(apartmentCardDto);
+    void create() {
+        when(apartmentMapper.toEntity(createApartmentDto)).thenReturn(apartment);
 
-        List<ApartmentCardDto> actual = service.getAllFetchPhotosBeds();
+        service.create(createApartmentDto);
 
-        assertEquals(
-                List.of(apartmentCardDto, apartmentCardDto),
-                actual
+        verify(apartmentRepository).save(apartment);
+    }
+
+    @Test
+    void update() {
+        Long id = 1L;
+        when(apartmentRepository.findById(id)).thenReturn(Optional.of(apartment));
+
+        service.update(updateApartmentDto, id);
+
+        verify(apartmentMapper, times(1)).update(apartment, updateApartmentDto);
+    }
+
+    @Test
+    void update_should_throw_ApartmentNotFoundException() {
+        Long id = 1L;
+        when(apartmentRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(
+                ApartmentNotFoundException.class,
+                () -> service.update(updateApartmentDto, id)
         );
+
+        verifyNoInteractions(apartmentMapper);
     }
 
     @Test
-    void getOneFetchInstances() {
+    void delete() {
         Long id = 1L;
+        when(apartmentRepository.existsById(id)).thenReturn(true);
 
-        when(apartmentRepository.findByIdFetchInstances(id))
-                .thenReturn(Optional.of(apartment));
+        service.delete(id);
 
-        var actual = service.getOneFetchInstances(id);
-
-        assertEquals(apartment, actual);
+        verify(apartmentRepository, times(1)).deleteById(id);
     }
 
     @Test
-    void getOneFetchInstances_should_throw_ApartmentNotFoundException() {
+    void delete_should_throw_ApartmentNotFoundException() {
         Long id = 1L;
+        when(apartmentRepository.existsById(id)).thenReturn(false);
 
-        when(apartmentRepository.findByIdFetchInstances(id))
-                .thenReturn(Optional.empty());
+        assertThrows(
+                ApartmentNotFoundException.class,
+                () -> service.delete(id)
+        );
 
-        assertThrows(ApartmentNotFoundException.class,
-                () -> service.getOneFetchInstances(id));
-    }
-
-    @Test
-    void getOne() {
-        Long id = 1L;
-
-        when(apartmentRepository.findById(id))
-                .thenReturn(Optional.of(apartment));
-
-        var actual = service.getOne(id);
-
-        assertEquals(apartment, actual);
-    }
-
-    @Test
-    void getOne_should_throw_ApartmentNotFoundException() {
-        Long id = 1L;
-
-        when(apartmentRepository.findById(id))
-                .thenReturn(Optional.empty());
-
-        assertThrows(ApartmentNotFoundException.class,
-                () -> service.getOne(id));
+        verify(apartmentRepository, never()).deleteById(id);
     }
 
     @Test

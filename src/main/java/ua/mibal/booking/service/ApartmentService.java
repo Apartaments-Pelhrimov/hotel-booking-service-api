@@ -43,13 +43,6 @@ public class ApartmentService {
     private final ApartmentMapper apartmentMapper;
 
     @Transactional(readOnly = true) // for LAZY Apartment.beds fetch
-    public ApartmentDto getOneFetchPhotosBeds(Long id) {
-        return apartmentRepository.findByIdFetchPhotos(id)
-                .map(apartmentMapper::toDto)
-                .orElseThrow(() -> new ApartmentNotFoundException(id));
-    }
-
-    @Transactional(readOnly = true) // for LAZY Apartment.beds fetch
     public List<ApartmentCardDto> getAllFetchPhotosBeds() {
         return apartmentRepository.findAllFetchPhotos()
                 .stream()
@@ -57,8 +50,30 @@ public class ApartmentService {
                 .toList();
     }
 
+    public Apartment getOne(Long id) {
+        return apartmentRepository.findById(id)
+                .orElseThrow(() -> new ApartmentNotFoundException(id));
+    }
+
     public Apartment getOneFetchPhotos(Long id) {
         return apartmentRepository.findByIdFetchPhotos(id)
+                .orElseThrow(() -> new ApartmentNotFoundException(id));
+    }
+
+    public Apartment getOneFetchInstances(Long id) {
+        return apartmentRepository.findByIdFetchInstances(id)
+                .orElseThrow(() -> new ApartmentNotFoundException(id));
+    }
+
+    public Apartment getOneFetchPrices(Long id) {
+        return apartmentRepository.findByIdFetchPrices(id)
+                .orElseThrow(() -> new ApartmentNotFoundException(id));
+    }
+
+    @Transactional(readOnly = true) // for LAZY Apartment.beds fetch
+    public ApartmentDto getOneFetchPhotosBeds(Long id) {
+        return apartmentRepository.findByIdFetchPhotos(id)
+                .map(apartmentMapper::toDto)
                 .orElseThrow(() -> new ApartmentNotFoundException(id));
     }
 
@@ -76,21 +91,6 @@ public class ApartmentService {
     public void delete(Long id) {
         validateExists(id);
         apartmentRepository.deleteById(id);
-    }
-
-    public Apartment getOneFetchPrices(Long id) {
-        return apartmentRepository.findByIdFetchPrices(id)
-                .orElseThrow(() -> new ApartmentNotFoundException(id));
-    }
-
-    public Apartment getOneFetchInstances(Long id) {
-        return apartmentRepository.findByIdFetchInstances(id)
-                .orElseThrow(() -> new ApartmentNotFoundException(id));
-    }
-
-    public Apartment getOne(Long id) {
-        return apartmentRepository.findById(id)
-                .orElseThrow(() -> new ApartmentNotFoundException(id));
     }
 
     public void validateApartmentHasPhoto(Long id, String link) {
