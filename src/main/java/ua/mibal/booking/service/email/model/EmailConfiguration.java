@@ -16,8 +16,8 @@
 
 package ua.mibal.booking.service.email.model;
 
-import ua.mibal.booking.controller.advice.model.ApiError;
 import ua.mibal.booking.model.entity.Token;
+import ua.mibal.booking.model.exception.marker.ApiException;
 
 /**
  * @author Mykhailo Balakhon
@@ -28,8 +28,8 @@ public record EmailConfiguration(
         String recipients,
         Object... args
 ) {
-    public static EmailConfiguration exceptionReportOf(EmailType type, String recipients, ApiError error) {
-        return new EmailConfiguration(type, recipients, error);
+    public static EmailConfiguration exceptionReportOf(EmailType type, String recipients, ApiException e) {
+        return new EmailConfiguration(type, recipients, e);
     }
 
     public static EmailConfiguration activationEmailOf(EmailType type, Token token) {
