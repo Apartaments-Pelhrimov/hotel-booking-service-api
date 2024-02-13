@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.entity.User;
+import ua.mibal.booking.model.entity.embeddable.Photo;
 import ua.mibal.booking.service.ApartmentService;
 import ua.mibal.booking.service.UserService;
 import ua.mibal.booking.service.photo.PhotoService;
@@ -50,9 +51,12 @@ public class AwsPhotoService implements PhotoService {
     @Transactional
     @Override
     public void changeUserPhoto(String email, MultipartFile photoFile) {
-        AwsPhoto photo = AwsPhoto.getInstanceToUpload(photoFile);
-        storage.uploadPhoto(photo);
-        userService.changeUserPhoto(email, photo.getKey());
+        User user = userService.getOne(email);
+        String oldPhotoKey = user.getPhotoKey();
+        storage.deletePhotoBy(oldPhotoKey);
+        AwsPhoto newPhoto = AwsPhoto.getInstanceToUpload(photoFile);
+        storage.uploadPhoto(newPhoto);
+        user.setPhoto(new Photo(newPhoto.getKey()));
     }
 
     @Transactional

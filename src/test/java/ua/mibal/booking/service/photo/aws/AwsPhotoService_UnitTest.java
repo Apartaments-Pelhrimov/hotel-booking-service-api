@@ -16,9 +16,11 @@
 
 package ua.mibal.booking.service.photo.aws;
 
+import org.instancio.junit.InstancioSource;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,6 +34,8 @@ import ua.mibal.booking.service.photo.aws.model.AwsPhotoResponse;
 import ua.mibal.booking.service.photo.model.PhotoResponse;
 import ua.mibal.booking.test.annotations.UnitTest;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.clearAllCaches;
 import static org.mockito.Mockito.mockStatic;
@@ -98,23 +102,28 @@ class AwsPhotoService_UnitTest {
     }
 
 
-    @Test
-    void changeUserPhoto() {
-        String email = "email";
-        String key = "photoKey";
-
+    @ParameterizedTest
+    @InstancioSource
+    void changeUserPhoto(User user, String email, String key) {
+        when(userService.getOne(email))
+                .thenReturn(user);
         mockedAwsPhoto.when(
                         () -> AwsPhoto.getInstanceToUpload(photoFile))
                 .thenReturn(photo);
         when(photo.getKey())
                 .thenReturn(key);
 
+        String beforeKey = user.getPhotoKey();
+
         service.changeUserPhoto(email, photoFile);
+
+        String afterKey = user.getPhotoKey();
 
         verify(storage, times(1))
                 .uploadPhoto(photo);
-        verify(userService, times(1))
-                .changeUserPhoto(email, key);
+        verify(storage, times(1))
+                .deletePhotoBy(beforeKey);
+        assertThat(afterKey, is(key));
     }
 
     @Test
