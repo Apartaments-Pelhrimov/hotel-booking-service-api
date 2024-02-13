@@ -414,4 +414,16 @@ class UserService_UnitTest {
         verify(userRepository, times(1))
                 .updateUserPhotoByEmail(new Photo(link), email);
     }
+
+    @Test
+    void clearNotEnabledWithNoTokens() {
+        int count = 100500;
+
+        when(userRepository.deleteNotEnabledWithNoTokens())
+                .thenReturn(count);
+
+        int actual = service.clearNotEnabledWithNoTokens();
+
+        assertEquals(count, actual);
+    }
 }
