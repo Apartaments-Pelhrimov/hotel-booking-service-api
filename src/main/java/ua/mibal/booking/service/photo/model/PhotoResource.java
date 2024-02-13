@@ -19,12 +19,24 @@ package ua.mibal.booking.service.photo.model;
 import org.springframework.http.MediaType;
 
 /**
+ * Class to encapsulate photo bytes and content type
+ *
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 public interface PhotoResource {
 
+    /**
+     * Returns raw photo bytes
+     *
+     * @return raw photo bytes
+     */
     byte[] getBytes();
 
+    /**
+     * Returns photo content type
+     *
+     * @return photo content type
+     */
     MediaType getContentType();
 }
