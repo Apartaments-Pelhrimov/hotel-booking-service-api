@@ -23,6 +23,9 @@ import org.springframework.http.HttpStatus;
 import ua.mibal.booking.model.exception.marker.ApiException;
 
 import java.time.ZonedDateTime;
+import java.util.Map;
+
+import static java.util.Collections.emptyMap;
 
 /**
  * @author Mykhailo Balakhon
@@ -36,21 +39,40 @@ public class ApiError {
     private Integer status;
     private String error;
     private String message;
+    private Map<String, String> fieldErrors;
 
-    protected ApiError(HttpStatus status, String error, String message) {
-        this(status.value(), error, message);
-    }
-
-    protected ApiError(HttpStatus status, Exception e, String message) {
+    protected ApiError(HttpStatus status, String error, String message, Map<String, String> fieldErrors) {
         this(
                 status.value(),
-                e.getClass().getSimpleName(),
-                message
+                error,
+                message,
+                fieldErrors
         );
     }
 
-    protected ApiError(HttpStatus status, Exception e) {
-        this(status, e, e.getLocalizedMessage());
+    private ApiError(HttpStatus status, String error, String message) {
+        this(
+                status.value(),
+                error,
+                message,
+                emptyMap()
+        );
+    }
+
+    private ApiError(HttpStatus status, Exception e) {
+        this(
+                status,
+                e.getClass().getSimpleName(),
+                e.getLocalizedMessage()
+        );
+    }
+
+    private ApiError(ApiException e, String message) {
+        this(
+                e.getHttpStatus(),
+                e.getCode(),
+                message
+        );
     }
 
     public static ApiError ofException(HttpStatus status, Exception e) {
@@ -58,10 +80,6 @@ public class ApiError {
     }
 
     public static ApiError of(ApiException e, String message) {
-        return new ApiError(
-                e.getHttpStatus().value(),
-                e.getCode(),
-                message
-        );
+        return new ApiError(e, message);
     }
 }

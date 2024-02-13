@@ -28,7 +28,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.multipart.MultipartException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import ua.mibal.booking.controller.advice.model.ApiError;
 import ua.mibal.booking.controller.advice.model.ValidationApiError;
 import ua.mibal.booking.model.exception.marker.ApiException;
@@ -67,7 +67,7 @@ class ExceptionHandlerAdvice_UnitTest {
     @Mock
     private MethodArgumentNotValidException methodArgumentNotValidException;
     @Mock
-    private MultipartException multipartException;
+    private MaxUploadSizeExceededException maxUploadSizeExceededException;
     @Mock
     private AccessDeniedException accessDeniedException;
     @Mock
@@ -104,15 +104,15 @@ class ExceptionHandlerAdvice_UnitTest {
     }
 
     @Test
-    void handleMultipartException() {
+    void handleMaxUploadSizeExceededException() {
         HttpStatus expectedStatus = BAD_REQUEST;
 
         mockedApiError
-                .when(() -> ApiError.ofException(expectedStatus, multipartException))
+                .when(() -> ApiError.ofException(expectedStatus, maxUploadSizeExceededException))
                 .thenReturn(apiError);
 
         ResponseEntity<ApiError> actualResponse =
-                exceptionHandler.handleMultipartException(multipartException);
+                exceptionHandler.handleMaxUploadSizeExceededException(maxUploadSizeExceededException);
 
         assertThat(actualResponse.getStatusCode(), is(expectedStatus));
         assertThat(actualResponse.getBody(), is(apiError));

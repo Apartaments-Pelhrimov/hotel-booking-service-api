@@ -26,7 +26,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.multipart.MultipartException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import ua.mibal.booking.controller.advice.model.ApiError;
 import ua.mibal.booking.controller.advice.model.ValidationApiError;
 import ua.mibal.booking.model.exception.marker.ApiException;
@@ -52,11 +52,9 @@ public class ExceptionHandlerAdvice {
                 .body(ValidationApiError.of(status, e));
     }
 
-    // FIXME
-    //  MultipartException when user load so big photo file to server
-    //  Implement preventive size validation
-    @ExceptionHandler(MultipartException.class)
-    public ResponseEntity<ApiError> handleMultipartException(Exception e) {
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ApiError> handleMaxUploadSizeExceededException(
+            MaxUploadSizeExceededException e) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         return ResponseEntity.status(status)
                 .body(ApiError.ofException(status, e));
