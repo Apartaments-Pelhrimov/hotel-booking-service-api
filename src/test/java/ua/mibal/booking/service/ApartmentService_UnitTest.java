@@ -74,6 +74,29 @@ class ApartmentService_UnitTest {
     }
 
     @Test
+    void getOneFetchPhotos() {
+        Long id = 1L;
+
+        when(apartmentRepository.findByIdFetchPhotos(id))
+                .thenReturn(Optional.of(apartment));
+
+        var actual = service.getOneFetchPhotos(id);
+
+        assertEquals(apartment, actual);
+    }
+
+    @Test
+    void getOneFetchPhotos_should_throw_ApartmentNotFoundException() {
+        Long id = 1L;
+
+        when(apartmentRepository.findByIdFetchPhotos(id))
+                .thenReturn(Optional.empty());
+
+        assertThrows(ApartmentNotFoundException.class,
+                () -> service.getOneFetchPhotos(id));
+    }
+
+    @Test
     void create() {
         when(apartmentMapper.toEntity(createApartmentDto)).thenReturn(apartment);
 
