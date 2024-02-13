@@ -58,8 +58,7 @@ public abstract class ApiException extends RuntimeException {
 
     public String getLocalizedMessage(MessageSource errorMessageSource,
                                       Locale locale) {
-        String template = errorMessageSource.getMessage(code, new Object[0], locale);
-        return template.formatted(provideArgs());
+        return errorMessageSource.getMessage(code, provideArgs(), locale);
     }
 
     public abstract Object[] provideArgs();
