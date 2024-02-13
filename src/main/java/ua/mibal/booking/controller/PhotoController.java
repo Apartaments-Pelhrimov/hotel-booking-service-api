@@ -34,7 +34,7 @@ import ua.mibal.booking.config.security.annotation.ManagerAllowed;
 import ua.mibal.booking.config.security.annotation.UserAllowed;
 import ua.mibal.booking.controller.model.PhotoResponseEntity;
 import ua.mibal.booking.service.photo.PhotoService;
-import ua.mibal.booking.service.photo.model.PhotoResponse;
+import ua.mibal.booking.service.photo.model.PhotoResource;
 
 /**
  * @author Mykhailo Balakhon
@@ -48,7 +48,7 @@ public class PhotoController {
 
     @GetMapping("/users/{email}/photo")
     public ResponseEntity<byte[]> getUserPhoto(@PathVariable String email) {
-        PhotoResponse photo = photoService.getUserPhoto(email);
+        PhotoResource photo = photoService.getUserPhoto(email);
         return PhotoResponseEntity.of(photo);
     }
 
@@ -70,7 +70,7 @@ public class PhotoController {
     @GetMapping("/apartments/{apartmentId}/photos/{photoOrderIndex}")
     public ResponseEntity<byte[]> getApartmentPhoto(@PathVariable Long apartmentId,
                                                     @PathVariable Integer photoOrderIndex) {
-        PhotoResponse photo = photoService.getApartmentPhoto(apartmentId, photoOrderIndex);
+        PhotoResource photo = photoService.getApartmentPhoto(apartmentId, photoOrderIndex);
         return PhotoResponseEntity.of(photo);
     }
 

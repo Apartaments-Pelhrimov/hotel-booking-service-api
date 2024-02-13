@@ -31,15 +31,15 @@ import static org.springframework.http.MediaType.IMAGE_PNG_VALUE;
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @UnitTest
-class AwsPhotoResponse_UnitTest {
+class AwsPhotoResource_UnitTest {
 
     @Test
     void of() {
         byte[] bytes = "PHOTO_CONTENT".getBytes(UTF_8);
         MediaType contentType = IMAGE_PNG;
 
-        AwsPhotoResponse response =
-                AwsPhotoResponse.of(bytes, IMAGE_PNG_VALUE);
+        AwsPhotoResource response =
+                AwsPhotoResource.of(bytes, IMAGE_PNG_VALUE);
 
         assertEquals(bytes, response.getBytes());
         assertEquals(contentType, response.getContentType());
@@ -51,6 +51,6 @@ class AwsPhotoResponse_UnitTest {
         String illegalContentType = "illegal-type";
 
         assertThrows(RuntimeException.class,
-                () -> AwsPhotoResponse.of(bytes, illegalContentType));
+                () -> AwsPhotoResource.of(bytes, illegalContentType));
     }
 }

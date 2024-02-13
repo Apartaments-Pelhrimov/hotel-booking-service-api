@@ -28,7 +28,7 @@ import ua.mibal.booking.service.UserService;
 import ua.mibal.booking.service.photo.PhotoService;
 import ua.mibal.booking.service.photo.aws.components.AwsStorage;
 import ua.mibal.booking.service.photo.aws.model.AwsPhoto;
-import ua.mibal.booking.service.photo.model.PhotoResponse;
+import ua.mibal.booking.service.photo.model.PhotoResource;
 
 /**
  * @author Mykhailo Balakhon
@@ -42,7 +42,7 @@ public class AwsPhotoService implements PhotoService {
     private final ApartmentService apartmentService;
 
     @Override
-    public PhotoResponse getUserPhoto(String email) {
+    public PhotoResource getUserPhoto(String email) {
         User user = userService.getOne(email);
         String photoKey = user.getPhotoKey();
         return storage.getPhotoBy(photoKey);
@@ -69,7 +69,7 @@ public class AwsPhotoService implements PhotoService {
     }
 
     @Override
-    public PhotoResponse getApartmentPhoto(Long apartmentId, Integer photoIndex) {
+    public PhotoResource getApartmentPhoto(Long apartmentId, Integer photoIndex) {
         Apartment apartment = apartmentService.getOneFetchPhotos(apartmentId);
         String photoKey = apartment.getPhotoKey(photoIndex);
         return storage.getPhotoBy(photoKey);

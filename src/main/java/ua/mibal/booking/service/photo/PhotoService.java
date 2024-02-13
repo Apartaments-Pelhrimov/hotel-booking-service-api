@@ -17,7 +17,7 @@
 package ua.mibal.booking.service.photo;
 
 import org.springframework.web.multipart.MultipartFile;
-import ua.mibal.booking.service.photo.model.PhotoResponse;
+import ua.mibal.booking.service.photo.model.PhotoResource;
 
 /**
  * @author Mykhailo Balakhon
@@ -26,12 +26,12 @@ import ua.mibal.booking.service.photo.model.PhotoResponse;
 public interface PhotoService {
 
     /**
-     * Returns {@link PhotoResponse} with user's profile photo
+     * Returns {@link PhotoResource} with user's profile photo
      *
      * @param email user's email used as user identifier
-     * @return {@link PhotoResponse} with user's profile photo
+     * @return {@link PhotoResource} with user's profile photo
      */
-    PhotoResponse getUserPhoto(String email);
+    PhotoResource getUserPhoto(String email);
 
     /**
      * Deletes user's previous (old) photo from photo storage.
@@ -53,13 +53,13 @@ public interface PhotoService {
     void deleteUserPhoto(String email);
 
     /**
-     * Returns {@link PhotoResponse} with the apartment photo
+     * Returns {@link PhotoResource} with the apartment photo
      *
      * @param apartmentId identifier of the wanted apartment
      * @param photoIndex  index of the wanted apartment photo
-     * @return {@link PhotoResponse} with the apartment photo
+     * @return {@link PhotoResource} with the apartment photo
      */
-    PhotoResponse getApartmentPhoto(Long apartmentId, Integer photoIndex);
+    PhotoResource getApartmentPhoto(Long apartmentId, Integer photoIndex);
 
     /**
      * Uploads new {@link MultipartFile} photo into photo storage.

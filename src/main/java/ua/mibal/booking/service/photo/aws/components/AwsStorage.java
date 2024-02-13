@@ -26,7 +26,7 @@ import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import ua.mibal.booking.model.exception.service.AwsStorageException;
 import ua.mibal.booking.service.photo.aws.model.AwsPhoto;
-import ua.mibal.booking.service.photo.aws.model.AwsPhotoResponse;
+import ua.mibal.booking.service.photo.aws.model.AwsPhotoResource;
 
 import java.io.IOException;
 
@@ -40,7 +40,7 @@ public class AwsStorage {
     private final S3Client s3Client;
     private final AwsRequestGenerator requestGenerator;
 
-    public AwsPhotoResponse getPhotoBy(String key) {
+    public AwsPhotoResource getPhotoBy(String key) {
         try {
             return getAwsPhotoBy(key);
         } catch (IOException e) {
@@ -70,10 +70,10 @@ public class AwsStorage {
         }
     }
 
-    private AwsPhotoResponse getAwsPhotoBy(String key) throws IOException {
+    private AwsPhotoResource getAwsPhotoBy(String key) throws IOException {
         GetObjectRequest getRequest = requestGenerator.generateGetRequest(key);
         var response = s3Client.getObject(getRequest);
-        return AwsPhotoResponse.of(
+        return AwsPhotoResource.of(
                 response.readAllBytes(),
                 response.response().contentType()
         );

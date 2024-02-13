@@ -19,7 +19,7 @@ package ua.mibal.booking.controller.model;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import ua.mibal.booking.service.photo.model.PhotoResponse;
+import ua.mibal.booking.service.photo.model.PhotoResource;
 
 /**
  * @author Mykhailo Balakhon
@@ -32,7 +32,7 @@ public class PhotoResponseEntity extends ResponseEntity<byte[]> {
         getHeaders().setContentType(mediaType);
     }
 
-    public static PhotoResponseEntity of(PhotoResponse photo) {
+    public static PhotoResponseEntity of(PhotoResource photo) {
         return new PhotoResponseEntity(photo.getBytes(), photo.getContentType());
     }
 }

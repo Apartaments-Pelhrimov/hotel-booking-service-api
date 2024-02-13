@@ -14,27 +14,17 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.photo.aws.model;
+package ua.mibal.booking.service.photo.model;
 
-import lombok.Getter;
 import org.springframework.http.MediaType;
-import ua.mibal.booking.service.photo.model.PhotoResponse;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Getter
-public class AwsPhotoResponse implements PhotoResponse {
-    private final byte[] bytes;
-    private final MediaType contentType;
+public interface PhotoResource {
 
-    protected AwsPhotoResponse(byte[] bytes, String contentType) {
-        this.bytes = bytes;
-        this.contentType = MediaType.parseMediaType(contentType);
-    }
+    byte[] getBytes();
 
-    public static AwsPhotoResponse of(byte[] bytes, String contentType) {
-        return new AwsPhotoResponse(bytes, contentType);
-    }
+    MediaType getContentType();
 }

@@ -30,8 +30,8 @@ import ua.mibal.booking.service.ApartmentService;
 import ua.mibal.booking.service.UserService;
 import ua.mibal.booking.service.photo.aws.components.AwsStorage;
 import ua.mibal.booking.service.photo.aws.model.AwsPhoto;
-import ua.mibal.booking.service.photo.aws.model.AwsPhotoResponse;
-import ua.mibal.booking.service.photo.model.PhotoResponse;
+import ua.mibal.booking.service.photo.aws.model.AwsPhotoResource;
+import ua.mibal.booking.service.photo.model.PhotoResource;
 import ua.mibal.booking.test.annotations.UnitTest;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -68,7 +68,7 @@ class AwsPhotoService_UnitTest {
     @Mock
     private AwsPhoto photo;
     @Mock
-    private AwsPhotoResponse awsPhotoResponse;
+    private AwsPhotoResource awsPhotoResponse;
 
     private MockedStatic<AwsPhoto> mockedAwsPhoto;
 
@@ -96,7 +96,7 @@ class AwsPhotoService_UnitTest {
         when(storage.getPhotoBy(key))
                 .thenReturn(awsPhotoResponse);
 
-        PhotoResponse actual = service.getUserPhoto(email);
+        PhotoResource actual = service.getUserPhoto(email);
 
         assertEquals(awsPhotoResponse, actual);
     }
@@ -157,7 +157,7 @@ class AwsPhotoService_UnitTest {
         when(storage.getPhotoBy(key))
                 .thenReturn(awsPhotoResponse);
 
-        PhotoResponse actual = service.getApartmentPhoto(id, photoIndex);
+        PhotoResource actual = service.getApartmentPhoto(id, photoIndex);
 
         assertEquals(awsPhotoResponse, actual);
     }
