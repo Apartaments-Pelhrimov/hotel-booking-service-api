@@ -19,14 +19,10 @@ package ua.mibal.booking.service.email.component;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
-import ua.mibal.booking.config.properties.TokenProps;
 import ua.mibal.booking.model.entity.Token;
 import ua.mibal.booking.model.exception.marker.InternalServerException;
 import ua.mibal.booking.service.email.model.EmailContent;
 import ua.mibal.booking.service.email.model.EmailType;
-import ua.mibal.booking.service.email.model.Link;
-
-import java.util.Map;
 
 /**
  * @author Mykhailo Balakhon
@@ -35,14 +31,12 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Component
 public class EmailContentProvider {
-    private final ClasspathFileReader fileReader;
     private final TemplateEngine templateEngine;
     private final MessageSource messageSource;
-    private final TokenProps tokenProps;
 
     public EmailContent getEmailContentBy(EmailType type, Token token) {
         String subject = type.getSubject(messageSource);
-        String body = generateBody(type, token);
+        String body = templateEngine.generate(type, token);
         return new EmailContent(subject, body);
     }
 
@@ -50,18 +44,6 @@ public class EmailContentProvider {
         String subject = "Internal server Exception " + e.getClass().getName();
         String body = generateBodyByException(e);
         return new EmailContent(subject, body);
-    }
-
-    private String generateBody(EmailType type, Token token) {
-        String templatePath = type.getTemplatePath(messageSource);
-        String sourceHtmlTemplate = fileReader.read(templatePath);
-        return templateEngine.insertIntoTemplate(sourceHtmlTemplate, Map.of(
-                "user", token.getUser(),
-                "link", new Link(
-                        type.getFrontLinkFor(token.getValue()),
-                        tokenProps.validForMinutes()
-                )
-        ));
     }
 
     private String generateBodyByException(InternalServerException e) {

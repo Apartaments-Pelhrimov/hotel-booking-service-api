@@ -20,7 +20,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.context.MessageSource;
-import ua.mibal.booking.config.properties.TokenProps;
 import ua.mibal.booking.model.entity.Token;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.exception.marker.InternalServerException;
@@ -30,8 +29,6 @@ import ua.mibal.booking.test.annotations.UnitTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.anyMap;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 /**
@@ -49,8 +46,6 @@ class EmailContentProvider_UnitTest {
     private TemplateEngine templateEngine;
     @Mock
     private MessageSource messageSource;
-    @Mock
-    private TokenProps tokenProps;
 
     @Mock
     private EmailType emailType;
@@ -61,7 +56,7 @@ class EmailContentProvider_UnitTest {
 
     @BeforeEach
     void setup() {
-        emailContentProvider = new EmailContentProvider(classpathFileReader, templateEngine, messageSource, tokenProps);
+        emailContentProvider = new EmailContentProvider(templateEngine, messageSource);
     }
 
     @Test
@@ -86,7 +81,7 @@ class EmailContentProvider_UnitTest {
                 .thenReturn(code);
         when(emailType.getFrontLinkFor(code))
                 .thenReturn(frontLink);
-        when(templateEngine.insertIntoTemplate(eq(templateContent), anyMap()))
+        when(templateEngine.generate(emailType, token))
                 .thenReturn(insertedTemplate);
 
         EmailContent actual =

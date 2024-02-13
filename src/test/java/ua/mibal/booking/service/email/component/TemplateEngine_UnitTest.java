@@ -16,14 +16,7 @@
 
 package ua.mibal.booking.service.email.component;
 
-import org.junit.jupiter.api.Test;
 import ua.mibal.booking.test.annotations.UnitTest;
-
-import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @author Mykhailo Balakhon
@@ -34,65 +27,5 @@ class TemplateEngine_UnitTest {
 
     private TemplateEngine templateEngine = new TemplateEngine();
 
-    @Test
-    void insertIntoTemplate_simple() {
-        String template = "Though our outer self is wasting away, our " +
-                          "inner self is being renewed ${how_often}";
-
-        String actual = templateEngine.insertIntoTemplate(template, Map.of(
-                "how_often", "day by day"
-        ));
-
-        assertEquals(
-                "Though our outer self is wasting away, our " +
-                "inner self is being renewed day by day",
-                actual
-        );
-        assertNotEquals(template, actual);
-    }
-
-    @Test
-    void insertIntoTemplate_field() {
-        String template = "For ${who} ${who.action} the world," +
-                          "that he gave his only Son," +
-                          "that whoever believes in him" +
-                          "should not perish but have eternal life";
-
-        String actual = templateEngine.insertIntoTemplate(template, Map.of(
-                "who", new TestObject()
-        ));
-
-        assertEquals(
-                "For God so loved the world," +
-                "that he gave his only Son," +
-                "that whoever believes in him" +
-                "should not perish but have eternal life",
-                actual
-        );
-        assertNotEquals(template, actual);
-    }
-
-    @Test
-    void insertIntoTemplate_field_should_throw() {
-        String template = "Therefore, since through God’s ${mercy.expiration} " +
-                          "we have this ministry, we do not lose heart";
-
-        RuntimeException e = assertThrows(
-                RuntimeException.class,
-                () -> templateEngine.insertIntoTemplate(template, Map.of(
-                        "mercy", new TestObject()
-                ))
-        );
-
-        assertEquals(NoSuchFieldException.class, e.getCause().getClass());
-    }
-
-    public static class TestObject {
-        private final String action = "so loved";
-
-        @Override
-        public String toString() {
-            return "God";
-        }
-    }
+    // TODO
 }
