@@ -37,6 +37,10 @@ public enum EmailType {
     PASSWORD_CHANGING(
             "mail.password-changing.subject",
             "https://apartmany-pe.cz/changePass"
+    ),
+    EXCEPTION_REPORT(
+            "mail.exception-report.subject",
+            null
     );
 
     private final String subjectCode;

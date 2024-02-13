@@ -20,11 +20,9 @@ import jakarta.mail.Session;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ua.mibal.booking.config.properties.EmailProps;
-import ua.mibal.booking.model.entity.Token;
-import ua.mibal.booking.model.exception.marker.InternalServerException;
 import ua.mibal.booking.service.email.model.Email;
+import ua.mibal.booking.service.email.model.EmailConfiguration;
 import ua.mibal.booking.service.email.model.EmailContent;
-import ua.mibal.booking.service.email.model.EmailType;
 
 /**
  * @author Mykhailo Balakhon
@@ -37,21 +35,8 @@ public class EmailBuilder {
     private final Session session;
     private final EmailProps emailProps;
 
-    public Email buildUserEmail(EmailType type,
-                                Token token) {
-        String recipient = token.getUser().getEmail();
-        EmailContent emailContent = emailContentProvider.getEmailContentBy(type, token);
-        return buildEmailMessageOf(recipient, emailContent);
-    }
-
-    public Email buildDeveloperEmail(InternalServerException e) {
-        String recipients = emailProps.developers();
-        EmailContent emailContent = emailContentProvider.getEmailContentByException(e);
-        return buildEmailMessageOf(recipients, emailContent);
-    }
-
-    private Email buildEmailMessageOf(String recipients, EmailContent emailContent) {
-        String sender = emailProps.username();
-        return Email.of(session, sender, recipients, emailContent);
+    public Email buildEmailBy(EmailConfiguration configuration) {
+        EmailContent content = emailContentProvider.getContentBy(configuration);
+        return Email.of(session, emailProps.username(), configuration.recipients(), content);
     }
 }

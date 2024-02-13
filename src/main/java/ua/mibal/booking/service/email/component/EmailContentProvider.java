@@ -20,8 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import ua.mibal.booking.config.properties.TokenProps;
-import ua.mibal.booking.model.entity.Token;
-import ua.mibal.booking.model.exception.marker.InternalServerException;
+import ua.mibal.booking.service.email.model.EmailConfiguration;
 import ua.mibal.booking.service.email.model.EmailContent;
 import ua.mibal.booking.service.email.model.EmailType;
 
@@ -36,20 +35,10 @@ public class EmailContentProvider {
     private final MessageSource messageSource;
     private final TokenProps tokenProps;
 
-    public EmailContent getEmailContentBy(EmailType type, Token token) {
+    public EmailContent getContentBy(EmailConfiguration configuration) {
+        EmailType type = configuration.type();
         String subject = type.getSubject(messageSource);
-        String body = templateEngine.generate(type.getTemplateName(), type, token, tokenProps);
+        String body = templateEngine.generate(type.getTemplateName(), type, configuration.args(), tokenProps);
         return new EmailContent(subject, body);
-    }
-
-    public EmailContent getEmailContentByException(InternalServerException e) {
-        String subject = "Internal server Exception " + e.getClass().getName();
-        String body = generateBodyByException(e);
-        return new EmailContent(subject, body);
-    }
-
-    private String generateBodyByException(InternalServerException e) {
-        String stackTrace = e.getStackTraceMessage();
-        return "<pre>\n" + stackTrace + "</pre>";
     }
 }

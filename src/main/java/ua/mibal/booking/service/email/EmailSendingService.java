@@ -26,9 +26,10 @@ import ua.mibal.booking.model.exception.marker.InternalServerException;
 import ua.mibal.booking.model.exception.service.EmailSentFailedException;
 import ua.mibal.booking.service.email.component.EmailBuilder;
 import ua.mibal.booking.service.email.model.Email;
-import ua.mibal.booking.service.email.model.EmailType;
+import ua.mibal.booking.service.email.model.EmailConfiguration;
 
 import static ua.mibal.booking.service.email.model.EmailType.ACCOUNT_ACTIVATION;
+import static ua.mibal.booking.service.email.model.EmailType.EXCEPTION_REPORT;
 import static ua.mibal.booking.service.email.model.EmailType.PASSWORD_CHANGING;
 
 /**
@@ -42,20 +43,19 @@ public class EmailSendingService {
     private final EmailProps emailProps;
 
     public void sendAccountActivationEmail(Token token) {
-        sendToken(ACCOUNT_ACTIVATION, token);
+        send(EmailConfiguration.activationEmailOf(ACCOUNT_ACTIVATION, token));
     }
 
     public void sendPasswordChangingEmail(Token token) {
-        sendToken(PASSWORD_CHANGING, token);
+        send(EmailConfiguration.activationEmailOf(PASSWORD_CHANGING, token));
     }
 
     public void sendErrorEmailToDevelopers(InternalServerException e) {
-        Email email = emailBuilder.buildDeveloperEmail(e);
-        sendAsync(email);
+        send(EmailConfiguration.exceptionReportOf(EXCEPTION_REPORT, emailProps.developers(), e));
     }
 
-    private void sendToken(EmailType type, Token code) {
-        Email email = emailBuilder.buildUserEmail(type, code);
+    private void send(EmailConfiguration configuration) {
+        Email email = emailBuilder.buildEmailBy(configuration);
         sendAsync(email);
     }
 
