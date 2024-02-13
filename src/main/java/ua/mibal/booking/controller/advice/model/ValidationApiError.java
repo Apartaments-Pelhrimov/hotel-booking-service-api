@@ -18,8 +18,10 @@ package ua.mibal.booking.controller.advice.model;
 
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -29,24 +31,26 @@ import java.util.stream.Collectors;
 public class ValidationApiError extends ApiError {
 
     protected ValidationApiError(HttpStatus status,
-                                 String message) {
-        super(status, "bad-request-error.validation", message);
+                                 String message,
+                                 Map<String, String> fieldErrors) {
+        super(status, "bad-request-error.validation", message, fieldErrors);
     }
 
     public static ValidationApiError of(HttpStatus status,
                                         MethodArgumentNotValidException e) {
         String objectErrors = getObjectErrorsMessage(e);
-        String fieldErrors = getFieldErrorsMessage(e);
-        String message = (objectErrors + " " + fieldErrors).trim();
-        return new ValidationApiError(status, message);
+        Map<String, String> fieldErrors = getFieldErrors(e);
+        return new ValidationApiError(status, objectErrors, fieldErrors);
     }
 
-    private static String getFieldErrorsMessage(MethodArgumentNotValidException e) {
+    private static Map<String, String> getFieldErrors(MethodArgumentNotValidException e) {
         return e.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                .collect(Collectors.joining(" "));
+                .collect(Collectors.toMap(
+                        FieldError::getField,
+                        DefaultMessageSourceResolvable::getDefaultMessage
+                ));
     }
 
     private static String getObjectErrorsMessage(MethodArgumentNotValidException e) {
