@@ -143,8 +143,6 @@ class UserMapper_UnitTest {
         when(phoneMapper.toNumberString(userChanges.phone()))
                 .thenReturn(mappedPhone);
 
-        mapper.update(source, userChanges);
-
         String expectedFirstName = userChanges.firstName() == null
                 ? source.getFirstName()
                 : userChanges.firstName();
@@ -155,6 +153,8 @@ class UserMapper_UnitTest {
                 ? source.getPhone()
                 : mappedPhone;
 
+        mapper.update(source, userChanges);
+
         assertThat(source.getFirstName(), is(expectedFirstName));
         assertThat(source.getLastName(), is(expectedLastName));
         assertThat(source.getPhone(), is(expectedPhone));
@@ -164,14 +164,14 @@ class UserMapper_UnitTest {
     @MethodSource("ua.mibal.booking.testUtils.DataGenerator#testNotificationSettings")
     void update_NotificationSettings(NotificationSettings source,
                                      ChangeNotificationSettingsDto userChanges) {
-        mapper.update(source, userChanges);
-
         boolean expectedOrderEmails = userChanges.receiveOrderEmails() == null
                 ? source.isReceiveOrderEmails()
                 : userChanges.receiveOrderEmails();
         boolean expectedNewsEmails = userChanges.receiveNewsEmails() == null
                 ? source.isReceiveNewsEmails()
                 : userChanges.receiveNewsEmails();
+
+        mapper.update(source, userChanges);
 
         assertThat(source.isReceiveOrderEmails(), is(expectedOrderEmails));
         assertThat(source.isReceiveNewsEmails(), is(expectedNewsEmails));
