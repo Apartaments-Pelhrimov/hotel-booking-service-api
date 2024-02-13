@@ -20,8 +20,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -87,7 +87,7 @@ class EmailType_UnitTest {
         assertThat(PASSWORD_CHANGING.getTemplatePath(messageSource), is(passwordChangingTemplatePath));
     }
 
-    @Disabled // TODO
+    @Ignore("Run test after front server link setup")
     @ParameterizedTest
     @EnumSource(EmailType.class)
     void getFrontLinkFor_PASSWORD_CHANGING(EmailType emailType) throws IOException {
