@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.photo.model;
+package ua.mibal.booking.service.photo;
 
 import org.springframework.http.MediaType;
 

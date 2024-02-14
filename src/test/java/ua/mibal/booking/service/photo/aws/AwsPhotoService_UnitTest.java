@@ -28,10 +28,10 @@ import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.service.ApartmentService;
 import ua.mibal.booking.service.UserService;
+import ua.mibal.booking.service.photo.PhotoResource;
 import ua.mibal.booking.service.photo.aws.components.AwsStorage;
 import ua.mibal.booking.service.photo.aws.model.AwsPhoto;
 import ua.mibal.booking.service.photo.aws.model.AwsPhotoResource;
-import ua.mibal.booking.service.photo.model.PhotoResource;
 import ua.mibal.booking.test.annotations.UnitTest;
 
 import static org.hamcrest.MatcherAssert.assertThat;

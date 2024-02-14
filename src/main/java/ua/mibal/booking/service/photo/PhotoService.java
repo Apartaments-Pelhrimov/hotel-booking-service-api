@@ -17,7 +17,6 @@
 package ua.mibal.booking.service.photo;
 
 import org.springframework.web.multipart.MultipartFile;
-import ua.mibal.booking.service.photo.model.PhotoResource;
 
 /**
  * @author Mykhailo Balakhon
