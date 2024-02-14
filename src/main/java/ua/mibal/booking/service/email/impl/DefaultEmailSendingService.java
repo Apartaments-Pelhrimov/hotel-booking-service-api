@@ -20,10 +20,10 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.Transport;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ua.mibal.booking.model.exception.service.EmailSentFailedException;
 import ua.mibal.booking.service.email.Email;
 import ua.mibal.booking.service.email.EmailSendingService;
 import ua.mibal.booking.service.email.config.properties.EmailProps;
+import ua.mibal.booking.service.email.exception.EmailSentFailedException;
 import ua.mibal.booking.service.email.impl.component.MimeEmailBuilder;
 import ua.mibal.booking.service.email.impl.model.MimeEmail;
 

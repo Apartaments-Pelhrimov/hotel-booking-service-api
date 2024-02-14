@@ -19,7 +19,7 @@ package ua.mibal.booking.service.email.impl.model;
 import jakarta.mail.MessagingException;
 import jakarta.mail.Session;
 import jakarta.mail.internet.MimeMessage;
-import ua.mibal.booking.model.exception.EmailCreationException;
+import ua.mibal.booking.service.email.exception.EmailCreationException;
 
 import static jakarta.mail.Message.RecipientType.TO;
 
