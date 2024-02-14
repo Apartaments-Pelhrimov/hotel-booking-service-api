@@ -33,7 +33,7 @@ import ua.mibal.booking.service.email.impl.model.MimeEmail;
  */
 @RequiredArgsConstructor
 @Service
-public class EmailSendingServiceImpl implements EmailSendingService {
+public class DefaultEmailSendingService implements EmailSendingService {
     private final MimeEmailBuilder mimeEmailBuilder;
     private final EmailProps emailProps;
 
