@@ -24,7 +24,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ua.mibal.booking.config.properties.EmailProps;
 import ua.mibal.booking.controller.advice.model.ApiError;
 import ua.mibal.booking.model.exception.marker.InternalServerException;
 import ua.mibal.booking.service.email.EmailSendingService;
@@ -42,7 +41,6 @@ public class ErrorEmailSendingAdvice {
     private static final Logger log = LoggerFactory.getLogger(ErrorEmailSendingAdvice.class);
     private final EmailSendingService emailSendingService;
     private final ExceptionHandlerAdvice exceptionHandlerAdvice;
-    private final EmailProps emailProps;
 
     @ExceptionHandler(InternalServerException.class)
     public ResponseEntity<ApiError> sendErrorEmailToDevelopers(InternalServerException e,
