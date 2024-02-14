@@ -22,7 +22,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
 /**
- * @param developers comma separated address strings
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
@@ -34,8 +33,6 @@ public record EmailProps(
         String username,
         @NotNull
         @NotBlank
-        String password,
-        @NotBlank
-        String developers
+        String password
 ) {
 }

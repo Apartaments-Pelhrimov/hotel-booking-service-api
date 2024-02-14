@@ -48,13 +48,13 @@ public class ErrorEmailSendingAdvice {
     public ResponseEntity<ApiError> sendErrorEmailToDevelopers(InternalServerException e,
                                                                Locale locale) {
 //        TODO FIXME emailSendingService.sendErrorEmailToDevelopers(e);
-        log.info("Email with exception sent to developers: {}", emailProps.developers());
+//        log.info("Email with exception sent to developers: {}", emailProps.developers());
         return exceptionHandlerAdvice.handleInternalServerException(e, locale);
     }
 
     @PostConstruct
     private void postConstruct() {
         log.info("Initialized {}", getClass().getSimpleName());
-        log.info("Developers: {}", emailProps.developers());
+//        log.info("Developers: {}", emailProps.developers());
     }
 }
