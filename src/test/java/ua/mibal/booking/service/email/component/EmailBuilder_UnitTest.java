@@ -17,18 +17,16 @@
 package ua.mibal.booking.service.email.component;
 
 import jakarta.mail.Session;
+import org.instancio.junit.InstancioSource;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
-import ua.mibal.booking.config.properties.EmailProps;
-import ua.mibal.booking.model.entity.Token;
-import ua.mibal.booking.model.entity.User;
-import ua.mibal.booking.model.exception.marker.InternalServerException;
-import ua.mibal.booking.service.email.model.Email;
-import ua.mibal.booking.service.email.model.EmailContent;
-import ua.mibal.booking.service.email.model.EmailType;
+import ua.mibal.booking.service.email.EmailConfiguration;
+import ua.mibal.booking.service.email.EmailConfiguration.EmailContent;
+import ua.mibal.booking.service.email.impl.component.EmailBuilder;
+import ua.mibal.booking.service.email.impl.model.Email;
 import ua.mibal.booking.test.annotations.UnitTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -45,31 +43,21 @@ class EmailBuilder_UnitTest {
     private EmailBuilder builder;
 
     @Mock
-    private EmailContentProvider contentProvider;
-    @Mock
     private Session session;
-    @Mock
-    private EmailProps props;
 
     @Mock
-    private EmailType type;
-    @Mock
-    private Token token;
-    @Mock
-    private User user;
+    private EmailConfiguration configuration;
     @Mock
     private EmailContent content;
     @Mock
     private Email email;
-    @Mock
-    private InternalServerException e;
 
     private MockedStatic<Email> mockedEmail;
 
     @BeforeEach
     void setup() {
         mockedEmail = mockStatic(Email.class);
-        builder = new EmailBuilder(contentProvider, session, props);
+        builder = new EmailBuilder(session);
     }
 
     @AfterEach
@@ -77,42 +65,19 @@ class EmailBuilder_UnitTest {
         mockedEmail.close();
     }
 
-    @Test
-    void buildUserEmail() {
-        String recipient = "recipientEmail";
-        String sender = "senderEmail";
+    @ParameterizedTest
+    @InstancioSource
+    void build(String sender, String recipients, String subject, String body) {
+        when(configuration.getSender()).thenReturn(sender);
+        when(configuration.getRecipients()).thenReturn(recipients);
+        when(configuration.getContent()).thenReturn(content);
+        when(content.getSubject()).thenReturn(subject);
+        when(content.getBody()).thenReturn(body);
 
-        when(token.getUser())
-                .thenReturn(user);
-        when(user.getEmail())
-                .thenReturn(recipient);
-        when(contentProvider.getEmailContentBy(type, token))
-                .thenReturn(content);
-        when(props.username())
-                .thenReturn(sender);
-        when(Email.of(session, sender, recipient, content))
+        mockedEmail.when(() -> Email.of(session, sender, recipients, subject, body))
                 .thenReturn(email);
 
-        Email actual = builder.buildUserEmail(type, token);
-
-        assertEquals(email, actual);
-    }
-
-    @Test
-    void buildDeveloperEmail() {
-        String recipients = "devEmail1,devEmail2";
-        String sender = "senderEmail";
-
-        when(props.developers())
-                .thenReturn(recipients);
-        when(contentProvider.getEmailContentByException(e))
-                .thenReturn(content);
-        when(props.username())
-                .thenReturn(sender);
-        when(Email.of(session, sender, recipients, content))
-                .thenReturn(email);
-
-        Email actual = builder.buildDeveloperEmail(e);
+        Email actual = builder.build(configuration);
 
         assertEquals(email, actual);
     }

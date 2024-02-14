@@ -38,7 +38,7 @@ public class EmailSendingServiceImpl implements EmailSendingService {
     private final EmailProps emailProps;
 
     public void sendEmail(EmailConfiguration configuration) {
-        Email email = emailBuilder.buildEmailBy(configuration);
+        Email email = emailBuilder.build(configuration);
         sendAsync(email);
     }
 

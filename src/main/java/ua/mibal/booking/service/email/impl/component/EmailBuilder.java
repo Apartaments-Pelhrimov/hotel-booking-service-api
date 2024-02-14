@@ -31,7 +31,7 @@ import ua.mibal.booking.service.email.impl.model.Email;
 public class EmailBuilder {
     private final Session session;
 
-    public Email buildEmailBy(EmailConfiguration configuration) {
+    public Email build(EmailConfiguration configuration) {
         return Email.of(
                 session,
                 configuration.getSender(),
