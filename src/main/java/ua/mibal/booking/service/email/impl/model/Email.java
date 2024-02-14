@@ -32,12 +32,13 @@ public class Email extends MimeMessage {
     protected Email(Session session,
                     String sender,
                     String recipients,
-                    EmailContent content) throws MessagingException {
+                    String subject,
+                    String body) throws MessagingException {
         super(session);
         setFrom(sender);
         setRecipients(TO, recipients);
-        setSubject(content.subject(), "UTF-8");
-        setContent(content.body(), "text/html; charset=UTF-8");
+        setSubject(subject, "UTF-8");
+        setContent(body, "text/html; charset=UTF-8");
     }
 
     /**
@@ -47,9 +48,10 @@ public class Email extends MimeMessage {
     public static Email of(Session session,
                            String sender,
                            String recipients,
-                           EmailContent content) {
+                           String subject,
+                           String body) {
         try {
-            return new Email(session, sender, recipients, content);
+            return new Email(session, sender, recipients, subject, body);
         } catch (MessagingException e) {
             throw new EmailCreationException(e);
         }

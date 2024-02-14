@@ -16,8 +16,6 @@
 
 package ua.mibal.booking.service.email;
 
-import java.util.List;
-
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
@@ -25,11 +23,16 @@ import java.util.List;
 // TODO javadoc
 public interface EmailConfiguration {
 
-    String getTemplateName();
-
-    String getSubject();
+    String getSender();
 
     String getRecipients();
 
-    List<TemplateVariable> getTemplateVars();
+    Content getContent();
+
+    interface Content {
+
+        String getSubject();
+
+        String getBody();
+    }
 }

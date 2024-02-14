@@ -19,10 +19,8 @@ package ua.mibal.booking.service.email.impl.component;
 import jakarta.mail.Session;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ua.mibal.booking.config.properties.EmailProps;
 import ua.mibal.booking.service.email.EmailConfiguration;
 import ua.mibal.booking.service.email.impl.model.Email;
-import ua.mibal.booking.service.email.impl.model.EmailContent;
 
 /**
  * @author Mykhailo Balakhon
@@ -31,12 +29,15 @@ import ua.mibal.booking.service.email.impl.model.EmailContent;
 @RequiredArgsConstructor
 @Component
 public class EmailBuilder {
-    private final EmailContentProvider emailContentProvider;
     private final Session session;
-    private final EmailProps emailProps;
 
     public Email buildEmailBy(EmailConfiguration configuration) {
-        EmailContent content = emailContentProvider.getContentBy(configuration);
-        return Email.of(session, emailProps.username(), configuration.getRecipients(), content);
+        return Email.of(
+                session,
+                configuration.getSender(),
+                configuration.getRecipients(),
+                configuration.getContent().getSubject(),
+                configuration.getContent().getBody()
+        );
     }
 }
