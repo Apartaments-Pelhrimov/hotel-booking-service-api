@@ -27,13 +27,13 @@ import static jakarta.mail.Message.RecipientType.TO;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class Email extends MimeMessage {
+public class MimeEmail extends MimeMessage {
 
-    protected Email(Session session,
-                    String sender,
-                    String recipients,
-                    String subject,
-                    String body) throws MessagingException {
+    protected MimeEmail(Session session,
+                        String sender,
+                        String recipients,
+                        String subject,
+                        String body) throws MessagingException {
         super(session);
         setFrom(sender);
         setRecipients(TO, recipients);
@@ -45,13 +45,13 @@ public class Email extends MimeMessage {
      * @param sender     comma separated address strings
      * @param recipients comma separated address strings
      */
-    public static Email of(Session session,
-                           String sender,
-                           String recipients,
-                           String subject,
-                           String body) {
+    public static MimeEmail of(Session session,
+                               String sender,
+                               String recipients,
+                               String subject,
+                               String body) {
         try {
-            return new Email(session, sender, recipients, subject, body);
+            return new MimeEmail(session, sender, recipients, subject, body);
         } catch (MessagingException e) {
             throw new EmailCreationException(e);
         }

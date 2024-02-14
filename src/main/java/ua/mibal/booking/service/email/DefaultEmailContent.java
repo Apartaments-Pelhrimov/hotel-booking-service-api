@@ -31,23 +31,7 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class DefaultEmailConfiguration implements EmailConfiguration {
-
-    private String sender;
-    private String recipients;
-    private DefaultEmailContent content;
-
-    /**
-     * @author Mykhailo Balakhon
-     * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
-     */
-    @Getter
-    @Setter
-    @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class DefaultEmailContent implements EmailContent {
-        private String subject;
-        private String body;
-    }
+public class DefaultEmailContent implements EmailContent {
+    private String subject;
+    private String body;
 }

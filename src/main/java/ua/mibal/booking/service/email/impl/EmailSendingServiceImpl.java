@@ -21,11 +21,11 @@ import jakarta.mail.Transport;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ua.mibal.booking.model.exception.service.EmailSentFailedException;
-import ua.mibal.booking.service.email.EmailConfiguration;
+import ua.mibal.booking.service.email.Email;
 import ua.mibal.booking.service.email.EmailSendingService;
 import ua.mibal.booking.service.email.config.properties.EmailProps;
-import ua.mibal.booking.service.email.impl.component.EmailBuilder;
-import ua.mibal.booking.service.email.impl.model.Email;
+import ua.mibal.booking.service.email.impl.component.MimeEmailBuilder;
+import ua.mibal.booking.service.email.impl.model.MimeEmail;
 
 /**
  * @author Mykhailo Balakhon
@@ -34,26 +34,26 @@ import ua.mibal.booking.service.email.impl.model.Email;
 @RequiredArgsConstructor
 @Service
 public class EmailSendingServiceImpl implements EmailSendingService {
-    private final EmailBuilder emailBuilder;
+    private final MimeEmailBuilder mimeEmailBuilder;
     private final EmailProps emailProps;
 
-    public void sendEmail(EmailConfiguration configuration) {
-        Email email = emailBuilder.build(configuration);
-        sendAsync(email);
+    public void send(Email email) {
+        MimeEmail mimeEmail = mimeEmailBuilder.buildBy(email);
+        sendAsync(mimeEmail);
     }
 
     // TODO use ExecutorService
-    private void sendAsync(Email email) {
+    private void sendAsync(MimeEmail mimeEmail) {
         new Thread(() -> {
             try {
-                send(email);
+                send(mimeEmail);
             } catch (MessagingException e) {
                 throw new EmailSentFailedException(e);
             }
         }, "Email-sending-Thread").start();
     }
 
-    private synchronized void send(Email email) throws MessagingException {
-        Transport.send(email, emailProps.username(), emailProps.password());
+    private synchronized void send(MimeEmail mimeEmail) throws MessagingException {
+        Transport.send(mimeEmail, emailProps.username(), emailProps.password());
     }
 }

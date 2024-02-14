@@ -21,18 +21,9 @@ package ua.mibal.booking.service.email;
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 // TODO javadoc
-public interface EmailConfiguration {
+public interface EmailContent {
 
-    String getSender();
+    String getSubject();
 
-    String getRecipients();
-
-    EmailContent getContent();
-
-    interface EmailContent {
-
-        String getSubject();
-
-        String getBody();
-    }
+    String getBody();
 }

@@ -23,10 +23,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
-import ua.mibal.booking.service.email.EmailConfiguration;
-import ua.mibal.booking.service.email.EmailConfiguration.EmailContent;
-import ua.mibal.booking.service.email.impl.component.EmailBuilder;
-import ua.mibal.booking.service.email.impl.model.Email;
+import ua.mibal.booking.service.email.Email;
+import ua.mibal.booking.service.email.EmailContent;
+import ua.mibal.booking.service.email.impl.component.MimeEmailBuilder;
+import ua.mibal.booking.service.email.impl.model.MimeEmail;
 import ua.mibal.booking.test.annotations.UnitTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -38,26 +38,26 @@ import static org.mockito.Mockito.when;
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @UnitTest
-class EmailBuilder_UnitTest {
+class MimeEmailBuilder_UnitTest {
 
-    private EmailBuilder builder;
+    private MimeEmailBuilder builder;
 
     @Mock
     private Session session;
 
     @Mock
-    private EmailConfiguration configuration;
+    private Email email;
     @Mock
     private EmailContent content;
     @Mock
-    private Email email;
+    private MimeEmail mimeEmail;
 
-    private MockedStatic<Email> mockedEmail;
+    private MockedStatic<MimeEmail> mockedEmail;
 
     @BeforeEach
     void setup() {
-        mockedEmail = mockStatic(Email.class);
-        builder = new EmailBuilder(session);
+        mockedEmail = mockStatic(MimeEmail.class);
+        builder = new MimeEmailBuilder(session);
     }
 
     @AfterEach
@@ -68,17 +68,17 @@ class EmailBuilder_UnitTest {
     @ParameterizedTest
     @InstancioSource
     void build(String sender, String recipients, String subject, String body) {
-        when(configuration.getSender()).thenReturn(sender);
-        when(configuration.getRecipients()).thenReturn(recipients);
-        when(configuration.getContent()).thenReturn(content);
+        when(email.getSender()).thenReturn(sender);
+        when(email.getRecipients()).thenReturn(recipients);
+        when(email.getContent()).thenReturn(content);
         when(content.getSubject()).thenReturn(subject);
         when(content.getBody()).thenReturn(body);
 
-        mockedEmail.when(() -> Email.of(session, sender, recipients, subject, body))
-                .thenReturn(email);
+        mockedEmail.when(() -> MimeEmail.of(session, sender, recipients, subject, body))
+                .thenReturn(mimeEmail);
 
-        Email actual = builder.build(configuration);
+        MimeEmail actual = builder.buildBy(email);
 
-        assertEquals(email, actual);
+        assertEquals(mimeEmail, actual);
     }
 }

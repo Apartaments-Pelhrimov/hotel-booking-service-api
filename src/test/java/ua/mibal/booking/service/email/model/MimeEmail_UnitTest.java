@@ -27,7 +27,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import ua.mibal.booking.model.exception.EmailCreationException;
-import ua.mibal.booking.service.email.impl.model.Email;
+import ua.mibal.booking.service.email.impl.model.MimeEmail;
 import ua.mibal.booking.test.annotations.UnitTest;
 
 import java.io.IOException;
@@ -46,7 +46,7 @@ import static org.mockito.Mockito.when;
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @UnitTest
-class Email_UnitTest {
+class MimeEmail_UnitTest {
 
     @Mock
     private Session session;
@@ -62,7 +62,7 @@ class Email_UnitTest {
     void of(String sender, String recipients, String subject, String body)
             throws MessagingException, IOException {
 
-        Email actual = Email.of(session, sender, recipients, subject, body);
+        MimeEmail actual = MimeEmail.of(session, sender, recipients, subject, body);
 
         assertEquals(recipients, recipientsOf(actual));
         assertEquals(subject, actual.getSubject());
@@ -86,7 +86,7 @@ class Email_UnitTest {
                 .thenThrow(AddressException.class);
 
         assertThrows(EmailCreationException.class,
-                () -> Email.of(session, sender, recipients, subject, body));
+                () -> MimeEmail.of(session, sender, recipients, subject, body));
     }
 
 
@@ -97,8 +97,8 @@ class Email_UnitTest {
         return String.join(",", addressesStrings);
     }
 
-    private String recipientsOf(Email email) throws MessagingException {
-        return Arrays.stream(email.getAllRecipients())
+    private String recipientsOf(MimeEmail mimeEmail) throws MessagingException {
+        return Arrays.stream(mimeEmail.getAllRecipients())
                 .map(Address::toString)
                 .collect(Collectors.joining(","));
     }

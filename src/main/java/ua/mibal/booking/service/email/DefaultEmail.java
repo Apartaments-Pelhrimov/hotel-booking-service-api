@@ -14,30 +14,25 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.email.impl.component;
+package ua.mibal.booking.service.email;
 
-import jakarta.mail.Session;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
-import ua.mibal.booking.service.email.EmailConfiguration;
-import ua.mibal.booking.service.email.impl.model.Email;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@RequiredArgsConstructor
-@Component
-public class EmailBuilder {
-    private final Session session;
-
-    public Email build(EmailConfiguration configuration) {
-        return Email.of(
-                session,
-                configuration.getSender(),
-                configuration.getRecipients(),
-                configuration.getContent().getSubject(),
-                configuration.getContent().getBody()
-        );
-    }
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class DefaultEmail implements Email {
+    private String sender;
+    private String recipients;
+    private DefaultEmailContent content;
 }
