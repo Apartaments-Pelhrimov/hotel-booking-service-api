@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.email.model;
+package ua.mibal.booking.service.email.impl.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

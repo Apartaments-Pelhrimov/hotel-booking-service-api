@@ -62,7 +62,7 @@ public class AuthService {
         validateEmailDoesNotExist(registrationDto.email());
         User user = userService.save(registrationDto);
         Token token = tokenService.generateAndSaveTokenFor(user);
-        emailSendingService.sendAccountActivationEmail(token);
+//        TODO fixme emailSendingServiceImpl.sendAccountActivationEmail(token);
     }
 
     public void activateNewAccountBy(String tokenValue) {
@@ -93,7 +93,7 @@ public class AuthService {
             return;
         }
         Token token = tokenService.generateAndSaveTokenFor(user);
-        emailSendingService.sendPasswordChangingEmail(token);
+//        TODO emailSendingServiceImpl.sendPasswordChangingEmail(token);
     }
 
     private TokenDto loginByCredentials(LoginDto login) {

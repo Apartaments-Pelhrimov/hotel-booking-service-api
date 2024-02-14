@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.email.component;
+package ua.mibal.booking.service.email.impl.component;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import ua.mibal.booking.config.properties.TokenProps;
-import ua.mibal.booking.service.email.model.EmailConfiguration;
-import ua.mibal.booking.service.email.model.EmailContent;
-import ua.mibal.booking.service.email.model.EmailType;
+import ua.mibal.booking.service.email.EmailConfiguration;
+import ua.mibal.booking.service.email.impl.model.EmailContent;
 
 /**
  * @author Mykhailo Balakhon
@@ -36,9 +35,9 @@ public class EmailContentProvider {
     private final TokenProps tokenProps;
 
     public EmailContent getContentBy(EmailConfiguration configuration) {
-        EmailType type = configuration.type();
-        String subject = type.getSubject(messageSource);
-        String body = templateEngine.generate(type.getTemplateName(), type, configuration.args(), tokenProps);
+        String subject = configuration.getSubject();
+        String body = templateEngine.generate(configuration.getTemplateName(),
+                configuration.getTemplateVars(), tokenProps); // FIXME
         return new EmailContent(subject, body);
     }
 }

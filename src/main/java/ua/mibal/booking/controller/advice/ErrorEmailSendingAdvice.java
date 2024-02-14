@@ -47,7 +47,7 @@ public class ErrorEmailSendingAdvice {
     @ExceptionHandler(InternalServerException.class)
     public ResponseEntity<ApiError> sendErrorEmailToDevelopers(InternalServerException e,
                                                                Locale locale) {
-        emailSendingService.sendErrorEmailToDevelopers(e);
+//        TODO FIXME emailSendingService.sendErrorEmailToDevelopers(e);
         log.info("Email with exception sent to developers: {}", emailProps.developers());
         return exceptionHandlerAdvice.handleInternalServerException(e, locale);
     }

@@ -20,9 +20,9 @@ package ua.mibal.booking.service.email;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-// TODO rename
-//  javadocs
-public interface EmailSendingService {
+public interface TemplateVariable {
 
-    void sendEmail(EmailConfiguration configuration);
+    String getName();
+
+    Object getValue();
 }

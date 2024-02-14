@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.email.component;
+package ua.mibal.booking.service.email.impl.component;
 
-import jakarta.mail.Session;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ua.mibal.booking.config.properties.EmailProps;
-import ua.mibal.booking.service.email.model.Email;
-import ua.mibal.booking.service.email.model.EmailConfiguration;
-import ua.mibal.booking.service.email.model.EmailContent;
+import org.thymeleaf.context.Context;
+
+import static org.springframework.context.i18n.LocaleContextHolder.getLocale;
 
 /**
  * @author Mykhailo Balakhon
@@ -30,13 +28,19 @@ import ua.mibal.booking.service.email.model.EmailContent;
  */
 @RequiredArgsConstructor
 @Component
-public class EmailBuilder {
-    private final EmailContentProvider emailContentProvider;
-    private final Session session;
-    private final EmailProps emailProps;
+public class TemplateEngine {
+    private final org.thymeleaf.TemplateEngine thymeleafTemplateEngine;
 
-    public Email buildEmailBy(EmailConfiguration configuration) {
-        EmailContent content = emailContentProvider.getContentBy(configuration);
-        return Email.of(session, emailProps.username(), configuration.recipients(), content);
+    // TODO
+    //  implement localization
+    //  rename components
+    //  tests
+
+    public String generate(String template, Object... args) {
+        Context context = new Context(getLocale());
+        for (Object arg : args) {
+            context.setVariable(arg.getClass().getSimpleName(), arg);
+        }
+        return thymeleafTemplateEngine.process(template, context);
     }
 }

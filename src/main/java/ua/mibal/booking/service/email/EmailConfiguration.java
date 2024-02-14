@@ -14,25 +14,22 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.email.model;
+package ua.mibal.booking.service.email;
 
-import ua.mibal.booking.model.entity.Token;
-import ua.mibal.booking.model.exception.marker.ApiException;
+import java.util.List;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public record EmailConfiguration(
-        EmailType type,
-        String recipients,
-        Object... args
-) {
-    public static EmailConfiguration exceptionReportOf(EmailType type, String recipients, ApiException e) {
-        return new EmailConfiguration(type, recipients, e);
-    }
+// TODO javadoc
+public interface EmailConfiguration {
 
-    public static EmailConfiguration activationEmailOf(EmailType type, Token token) {
-        return new EmailConfiguration(type, token.getUser().getEmail(), token);
-    }
+    String getTemplateName();
+
+    String getSubject();
+
+    String getRecipients();
+
+    List<TemplateVariable> getTemplateVars();
 }
