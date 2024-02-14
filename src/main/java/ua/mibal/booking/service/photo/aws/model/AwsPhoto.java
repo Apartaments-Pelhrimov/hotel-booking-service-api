@@ -17,7 +17,7 @@
 package ua.mibal.booking.service.photo.aws.model;
 
 import org.springframework.web.multipart.MultipartFile;
-import ua.mibal.booking.model.exception.IllegalPhotoFormatException;
+import ua.mibal.booking.service.photo.exception.IllegalPhotoFormatException;
 
 import java.io.IOException;
 import java.util.Objects;
