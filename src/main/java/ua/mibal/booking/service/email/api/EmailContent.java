@@ -14,25 +14,16 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.email.config.properties;
-
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.validation.annotation.Validated;
+package ua.mibal.booking.service.email.api;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Validated
-@ConfigurationProperties("mail")
-public record EmailProps(
-        @NotNull
-        @NotBlank
-        String username,
-        @NotNull
-        @NotBlank
-        String password
-) {
+// TODO javadoc
+public interface EmailContent {
+
+    String getSubject();
+
+    String getBody();
 }

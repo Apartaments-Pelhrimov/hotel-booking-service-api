@@ -14,25 +14,17 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.email;
+package ua.mibal.booking.service.email.impl.exception;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import ua.mibal.booking.model.exception.marker.InternalServerException;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Getter
-@Setter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class DefaultEmail implements Email {
-    private String sender;
-    private String recipients;
-    private DefaultEmailContent content;
+public class EmailCreationException extends InternalServerException {
+
+    public EmailCreationException(Throwable cause) {
+        super("Exception while creating email", cause);
+    }
 }

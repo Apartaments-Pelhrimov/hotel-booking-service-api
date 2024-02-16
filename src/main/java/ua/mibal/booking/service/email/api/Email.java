@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.email.exception;
-
-import ua.mibal.booking.model.exception.marker.InternalServerException;
+package ua.mibal.booking.service.email.api;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class EmailSentFailedException extends InternalServerException {
+// TODO javadoc
+public interface Email {
 
-    public EmailSentFailedException(Throwable cause) {
-        super("Email send failed", cause);
-    }
+    String getSender();
+
+    String getRecipients();
+
+    EmailContent getContent();
 }
