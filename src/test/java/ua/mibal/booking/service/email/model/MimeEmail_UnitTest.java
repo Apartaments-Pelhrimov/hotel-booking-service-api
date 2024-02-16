@@ -21,22 +21,23 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.Session;
 import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
+import org.instancio.junit.InstancioSource;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
-import ua.mibal.booking.model.exception.EmailCreationException;
+import ua.mibal.booking.service.email.exception.EmailCreationException;
+import ua.mibal.booking.service.email.impl.model.MimeEmail;
 import ua.mibal.booking.test.annotations.UnitTest;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
-import static java.util.Arrays.asList;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
@@ -45,66 +46,47 @@ import static org.mockito.Mockito.when;
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @UnitTest
-class Email_UnitTest {
+class MimeEmail_UnitTest {
 
     @Mock
     private Session session;
-    @Mock
-    private EmailContent content;
-
-    private String sender = "sender@email";
-    private String recipients = "recipient1@email,recipient2@email";
-
-    @Mock
-    private Properties props;
 
     @BeforeEach
     void setup() {
         when(session.getProperties())
-                .thenReturn(props);
+                .thenReturn(mock(Properties.class));
     }
 
-    @Test
-    void of() throws MessagingException, IOException {
-        String subject = "SUBJECT";
-        String body = "CONTENT";
+    @ParameterizedTest
+    @InstancioSource
+    void of(String sender, String recipients, String subject, String body)
+            throws MessagingException, IOException {
 
-        when(content.subject())
-                .thenReturn(subject);
-        when(content.body())
-                .thenReturn(body);
+        MimeEmail actual = MimeEmail.of(session, sender, recipients, subject, body);
 
-        Email actual = Email.of(session, sender, recipients, content);
-
-        assertThat(recipientsOf(actual)).containsAll(expectedRecipients());
+        assertEquals(recipients, recipientsOf(actual));
         assertEquals(subject, actual.getSubject());
         assertEquals(body, actual.getContent());
         assertEquals(sender, addressesToString(actual.getFrom()));
         assertEquals(session, actual.getSession());
     }
 
-    @Test
-    void of_should_throw_EmailCreationException() {
+    @ParameterizedTest
+    @InstancioSource
+    void of_should_throw_EmailCreationException(String sender, String recipients, String subject, String body) {
         try (MockedStatic<InternetAddress> mockedInternetAddress = mockStatic(InternetAddress.class)) {
-            of_should_throw_EmailCreationException_mockedInternetAddress(mockedInternetAddress);
+            of_should_throw_EmailCreationException_mockedInternetAddress(sender, recipients, subject, body, mockedInternetAddress);
         }
     }
 
-    void of_should_throw_EmailCreationException_mockedInternetAddress(MockedStatic<InternetAddress> mockedInternetAddress) {
-        String subject = "SUBJECT";
-        String body = "CONTENT";
-
-        when(content.subject())
-                .thenReturn(subject);
-        when(content.body())
-                .thenReturn(body);
-
+    void of_should_throw_EmailCreationException_mockedInternetAddress(String sender, String recipients, String subject, String body,
+                                                                      MockedStatic<InternetAddress> mockedInternetAddress) {
         mockedInternetAddress
                 .when(() -> InternetAddress.parse(sender))
                 .thenThrow(AddressException.class);
 
         assertThrows(EmailCreationException.class,
-                () -> Email.of(session, sender, recipients, content));
+                () -> MimeEmail.of(session, sender, recipients, subject, body));
     }
 
 
@@ -115,13 +97,9 @@ class Email_UnitTest {
         return String.join(",", addressesStrings);
     }
 
-    private String[] recipientsOf(Email email) throws MessagingException {
-        return Arrays.stream(email.getAllRecipients())
+    private String recipientsOf(MimeEmail mimeEmail) throws MessagingException {
+        return Arrays.stream(mimeEmail.getAllRecipients())
                 .map(Address::toString)
-                .toArray(String[]::new);
-    }
-
-    private List<String> expectedRecipients() {
-        return asList(recipients.split(","));
+                .collect(Collectors.joining(","));
     }
 }

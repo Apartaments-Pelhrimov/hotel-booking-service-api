@@ -16,13 +16,22 @@
 
 package ua.mibal.booking.service.email;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-// TODO rename
-//  javadocs
-public interface EmailSendingService {
-
-    void send(Email email);
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class DefaultEmailContent implements EmailContent {
+    private String subject;
+    private String body;
 }

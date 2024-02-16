@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.exception;
-
-import ua.mibal.booking.model.exception.marker.InternalServerException;
+package ua.mibal.booking.service.email;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class EmailCreationException extends InternalServerException {
+// TODO javadoc
+public interface EmailContent {
 
-    public EmailCreationException(Throwable cause) {
-        super("Exception while creating email", cause);
-    }
+    String getSubject();
+
+    String getBody();
 }

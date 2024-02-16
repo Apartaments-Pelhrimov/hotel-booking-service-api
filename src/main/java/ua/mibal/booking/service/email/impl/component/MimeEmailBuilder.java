@@ -14,15 +14,30 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.email;
+package ua.mibal.booking.service.email.impl.component;
+
+import jakarta.mail.Session;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+import ua.mibal.booking.service.email.Email;
+import ua.mibal.booking.service.email.impl.model.MimeEmail;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-// TODO rename
-//  javadocs
-public interface EmailSendingService {
+@RequiredArgsConstructor
+@Component
+public class MimeEmailBuilder {
+    private final Session session;
 
-    void send(Email email);
+    public MimeEmail buildBy(Email email) {
+        return MimeEmail.of(
+                session,
+                email.getSender(),
+                email.getRecipients(),
+                email.getContent().getSubject(),
+                email.getContent().getBody()
+        );
+    }
 }

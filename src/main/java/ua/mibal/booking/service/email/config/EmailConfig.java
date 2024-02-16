@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.config;
+package ua.mibal.booking.service.email.config;
 
 import jakarta.mail.Session;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import ua.mibal.booking.config.properties.EmailProps;
+import ua.mibal.booking.service.email.config.properties.EmailProps;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -32,10 +31,9 @@ import java.util.Properties;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Configuration
-@ComponentScan("ua.mibal.booking.testUtils")
 @EnableConfigurationProperties(EmailProps.class)
-public class Config {
+@Configuration
+public class EmailConfig {
 
     @Bean
     public Session getSessionByProperties(Environment env) {
@@ -45,13 +43,6 @@ public class Config {
         props.put("mail.smtp.starttls.enable", Objects.requireNonNull(env.getProperty("mail.smtp.starttls.enable")));
         Optional.ofNullable(env.getProperty("mail.debug"))
                 .ifPresent(val -> props.put("mail.debug", val));
-
-        props.put("mail.imap.host", env.getProperty("mail.imap.host"));
-        props.put("mail.imap.port", env.getProperty("mail.imap.port"));
-        props.put("mail.imap.starttls.enable", env.getProperty("mail.imap.starttls.enable"));
-        props.put("mail.debug", env.getProperty("mail.debug"));
-        props.put("mail.store.protocol", env.getProperty("mail.store.protocol"));
-        props.put("mail.imap.ssl.trust", env.getProperty("mail.imap.ssl.trust"));
         return Session.getInstance(props);
     }
 }

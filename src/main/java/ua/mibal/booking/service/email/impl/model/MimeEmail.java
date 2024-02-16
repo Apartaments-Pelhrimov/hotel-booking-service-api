@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.email.model;
+package ua.mibal.booking.service.email.impl.model;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.Session;
 import jakarta.mail.internet.MimeMessage;
-import ua.mibal.booking.model.exception.EmailCreationException;
+import ua.mibal.booking.service.email.exception.EmailCreationException;
 
 import static jakarta.mail.Message.RecipientType.TO;
 
@@ -27,29 +27,31 @@ import static jakarta.mail.Message.RecipientType.TO;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class Email extends MimeMessage {
+public class MimeEmail extends MimeMessage {
 
-    protected Email(Session session,
-                    String sender,
-                    String recipients,
-                    EmailContent content) throws MessagingException {
+    protected MimeEmail(Session session,
+                        String sender,
+                        String recipients,
+                        String subject,
+                        String body) throws MessagingException {
         super(session);
         setFrom(sender);
         setRecipients(TO, recipients);
-        setSubject(content.subject(), "UTF-8");
-        setContent(content.body(), "text/html; charset=UTF-8");
+        setSubject(subject, "UTF-8");
+        setContent(body, "text/html; charset=UTF-8");
     }
 
     /**
      * @param sender     comma separated address strings
      * @param recipients comma separated address strings
      */
-    public static Email of(Session session,
-                           String sender,
-                           String recipients,
-                           EmailContent content) {
+    public static MimeEmail of(Session session,
+                               String sender,
+                               String recipients,
+                               String subject,
+                               String body) {
         try {
-            return new Email(session, sender, recipients, content);
+            return new MimeEmail(session, sender, recipients, subject, body);
         } catch (MessagingException e) {
             throw new EmailCreationException(e);
         }

@@ -25,21 +25,7 @@
 </head>
 <body>
 
-<h1>
-    Hello, <span th:text="${Token.user.firstName}">User</span>
-</h1>
-
-<p>Congrats with registration. So you should to activate your account!</p>
-<p>Click on the "Activate Account" link to activate your account</p>
-
-<a th:href="@{${EmailType.frontLink}(token=${Token.value})}">Activate Account</a>
-
-<p>
-    Activation link expires in <span th:text="${TokenProps.validForMinutes}">some</span> minutes
-</p>
-
-<p>Have a nice day</p>
-<p>Hotel booking service team</p>
+<pre th:text="${InternalServerException.stackTraceMessage}"></pre>
 
 </body>
 </html>

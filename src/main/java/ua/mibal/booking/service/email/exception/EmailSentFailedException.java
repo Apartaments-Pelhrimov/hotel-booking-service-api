@@ -14,24 +14,17 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.email.model;
+package ua.mibal.booking.service.email.exception;
 
-import lombok.AllArgsConstructor;
+import ua.mibal.booking.model.exception.marker.InternalServerException;
 
 /**
- * Structure class used to associate {@link Link} related data into one structure.
- * Used only in HTML templates.
- *
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@AllArgsConstructor
-public class Link {
-    private String value;
-    private int validForMinutes;
+public class EmailSentFailedException extends InternalServerException {
 
-    @Override
-    public String toString() {
-        return value;
+    public EmailSentFailedException(Throwable cause) {
+        super("Email send failed", cause);
     }
 }
