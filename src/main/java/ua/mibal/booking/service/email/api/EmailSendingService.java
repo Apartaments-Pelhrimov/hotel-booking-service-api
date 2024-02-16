@@ -16,6 +16,8 @@
 
 package ua.mibal.booking.service.email.api;
 
+import ua.mibal.booking.service.email.api.model.Email;
+
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>

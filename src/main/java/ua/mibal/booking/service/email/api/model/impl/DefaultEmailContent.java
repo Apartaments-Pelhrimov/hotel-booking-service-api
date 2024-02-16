@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.email.api;
+package ua.mibal.booking.service.email.api.model.impl;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ua.mibal.booking.service.email.api.model.EmailContent;
 
 /**
  * @author Mykhailo Balakhon
@@ -31,8 +32,7 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class DefaultEmail implements Email {
-    private String sender;
-    private String recipients;
-    private DefaultEmailContent content;
+public class DefaultEmailContent implements EmailContent {
+    private String subject;
+    private String body;
 }

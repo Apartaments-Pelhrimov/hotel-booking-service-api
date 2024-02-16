@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
-import ua.mibal.booking.service.email.api.Email;
+import ua.mibal.booking.service.email.api.model.Email;
 import ua.mibal.booking.service.email.impl.component.MimeEmailBuilder;
 import ua.mibal.booking.service.email.impl.config.properties.EmailProps;
 import ua.mibal.booking.service.email.impl.exception.EmailSentFailedException;

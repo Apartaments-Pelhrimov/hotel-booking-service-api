@@ -19,7 +19,7 @@ package ua.mibal.booking.service.email.impl.component;
 import jakarta.mail.Session;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ua.mibal.booking.service.email.api.Email;
+import ua.mibal.booking.service.email.api.model.Email;
 import ua.mibal.booking.service.email.impl.model.MimeEmail;
 
 /**
