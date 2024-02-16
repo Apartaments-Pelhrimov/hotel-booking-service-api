@@ -19,9 +19,9 @@ package ua.mibal.booking.repository;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.hibernate.SessionFactory;
 import org.hibernate.stat.Statistics;
-import org.junit.Ignore;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
@@ -173,7 +173,7 @@ class ApartmentInstanceRepository_IntegrationTest {
         assertThat(freeByRequest).isEmpty();
     }
 
-    @Ignore("Actual result is empty")
+    @Disabled("Actual result is empty")
     @Test
     void findFreeByRequest_without_reservations_ApartmentInstance() {
         LocalDateTime requestFrom = now().plusYears(1);
@@ -188,7 +188,7 @@ class ApartmentInstanceRepository_IntegrationTest {
         assertThat(freeByRequest).hasSize(1);
     }
 
-    @Ignore("Actual result does not contain ApartmentInstance with name '1'")
+    @Disabled("Actual result does not contain ApartmentInstance with name '1'")
     @Test
     void findFreeByRequest_with_intersecting_and_without_reservations() {
         LocalDateTime requestFrom = now().plusYears(1);

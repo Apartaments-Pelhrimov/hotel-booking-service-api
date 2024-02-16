@@ -19,9 +19,9 @@ package ua.mibal.booking.service.email.impl;
 import jakarta.mail.MessagingException;
 import jakarta.mail.Transport;
 import org.instancio.junit.InstancioSource;
-import org.junit.Ignore;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
@@ -41,7 +41,7 @@ import static org.mockito.Mockito.when;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Ignore("Static Mocks are not allowed in MultiThreading")
+@Disabled("Static Mocks are not allowed in MultiThreading")
 @UnitTest
 class DefaultEmailSendingService_UnitTest {
 

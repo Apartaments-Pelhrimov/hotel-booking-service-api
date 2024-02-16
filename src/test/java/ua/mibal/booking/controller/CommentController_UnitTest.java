@@ -17,8 +17,8 @@
 package ua.mibal.booking.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
@@ -91,7 +91,7 @@ class CommentController_UnitTest {
     }
 
 
-    @Ignore("Spring Authentication does not work at test environment")
+    @Disabled("Spring Authentication does not work at test environment")
     @Test
     void create_should_allow_only_ROLE_USER() throws Exception {
         mvc.perform(post("/api/apartments/{apartmentId}/comments", 1)
@@ -119,7 +119,7 @@ class CommentController_UnitTest {
         verifyNoInteractions(commentService);
     }
 
-    @Ignore("Spring Authentication does not work at test environment")
+    @Disabled("Spring Authentication does not work at test environment")
     @ParameterizedTest
     @CsvSource({
             "1, correct_body1, 5.0",
