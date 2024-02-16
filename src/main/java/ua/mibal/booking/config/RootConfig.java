@@ -26,10 +26,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
-import software.amazon.awssdk.services.s3.S3Client;
-import ua.mibal.booking.config.properties.AwsProps;
 import ua.mibal.booking.config.properties.CalendarProps;
 import ua.mibal.booking.config.properties.EmailProps;
 import ua.mibal.booking.config.properties.LocalizedMessagesProps;
@@ -49,8 +45,6 @@ import java.util.Properties;
  */
 @RequiredArgsConstructor
 @EnableConfigurationProperties({
-        AwsProps.class,
-        AwsProps.AwsBucketProps.class,
         CalendarProps.class,
         CalendarProps.ReservationDateTimeProps.class,
         CalendarProps.ICalProps.class,
@@ -60,20 +54,7 @@ import java.util.Properties;
 })
 @Configuration
 public class RootConfig {
-    private final AwsProps awsProps;
     private final LocalizedMessagesProps localizedMessagesProps;
-
-    @Bean
-    public S3Client create() {
-        return S3Client.builder()
-                .credentialsProvider(StaticCredentialsProvider.create(
-                        AwsBasicCredentials.create(
-                                awsProps.accessKeyId(),
-                                awsProps.secretAccessKey()
-                        )))
-                .region(awsProps.region())
-                .build();
-    }
 
     @Bean
     public Session getSessionByProperties(Environment env) {

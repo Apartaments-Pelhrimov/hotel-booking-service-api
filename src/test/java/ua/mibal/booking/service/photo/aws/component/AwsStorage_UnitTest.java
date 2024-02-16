@@ -30,8 +30,8 @@ import software.amazon.awssdk.services.s3.model.GetUrlRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import ua.mibal.booking.service.photo.aws.components.AwsRequestGenerator;
 import ua.mibal.booking.service.photo.aws.components.AwsStorage;
+import ua.mibal.booking.service.photo.aws.exception.AwsStorageException;
 import ua.mibal.booking.service.photo.aws.model.AwsPhoto;
-import ua.mibal.booking.service.photo.exception.AwsStorageException;
 import ua.mibal.booking.test.annotations.UnitTest;
 
 import java.io.IOException;

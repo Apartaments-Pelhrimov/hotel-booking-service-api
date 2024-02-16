@@ -19,7 +19,7 @@ package ua.mibal.booking.service.photo.aws.components;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import ua.mibal.booking.config.properties.AwsProps.AwsBucketProps;
+import ua.mibal.booking.service.photo.aws.config.AwsProps.AwsBucketProps;
 import ua.mibal.booking.service.photo.aws.model.AwsPhoto;
 import ua.mibal.booking.test.annotations.UnitTest;
 
