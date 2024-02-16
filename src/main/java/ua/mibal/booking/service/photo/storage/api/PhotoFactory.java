@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.photo.aws.exception;
+package ua.mibal.booking.service.photo.storage.api;
 
-import ua.mibal.booking.model.exception.marker.InternalServerException;
+import org.springframework.web.multipart.MultipartFile;
+import ua.mibal.booking.service.photo.storage.api.model.Photo;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class AwsStorageException extends InternalServerException {
+public interface PhotoFactory {
 
-    public AwsStorageException(String message, Throwable cause) {
-        super(message, cause);
-    }
+    Photo getInstance(MultipartFile photo);
 }

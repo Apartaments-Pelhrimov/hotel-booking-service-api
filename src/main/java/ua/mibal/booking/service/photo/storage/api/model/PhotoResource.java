@@ -14,26 +14,29 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.photo.aws.model;
+package ua.mibal.booking.service.photo.storage.api.model;
+
+import org.springframework.http.MediaType;
 
 /**
+ * Class to encapsulate photo bytes and content type
+ *
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public enum PhotoExtension {
+public interface PhotoResource {
 
-    PNG, JPG, JPEG, NONE;
+    /**
+     * Returns raw photo bytes
+     *
+     * @return raw photo bytes
+     */
+    byte[] getBytes();
 
-    public static PhotoExtension ofExtension(String photoExtension) {
-        return valueOf(photoExtension.toUpperCase());
-    }
-
-    public String getExtension() {
-        if (this == NONE) {
-            throw new UnsupportedOperationException(
-                    "Trying to call PhotoExtension.getExtension() " +
-                    "on PhotoExtension.NONE instance");
-        }
-        return name().toLowerCase();
-    }
+    /**
+     * Returns photo content type
+     *
+     * @return photo content type
+     */
+    MediaType getContentType();
 }

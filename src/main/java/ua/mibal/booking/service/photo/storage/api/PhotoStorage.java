@@ -14,29 +14,20 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.photo;
+package ua.mibal.booking.service.photo.storage.api;
 
-import org.springframework.http.MediaType;
+import ua.mibal.booking.service.photo.storage.api.model.Photo;
+import ua.mibal.booking.service.photo.storage.api.model.PhotoResource;
 
 /**
- * Class to encapsulate photo bytes and content type
- *
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public interface PhotoResource {
+public interface PhotoStorage {
 
-    /**
-     * Returns raw photo bytes
-     *
-     * @return raw photo bytes
-     */
-    byte[] getBytes();
+    PhotoResource getPhotoBy(String key);
 
-    /**
-     * Returns photo content type
-     *
-     * @return photo content type
-     */
-    MediaType getContentType();
+    void uploadPhoto(Photo photo);
+
+    void deletePhotoBy(String key);
 }

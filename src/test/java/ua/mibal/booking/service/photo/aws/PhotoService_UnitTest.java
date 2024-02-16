@@ -22,23 +22,22 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.springframework.web.multipart.MultipartFile;
 import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.service.ApartmentService;
 import ua.mibal.booking.service.UserService;
-import ua.mibal.booking.service.photo.PhotoResource;
-import ua.mibal.booking.service.photo.aws.components.AwsStorage;
-import ua.mibal.booking.service.photo.aws.model.AwsPhoto;
-import ua.mibal.booking.service.photo.aws.model.AwsPhotoResource;
+import ua.mibal.booking.service.photo.PhotoService;
+import ua.mibal.booking.service.photo.storage.api.PhotoFactory;
+import ua.mibal.booking.service.photo.storage.api.PhotoStorage;
+import ua.mibal.booking.service.photo.storage.api.model.Photo;
+import ua.mibal.booking.service.photo.storage.api.model.PhotoResource;
 import ua.mibal.booking.test.annotations.UnitTest;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.clearAllCaches;
-import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -48,16 +47,18 @@ import static org.mockito.Mockito.when;
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @UnitTest
-class AwsPhotoService_UnitTest {
+class PhotoService_UnitTest {
 
-    private AwsPhotoService service;
+    private PhotoService service;
 
     @Mock
-    private AwsStorage storage;
+    private PhotoStorage storage;
     @Mock
     private UserService userService;
     @Mock
     private ApartmentService apartmentService;
+    @Mock
+    private PhotoFactory photoFactory;
 
     @Mock
     private MultipartFile photoFile;
@@ -66,21 +67,17 @@ class AwsPhotoService_UnitTest {
     @Mock
     private User user;
     @Mock
-    private AwsPhoto photo;
+    private Photo photo;
     @Mock
-    private AwsPhotoResource awsPhotoResponse;
-
-    private MockedStatic<AwsPhoto> mockedAwsPhoto;
+    private PhotoResource awsPhotoResponse;
 
     @BeforeEach
     void setup() {
-        mockedAwsPhoto = mockStatic(AwsPhoto.class);
-        service = new AwsPhotoService(storage, userService, apartmentService);
+        service = new PhotoService(storage, userService, apartmentService, photoFactory);
     }
 
     @AfterEach
     void after() {
-        mockedAwsPhoto.close();
         clearAllCaches();
     }
 
@@ -107,8 +104,7 @@ class AwsPhotoService_UnitTest {
     void changeUserPhoto(User user, String email, String key) {
         when(userService.getOne(email))
                 .thenReturn(user);
-        mockedAwsPhoto.when(
-                        () -> AwsPhoto.getInstanceToUpload(photoFile))
+        when(photoFactory.getInstance(photoFile))
                 .thenReturn(photo);
         when(photo.getKey())
                 .thenReturn(key);
@@ -169,8 +165,7 @@ class AwsPhotoService_UnitTest {
 
         when(apartmentService.getOne(id))
                 .thenReturn(apartment);
-        mockedAwsPhoto.when(
-                        () -> AwsPhoto.getInstanceToUpload(photoFile))
+        when(photoFactory.getInstance(photoFile))
                 .thenReturn(photo);
         when(photo.getKey())
                 .thenReturn(key);

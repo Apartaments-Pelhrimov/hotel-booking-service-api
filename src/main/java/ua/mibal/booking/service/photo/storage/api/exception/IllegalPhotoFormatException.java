@@ -14,27 +14,20 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.photo.aws.model;
+package ua.mibal.booking.service.photo.storage.api.exception;
 
-import lombok.Getter;
-import org.springframework.http.MediaType;
-import ua.mibal.booking.service.photo.PhotoResource;
+import ua.mibal.booking.model.exception.marker.BadRequestException;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Getter
-public class AwsPhotoResource implements PhotoResource {
-    private final byte[] bytes;
-    private final MediaType contentType;
+public class IllegalPhotoFormatException extends BadRequestException {
 
-    protected AwsPhotoResource(byte[] bytes, String contentType) {
-        this.bytes = bytes;
-        this.contentType = MediaType.parseMediaType(contentType);
-    }
-
-    public static AwsPhotoResource of(byte[] bytes, String contentType) {
-        return new AwsPhotoResource(bytes, contentType);
+    public IllegalPhotoFormatException(String photoName) {
+        super(
+                "Illegal photo format for file " + photoName,
+                "bad-request-error.illegal-photo-format", photoName
+        );
     }
 }

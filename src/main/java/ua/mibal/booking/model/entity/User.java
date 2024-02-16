@@ -219,4 +219,8 @@ public class User implements UserDetails {
     public final int hashCode() {
         return Objects.hash(email);
     }
+
+    public void setPhoto(String key) {
+        this.photo = new Photo(key);
+    }
 }

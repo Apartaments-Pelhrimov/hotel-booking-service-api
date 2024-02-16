@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.photo.aws.components;
+package ua.mibal.booking.service.photo.storage.aws.components;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,9 +24,10 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-import ua.mibal.booking.service.photo.aws.exception.AwsStorageException;
-import ua.mibal.booking.service.photo.aws.model.AwsPhoto;
-import ua.mibal.booking.service.photo.aws.model.AwsPhotoResource;
+import ua.mibal.booking.service.photo.storage.api.model.Photo;
+import ua.mibal.booking.service.photo.storage.api.PhotoStorage;
+import ua.mibal.booking.service.photo.storage.aws.exception.AwsStorageException;
+import ua.mibal.booking.service.photo.storage.aws.model.AwsPhotoResource;
 
 import java.io.IOException;
 
@@ -36,10 +37,11 @@ import java.io.IOException;
  */
 @RequiredArgsConstructor
 @Service
-public class AwsStorage {
+public class AwsPhotoStorage implements PhotoStorage {
     private final S3Client s3Client;
     private final AwsRequestGenerator requestGenerator;
 
+    @Override
     public AwsPhotoResource getPhotoBy(String key) {
         try {
             return getAwsPhotoBy(key);
@@ -50,7 +52,8 @@ public class AwsStorage {
         }
     }
 
-    public void uploadPhoto(AwsPhoto photo) {
+    @Override
+    public void uploadPhoto(Photo photo) {
         try {
             uploadAwsPhoto(photo);
         } catch (IOException | SdkException e) {
@@ -60,6 +63,7 @@ public class AwsStorage {
         }
     }
 
+    @Override
     public void deletePhotoBy(String key) {
         try {
             deleteAwsPhotoBy(key);
@@ -79,7 +83,7 @@ public class AwsStorage {
         );
     }
 
-    private void uploadAwsPhoto(AwsPhoto photo) throws IOException {
+    private void uploadAwsPhoto(Photo photo) throws IOException {
         PutObjectRequest putRequest = requestGenerator.generatePutRequest(photo);
         RequestBody requestBody = RequestBody.fromBytes(photo.getPhoto());
         s3Client.putObject(putRequest, requestBody);

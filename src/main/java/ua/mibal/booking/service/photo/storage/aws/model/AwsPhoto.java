@@ -14,25 +14,26 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.controller.model;
+package ua.mibal.booking.service.photo.storage.aws.model;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import ua.mibal.booking.service.photo.storage.api.model.PhotoResource;
+import org.springframework.web.multipart.MultipartFile;
+import ua.mibal.booking.service.photo.storage.api.model.Photo;
+
+import static java.time.LocalDateTime.now;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class PhotoResponse extends ResponseEntity<byte[]> {
+public class AwsPhoto extends Photo {
 
-    protected PhotoResponse(byte[] body, MediaType mediaType) {
-        super(body, HttpStatus.OK);
-        getHeaders().setContentType(mediaType);
+    public AwsPhoto(MultipartFile photo) {
+        super(photo);
     }
 
-    public static PhotoResponse of(PhotoResource photo) {
-        return new PhotoResponse(photo.getBytes(), photo.getContentType());
+    @Override
+    protected String generateFileKey(MultipartFile photo) {
+        String name = photo.getOriginalFilename();
+        return "" + now().hashCode() + name.hashCode();
     }
 }

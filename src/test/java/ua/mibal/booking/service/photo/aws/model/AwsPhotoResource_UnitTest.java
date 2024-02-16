@@ -18,6 +18,7 @@ package ua.mibal.booking.service.photo.aws.model;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import ua.mibal.booking.service.photo.storage.aws.model.AwsPhotoResource;
 import ua.mibal.booking.test.annotations.UnitTest;
 
 import static java.nio.charset.StandardCharsets.UTF_8;

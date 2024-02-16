@@ -14,25 +14,17 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.controller.model;
+package ua.mibal.booking.service.photo.storage.aws.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import ua.mibal.booking.service.photo.storage.api.model.PhotoResource;
+import ua.mibal.booking.model.exception.marker.InternalServerException;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class PhotoResponse extends ResponseEntity<byte[]> {
+public class AwsStorageException extends InternalServerException {
 
-    protected PhotoResponse(byte[] body, MediaType mediaType) {
-        super(body, HttpStatus.OK);
-        getHeaders().setContentType(mediaType);
-    }
-
-    public static PhotoResponse of(PhotoResource photo) {
-        return new PhotoResponse(photo.getBytes(), photo.getContentType());
+    public AwsStorageException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

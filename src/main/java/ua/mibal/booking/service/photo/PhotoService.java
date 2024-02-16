@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,65 +16,74 @@
 
 package ua.mibal.booking.service.photo;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import ua.mibal.booking.model.entity.Apartment;
+import ua.mibal.booking.model.entity.User;
+import ua.mibal.booking.service.ApartmentService;
+import ua.mibal.booking.service.UserService;
+import ua.mibal.booking.service.photo.storage.api.model.Photo;
+import ua.mibal.booking.service.photo.storage.api.PhotoFactory;
+import ua.mibal.booking.service.photo.storage.api.model.PhotoResource;
+import ua.mibal.booking.service.photo.storage.api.PhotoStorage;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public interface PhotoService {
+@RequiredArgsConstructor
+@Service
+public class PhotoService {
+    private final PhotoStorage storage;
+    private final UserService userService;
+    private final ApartmentService apartmentService;
+    private final PhotoFactory photoFactory;
 
-    /**
-     * Returns {@link PhotoResource} with user's profile photo
-     *
-     * @param email user's email used as user identifier
-     * @return {@link PhotoResource} with user's profile photo
-     */
-    PhotoResource getUserPhoto(String email);
+    public PhotoResource getUserPhoto(String email) {
+        User user = userService.getOne(email);
+        String photoKey = user.getPhotoKey();
+        return storage.getPhotoBy(photoKey);
+    }
 
-    /**
-     * Deletes user's previous (old) photo from photo storage.
-     * Deletes old photo identifier from user entity.
-     * Uploads new {@link MultipartFile} into photo storage.
-     * Adds new photo identifier to user entity.
-     *
-     * @param email user's email used as user identifier
-     * @param photo photo to upload
-     */
-    void changeUserPhoto(String email, MultipartFile photo);
+    @Transactional
+    public void changeUserPhoto(String email, MultipartFile photoFile) {
+        User user = userService.getOne(email);
+        String oldPhotoKey = user.getPhotoKey();
+        storage.deletePhotoBy(oldPhotoKey);
+        Photo newPhoto = photoFactory.getInstance(photoFile);
+        storage.uploadPhoto(newPhoto);
+        user.setPhoto(newPhoto.getKey());
+    }
 
-    /**
-     * Method deletes user's photo from photo storage and
-     * deletes previous (old) photo identifier from user entity.
-     *
-     * @param email user's email used as user identifier
-     */
-    void deleteUserPhoto(String email);
+    @Transactional
+    public void deleteUserPhoto(String email) {
+        User user = userService.getOne(email);
+        String photoKey = user.getPhotoKey();
+        storage.deletePhotoBy(photoKey);
+        user.deletePhoto();
+    }
 
-    /**
-     * Returns {@link PhotoResource} with the apartment photo
-     *
-     * @param apartmentId identifier of the wanted apartment
-     * @param photoIndex  index of the wanted apartment photo
-     * @return {@link PhotoResource} with the apartment photo
-     */
-    PhotoResource getApartmentPhoto(Long apartmentId, Integer photoIndex);
+    public PhotoResource getApartmentPhoto(Long apartmentId, Integer photoIndex) {
+        Apartment apartment = apartmentService.getOneFetchPhotos(apartmentId);
+        String photoKey = apartment.getPhotoKey(photoIndex);
+        return storage.getPhotoBy(photoKey);
+    }
 
-    /**
-     * Uploads new {@link MultipartFile} photo into photo storage.
-     * Adds the new photo to the apartment entity.
-     *
-     * @param apartmentId identifier of the wanted apartment
-     * @param photo       photo to upload
-     */
-    void createApartmentPhoto(Long apartmentId, MultipartFile photo);
+    @Transactional
+    public void createApartmentPhoto(Long id, MultipartFile photoFile) {
+        Apartment apartment = apartmentService.getOne(id);
+        Photo photo = photoFactory.getInstance(photoFile);
+        storage.uploadPhoto(photo);
+        apartment.addPhoto(photo.getKey());
+    }
 
-    /**
-     * Method deletes apartment's photo from photo storage and
-     * deletes photo identifier from apartment entity.
-     *
-     * @param apartmentId identifier of the wanted apartment
-     * @param photoIndex  index of the wanted apartment photo
-     */
-    void deleteApartmentPhoto(Long apartmentId, Integer photoIndex);
+    @Transactional
+    public void deleteApartmentPhoto(Long apartmentId, Integer photoIndex) {
+        Apartment apartment = apartmentService.getOneFetchPhotos(apartmentId);
+        String photoKey = apartment.getPhotoKey(photoIndex);
+        storage.deletePhotoBy(photoKey);
+        apartment.deletePhoto(photoKey);
+    }
 }

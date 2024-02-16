@@ -28,10 +28,10 @@ import software.amazon.awssdk.services.s3.S3Utilities;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetUrlRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-import ua.mibal.booking.service.photo.aws.components.AwsRequestGenerator;
-import ua.mibal.booking.service.photo.aws.components.AwsStorage;
-import ua.mibal.booking.service.photo.aws.exception.AwsStorageException;
-import ua.mibal.booking.service.photo.aws.model.AwsPhoto;
+import ua.mibal.booking.service.photo.storage.aws.components.AwsRequestGenerator;
+import ua.mibal.booking.service.photo.storage.aws.components.AwsPhotoStorage;
+import ua.mibal.booking.service.photo.storage.aws.exception.AwsStorageException;
+import ua.mibal.booking.service.photo.storage.aws.model.AwsPhoto;
 import ua.mibal.booking.test.annotations.UnitTest;
 
 import java.io.IOException;
@@ -48,9 +48,9 @@ import static org.mockito.Mockito.when;
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @UnitTest
-class AwsStorage_UnitTest {
+class AwsPhotoStorage_UnitTest {
 
-    private AwsStorage storage;
+    private AwsPhotoStorage storage;
 
     @Mock
     private S3Client s3Client;
@@ -74,7 +74,7 @@ class AwsStorage_UnitTest {
 
     @BeforeEach
     public void beforeEach() {
-        storage = new AwsStorage(s3Client, requestGenerator);
+        storage = new AwsPhotoStorage(s3Client, requestGenerator);
     }
 
     @Test

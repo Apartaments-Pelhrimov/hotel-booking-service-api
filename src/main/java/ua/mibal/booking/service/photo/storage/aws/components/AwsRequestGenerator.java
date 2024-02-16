@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.photo.aws.components;
+package ua.mibal.booking.service.photo.storage.aws.components;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-import ua.mibal.booking.service.photo.aws.config.AwsProps.AwsBucketProps;
-import ua.mibal.booking.service.photo.aws.model.AwsPhoto;
+import ua.mibal.booking.service.photo.storage.api.model.Photo;
+import ua.mibal.booking.service.photo.storage.aws.config.AwsProps.AwsBucketProps;
 
 /**
  * @author Mykhailo Balakhon
@@ -33,7 +33,7 @@ import ua.mibal.booking.service.photo.aws.model.AwsPhoto;
 public class AwsRequestGenerator {
     private final AwsBucketProps awsBucketProps;
 
-    public PutObjectRequest generatePutRequest(AwsPhoto photo) {
+    public PutObjectRequest generatePutRequest(Photo photo) {
         return PutObjectRequest.builder()
                 .bucket(awsBucketProps.name())
                 .key(photo.getKey())
