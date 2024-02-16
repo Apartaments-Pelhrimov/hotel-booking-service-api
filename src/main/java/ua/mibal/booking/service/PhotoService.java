@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.photo;
+package ua.mibal.booking.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,12 +22,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.entity.User;
-import ua.mibal.booking.service.ApartmentService;
-import ua.mibal.booking.service.UserService;
-import ua.mibal.booking.service.photo.storage.api.model.Photo;
 import ua.mibal.booking.service.photo.storage.api.PhotoFactory;
-import ua.mibal.booking.service.photo.storage.api.model.PhotoResource;
 import ua.mibal.booking.service.photo.storage.api.PhotoStorage;
+import ua.mibal.booking.service.photo.storage.api.model.Photo;
+import ua.mibal.booking.service.photo.storage.api.model.PhotoResource;
 
 /**
  * @author Mykhailo Balakhon
