@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.email.impl;
+package ua.mibal.email.impl;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.Transport;
@@ -27,7 +27,6 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import ua.mibal.booking.test.annotations.UnitTest;
 import ua.mibal.email.api.model.Email;
-import ua.mibal.email.impl.DefaultEmailSendingService;
 import ua.mibal.email.impl.component.MimeEmailBuilder;
 import ua.mibal.email.impl.config.properties.EmailProps;
 import ua.mibal.email.impl.exception.EmailSentFailedException;

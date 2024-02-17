@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.email.component;
+package ua.mibal.email.impl.component;
 
 import jakarta.mail.Session;
 import org.instancio.junit.InstancioSource;
@@ -26,7 +26,6 @@ import org.mockito.MockedStatic;
 import ua.mibal.booking.test.annotations.UnitTest;
 import ua.mibal.email.api.model.Email;
 import ua.mibal.email.api.model.EmailContent;
-import ua.mibal.email.impl.component.MimeEmailBuilder;
 import ua.mibal.email.impl.model.MimeEmail;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
