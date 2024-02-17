@@ -23,11 +23,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
-import ua.mibal.booking.service.email.api.model.Email;
-import ua.mibal.booking.service.email.api.model.EmailContent;
-import ua.mibal.booking.service.email.impl.component.MimeEmailBuilder;
-import ua.mibal.booking.service.email.impl.model.MimeEmail;
 import ua.mibal.booking.test.annotations.UnitTest;
+import ua.mibal.email.api.model.Email;
+import ua.mibal.email.api.model.EmailContent;
+import ua.mibal.email.impl.component.MimeEmailBuilder;
+import ua.mibal.email.impl.model.MimeEmail;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mockStatic;

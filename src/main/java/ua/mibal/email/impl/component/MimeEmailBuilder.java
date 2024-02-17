@@ -14,17 +14,30 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.email.impl.exception;
+package ua.mibal.email.impl.component;
 
-import ua.mibal.booking.model.exception.marker.InternalServerException;
+import jakarta.mail.Session;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+import ua.mibal.email.api.model.Email;
+import ua.mibal.email.impl.model.MimeEmail;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class EmailSentFailedException extends InternalServerException {
+@RequiredArgsConstructor
+@Component
+public class MimeEmailBuilder {
+    private final Session session;
 
-    public EmailSentFailedException(Throwable cause) {
-        super("Email send failed", cause);
+    public MimeEmail buildBy(Email email) {
+        return MimeEmail.of(
+                session,
+                email.getSender(),
+                email.getRecipients(),
+                email.getContent().getSubject(),
+                email.getContent().getBody()
+        );
     }
 }

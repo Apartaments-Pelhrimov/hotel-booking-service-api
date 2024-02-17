@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.email.impl.model;
+package ua.mibal.email.impl.model;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.Session;
 import jakarta.mail.internet.MimeMessage;
-import ua.mibal.booking.service.email.impl.exception.EmailCreationException;
+import ua.mibal.email.impl.exception.EmailCreationException;
 
 import static jakarta.mail.Message.RecipientType.TO;
 

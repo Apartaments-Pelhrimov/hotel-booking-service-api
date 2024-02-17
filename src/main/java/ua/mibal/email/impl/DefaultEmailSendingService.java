@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.email.impl;
+package ua.mibal.email.impl;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.Transport;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ua.mibal.booking.service.email.api.EmailSendingService;
-import ua.mibal.booking.service.email.api.model.Email;
-import ua.mibal.booking.service.email.impl.component.MimeEmailBuilder;
-import ua.mibal.booking.service.email.impl.config.properties.EmailProps;
-import ua.mibal.booking.service.email.impl.exception.EmailSentFailedException;
-import ua.mibal.booking.service.email.impl.model.MimeEmail;
+import ua.mibal.email.api.EmailSendingService;
+import ua.mibal.email.api.model.Email;
+import ua.mibal.email.impl.component.MimeEmailBuilder;
+import ua.mibal.email.impl.config.properties.EmailProps;
+import ua.mibal.email.impl.exception.EmailSentFailedException;
+import ua.mibal.email.impl.model.MimeEmail;
 
 /**
  * @author Mykhailo Balakhon
