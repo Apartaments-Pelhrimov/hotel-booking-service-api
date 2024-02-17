@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.photo.aws;
+package ua.mibal.booking.service;
 
 import org.instancio.junit.InstancioSource;
 import org.junit.jupiter.api.AfterEach;
@@ -25,9 +25,6 @@ import org.mockito.Mock;
 import org.springframework.web.multipart.MultipartFile;
 import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.entity.User;
-import ua.mibal.booking.service.ApartmentService;
-import ua.mibal.booking.service.PhotoService;
-import ua.mibal.booking.service.UserService;
 import ua.mibal.booking.test.annotations.UnitTest;
 import ua.mibal.photo.storage.api.PhotoStorage;
 import ua.mibal.photo.storage.api.component.PhotoFactory;

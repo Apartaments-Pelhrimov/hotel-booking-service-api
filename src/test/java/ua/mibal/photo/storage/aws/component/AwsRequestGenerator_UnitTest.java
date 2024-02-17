@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.photo.aws.components;
+package ua.mibal.photo.storage.aws.component;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import ua.mibal.booking.test.annotations.UnitTest;
-import ua.mibal.photo.storage.aws.component.AwsRequestGenerator;
 import ua.mibal.photo.storage.aws.config.AwsProps.AwsBucketProps;
 import ua.mibal.photo.storage.aws.model.AwsPhoto;
 
