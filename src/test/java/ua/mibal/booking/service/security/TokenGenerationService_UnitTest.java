@@ -22,7 +22,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
 import ua.mibal.booking.config.properties.TokenProps;
-import ua.mibal.booking.test.annotations.UnitTest;
+import ua.mibal.test.annotation.UnitTest;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;

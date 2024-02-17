@@ -29,7 +29,7 @@ import ua.mibal.booking.service.ApartmentInstanceService;
 import ua.mibal.booking.service.ApartmentService;
 import ua.mibal.booking.service.TurningOffService;
 import ua.mibal.booking.service.reservation.BookingComReservationService;
-import ua.mibal.booking.test.annotations.UnitTest;
+import ua.mibal.test.annotation.UnitTest;
 
 import java.util.List;
 

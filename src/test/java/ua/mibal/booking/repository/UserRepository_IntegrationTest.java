@@ -26,7 +26,7 @@ import ua.mibal.booking.model.entity.Comment;
 import ua.mibal.booking.model.entity.Reservation;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.entity.embeddable.Photo;
-import ua.mibal.booking.test.annotations.JpaTest;
+import ua.mibal.test.annotation.JpaTest;
 
 import java.util.Optional;
 

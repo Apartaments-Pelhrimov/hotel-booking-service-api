@@ -26,7 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.entity.Comment;
-import ua.mibal.booking.test.annotations.JpaTest;
+import ua.mibal.test.annotation.JpaTest;
 
 import java.util.List;
 

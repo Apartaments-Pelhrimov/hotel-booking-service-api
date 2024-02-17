@@ -24,7 +24,7 @@ import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.entity.embeddable.Price;
 import ua.mibal.booking.model.exception.entity.PriceNotFoundException;
 import ua.mibal.booking.model.mapper.PriceMapper;
-import ua.mibal.booking.test.annotations.UnitTest;
+import ua.mibal.test.annotation.UnitTest;
 
 import java.math.BigDecimal;
 import java.util.List;

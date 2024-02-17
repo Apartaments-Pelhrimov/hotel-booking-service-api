@@ -28,7 +28,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.entity.ApartmentInstance;
 import ua.mibal.booking.model.entity.Reservation;
-import ua.mibal.booking.test.annotations.JpaTest;
+import ua.mibal.test.annotation.JpaTest;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;

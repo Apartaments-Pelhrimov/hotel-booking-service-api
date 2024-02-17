@@ -24,7 +24,7 @@ import ua.mibal.booking.model.entity.Token;
 import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.exception.entity.TokenNotFoundException;
 import ua.mibal.booking.repository.TokenRepository;
-import ua.mibal.booking.test.annotations.UnitTest;
+import ua.mibal.test.annotation.UnitTest;
 
 import java.util.Optional;
 

@@ -32,7 +32,7 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import ua.mibal.booking.controller.advice.model.ApiError;
 import ua.mibal.booking.controller.advice.model.ValidationApiError;
 import ua.mibal.booking.model.exception.marker.ApiException;
-import ua.mibal.booking.test.annotations.UnitTest;
+import ua.mibal.test.annotation.UnitTest;
 
 import java.util.Locale;
 

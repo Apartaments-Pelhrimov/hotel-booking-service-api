@@ -23,7 +23,7 @@ import org.mockito.Mock;
 import ua.mibal.booking.model.exception.IllegalReservationDateRangeException;
 import ua.mibal.booking.model.exception.service.PriceCalculatorException;
 import ua.mibal.booking.model.request.ReservationRequest;
-import ua.mibal.booking.test.annotations.UnitTest;
+import ua.mibal.test.annotation.UnitTest;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

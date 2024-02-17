@@ -20,7 +20,7 @@ import org.instancio.junit.InstancioSource;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.springframework.http.HttpStatus;
 import ua.mibal.booking.model.exception.marker.ApiException;
-import ua.mibal.booking.test.annotations.UnitTest;
+import ua.mibal.test.annotation.UnitTest;
 
 import java.util.Map;
 

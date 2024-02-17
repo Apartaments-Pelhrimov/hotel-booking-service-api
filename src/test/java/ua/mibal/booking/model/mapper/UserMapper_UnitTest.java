@@ -31,7 +31,7 @@ import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.entity.embeddable.NotificationSettings;
 import ua.mibal.booking.model.entity.embeddable.Phone;
 import ua.mibal.booking.model.mapper.linker.UserPhotoLinker;
-import ua.mibal.booking.test.annotations.UnitTest;
+import ua.mibal.test.annotation.UnitTest;
 
 import static java.util.Optional.empty;
 import static org.hamcrest.MatcherAssert.assertThat;

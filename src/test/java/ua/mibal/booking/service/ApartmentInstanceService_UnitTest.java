@@ -31,7 +31,7 @@ import ua.mibal.booking.repository.ApartmentInstanceRepository;
 import ua.mibal.booking.repository.ApartmentRepository;
 import ua.mibal.booking.service.reservation.BookingComReservationService;
 import ua.mibal.booking.service.util.DateTimeUtils;
-import ua.mibal.booking.test.annotations.UnitTest;
+import ua.mibal.test.annotation.UnitTest;
 
 import java.time.LocalDate;
 import java.util.List;

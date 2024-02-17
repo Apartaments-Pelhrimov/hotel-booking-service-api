@@ -28,7 +28,7 @@ import ua.mibal.booking.model.exception.IllegalTurningOffTimeException;
 import ua.mibal.booking.model.mapper.TurningOffTimeMapper;
 import ua.mibal.booking.repository.HotelTurningOffRepository;
 import ua.mibal.booking.repository.ReservationRepository;
-import ua.mibal.booking.test.annotations.UnitTest;
+import ua.mibal.test.annotation.UnitTest;
 
 import java.util.List;
 

@@ -14,29 +14,34 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.test.annotations;
+package ua.mibal.test.annotation;
 
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.TestPropertySource;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
-import static org.mockito.quality.Strictness.LENIENT;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@ExtendWith(MockitoExtension.class)
-@MockitoSettings(strictness = LENIENT)
+@DataJpaTest
+@TestPropertySource(properties = {
+        "spring.test.database.replace=none",
+        "spring.datasource.url=jdbc:tc:postgresql:15:///db",
+        "spring.jpa.open-in-view=false",
+        "spring.jpa.show-sql=true",
+        "spring.jpa.hibernate.ddl-auto=validate",
+        "spring.jpa.properties.hibernate.generate_statistics=true",
+})
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @Target(TYPE)
 @Retention(RUNTIME)
-public @interface UnitTest {
+public @interface JpaTest {
 }

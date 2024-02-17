@@ -21,7 +21,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.mockito.Mock;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
-import ua.mibal.booking.test.annotations.UnitTest;
+import ua.mibal.test.annotation.UnitTest;
 
 import java.util.Locale;
 

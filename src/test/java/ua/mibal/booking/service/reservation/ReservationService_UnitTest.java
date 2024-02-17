@@ -29,7 +29,7 @@ import ua.mibal.booking.model.request.ReservationRequest;
 import ua.mibal.booking.repository.ReservationRepository;
 import ua.mibal.booking.service.UserService;
 import ua.mibal.booking.service.reservation.component.ReservationBuilder;
-import ua.mibal.booking.test.annotations.UnitTest;
+import ua.mibal.test.annotation.UnitTest;
 
 import java.util.List;
 import java.util.Optional;

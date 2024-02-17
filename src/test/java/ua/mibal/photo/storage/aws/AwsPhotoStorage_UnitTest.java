@@ -28,7 +28,7 @@ import software.amazon.awssdk.services.s3.S3Utilities;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetUrlRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-import ua.mibal.booking.test.annotations.UnitTest;
+import ua.mibal.test.annotation.UnitTest;
 import ua.mibal.photo.storage.aws.component.AwsRequestGenerator;
 import ua.mibal.photo.storage.aws.exception.AwsStorageException;
 import ua.mibal.photo.storage.aws.model.AwsPhoto;

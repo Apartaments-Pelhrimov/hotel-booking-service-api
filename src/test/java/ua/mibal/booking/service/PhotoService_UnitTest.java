@@ -25,7 +25,7 @@ import org.mockito.Mock;
 import org.springframework.web.multipart.MultipartFile;
 import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.entity.User;
-import ua.mibal.booking.test.annotations.UnitTest;
+import ua.mibal.test.annotation.UnitTest;
 import ua.mibal.photo.storage.api.PhotoStorage;
 import ua.mibal.photo.storage.api.component.PhotoFactory;
 import ua.mibal.photo.storage.api.model.Photo;

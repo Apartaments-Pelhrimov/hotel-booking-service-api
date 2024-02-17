@@ -36,7 +36,7 @@ import ua.mibal.booking.model.entity.embeddable.ApartmentOptions;
 import ua.mibal.booking.model.entity.embeddable.Bed;
 import ua.mibal.booking.model.entity.embeddable.Price;
 import ua.mibal.booking.model.mapper.linker.ApartmentPhotoLinker;
-import ua.mibal.booking.test.annotations.UnitTest;
+import ua.mibal.test.annotation.UnitTest;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

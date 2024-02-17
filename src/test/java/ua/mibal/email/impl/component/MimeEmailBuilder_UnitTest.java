@@ -23,7 +23,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
-import ua.mibal.booking.test.annotations.UnitTest;
+import ua.mibal.test.annotation.UnitTest;
 import ua.mibal.email.api.model.Email;
 import ua.mibal.email.api.model.EmailContent;
 import ua.mibal.email.impl.model.MimeEmail;

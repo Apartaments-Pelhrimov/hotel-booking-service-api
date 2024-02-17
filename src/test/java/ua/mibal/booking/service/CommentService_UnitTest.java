@@ -36,7 +36,7 @@ import ua.mibal.booking.model.mapper.CommentMapper;
 import ua.mibal.booking.repository.ApartmentRepository;
 import ua.mibal.booking.repository.CommentRepository;
 import ua.mibal.booking.repository.UserRepository;
-import ua.mibal.booking.test.annotations.UnitTest;
+import ua.mibal.test.annotation.UnitTest;
 
 import java.util.List;
 

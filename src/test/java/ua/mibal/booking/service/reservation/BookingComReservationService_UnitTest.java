@@ -30,7 +30,7 @@ import ua.mibal.booking.model.entity.Event;
 import ua.mibal.booking.model.exception.service.BookingComServiceException;
 import ua.mibal.booking.model.request.ReservationRequest;
 import ua.mibal.booking.service.calendar.ICalService;
-import ua.mibal.booking.test.annotations.UnitTest;
+import ua.mibal.test.annotation.UnitTest;
 
 import java.time.LocalDateTime;
 import java.util.List;

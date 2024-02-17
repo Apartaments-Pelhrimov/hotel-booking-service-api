@@ -22,7 +22,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
 import org.springframework.web.multipart.MultipartFile;
-import ua.mibal.booking.test.annotations.UnitTest;
+import ua.mibal.test.annotation.UnitTest;
 import ua.mibal.photo.storage.api.exception.IllegalPhotoFormatException;
 
 import java.io.IOException;

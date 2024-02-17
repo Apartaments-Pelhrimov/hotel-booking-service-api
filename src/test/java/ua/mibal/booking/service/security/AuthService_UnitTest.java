@@ -35,7 +35,7 @@ import ua.mibal.booking.model.mapper.UserMapper;
 import ua.mibal.booking.service.UserService;
 import ua.mibal.booking.service.security.component.TemplateEmailFactory;
 import ua.mibal.booking.service.security.jwt.JwtTokenService;
-import ua.mibal.booking.test.annotations.UnitTest;
+import ua.mibal.test.annotation.UnitTest;
 import ua.mibal.email.api.EmailSendingService;
 import ua.mibal.email.api.model.Email;
 
