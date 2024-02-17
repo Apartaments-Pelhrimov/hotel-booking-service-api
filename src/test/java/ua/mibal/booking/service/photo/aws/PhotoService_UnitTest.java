@@ -28,11 +28,11 @@ import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.service.ApartmentService;
 import ua.mibal.booking.service.PhotoService;
 import ua.mibal.booking.service.UserService;
-import ua.mibal.photo.storage.api.PhotoFactory;
+import ua.mibal.booking.test.annotations.UnitTest;
 import ua.mibal.photo.storage.api.PhotoStorage;
+import ua.mibal.photo.storage.api.component.PhotoFactory;
 import ua.mibal.photo.storage.api.model.Photo;
 import ua.mibal.photo.storage.api.model.PhotoResource;
-import ua.mibal.booking.test.annotations.UnitTest;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;

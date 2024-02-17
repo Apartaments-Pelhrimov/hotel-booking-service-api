@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package ua.mibal.photo.storage.aws.components;
+package ua.mibal.photo.storage.aws.component;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-import ua.mibal.photo.storage.aws.config.AwsProps;
 import ua.mibal.photo.storage.api.model.Photo;
+import ua.mibal.photo.storage.aws.config.AwsProps;
 
 /**
  * @author Mykhailo Balakhon
