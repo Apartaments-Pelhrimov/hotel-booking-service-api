@@ -18,15 +18,16 @@ package ua.mibal.booking.controller.advice;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ua.mibal.booking.controller.advice.model.ApiError;
 import ua.mibal.booking.model.exception.marker.InternalServerException;
+import ua.mibal.booking.service.security.component.TemplateEmailFactory;
 import ua.mibal.email.api.EmailSendingService;
+import ua.mibal.email.api.model.Email;
 
 import java.util.Locale;
 
@@ -34,25 +35,26 @@ import java.util.Locale;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
+@Slf4j
 @RequiredArgsConstructor
 @Profile("heroku")
 @RestControllerAdvice
 public class ErrorEmailSendingAdvice {
-    private static final Logger log = LoggerFactory.getLogger(ErrorEmailSendingAdvice.class);
     private final EmailSendingService emailSendingService;
+    private final TemplateEmailFactory emailFactory;
     private final ExceptionHandlerAdvice exceptionHandlerAdvice;
 
     @ExceptionHandler(InternalServerException.class)
     public ResponseEntity<ApiError> sendErrorEmailToDevelopers(InternalServerException e,
                                                                Locale locale) {
-//        TODO FIXME emailSendingService.sendErrorEmailToDevelopers(e);
-//        log.info("Email with exception sent to developers: {}", emailProps.developers());
+        Email email = emailFactory.getExceptionReportEmail(e);
+        emailSendingService.send(email);
+        log.info("Email with exception sent to developers: {}", email.getRecipients());
         return exceptionHandlerAdvice.handleInternalServerException(e, locale);
     }
 
     @PostConstruct
-    private void postConstruct() {
+    private void logCreated() {
         log.info("Initialized {}", getClass().getSimpleName());
-//        log.info("Developers: {}", emailProps.developers());
     }
 }

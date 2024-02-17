@@ -31,8 +31,10 @@ import ua.mibal.booking.model.exception.entity.UserNotFoundException;
 import ua.mibal.booking.model.exception.marker.NotAuthorizedException;
 import ua.mibal.booking.model.mapper.UserMapper;
 import ua.mibal.booking.service.UserService;
+import ua.mibal.booking.service.security.component.TemplateEmailFactory;
 import ua.mibal.booking.service.security.jwt.JwtTokenService;
 import ua.mibal.email.api.EmailSendingService;
+import ua.mibal.email.api.model.Email;
 
 /**
  * @author Mykhailo Balakhon
@@ -47,6 +49,7 @@ public class AuthService {
     private final TokenService tokenService;
     private final EmailSendingService emailSendingService;
     private final PasswordEncoder passwordEncoder;
+    private final TemplateEmailFactory emailFactory;
 
     public TokenDto login(LoginDto login) {
         try {
@@ -62,7 +65,8 @@ public class AuthService {
         validateEmailDoesNotExist(registrationDto.email());
         User user = userService.save(registrationDto);
         Token token = tokenService.generateAndSaveTokenFor(user);
-//        TODO fixme emailSendingServiceImpl.sendAccountActivationEmail(token);
+        Email email = emailFactory.getAccountActivationEmail(token);
+        emailSendingService.send(email);
     }
 
     public void activateNewAccountBy(String tokenValue) {
@@ -93,7 +97,8 @@ public class AuthService {
             return;
         }
         Token token = tokenService.generateAndSaveTokenFor(user);
-//        TODO emailSendingServiceImpl.sendPasswordChangingEmail(token);
+        Email emailMessage = emailFactory.getPasswordChangingEmail(token);
+        emailSendingService.send(emailMessage);
     }
 
     private TokenDto loginByCredentials(LoginDto login) {

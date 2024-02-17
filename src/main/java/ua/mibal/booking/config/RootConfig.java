@@ -24,6 +24,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import ua.mibal.booking.config.properties.ApplicationProps;
 import ua.mibal.booking.config.properties.CalendarProps;
 import ua.mibal.booking.config.properties.LocalizedMessagesProps;
 import ua.mibal.booking.config.properties.TokenProps;
@@ -38,6 +39,7 @@ import ua.mibal.booking.repository.UserRepository;
  */
 @RequiredArgsConstructor
 @EnableConfigurationProperties({
+        ApplicationProps.class,
         CalendarProps.class,
         CalendarProps.ReservationDateTimeProps.class,
         CalendarProps.ICalProps.class,

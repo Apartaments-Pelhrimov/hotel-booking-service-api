@@ -33,9 +33,11 @@ import ua.mibal.booking.model.exception.entity.UserNotFoundException;
 import ua.mibal.booking.model.exception.marker.NotAuthorizedException;
 import ua.mibal.booking.model.mapper.UserMapper;
 import ua.mibal.booking.service.UserService;
+import ua.mibal.booking.service.security.component.TemplateEmailFactory;
 import ua.mibal.booking.service.security.jwt.JwtTokenService;
 import ua.mibal.booking.test.annotations.UnitTest;
 import ua.mibal.email.api.EmailSendingService;
+import ua.mibal.email.api.model.Email;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -67,6 +69,8 @@ class AuthService_UnitTest {
     private EmailSendingService emailSendingService;
     @Mock
     private PasswordEncoder passwordEncoder;
+    @Mock
+    private TemplateEmailFactory emailFactory;
 
     @Mock
     private User user;
@@ -76,10 +80,12 @@ class AuthService_UnitTest {
     private TokenDto expectedAuthDto;
     @Mock
     private RegistrationDto registrationDto;
+    @Mock
+    private Email email;
 
     @BeforeEach
     void setup() {
-        service = new AuthService(jwtTokenService, userMapper, userService, tokenService, emailSendingService, passwordEncoder);
+        service = new AuthService(jwtTokenService, userMapper, userService, tokenService, emailSendingService, passwordEncoder, emailFactory);
     }
 
     @ParameterizedTest
@@ -147,11 +153,13 @@ class AuthService_UnitTest {
                 .thenReturn(user);
         when(tokenService.generateAndSaveTokenFor(user))
                 .thenReturn(token);
+        when(emailFactory.getAccountActivationEmail(token))
+                .thenReturn(email);
 
         service.register(registrationDto);
 
-//        TODO verify(emailSendingServiceImpl, times(1))
-//                .sendAccountActivationEmail(token);
+        verify(emailSendingService, times(1))
+                .send(email);
     }
 
     @Test
@@ -192,19 +200,22 @@ class AuthService_UnitTest {
 
     @Test
     void restore() {
-        String email = "email";
-        when(userService.getOne(email))
+        String emailStr = "email";
+        when(userService.getOne(emailStr))
                 .thenReturn(user);
         when(user.isEnabled())
                 .thenReturn(true);
         when(tokenService.generateAndSaveTokenFor(user))
                 .thenReturn(token);
+        when(emailFactory.getPasswordChangingEmail(token))
+                .thenReturn(email);
 
         assertDoesNotThrow(
-                () -> service.restore(email)
+                () -> service.restore(emailStr)
         );
-//        TODO verify(emailSendingServiceImpl, times(1))
-//                .sendPasswordChangingEmail(token);
+
+        verify(emailSendingService, times(1))
+                .send(email);
     }
 
     @Test
