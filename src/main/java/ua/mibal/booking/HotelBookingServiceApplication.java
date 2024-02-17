@@ -19,7 +19,7 @@ package ua.mibal.booking;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "ua.mibal")
 public class HotelBookingServiceApplication {
 
     public static void main(String[] args) {
