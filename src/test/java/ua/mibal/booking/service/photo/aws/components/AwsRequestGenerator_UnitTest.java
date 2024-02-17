@@ -19,9 +19,9 @@ package ua.mibal.booking.service.photo.aws.components;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import ua.mibal.booking.service.photo.storage.aws.components.AwsRequestGenerator;
-import ua.mibal.booking.service.photo.storage.aws.config.AwsProps.AwsBucketProps;
-import ua.mibal.booking.service.photo.storage.aws.model.AwsPhoto;
+import ua.mibal.photo.storage.aws.components.AwsRequestGenerator;
+import ua.mibal.photo.storage.aws.config.AwsProps.AwsBucketProps;
+import ua.mibal.photo.storage.aws.model.AwsPhoto;
 import ua.mibal.booking.test.annotations.UnitTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

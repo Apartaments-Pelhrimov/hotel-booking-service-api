@@ -14,26 +14,23 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.photo.storage.aws.model;
+package ua.mibal.photo.storage.aws.components;
 
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
-import ua.mibal.booking.service.photo.storage.api.model.Photo;
-
-import static java.time.LocalDateTime.now;
+import ua.mibal.photo.storage.api.model.Photo;
+import ua.mibal.photo.storage.api.PhotoFactory;
+import ua.mibal.photo.storage.aws.model.AwsPhoto;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class AwsPhoto extends Photo {
-
-    public AwsPhoto(MultipartFile photo) {
-        super(photo);
-    }
+@Component
+public class AwsPhotoFactory implements PhotoFactory {
 
     @Override
-    protected String generateFileKey(MultipartFile photo) {
-        String name = photo.getOriginalFilename();
-        return "" + now().hashCode() + name.hashCode();
+    public Photo getInstance(MultipartFile photo) {
+        return new AwsPhoto(photo);
     }
 }

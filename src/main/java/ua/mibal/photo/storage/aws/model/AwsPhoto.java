@@ -14,20 +14,26 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.photo.storage.api.exception;
+package ua.mibal.photo.storage.aws.model;
 
-import ua.mibal.booking.model.exception.marker.BadRequestException;
+import org.springframework.web.multipart.MultipartFile;
+import ua.mibal.photo.storage.api.model.Photo;
+
+import static java.time.LocalDateTime.now;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class IllegalPhotoFormatException extends BadRequestException {
+public class AwsPhoto extends Photo {
 
-    public IllegalPhotoFormatException(String photoName) {
-        super(
-                "Illegal photo format for file " + photoName,
-                "bad-request-error.illegal-photo-format", photoName
-        );
+    public AwsPhoto(MultipartFile photo) {
+        super(photo);
+    }
+
+    @Override
+    protected String generateFileKey(MultipartFile photo) {
+        String name = photo.getOriginalFilename();
+        return "" + now().hashCode() + name.hashCode();
     }
 }

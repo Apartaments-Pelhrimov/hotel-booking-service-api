@@ -14,16 +14,20 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.photo.storage.api;
+package ua.mibal.photo.storage.api.exception;
 
-import org.springframework.web.multipart.MultipartFile;
-import ua.mibal.booking.service.photo.storage.api.model.Photo;
+import ua.mibal.booking.model.exception.marker.BadRequestException;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public interface PhotoFactory {
+public class IllegalPhotoFormatException extends BadRequestException {
 
-    Photo getInstance(MultipartFile photo);
+    public IllegalPhotoFormatException(String photoName) {
+        super(
+                "Illegal photo format for file " + photoName,
+                "bad-request-error.illegal-photo-format", photoName
+        );
+    }
 }

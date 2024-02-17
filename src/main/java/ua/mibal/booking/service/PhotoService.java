@@ -22,10 +22,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ua.mibal.booking.model.entity.Apartment;
 import ua.mibal.booking.model.entity.User;
-import ua.mibal.booking.service.photo.storage.api.PhotoFactory;
-import ua.mibal.booking.service.photo.storage.api.PhotoStorage;
-import ua.mibal.booking.service.photo.storage.api.model.Photo;
-import ua.mibal.booking.service.photo.storage.api.model.PhotoResource;
+import ua.mibal.photo.storage.api.PhotoFactory;
+import ua.mibal.photo.storage.api.PhotoStorage;
+import ua.mibal.photo.storage.api.model.Photo;
+import ua.mibal.photo.storage.api.model.PhotoResource;
 
 /**
  * @author Mykhailo Balakhon

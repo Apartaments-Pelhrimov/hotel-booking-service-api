@@ -22,8 +22,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
 import org.springframework.web.multipart.MultipartFile;
-import ua.mibal.booking.service.photo.storage.api.exception.IllegalPhotoFormatException;
-import ua.mibal.booking.service.photo.storage.aws.model.AwsPhoto;
+import ua.mibal.photo.storage.api.exception.IllegalPhotoFormatException;
+import ua.mibal.photo.storage.aws.model.AwsPhoto;
 import ua.mibal.booking.test.annotations.UnitTest;
 
 import java.io.IOException;

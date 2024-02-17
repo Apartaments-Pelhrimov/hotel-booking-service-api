@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.photo.storage.api.model;
+package ua.mibal.photo.storage.api.model;
 
 import lombok.Getter;
 import org.springframework.web.multipart.MultipartFile;
-import ua.mibal.booking.service.photo.storage.api.exception.IllegalPhotoFormatException;
+import ua.mibal.photo.storage.api.exception.IllegalPhotoFormatException;
 
 import java.io.IOException;
 import java.util.Objects;

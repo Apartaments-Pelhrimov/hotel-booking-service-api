@@ -14,20 +14,17 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.service.photo.storage.api;
+package ua.mibal.photo.storage.aws.exception;
 
-import ua.mibal.booking.service.photo.storage.api.model.Photo;
-import ua.mibal.booking.service.photo.storage.api.model.PhotoResource;
+import ua.mibal.booking.model.exception.marker.InternalServerException;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public interface PhotoStorage {
+public class AwsStorageException extends InternalServerException {
 
-    PhotoResource getPhotoBy(String key);
-
-    void uploadPhoto(Photo photo);
-
-    void deletePhotoBy(String key);
+    public AwsStorageException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }
