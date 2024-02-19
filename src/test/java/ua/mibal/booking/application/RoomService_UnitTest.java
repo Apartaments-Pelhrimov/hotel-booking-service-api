@@ -25,8 +25,8 @@ import ua.mibal.booking.application.port.jpa.ApartmentRepository;
 import ua.mibal.booking.application.port.jpa.RoomRepository;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.Room;
-import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
-import ua.mibal.booking.model.exception.entity.RoomNotFoundException;
+import ua.mibal.booking.application.exception.ApartmentNotFoundException;
+import ua.mibal.booking.application.exception.RoomNotFoundException;
 import ua.mibal.test.annotation.UnitTest;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;

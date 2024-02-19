@@ -30,9 +30,9 @@ import ua.mibal.booking.application.port.jpa.UserRepository;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.Comment;
 import ua.mibal.booking.domain.User;
-import ua.mibal.booking.model.exception.UserHasNoAccessToCommentException;
-import ua.mibal.booking.model.exception.UserHasNoAccessToCommentsException;
-import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
+import ua.mibal.booking.application.exception.UserHasNoAccessToCommentException;
+import ua.mibal.booking.application.exception.UserHasNoAccessToCommentsException;
+import ua.mibal.booking.application.exception.ApartmentNotFoundException;
 
 /**
  * @author Mykhailo Balakhon

@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.exception.entity;
-
-import ua.mibal.booking.domain.Room;
+package ua.mibal.booking.application.exception;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class RoomNotFoundException extends EntityNotFoundException {
+public class UserHasNoAccessToCommentsException extends BadRequestException {
 
-    public RoomNotFoundException(Long id) {
-        super(Room.class, id);
+    public UserHasNoAccessToCommentsException() {
+        super("bad-request-error.user-has-no-access-to-comments");
     }
 }

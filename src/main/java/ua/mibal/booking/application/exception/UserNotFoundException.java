@@ -14,17 +14,21 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.exception;
+package ua.mibal.booking.application.exception;
 
-import ua.mibal.booking.model.exception.marker.BadRequestException;
+import ua.mibal.booking.domain.User;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class TokenExpiredException extends BadRequestException {
+public class UserNotFoundException extends EntityNotFoundException {
 
-    public TokenExpiredException(String tokenValue) {
-        super("bad-request-error.token-expired", (Object) tokenValue);
+    public UserNotFoundException(Long id) {
+        super(User.class, id);
+    }
+
+    public UserNotFoundException(String email) {
+        super(email);
     }
 }

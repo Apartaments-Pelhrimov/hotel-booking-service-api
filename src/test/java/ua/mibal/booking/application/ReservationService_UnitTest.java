@@ -27,7 +27,7 @@ import ua.mibal.booking.application.port.jpa.ReservationRepository;
 import ua.mibal.booking.domain.Reservation;
 import ua.mibal.booking.domain.ReservationRequest;
 import ua.mibal.booking.domain.User;
-import ua.mibal.booking.model.exception.UserHasNoAccessToReservationException;
+import ua.mibal.booking.application.exception.UserHasNoAccessToReservationException;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.util.List;

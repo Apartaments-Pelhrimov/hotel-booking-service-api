@@ -23,8 +23,8 @@ import ua.mibal.booking.application.mapper.RoomMapper;
 import ua.mibal.booking.application.port.jpa.ApartmentRepository;
 import ua.mibal.booking.application.port.jpa.RoomRepository;
 import ua.mibal.booking.domain.Room;
-import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
-import ua.mibal.booking.model.exception.entity.RoomNotFoundException;
+import ua.mibal.booking.application.exception.ApartmentNotFoundException;
+import ua.mibal.booking.application.exception.RoomNotFoundException;
 
 /**
  * @author Mykhailo Balakhon

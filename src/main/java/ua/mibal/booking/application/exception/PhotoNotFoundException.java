@@ -14,30 +14,15 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.exception.marker;
-
-import org.springframework.http.HttpStatus;
+package ua.mibal.booking.application.exception;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public abstract class BadRequestException extends ApiException {
+public class PhotoNotFoundException extends NotFoundException {
 
-    private final Object[] args;
-
-    public BadRequestException(String code, Object... args) {
-        super(code, HttpStatus.BAD_REQUEST);
-        this.args = args;
-    }
-
-    public BadRequestException(String message, String code, Object... args) {
-        super(message, code, HttpStatus.BAD_REQUEST);
-        this.args = args;
-    }
-
-    @Override
-    public Object[] provideArgs() {
-        return args;
+    public PhotoNotFoundException() {
+        super("not-found-error.photo-not-found");
     }
 }

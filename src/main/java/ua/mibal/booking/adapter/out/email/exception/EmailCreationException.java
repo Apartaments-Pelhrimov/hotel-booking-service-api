@@ -16,7 +16,7 @@
 
 package ua.mibal.booking.adapter.out.email.exception;
 
-import ua.mibal.booking.model.exception.marker.InternalServerException;
+import ua.mibal.booking.application.exception.InternalServerException;
 
 /**
  * @author Mykhailo Balakhon

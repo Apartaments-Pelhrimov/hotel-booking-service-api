@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,25 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.exception.entity;
+package ua.mibal.booking.application.exception;
 
-import ua.mibal.booking.domain.Reservation;
+import org.springframework.http.HttpStatus;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class ReservationNotFoundException extends EntityNotFoundException {
+public abstract class NotFoundException extends ApiException {
 
-    public ReservationNotFoundException(Long id) {
-        super(Reservation.class, id);
+    private final Object[] args;
+
+    public NotFoundException(String code, Object... args) {
+        super(code, HttpStatus.NOT_FOUND);
+        this.args = args;
+    }
+
+    @Override
+    public Object[] provideArgs() {
+        return args;
     }
 }

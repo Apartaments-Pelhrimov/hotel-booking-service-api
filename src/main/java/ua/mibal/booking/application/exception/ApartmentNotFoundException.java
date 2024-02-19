@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,17 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.exception.entity;
+package ua.mibal.booking.application.exception;
 
-import ua.mibal.booking.domain.User;
+import ua.mibal.booking.domain.Apartment;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class UserNotFoundException extends EntityNotFoundException {
+public class ApartmentNotFoundException extends EntityNotFoundException {
 
-    public UserNotFoundException(Long id) {
-        super(User.class, id);
-    }
-
-    public UserNotFoundException(String email) {
-        super(email);
+    public ApartmentNotFoundException(Long id) {
+        super(Apartment.class, id);
     }
 }

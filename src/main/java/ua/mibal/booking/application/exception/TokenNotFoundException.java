@@ -14,22 +14,17 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.exception.marker;
+package ua.mibal.booking.application.exception;
 
-import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+import ua.mibal.booking.domain.Token;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class NotAuthorizedException extends ApiException {
+public class TokenNotFoundException extends EntityNotFoundException {
 
-    public NotAuthorizedException() {
-        super("unauthorized-error", UNAUTHORIZED);
-    }
-
-    @Override
-    public Object[] provideArgs() {
-        return new Object[0];
+    public TokenNotFoundException(String code) {
+        super(Token.class, code);
     }
 }

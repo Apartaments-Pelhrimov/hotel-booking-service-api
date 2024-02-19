@@ -29,10 +29,10 @@ import ua.mibal.booking.application.port.email.EmailSendingService;
 import ua.mibal.booking.application.port.email.model.Email;
 import ua.mibal.booking.domain.Token;
 import ua.mibal.booking.domain.User;
-import ua.mibal.booking.model.exception.EmailAlreadyExistsException;
-import ua.mibal.booking.model.exception.IllegalPasswordException;
-import ua.mibal.booking.model.exception.entity.UserNotFoundException;
-import ua.mibal.booking.model.exception.marker.NotAuthorizedException;
+import ua.mibal.booking.application.exception.EmailAlreadyExistsException;
+import ua.mibal.booking.application.exception.IllegalPasswordException;
+import ua.mibal.booking.application.exception.UserNotFoundException;
+import ua.mibal.booking.application.exception.NotAuthorizedException;
 
 /**
  * @author Mykhailo Balakhon

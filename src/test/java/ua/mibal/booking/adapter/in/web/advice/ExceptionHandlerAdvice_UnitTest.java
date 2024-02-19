@@ -29,10 +29,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
-import ua.mibal.booking.adapter.in.web.advice.ExceptionHandlerAdvice;
 import ua.mibal.booking.adapter.in.web.advice.model.ApiError;
 import ua.mibal.booking.adapter.in.web.advice.model.ValidationApiError;
-import ua.mibal.booking.model.exception.marker.ApiException;
+import ua.mibal.booking.application.exception.ApiException;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.util.Locale;

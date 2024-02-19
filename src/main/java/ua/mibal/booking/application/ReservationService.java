@@ -28,8 +28,8 @@ import ua.mibal.booking.application.port.jpa.ReservationRepository;
 import ua.mibal.booking.domain.Reservation;
 import ua.mibal.booking.domain.ReservationRequest;
 import ua.mibal.booking.domain.User;
-import ua.mibal.booking.model.exception.UserHasNoAccessToReservationException;
-import ua.mibal.booking.model.exception.entity.ReservationNotFoundException;
+import ua.mibal.booking.application.exception.UserHasNoAccessToReservationException;
+import ua.mibal.booking.application.exception.ReservationNotFoundException;
 
 import static ua.mibal.booking.domain.Role.MANAGER;
 

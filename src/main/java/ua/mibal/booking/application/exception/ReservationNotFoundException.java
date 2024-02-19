@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.exception;
+package ua.mibal.booking.application.exception;
 
-import ua.mibal.booking.model.exception.marker.BadRequestException;
+import ua.mibal.booking.domain.Reservation;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class ApartmentIsNotAvailableForReservation extends BadRequestException {
+public class ReservationNotFoundException extends EntityNotFoundException {
 
-    public ApartmentIsNotAvailableForReservation() {
-        super("bad-request-error.apartment-not-available");
+    public ReservationNotFoundException(Long id) {
+        super(Reservation.class, id);
     }
 }

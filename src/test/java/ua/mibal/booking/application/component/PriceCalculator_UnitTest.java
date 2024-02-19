@@ -21,7 +21,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import ua.mibal.booking.domain.ReservationRequest;
-import ua.mibal.booking.model.exception.IllegalReservationDateRangeException;
+import ua.mibal.booking.application.exception.IllegalReservationDateRangeException;
 import ua.mibal.booking.model.exception.service.PriceCalculatorException;
 import ua.mibal.test.annotation.UnitTest;
 

@@ -37,7 +37,7 @@ import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.type.NumericBooleanConverter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import ua.mibal.booking.model.exception.PhotoNotFoundException;
+import ua.mibal.booking.application.exception.PhotoNotFoundException;
 
 import java.util.ArrayList;
 import java.util.Collection;

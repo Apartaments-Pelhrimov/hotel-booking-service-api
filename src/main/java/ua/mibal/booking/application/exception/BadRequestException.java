@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,30 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.exception;
+package ua.mibal.booking.application.exception;
 
-import ua.mibal.booking.model.exception.marker.BadRequestException;
+import org.springframework.http.HttpStatus;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class IllegalPasswordException extends BadRequestException {
+public abstract class BadRequestException extends ApiException {
 
-    public IllegalPasswordException() {
-        super("bad-request-error.illegal-password");
+    private final Object[] args;
+
+    public BadRequestException(String code, Object... args) {
+        super(code, HttpStatus.BAD_REQUEST);
+        this.args = args;
+    }
+
+    public BadRequestException(String message, String code, Object... args) {
+        super(message, code, HttpStatus.BAD_REQUEST);
+        this.args = args;
+    }
+
+    @Override
+    public Object[] provideArgs() {
+        return args;
     }
 }

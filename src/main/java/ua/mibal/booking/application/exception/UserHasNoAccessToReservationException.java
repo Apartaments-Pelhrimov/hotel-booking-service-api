@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.exception.entity;
+package ua.mibal.booking.application.exception;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class PriceNotFoundException extends EntityNotFoundException {
+public class UserHasNoAccessToReservationException extends BadRequestException {
 
-    public PriceNotFoundException(Integer people) {
-        super(people);
+    public UserHasNoAccessToReservationException() {
+        super("bad-request-error.user-has-no-access-to-reservation");
     }
 }

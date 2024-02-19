@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.exception;
-
-import ua.mibal.booking.model.exception.marker.NotFoundException;
+package ua.mibal.booking.application.exception;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class PhotoNotFoundException extends NotFoundException {
+public class UserHasNoAccessToCommentException extends BadRequestException {
 
-    public PhotoNotFoundException() {
-        super("not-found-error.photo-not-found");
+    public UserHasNoAccessToCommentException() {
+        super("bad-request-error.user-has-no-access-to-comment");
     }
 }

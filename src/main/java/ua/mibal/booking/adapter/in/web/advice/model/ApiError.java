@@ -20,7 +20,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
-import ua.mibal.booking.model.exception.marker.ApiException;
+import ua.mibal.booking.application.exception.ApiException;
 
 import java.time.ZonedDateTime;
 import java.util.Map;

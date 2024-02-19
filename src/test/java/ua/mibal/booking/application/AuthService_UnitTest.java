@@ -32,9 +32,9 @@ import ua.mibal.booking.application.port.email.EmailSendingService;
 import ua.mibal.booking.application.port.email.model.Email;
 import ua.mibal.booking.domain.Token;
 import ua.mibal.booking.domain.User;
-import ua.mibal.booking.model.exception.EmailAlreadyExistsException;
-import ua.mibal.booking.model.exception.entity.UserNotFoundException;
-import ua.mibal.booking.model.exception.marker.NotAuthorizedException;
+import ua.mibal.booking.application.exception.EmailAlreadyExistsException;
+import ua.mibal.booking.application.exception.UserNotFoundException;
+import ua.mibal.booking.application.exception.NotAuthorizedException;
 import ua.mibal.test.annotation.UnitTest;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;

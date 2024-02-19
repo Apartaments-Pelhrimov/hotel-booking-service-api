@@ -27,7 +27,7 @@ import ua.mibal.booking.adapter.in.web.advice.model.ApiError;
 import ua.mibal.booking.application.component.TemplateEmailFactory;
 import ua.mibal.booking.application.port.email.EmailSendingService;
 import ua.mibal.booking.application.port.email.model.Email;
-import ua.mibal.booking.model.exception.marker.InternalServerException;
+import ua.mibal.booking.application.exception.InternalServerException;
 
 import java.util.Locale;
 

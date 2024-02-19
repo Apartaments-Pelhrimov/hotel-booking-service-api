@@ -29,8 +29,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import ua.mibal.booking.adapter.in.web.advice.model.ValidationApiError;
 import ua.mibal.booking.adapter.in.web.advice.model.ApiError;
-import ua.mibal.booking.model.exception.marker.ApiException;
-import ua.mibal.booking.model.exception.marker.InternalServerException;
+import ua.mibal.booking.application.exception.ApiException;
+import ua.mibal.booking.application.exception.InternalServerException;
 
 import java.util.Locale;
 

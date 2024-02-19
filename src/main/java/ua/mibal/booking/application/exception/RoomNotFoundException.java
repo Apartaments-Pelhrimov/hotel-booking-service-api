@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.exception;
+package ua.mibal.booking.application.exception;
 
-import ua.mibal.booking.model.exception.marker.InternalServerException;
+import ua.mibal.booking.domain.Room;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class ClasspathFileReaderException extends InternalServerException {
+public class RoomNotFoundException extends EntityNotFoundException {
 
-    public ClasspathFileReaderException(String message, Throwable cause) {
-        super(message, cause);
+    public RoomNotFoundException(Long id) {
+        super(Room.class, id);
     }
 }

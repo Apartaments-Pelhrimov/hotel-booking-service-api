@@ -16,7 +16,7 @@
 
 package ua.mibal.booking.model.exception.service;
 
-import ua.mibal.booking.model.exception.marker.InternalServerException;
+import ua.mibal.booking.application.exception.InternalServerException;
 
 /**
  * @author Mykhailo Balakhon

@@ -14,29 +14,15 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.exception;
-
-import ua.mibal.booking.model.exception.marker.InternalServerException;
+package ua.mibal.booking.application.exception;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class TemplateEngineException extends InternalServerException {
+public class ApartmentIsNotAvailableForReservation extends BadRequestException {
 
-    public TemplateEngineException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public TemplateEngineException(String messageFormat, Throwable cause, Object... vars) {
-        super(messageFormat.formatted(vars), cause);
-    }
-
-    public TemplateEngineException(String message) {
-        super(message);
-    }
-
-    public TemplateEngineException(String messageFormat, Object... vars) {
-        super(messageFormat.formatted(vars));
+    public ApartmentIsNotAvailableForReservation() {
+        super("bad-request-error.apartment-not-available");
     }
 }

@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.exception.entity;
-
-import ua.mibal.booking.domain.Token;
+package ua.mibal.booking.application.exception;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class TokenNotFoundException extends EntityNotFoundException {
+public class PriceNotFoundException extends EntityNotFoundException {
 
-    public TokenNotFoundException(String code) {
-        super(Token.class, code);
+    public PriceNotFoundException(Integer people) {
+        super(people);
     }
 }

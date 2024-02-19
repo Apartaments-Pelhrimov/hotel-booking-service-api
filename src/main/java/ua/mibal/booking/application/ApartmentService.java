@@ -27,8 +27,8 @@ import ua.mibal.booking.application.mapper.ApartmentMapper;
 import ua.mibal.booking.application.port.jpa.ApartmentRepository;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.Photo;
-import ua.mibal.booking.model.exception.ApartmentDoesNotHavePhotoException;
-import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
+import ua.mibal.booking.application.exception.ApartmentDoesNotHavePhotoException;
+import ua.mibal.booking.application.exception.ApartmentNotFoundException;
 
 import java.util.List;
 

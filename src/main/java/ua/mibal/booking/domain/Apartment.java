@@ -38,8 +38,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Formula;
-import ua.mibal.booking.model.exception.PhotoNotFoundException;
-import ua.mibal.booking.model.exception.entity.PriceNotFoundException;
+import ua.mibal.booking.application.exception.PhotoNotFoundException;
+import ua.mibal.booking.application.exception.PriceNotFoundException;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

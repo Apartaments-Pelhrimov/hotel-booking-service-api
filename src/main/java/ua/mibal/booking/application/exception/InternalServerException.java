@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.exception.marker;
+package ua.mibal.booking.application.exception;
 
 import org.springframework.http.HttpStatus;
 

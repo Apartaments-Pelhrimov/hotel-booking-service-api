@@ -27,9 +27,9 @@ import ua.mibal.booking.application.util.DateTimeUtils;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.domain.ReservationRequest;
-import ua.mibal.booking.model.exception.ApartmentIsNotAvailableForReservation;
-import ua.mibal.booking.model.exception.entity.ApartmentInstanceNotFoundException;
-import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
+import ua.mibal.booking.application.exception.ApartmentIsNotAvailableForReservation;
+import ua.mibal.booking.application.exception.ApartmentInstanceNotFoundException;
+import ua.mibal.booking.application.exception.ApartmentNotFoundException;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.time.LocalDate;

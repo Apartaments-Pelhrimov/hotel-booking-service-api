@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.exception;
+package ua.mibal.booking.application.exception;
 
-import ua.mibal.booking.model.exception.marker.BadRequestException;
+import ua.mibal.booking.domain.ApartmentInstance;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class UserHasNoAccessToReservationException extends BadRequestException {
+public class ApartmentInstanceNotFoundException extends EntityNotFoundException {
 
-    public UserHasNoAccessToReservationException() {
-        super("bad-request-error.user-has-no-access-to-reservation");
+    public ApartmentInstanceNotFoundException(Long apartmentInstanceId) {
+        super(ApartmentInstance.class, apartmentInstanceId);
     }
 }

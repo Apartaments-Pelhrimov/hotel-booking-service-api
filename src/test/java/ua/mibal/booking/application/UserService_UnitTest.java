@@ -33,8 +33,8 @@ import ua.mibal.booking.application.port.jpa.UserRepository;
 import ua.mibal.booking.domain.NotificationSettings;
 import ua.mibal.booking.domain.Photo;
 import ua.mibal.booking.domain.User;
-import ua.mibal.booking.model.exception.IllegalPasswordException;
-import ua.mibal.booking.model.exception.entity.UserNotFoundException;
+import ua.mibal.booking.application.exception.IllegalPasswordException;
+import ua.mibal.booking.application.exception.UserNotFoundException;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.util.Optional;

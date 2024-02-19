@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.exception.marker;
+package ua.mibal.booking.application.exception;
 
 import lombok.Getter;
 import org.springframework.context.MessageSource;

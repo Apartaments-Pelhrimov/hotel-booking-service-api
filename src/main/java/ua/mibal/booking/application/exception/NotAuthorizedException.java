@@ -14,25 +14,22 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.exception.marker;
+package ua.mibal.booking.application.exception;
 
-import org.springframework.http.HttpStatus;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public abstract class NotFoundException extends ApiException {
+public class NotAuthorizedException extends ApiException {
 
-    private final Object[] args;
-
-    public NotFoundException(String code, Object... args) {
-        super(code, HttpStatus.NOT_FOUND);
-        this.args = args;
+    public NotAuthorizedException() {
+        super("unauthorized-error", UNAUTHORIZED);
     }
 
     @Override
     public Object[] provideArgs() {
-        return args;
+        return new Object[0];
     }
 }

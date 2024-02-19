@@ -19,7 +19,7 @@ package ua.mibal.booking.adapter.in.web.advice.model;
 import org.instancio.junit.InstancioSource;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.springframework.http.HttpStatus;
-import ua.mibal.booking.model.exception.marker.ApiException;
+import ua.mibal.booking.application.exception.ApiException;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.util.Map;

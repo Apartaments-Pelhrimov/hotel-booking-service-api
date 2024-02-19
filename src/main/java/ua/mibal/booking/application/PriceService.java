@@ -23,7 +23,7 @@ import ua.mibal.booking.application.dto.request.PriceDto;
 import ua.mibal.booking.application.mapper.PriceMapper;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.Price;
-import ua.mibal.booking.model.exception.entity.PriceNotFoundException;
+import ua.mibal.booking.application.exception.PriceNotFoundException;
 
 import java.util.List;
 

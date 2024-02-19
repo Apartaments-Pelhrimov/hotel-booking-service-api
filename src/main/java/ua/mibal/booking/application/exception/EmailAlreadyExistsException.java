@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.exception.entity;
-
-import ua.mibal.booking.domain.ApartmentInstance;
+package ua.mibal.booking.application.exception;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class ApartmentInstanceNotFoundException extends EntityNotFoundException {
+public class EmailAlreadyExistsException extends BadRequestException {
 
-    public ApartmentInstanceNotFoundException(Long apartmentInstanceId) {
-        super(ApartmentInstance.class, apartmentInstanceId);
+    public EmailAlreadyExistsException(String email) {
+        super(
+                "bad-request-error.email-exists",
+                (Object) email // to call appropriate constructor
+        );
     }
 }
