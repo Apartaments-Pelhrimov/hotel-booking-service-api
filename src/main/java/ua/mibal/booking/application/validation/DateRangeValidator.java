@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.validation;
+package ua.mibal.booking.application.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import ua.mibal.booking.application.validation.constraints.ValidDateRange;
 import ua.mibal.booking.model.search.DateRangeValidRequest;
-import ua.mibal.booking.model.validation.constraints.ValidDateRange;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

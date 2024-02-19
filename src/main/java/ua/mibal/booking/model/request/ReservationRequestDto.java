@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,8 @@ package ua.mibal.booking.model.request;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import org.springframework.format.annotation.DateTimeFormat;
+import ua.mibal.booking.application.validation.constraints.ValidDateRange;
 import ua.mibal.booking.model.search.DateRangeValidRequest;
-import ua.mibal.booking.model.validation.constraints.ValidDateRange;
 
 import java.time.LocalDate;
 

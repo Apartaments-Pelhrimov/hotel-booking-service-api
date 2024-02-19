@@ -20,7 +20,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
-import ua.mibal.booking.model.validation.constraints.Link;
+import ua.mibal.booking.application.validation.constraints.Link;
 
 /**
  * @author Mykhailo Balakhon

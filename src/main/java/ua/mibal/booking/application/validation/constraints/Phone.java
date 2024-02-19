@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,28 +14,37 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.validation.constraints;
+package ua.mibal.booking.application.validation.constraints;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
-import ua.mibal.booking.model.validation.DateRangeValidator;
+import jakarta.validation.constraints.Pattern;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
+import static java.lang.annotation.ElementType.CONSTRUCTOR;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.ElementType.TYPE_USE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Target(TYPE)
+@Pattern(
+        regexp = "^\\+([0-9]){10,15}",
+        message = "{validation.phone}"
+)
+@Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
 @Retention(RUNTIME)
-@Constraint(validatedBy = DateRangeValidator.class)
-public @interface ValidDateRange {
+@Constraint(validatedBy = {})
+public @interface Phone {
 
-    String message() default "{validation.valid-date-range}";
+    String message() default "{validation.phone}";
 
     Class<?>[] groups() default {};
 

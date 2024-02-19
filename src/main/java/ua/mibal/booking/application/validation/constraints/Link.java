@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.validation.constraints;
+package ua.mibal.booking.application.validation.constraints;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
@@ -36,15 +36,16 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @Pattern(
-        regexp = "^(?=.*[0-9])(?=.*[a-z])(?=\\S+$).{8,}$",
-        message = "{validation.password}"
+        regexp = "https?://(www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}" +
+                 "\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)",
+        message = "{validation.link}"
 )
 @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
 @Retention(RUNTIME)
 @Constraint(validatedBy = {})
-public @interface Password {
+public @interface Link {
 
-    String message() default "{validation.password}";
+    String message() default "{validation.link}";
 
     Class<?>[] groups() default {};
 

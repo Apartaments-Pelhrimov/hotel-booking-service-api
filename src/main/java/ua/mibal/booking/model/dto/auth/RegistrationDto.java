@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,10 @@
 package ua.mibal.booking.model.dto.auth;
 
 import jakarta.validation.constraints.NotNull;
-import ua.mibal.booking.model.validation.constraints.Email;
-import ua.mibal.booking.model.validation.constraints.Name;
-import ua.mibal.booking.model.validation.constraints.Password;
-import ua.mibal.booking.model.validation.constraints.Phone;
+import ua.mibal.booking.application.validation.constraints.Email;
+import ua.mibal.booking.application.validation.constraints.Name;
+import ua.mibal.booking.application.validation.constraints.Password;
+import ua.mibal.booking.application.validation.constraints.Phone;
 
 /**
  * @author Mykhailo Balakhon
