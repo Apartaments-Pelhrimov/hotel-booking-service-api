@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.photo.storage.aws;
+package ua.mibal.booking.adapter.out.photo.storage.aws;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,11 +24,11 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import ua.mibal.booking.adapter.out.photo.storage.aws.component.AwsRequestGenerator;
+import ua.mibal.booking.adapter.out.photo.storage.aws.exception.AwsStorageException;
+import ua.mibal.booking.adapter.out.photo.storage.aws.model.AwsPhoto;
+import ua.mibal.booking.adapter.out.photo.storage.aws.model.AwsPhotoResource;
 import ua.mibal.booking.application.port.photo.storage.PhotoStorage;
-import ua.mibal.photo.storage.aws.component.AwsRequestGenerator;
-import ua.mibal.photo.storage.aws.exception.AwsStorageException;
-import ua.mibal.photo.storage.aws.model.AwsPhoto;
-import ua.mibal.photo.storage.aws.model.AwsPhotoResource;
 
 import java.io.IOException;
 

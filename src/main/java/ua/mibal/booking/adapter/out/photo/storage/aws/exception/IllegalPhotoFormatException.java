@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.photo.storage.aws.exception;
+package ua.mibal.booking.adapter.out.photo.storage.aws.exception;
 
 import ua.mibal.booking.model.exception.marker.BadRequestException;
 

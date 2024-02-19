@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package ua.mibal.photo.storage.aws.model;
+package ua.mibal.booking.adapter.out.photo.storage.aws.model;
 
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
+import ua.mibal.booking.adapter.out.photo.storage.aws.exception.IllegalPhotoFormatException;
 import ua.mibal.booking.application.port.photo.storage.model.PhotoExtension;
-import ua.mibal.photo.storage.aws.exception.IllegalPhotoFormatException;
 
 import java.io.IOException;
 import java.util.Objects;

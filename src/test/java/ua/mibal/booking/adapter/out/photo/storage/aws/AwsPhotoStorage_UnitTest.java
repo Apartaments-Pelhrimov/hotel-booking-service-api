@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.photo.storage.aws;
+package ua.mibal.booking.adapter.out.photo.storage.aws;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,9 +28,9 @@ import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-import ua.mibal.photo.storage.aws.component.AwsRequestGenerator;
-import ua.mibal.photo.storage.aws.exception.AwsStorageException;
-import ua.mibal.photo.storage.aws.model.AwsPhoto;
+import ua.mibal.booking.adapter.out.photo.storage.aws.component.AwsRequestGenerator;
+import ua.mibal.booking.adapter.out.photo.storage.aws.exception.AwsStorageException;
+import ua.mibal.booking.adapter.out.photo.storage.aws.model.AwsPhoto;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.io.IOException;

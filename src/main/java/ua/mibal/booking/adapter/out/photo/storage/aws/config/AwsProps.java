@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.photo.storage.aws.config;
+package ua.mibal.booking.adapter.out.photo.storage.aws.config;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

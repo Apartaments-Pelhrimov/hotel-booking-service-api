@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.photo.storage.aws.model;
+package ua.mibal.booking.adapter.out.photo.storage.aws.model;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,7 +25,7 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
-import ua.mibal.photo.storage.aws.exception.IllegalPhotoFormatException;
+import ua.mibal.booking.adapter.out.photo.storage.aws.exception.IllegalPhotoFormatException;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.io.IOException;

@@ -14,17 +14,27 @@
  * limitations under the License.
  */
 
-package ua.mibal.photo.storage.aws.exception;
+package ua.mibal.booking.adapter.out.photo.storage.aws.model;
 
-import ua.mibal.booking.model.exception.marker.InternalServerException;
+import lombok.Getter;
+import org.springframework.http.MediaType;
+import ua.mibal.booking.application.port.photo.storage.model.PhotoResource;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class AwsStorageException extends InternalServerException {
+@Getter
+public class AwsPhotoResource implements PhotoResource {
+    private final byte[] bytes;
+    private final MediaType contentType;
 
-    public AwsStorageException(String message, Throwable cause) {
-        super(message, cause);
+    protected AwsPhotoResource(byte[] bytes, String contentType) {
+        this.bytes = bytes;
+        this.contentType = MediaType.parseMediaType(contentType);
+    }
+
+    public static AwsPhotoResource of(byte[] bytes, String contentType) {
+        return new AwsPhotoResource(bytes, contentType);
     }
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.photo.storage.aws.model;
+package ua.mibal.booking.adapter.out.photo.storage.aws.model;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
