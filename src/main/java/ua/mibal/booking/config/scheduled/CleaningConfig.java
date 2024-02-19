@@ -17,8 +17,7 @@
 package ua.mibal.booking.config.scheduled;
 
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -31,12 +30,11 @@ import static java.util.concurrent.TimeUnit.HOURS;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
+@Slf4j
 @EnableScheduling
 @RequiredArgsConstructor
 @Configuration
 public class CleaningConfig {
-    private final static Logger log = LoggerFactory.getLogger(CleaningConfig.class);
-
     private final TokenService tokenService;
     private final UserService userService;
 
