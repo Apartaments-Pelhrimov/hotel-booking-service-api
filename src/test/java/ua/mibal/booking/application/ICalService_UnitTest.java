@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.calendar;
+package ua.mibal.booking.application;
 
 import net.fortuna.ical4j.model.property.ProdId;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
-import ua.mibal.booking.application.ICalService;
 import ua.mibal.booking.config.properties.CalendarProps;
 import ua.mibal.booking.domain.Event;
 import ua.mibal.booking.model.exception.service.ICalServiceException;

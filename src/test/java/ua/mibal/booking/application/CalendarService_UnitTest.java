@@ -14,17 +14,11 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.calendar;
+package ua.mibal.booking.application;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import ua.mibal.booking.application.ApartmentInstanceService;
-import ua.mibal.booking.application.ApartmentService;
-import ua.mibal.booking.application.BookingComReservationService;
-import ua.mibal.booking.application.CalendarService;
-import ua.mibal.booking.application.ICalService;
-import ua.mibal.booking.application.TurningOffService;
 import ua.mibal.booking.application.port.jpa.HotelTurningOffRepository;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.ApartmentInstance;

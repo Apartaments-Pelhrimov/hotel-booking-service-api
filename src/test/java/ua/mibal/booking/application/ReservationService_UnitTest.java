@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.reservation;
+package ua.mibal.booking.application;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.data.domain.PageImpl;
-import ua.mibal.booking.application.ReservationService;
-import ua.mibal.booking.application.UserService;
 import ua.mibal.booking.application.component.ReservationBuilder;
 import ua.mibal.booking.application.port.jpa.ReservationRepository;
 import ua.mibal.booking.domain.Reservation;
