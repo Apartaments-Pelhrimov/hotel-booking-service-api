@@ -19,7 +19,6 @@ package ua.mibal.booking.application.port.jpa;
 import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.model.request.ReservationRequest;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,8 +27,6 @@ import java.util.Optional;
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 public interface ApartmentInstanceRepository extends Repository<ApartmentInstance, Long> {
-
-    List<ApartmentInstance> findFreeByRequestFetchApartmentAndPrices(Long id, LocalDateTime from, LocalDateTime to, int people);
 
     List<ApartmentInstance> findFreeByRequestFetchApartmentAndPrices(ReservationRequest request);
 
