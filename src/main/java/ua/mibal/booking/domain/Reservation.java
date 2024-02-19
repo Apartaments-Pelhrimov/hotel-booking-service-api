@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.entity;
+package ua.mibal.booking.domain;
 
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -36,15 +36,13 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ua.mibal.booking.model.entity.embeddable.Rejection;
-import ua.mibal.booking.model.entity.embeddable.ReservationDetails;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.time.LocalDateTime.now;
-import static ua.mibal.booking.model.entity.Reservation.State.PROCESSED;
+import static ua.mibal.booking.domain.Reservation.State.PROCESSED;
 
 /**
  * @author Mykhailo Balakhon

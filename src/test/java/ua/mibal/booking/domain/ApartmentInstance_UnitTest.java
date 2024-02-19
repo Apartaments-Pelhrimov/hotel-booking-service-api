@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.entity;
+package ua.mibal.booking.domain;
 
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
-import ua.mibal.booking.model.entity.embeddable.ReservationDetails;
 import ua.mibal.booking.testUtils.DataGenerator;
 
 import java.time.LocalDateTime;

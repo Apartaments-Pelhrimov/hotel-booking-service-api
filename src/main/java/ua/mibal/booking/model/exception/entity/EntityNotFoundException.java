@@ -16,7 +16,7 @@
 
 package ua.mibal.booking.model.exception.entity;
 
-import ua.mibal.booking.model.entity.Token;
+import ua.mibal.booking.domain.Token;
 import ua.mibal.booking.model.exception.marker.NotFoundException;
 
 /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,48 +14,37 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.entity.embeddable;
+package ua.mibal.booking.domain;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.ForeignKey;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.type.NumericBooleanConverter;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@AllArgsConstructor
+@AllArgsConstructor(staticName = "of")
 @NoArgsConstructor
 @Getter
 @Setter
 @Embeddable
-public class ApartmentOptions {
+public class Rejection {
 
-    public static final ApartmentOptions DEFAULT
-            = new ApartmentOptions(false, false, false, false, false);
+    @ManyToOne(optional = false)
+    @JoinColumn(
+            name = "user_id",
+            nullable = false,
+            foreignKey = @ForeignKey(name = "reservation_rejections_user_id")
+    )
+    private User user;
 
-    @Convert(converter = NumericBooleanConverter.class)
     @Column(nullable = false)
-    private boolean mealsIncluded;
-
-    @Convert(converter = NumericBooleanConverter.class)
-    @Column(nullable = false)
-    private boolean kitchen;
-
-    @Convert(converter = NumericBooleanConverter.class)
-    @Column(nullable = false)
-    private boolean bathroom;
-
-    @Convert(converter = NumericBooleanConverter.class)
-    @Column(nullable = false)
-    private boolean wifi;
-
-    @Convert(converter = NumericBooleanConverter.class)
-    @Column(nullable = false)
-    private boolean refrigerator;
+    private String reason;
 }

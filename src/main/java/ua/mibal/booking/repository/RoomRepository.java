@@ -17,7 +17,7 @@
 package ua.mibal.booking.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ua.mibal.booking.model.entity.Room;
+import ua.mibal.booking.domain.Room;
 
 public interface RoomRepository extends JpaRepository<Room, Long> {
 

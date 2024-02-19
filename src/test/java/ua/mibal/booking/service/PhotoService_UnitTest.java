@@ -23,13 +23,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.mockito.Mock;
 import org.springframework.web.multipart.MultipartFile;
-import ua.mibal.booking.model.entity.Apartment;
-import ua.mibal.booking.model.entity.User;
-import ua.mibal.test.annotation.UnitTest;
+import ua.mibal.booking.domain.Apartment;
+import ua.mibal.booking.domain.User;
 import ua.mibal.photo.storage.api.PhotoStorage;
 import ua.mibal.photo.storage.api.component.PhotoFactory;
 import ua.mibal.photo.storage.api.model.Photo;
 import ua.mibal.photo.storage.api.model.PhotoResource;
+import ua.mibal.test.annotation.UnitTest;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;

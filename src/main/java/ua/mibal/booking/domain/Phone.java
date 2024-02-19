@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,26 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.entity;
+package ua.mibal.booking.domain;
 
-import ua.mibal.booking.model.dto.response.SimpleEvent;
-
-import java.time.LocalDateTime;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public interface Event {
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@Embeddable
+public class Phone {
 
-    static Event from(LocalDateTime from, LocalDateTime to, String eventName) {
-        return new SimpleEvent(from, to, eventName);
-    }
-
-    LocalDateTime getStart();
-
-    LocalDateTime getEnd();
-
-    String getEventName();
+    @Column(nullable = false, name = "phone")
+    private String number;
 }

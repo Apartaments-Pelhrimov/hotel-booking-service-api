@@ -16,7 +16,7 @@
 
 package ua.mibal.booking.model.dto.request;
 
-import ua.mibal.booking.model.entity.Apartment.ApartmentClass;
+import ua.mibal.booking.domain.Apartment.ApartmentClass;
 import ua.mibal.booking.model.validation.constraints.Name;
 
 /**

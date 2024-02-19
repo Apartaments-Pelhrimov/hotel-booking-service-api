@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.entity;
+package ua.mibal.booking.domain;
 
 import jakarta.annotation.Nullable;
 import jakarta.persistence.CascadeType;
@@ -37,10 +37,6 @@ import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.type.NumericBooleanConverter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import ua.mibal.booking.model.entity.embeddable.Photo;
-import ua.mibal.booking.model.entity.embeddable.NotificationSettings;
-import ua.mibal.booking.model.entity.embeddable.Phone;
-import ua.mibal.booking.model.entity.embeddable.Role;
 import ua.mibal.booking.model.exception.PhotoNotFoundException;
 
 import java.util.ArrayList;
@@ -50,8 +46,8 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static lombok.AccessLevel.PRIVATE;
-import static ua.mibal.booking.model.entity.embeddable.NotificationSettings.DEFAULT;
-import static ua.mibal.booking.model.entity.embeddable.Role.USER;
+import static ua.mibal.booking.domain.NotificationSettings.DEFAULT;
+import static ua.mibal.booking.domain.Role.USER;
 
 /**
  * @author Mykhailo Balakhon

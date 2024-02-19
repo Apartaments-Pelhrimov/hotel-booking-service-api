@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,56 +14,58 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.entity.embeddable;
+package ua.mibal.booking.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Parent;
-import ua.mibal.booking.model.entity.ApartmentInstance;
-import ua.mibal.booking.model.entity.Event;
-
-import java.time.LocalDateTime;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Embeddable
-public class TurningOffTime implements Event {
+public class Bed {
 
-    // TODO rename
+    @Column(nullable = false)
+    private Integer size;
 
-    @Column(nullable = false, name = "\"from\"")
-    private LocalDateTime from;
-
-    @Column(nullable = false, name = "\"to\"")
-    private LocalDateTime to;
-
-    @Parent
-    private ApartmentInstance apartmentInstance;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Type type;
 
     @Override
-    public LocalDateTime getStart() {
-        return from;
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Bed bed = (Bed) o;
+        if (!size.equals(bed.size)) {
+            return false;
+        }
+        return type == bed.type;
     }
 
     @Override
-    public LocalDateTime getEnd() {
-        return to;
+    public int hashCode() {
+        int result = size.hashCode();
+        result = 31 * result + type.hashCode();
+        return result;
     }
 
-    @Override
-    public String getEventName() {
-        return apartmentInstance.getName() + " turned off";
+    public enum Type {
+        BUNK, CONNECTED, TRANSFORMER
     }
 }

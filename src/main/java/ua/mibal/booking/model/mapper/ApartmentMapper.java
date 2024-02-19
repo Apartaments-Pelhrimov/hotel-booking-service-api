@@ -21,13 +21,13 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
+import ua.mibal.booking.domain.Apartment;
+import ua.mibal.booking.domain.ApartmentOptions;
 import ua.mibal.booking.model.dto.request.CreateApartmentDto;
 import ua.mibal.booking.model.dto.request.UpdateApartmentDto;
 import ua.mibal.booking.model.dto.request.UpdateApartmentOptionsDto;
 import ua.mibal.booking.model.dto.response.ApartmentCardDto;
 import ua.mibal.booking.model.dto.response.ApartmentDto;
-import ua.mibal.booking.model.entity.Apartment;
-import ua.mibal.booking.model.entity.embeddable.ApartmentOptions;
 import ua.mibal.booking.model.mapper.linker.ApartmentPhotoLinker;
 
 import static org.mapstruct.InjectionStrategy.CONSTRUCTOR;

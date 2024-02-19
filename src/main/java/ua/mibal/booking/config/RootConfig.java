@@ -28,9 +28,9 @@ import ua.mibal.booking.config.properties.ApplicationProps;
 import ua.mibal.booking.config.properties.CalendarProps;
 import ua.mibal.booking.config.properties.LocalizedMessagesProps;
 import ua.mibal.booking.config.properties.TokenProps;
-import ua.mibal.booking.model.entity.User;
-import ua.mibal.booking.model.entity.embeddable.Phone;
-import ua.mibal.booking.model.entity.embeddable.Role;
+import ua.mibal.booking.domain.Phone;
+import ua.mibal.booking.domain.Role;
+import ua.mibal.booking.domain.User;
 import ua.mibal.booking.repository.UserRepository;
 
 /**

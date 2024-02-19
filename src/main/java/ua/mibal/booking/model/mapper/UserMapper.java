@@ -20,13 +20,13 @@ import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import ua.mibal.booking.domain.NotificationSettings;
+import ua.mibal.booking.domain.User;
 import ua.mibal.booking.model.dto.auth.RegistrationDto;
 import ua.mibal.booking.model.dto.auth.TokenDto;
 import ua.mibal.booking.model.dto.request.ChangeNotificationSettingsDto;
 import ua.mibal.booking.model.dto.request.ChangeUserDetailsDto;
 import ua.mibal.booking.model.dto.response.UserDto;
-import ua.mibal.booking.model.entity.User;
-import ua.mibal.booking.model.entity.embeddable.NotificationSettings;
 import ua.mibal.booking.model.mapper.linker.UserPhotoLinker;
 
 import static org.mapstruct.InjectionStrategy.CONSTRUCTOR;

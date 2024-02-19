@@ -16,7 +16,7 @@
 
 package ua.mibal.booking.testUtils;
 
-import ua.mibal.booking.model.entity.Event;
+import ua.mibal.booking.domain.Event;
 
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;

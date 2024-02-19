@@ -18,12 +18,12 @@ package ua.mibal.booking.service.reservation.component;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ua.mibal.booking.model.entity.Apartment;
-import ua.mibal.booking.model.entity.ApartmentInstance;
-import ua.mibal.booking.model.entity.Reservation;
-import ua.mibal.booking.model.entity.User;
-import ua.mibal.booking.model.entity.embeddable.Price;
-import ua.mibal.booking.model.entity.embeddable.ReservationDetails;
+import ua.mibal.booking.domain.Apartment;
+import ua.mibal.booking.domain.ApartmentInstance;
+import ua.mibal.booking.domain.Price;
+import ua.mibal.booking.domain.Reservation;
+import ua.mibal.booking.domain.ReservationDetails;
+import ua.mibal.booking.domain.User;
 import ua.mibal.booking.model.request.ReservationRequest;
 import ua.mibal.booking.service.ApartmentInstanceService;
 import ua.mibal.booking.service.UserService;

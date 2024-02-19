@@ -20,9 +20,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.data.domain.PageImpl;
+import ua.mibal.booking.domain.Reservation;
+import ua.mibal.booking.domain.User;
 import ua.mibal.booking.model.dto.response.ReservationDto;
-import ua.mibal.booking.model.entity.Reservation;
-import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.exception.UserHasNoAccessToReservationException;
 import ua.mibal.booking.model.mapper.ReservationMapper;
 import ua.mibal.booking.model.request.ReservationRequest;
@@ -40,7 +40,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.data.domain.Pageable.unpaged;
-import static ua.mibal.booking.model.entity.embeddable.Role.MANAGER;
+import static ua.mibal.booking.domain.Role.MANAGER;
 
 /**
  * @author Mykhailo Balakhon

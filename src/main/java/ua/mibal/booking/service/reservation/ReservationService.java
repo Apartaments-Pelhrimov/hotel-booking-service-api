@@ -21,9 +21,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ua.mibal.booking.domain.Reservation;
+import ua.mibal.booking.domain.User;
 import ua.mibal.booking.model.dto.response.ReservationDto;
-import ua.mibal.booking.model.entity.Reservation;
-import ua.mibal.booking.model.entity.User;
 import ua.mibal.booking.model.exception.UserHasNoAccessToReservationException;
 import ua.mibal.booking.model.exception.entity.ReservationNotFoundException;
 import ua.mibal.booking.model.mapper.ReservationMapper;
@@ -32,7 +32,7 @@ import ua.mibal.booking.repository.ReservationRepository;
 import ua.mibal.booking.service.UserService;
 import ua.mibal.booking.service.reservation.component.ReservationBuilder;
 
-import static ua.mibal.booking.model.entity.embeddable.Role.MANAGER;
+import static ua.mibal.booking.domain.Role.MANAGER;
 
 /**
  * @author Mykhailo Balakhon

@@ -18,7 +18,7 @@ package ua.mibal.booking.model.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
-import ua.mibal.booking.model.entity.embeddable.Phone;
+import ua.mibal.booking.domain.Phone;
 
 /**
  * @author Mykhailo Balakhon

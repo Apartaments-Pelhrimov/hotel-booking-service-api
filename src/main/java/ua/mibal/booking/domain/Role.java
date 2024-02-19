@@ -14,43 +14,37 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.entity.embeddable;
+package ua.mibal.booking.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-@Embeddable
-public class Photo {
+public enum Role implements GrantedAuthority {
 
-    @Column(name = "aws_photo_key")
-    private String key;
+    USER("ROLE_USER"),
+    MANAGER("ROLE_MANAGER", USER);
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Photo photo = (Photo) o;
-        return key.equals(photo.key);
+    @Getter
+    private final String authority;
+    private final List<Role> children;
+
+    Role(String authority, Role... children) {
+        this.authority = authority;
+        this.children = Arrays.stream(children).toList();
     }
 
-    @Override
-    public int hashCode() {
-        return key.hashCode();
+    public Collection<? extends GrantedAuthority> getGrantedAuthorities() {
+        List<Role> roles = new ArrayList<>(children);
+        roles.add(this);
+        return roles;
     }
 }

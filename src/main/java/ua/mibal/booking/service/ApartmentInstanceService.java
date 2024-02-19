@@ -18,9 +18,9 @@ package ua.mibal.booking.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ua.mibal.booking.domain.Apartment;
+import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.model.dto.request.CreateApartmentInstanceDto;
-import ua.mibal.booking.model.entity.Apartment;
-import ua.mibal.booking.model.entity.ApartmentInstance;
 import ua.mibal.booking.model.exception.ApartmentIsNotAvailableForReservation;
 import ua.mibal.booking.model.exception.entity.ApartmentInstanceNotFoundException;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;

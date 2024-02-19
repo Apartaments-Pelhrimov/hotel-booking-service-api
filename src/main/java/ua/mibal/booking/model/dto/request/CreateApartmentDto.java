@@ -18,8 +18,8 @@ package ua.mibal.booking.model.dto.request;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import ua.mibal.booking.model.entity.Apartment.ApartmentClass;
-import ua.mibal.booking.model.entity.embeddable.ApartmentOptions;
+import ua.mibal.booking.domain.Apartment.ApartmentClass;
+import ua.mibal.booking.domain.ApartmentOptions;
 import ua.mibal.booking.model.validation.constraints.Name;
 
 import java.util.List;

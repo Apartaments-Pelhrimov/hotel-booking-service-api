@@ -18,8 +18,8 @@ package ua.mibal.booking.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import ua.mibal.booking.model.entity.Apartment;
-import ua.mibal.booking.model.entity.embeddable.Photo;
+import ua.mibal.booking.domain.Apartment;
+import ua.mibal.booking.domain.Photo;
 
 import java.util.List;
 import java.util.Optional;

@@ -21,7 +21,7 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.ITemplateEngine;
 import ua.mibal.booking.config.properties.ApplicationProps;
-import ua.mibal.booking.model.entity.Token;
+import ua.mibal.booking.domain.Token;
 import ua.mibal.booking.model.exception.marker.ApiException;
 import ua.mibal.email.api.model.Email;
 

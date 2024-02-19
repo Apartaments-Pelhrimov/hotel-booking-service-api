@@ -20,7 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import ua.mibal.booking.model.entity.Comment;
+import ua.mibal.booking.domain.Comment;
 
 /**
  * @author Mykhailo Balakhon

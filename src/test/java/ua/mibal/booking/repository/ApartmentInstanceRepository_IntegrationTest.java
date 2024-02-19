@@ -25,9 +25,9 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import ua.mibal.booking.model.entity.Apartment;
-import ua.mibal.booking.model.entity.ApartmentInstance;
-import ua.mibal.booking.model.entity.Reservation;
+import ua.mibal.booking.domain.Apartment;
+import ua.mibal.booking.domain.ApartmentInstance;
+import ua.mibal.booking.domain.Reservation;
 import ua.mibal.test.annotation.JpaTest;
 
 import java.time.LocalDateTime;

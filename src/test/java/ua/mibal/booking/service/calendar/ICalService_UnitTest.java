@@ -27,7 +27,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import ua.mibal.booking.config.properties.CalendarProps;
-import ua.mibal.booking.model.entity.Event;
+import ua.mibal.booking.domain.Event;
 import ua.mibal.booking.model.exception.service.ICalServiceException;
 import ua.mibal.booking.model.mapper.CalendarFormatMapper;
 import ua.mibal.booking.testUtils.DataGenerator;

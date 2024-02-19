@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.entity.embeddable;
+package ua.mibal.booking.domain;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.type.NumericBooleanConverter;
 
 /**
  * @author Mykhailo Balakhon
@@ -34,38 +34,28 @@ import lombok.Setter;
 @Getter
 @Setter
 @Embeddable
-public class Bed {
+public class ApartmentOptions {
 
+    public static final ApartmentOptions DEFAULT
+            = new ApartmentOptions(false, false, false, false, false);
+
+    @Convert(converter = NumericBooleanConverter.class)
     @Column(nullable = false)
-    private Integer size;
+    private boolean mealsIncluded;
 
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = NumericBooleanConverter.class)
     @Column(nullable = false)
-    private Type type;
+    private boolean kitchen;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Bed bed = (Bed) o;
-        if (!size.equals(bed.size)) {
-            return false;
-        }
-        return type == bed.type;
-    }
+    @Convert(converter = NumericBooleanConverter.class)
+    @Column(nullable = false)
+    private boolean bathroom;
 
-    @Override
-    public int hashCode() {
-        int result = size.hashCode();
-        result = 31 * result + type.hashCode();
-        return result;
-    }
+    @Convert(converter = NumericBooleanConverter.class)
+    @Column(nullable = false)
+    private boolean wifi;
 
-    public enum Type {
-        BUNK, CONNECTED, TRANSFORMER
-    }
+    @Convert(converter = NumericBooleanConverter.class)
+    @Column(nullable = false)
+    private boolean refrigerator;
 }

@@ -16,8 +16,8 @@
 
 package ua.mibal.booking.model.dto.response;
 
-import ua.mibal.booking.model.entity.embeddable.NotificationSettings;
-import ua.mibal.booking.model.entity.embeddable.Role;
+import ua.mibal.booking.domain.NotificationSettings;
+import ua.mibal.booking.domain.Role;
 
 /**
  * @author Mykhailo Balakhon

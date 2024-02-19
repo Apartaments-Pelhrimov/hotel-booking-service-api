@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,18 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.entity;
+package ua.mibal.booking.domain;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Parent;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 /**
  * @author Mykhailo Balakhon
@@ -39,13 +36,10 @@ import java.util.Optional;
 @NoArgsConstructor
 @Getter
 @Setter
-@Entity
-@Table(name = "hotel_turning_off_times")
-public class HotelTurningOffTime implements Event {
+@Embeddable
+public class TurningOffTime implements Event {
 
-    @Id
-    @GeneratedValue
-    private Long id;
+    // TODO rename
 
     @Column(nullable = false, name = "\"from\"")
     private LocalDateTime from;
@@ -53,10 +47,8 @@ public class HotelTurningOffTime implements Event {
     @Column(nullable = false, name = "\"to\"")
     private LocalDateTime to;
 
-    @Column
-    private String event;
-
-    // TODO rename
+    @Parent
+    private ApartmentInstance apartmentInstance;
 
     @Override
     public LocalDateTime getStart() {
@@ -70,6 +62,6 @@ public class HotelTurningOffTime implements Event {
 
     @Override
     public String getEventName() {
-        return "Hotel turned off. Reason: " + Optional.ofNullable(event).orElse("");
+        return apartmentInstance.getName() + " turned off";
     }
 }

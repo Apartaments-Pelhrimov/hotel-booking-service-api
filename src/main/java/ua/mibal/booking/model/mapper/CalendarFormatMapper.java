@@ -25,7 +25,7 @@ import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.DateProperty;
 import org.springframework.stereotype.Component;
 import ua.mibal.booking.config.properties.CalendarProps;
-import ua.mibal.booking.model.entity.Event;
+import ua.mibal.booking.domain.Event;
 
 import java.time.Instant;
 import java.time.LocalDateTime;

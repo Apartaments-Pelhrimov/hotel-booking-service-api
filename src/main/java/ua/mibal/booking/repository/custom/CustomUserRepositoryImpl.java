@@ -19,7 +19,7 @@ package ua.mibal.booking.repository.custom;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.hibernate.Session;
-import ua.mibal.booking.model.entity.User;
+import ua.mibal.booking.domain.User;
 
 /**
  * @author Mykhailo Balakhon

@@ -18,7 +18,7 @@ package ua.mibal.booking.model.dto.request;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import ua.mibal.booking.model.entity.embeddable.Bed.Type;
+import ua.mibal.booking.domain.Bed.Type;
 
 /**
  * @author Mykhailo Balakhon

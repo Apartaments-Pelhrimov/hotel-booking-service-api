@@ -22,14 +22,15 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
+import ua.mibal.booking.domain.NotificationSettings;
+import ua.mibal.booking.domain.Phone;
+import ua.mibal.booking.domain.User;
+import ua.mibal.booking.mapper.UserMapperImpl;
 import ua.mibal.booking.model.dto.auth.RegistrationDto;
 import ua.mibal.booking.model.dto.auth.TokenDto;
 import ua.mibal.booking.model.dto.request.ChangeNotificationSettingsDto;
 import ua.mibal.booking.model.dto.request.ChangeUserDetailsDto;
 import ua.mibal.booking.model.dto.response.UserDto;
-import ua.mibal.booking.model.entity.User;
-import ua.mibal.booking.model.entity.embeddable.NotificationSettings;
-import ua.mibal.booking.model.entity.embeddable.Phone;
 import ua.mibal.booking.model.mapper.linker.UserPhotoLinker;
 import ua.mibal.test.annotation.UnitTest;
 
@@ -39,8 +40,8 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.when;
-import static ua.mibal.booking.model.entity.embeddable.NotificationSettings.DEFAULT;
-import static ua.mibal.booking.model.entity.embeddable.Role.USER;
+import static ua.mibal.booking.domain.NotificationSettings.DEFAULT;
+import static ua.mibal.booking.domain.Role.USER;
 
 /**
  * @author Mykhailo Balakhon

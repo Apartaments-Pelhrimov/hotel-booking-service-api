@@ -20,7 +20,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 import org.springframework.hateoas.Link;
 import ua.mibal.booking.controller.PhotoController;
-import ua.mibal.booking.model.entity.User;
+import ua.mibal.booking.domain.User;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;

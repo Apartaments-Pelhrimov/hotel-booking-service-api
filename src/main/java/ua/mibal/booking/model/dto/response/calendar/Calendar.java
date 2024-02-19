@@ -17,7 +17,7 @@
 package ua.mibal.booking.model.dto.response.calendar;
 
 import lombok.NoArgsConstructor;
-import ua.mibal.booking.model.entity.Event;
+import ua.mibal.booking.domain.Event;
 
 import java.util.ArrayList;
 import java.util.Collection;

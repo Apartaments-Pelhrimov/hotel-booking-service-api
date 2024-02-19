@@ -18,8 +18,8 @@ package ua.mibal.booking.model.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
+import ua.mibal.booking.domain.Price;
 import ua.mibal.booking.model.dto.request.PriceDto;
-import ua.mibal.booking.model.entity.embeddable.Price;
 
 import java.math.BigDecimal;
 import java.util.List;

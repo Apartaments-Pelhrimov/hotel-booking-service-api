@@ -19,7 +19,7 @@ package ua.mibal.booking.model.dto.response.calendar;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ua.mibal.booking.model.entity.Event;
+import ua.mibal.booking.domain.Event;
 
 import java.time.LocalDateTime;
 

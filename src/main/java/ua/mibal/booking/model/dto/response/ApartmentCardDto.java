@@ -16,7 +16,7 @@
 
 package ua.mibal.booking.model.dto.response;
 
-import ua.mibal.booking.model.entity.embeddable.ApartmentOptions;
+import ua.mibal.booking.domain.ApartmentOptions;
 
 import java.math.BigDecimal;
 import java.util.List;

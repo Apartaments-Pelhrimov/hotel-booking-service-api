@@ -18,7 +18,7 @@ package ua.mibal.booking.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import ua.mibal.booking.model.entity.ApartmentInstance;
+import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.model.request.ReservationRequest;
 
 import java.time.LocalDateTime;

@@ -20,7 +20,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ua.mibal.booking.model.entity.Event;
+import ua.mibal.booking.domain.Event;
 
 import java.time.LocalDateTime;
 

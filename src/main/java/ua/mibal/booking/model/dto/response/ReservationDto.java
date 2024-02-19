@@ -16,11 +16,10 @@
 
 package ua.mibal.booking.model.dto.response;
 
-import ua.mibal.booking.model.entity.embeddable.ReservationDetails;
+import ua.mibal.booking.domain.ReservationDetails;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author Mykhailo Balakhon

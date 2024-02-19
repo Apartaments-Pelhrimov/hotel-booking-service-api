@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.entity.embeddable;
+package ua.mibal.booking.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -32,8 +32,25 @@ import lombok.Setter;
 @Getter
 @Setter
 @Embeddable
-public class Phone {
+public class Photo {
 
-    @Column(nullable = false, name = "phone")
-    private String number;
+    @Column(name = "aws_photo_key")
+    private String key;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Photo photo = (Photo) o;
+        return key.equals(photo.key);
+    }
+
+    @Override
+    public int hashCode() {
+        return key.hashCode();
+    }
 }

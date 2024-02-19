@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,44 +14,50 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.entity.embeddable;
+package ua.mibal.booking.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.Embedded;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ua.mibal.booking.model.request.ReservationRequest;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@AllArgsConstructor(staticName = "of")
+@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Embeddable
-public class ReservationDetails {
-
-    @Column(nullable = false, name = "\"from\"")
-    private LocalDateTime from;
-
-    @Column(nullable = false, name = "\"to\"")
-    private LocalDateTime to;
-
-    @Embedded
-    private Price price;
+public class Price {
 
     @Column(nullable = false)
-    private BigDecimal fullPrice;
+    private Integer person;
 
-    public static ReservationDetails of(ReservationRequest request, Price oneNightPriceOption,  BigDecimal reservationPrice) {
-        return new ReservationDetails(request.from(), request.to(), oneNightPriceOption, reservationPrice);
+    @Column(name = "price", nullable = false)
+    private BigDecimal amount;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Price price = (Price) o;
+
+        return person.equals(price.person);
+    }
+
+    @Override
+    public int hashCode() {
+        return person.hashCode();
     }
 }
