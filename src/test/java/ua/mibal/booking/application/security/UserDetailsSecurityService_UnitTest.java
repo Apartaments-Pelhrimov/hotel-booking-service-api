@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import ua.mibal.booking.adapter.in.web.security.UserDetailsSecurityService;
 import ua.mibal.booking.application.port.jpa.UserRepository;
 import ua.mibal.booking.domain.User;
 import ua.mibal.test.annotation.UnitTest;
