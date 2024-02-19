@@ -20,6 +20,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ua.mibal.booking.application.UserService;
+import ua.mibal.booking.application.port.email.EmailSendingService;
+import ua.mibal.booking.application.port.email.model.Email;
 import ua.mibal.booking.application.security.component.TemplateEmailFactory;
 import ua.mibal.booking.application.security.jwt.JwtTokenService;
 import ua.mibal.booking.domain.Token;
@@ -32,9 +35,6 @@ import ua.mibal.booking.model.exception.IllegalPasswordException;
 import ua.mibal.booking.model.exception.entity.UserNotFoundException;
 import ua.mibal.booking.model.exception.marker.NotAuthorizedException;
 import ua.mibal.booking.model.mapper.UserMapper;
-import ua.mibal.booking.application.UserService;
-import ua.mibal.email.api.EmailSendingService;
-import ua.mibal.email.api.model.Email;
 
 /**
  * @author Mykhailo Balakhon

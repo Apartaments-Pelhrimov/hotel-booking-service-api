@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.email.impl.exception;
+package ua.mibal.booking.adapter.out.email.exception;
 
 import ua.mibal.booking.model.exception.marker.InternalServerException;
 

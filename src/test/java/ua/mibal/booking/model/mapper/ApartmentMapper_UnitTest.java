@@ -30,7 +30,6 @@ import ua.mibal.booking.domain.ApartmentOptions;
 import ua.mibal.booking.domain.Bed;
 import ua.mibal.booking.domain.Price;
 import ua.mibal.booking.domain.Room;
-import ua.mibal.booking.mapper.ApartmentMapperImpl;
 import ua.mibal.booking.model.dto.request.CreateApartmentDto;
 import ua.mibal.booking.model.dto.request.UpdateApartmentDto;
 import ua.mibal.booking.model.dto.request.UpdateApartmentOptionsDto;

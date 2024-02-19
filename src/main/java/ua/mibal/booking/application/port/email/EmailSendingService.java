@@ -14,26 +14,17 @@
  * limitations under the License.
  */
 
-package ua.mibal.email.api.model.impl;
+package ua.mibal.booking.application.port.email;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import ua.mibal.email.api.model.Email;
+import ua.mibal.booking.application.port.email.model.Email;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Getter
-@Setter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class DefaultEmail implements Email {
-    private String sender;
-    private String recipients;
-    private DefaultEmailContent content;
+// TODO rename
+//  javadocs
+public interface EmailSendingService {
+
+    void send(Email email);
 }

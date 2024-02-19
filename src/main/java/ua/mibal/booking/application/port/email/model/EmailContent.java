@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-package ua.mibal.email.api;
-
-import ua.mibal.email.api.model.Email;
+package ua.mibal.booking.application.port.email.model;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-// TODO rename
-//  javadocs
-public interface EmailSendingService {
+// TODO javadoc
+public interface EmailContent {
 
-    void send(Email email);
+    String getSubject();
+
+    String getBody();
 }

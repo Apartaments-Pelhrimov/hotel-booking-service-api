@@ -25,7 +25,6 @@ import org.mockito.Mock;
 import ua.mibal.booking.domain.NotificationSettings;
 import ua.mibal.booking.domain.Phone;
 import ua.mibal.booking.domain.User;
-import ua.mibal.booking.mapper.UserMapperImpl;
 import ua.mibal.booking.model.dto.auth.RegistrationDto;
 import ua.mibal.booking.model.dto.auth.TokenDto;
 import ua.mibal.booking.model.dto.request.ChangeNotificationSettingsDto;

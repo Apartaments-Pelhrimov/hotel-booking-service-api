@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.email.impl.model;
+package ua.mibal.booking.adapter.out.email.model;
 
 import jakarta.mail.Address;
 import jakarta.mail.MessagingException;
@@ -26,8 +26,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
+import ua.mibal.booking.adapter.out.email.exception.EmailCreationException;
 import ua.mibal.test.annotation.UnitTest;
-import ua.mibal.email.impl.exception.EmailCreationException;
 
 import java.io.IOException;
 import java.util.Arrays;
