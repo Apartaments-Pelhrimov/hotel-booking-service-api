@@ -22,8 +22,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+import ua.mibal.booking.application.TokenService;
 import ua.mibal.booking.application.UserService;
-import ua.mibal.booking.application.security.TokenService;
 
 import static java.util.concurrent.TimeUnit.HOURS;
 

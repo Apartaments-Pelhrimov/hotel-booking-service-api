@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.security;
+package ua.mibal.booking.application;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import ua.mibal.booking.application.component.TokenGenerator;
 import ua.mibal.booking.application.port.jpa.TokenRepository;
 import ua.mibal.booking.config.properties.TokenProps;
 import ua.mibal.booking.domain.Token;
@@ -46,7 +47,7 @@ class TokenService_UnitTest {
     @Mock
     private TokenRepository tokenRepository;
     @Mock
-    private TokenGenerationService tokenGenerationService;
+    private TokenGenerator tokenGenerator;
     @Mock
     private TokenProps tokenProps;
 
@@ -57,7 +58,7 @@ class TokenService_UnitTest {
 
     @BeforeEach
     void setup() {
-        service = new TokenService(tokenRepository, tokenGenerationService, tokenProps);
+        service = new TokenService(tokenRepository, tokenGenerator, tokenProps);
     }
 
     @Test
@@ -65,7 +66,7 @@ class TokenService_UnitTest {
         String tokenValue = "code";
         int validForMinutes = 100500;
 
-        when(tokenGenerationService.generateTokenValue())
+        when(tokenGenerator.generateTokenValue())
                 .thenReturn(tokenValue);
         when(tokenProps.validForMinutes())
                 .thenReturn(validForMinutes);

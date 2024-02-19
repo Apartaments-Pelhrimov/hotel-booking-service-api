@@ -24,9 +24,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ua.mibal.booking.adapter.in.web.advice.model.ApiError;
+import ua.mibal.booking.application.component.TemplateEmailFactory;
 import ua.mibal.booking.application.port.email.EmailSendingService;
 import ua.mibal.booking.application.port.email.model.Email;
-import ua.mibal.booking.application.security.component.TemplateEmailFactory;
 import ua.mibal.booking.model.exception.marker.InternalServerException;
 
 import java.util.Locale;

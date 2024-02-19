@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.security;
+package ua.mibal.booking.application.component;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
-import ua.mibal.booking.application.security.TokenGenerationService;
 import ua.mibal.booking.config.properties.TokenProps;
 import ua.mibal.test.annotation.UnitTest;
 
@@ -36,16 +35,16 @@ import static org.mockito.Mockito.when;
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @UnitTest
-class TokenGenerationService_UnitTest {
+class TokenGenerator_UnitTest {
 
-    private TokenGenerationService service;
+    private TokenGenerator service;
 
     @Mock
     private TokenProps tokenProps;
 
     @BeforeEach
     void setup() {
-        service = new TokenGenerationService(tokenProps);
+        service = new TokenGenerator(tokenProps);
     }
 
     @ParameterizedTest

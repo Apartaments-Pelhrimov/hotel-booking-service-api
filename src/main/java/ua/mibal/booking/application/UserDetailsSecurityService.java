@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.security.jwt;
+package ua.mibal.booking.application;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.jwt.JwtClaimsSet;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import ua.mibal.booking.application.security.jwt.component.JwtTokenBuilder;
+import ua.mibal.booking.application.port.jpa.UserRepository;
 
 /**
  * @author Mykhailo Balakhon
@@ -31,13 +29,13 @@ import ua.mibal.booking.application.security.jwt.component.JwtTokenBuilder;
  */
 @RequiredArgsConstructor
 @Service
-public class JwtTokenService {
-    private final JwtEncoder encoder;
-    private final JwtTokenBuilder tokenBuilder;
+public class UserDetailsSecurityService implements UserDetailsService {
+    private final UserRepository userRepository;
 
-    public String generateJwtToken(UserDetails userDetails) {
-        JwtClaimsSet jwtClaims = tokenBuilder.buildBy(userDetails);
-        Jwt jwt = encoder.encode(JwtEncoderParameters.from(jwtClaims));
-        return jwt.getTokenValue();
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return userRepository
+                .findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User for email='" + email + "' not found"));
     }
 }
