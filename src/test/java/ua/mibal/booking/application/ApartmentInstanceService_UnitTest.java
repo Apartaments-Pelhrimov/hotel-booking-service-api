@@ -19,17 +19,17 @@ package ua.mibal.booking.application;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import ua.mibal.booking.application.mapper.ApartmentInstanceMapper;
 import ua.mibal.booking.application.port.jpa.ApartmentInstanceRepository;
 import ua.mibal.booking.application.port.jpa.ApartmentRepository;
 import ua.mibal.booking.application.util.DateTimeUtils;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.ApartmentInstance;
+import ua.mibal.booking.domain.ReservationRequest;
 import ua.mibal.booking.model.dto.request.CreateApartmentInstanceDto;
 import ua.mibal.booking.model.exception.ApartmentIsNotAvailableForReservation;
 import ua.mibal.booking.model.exception.entity.ApartmentInstanceNotFoundException;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
-import ua.mibal.booking.application.mapper.ApartmentInstanceMapper;
-import ua.mibal.booking.model.request.ReservationRequest;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.time.LocalDate;
@@ -117,7 +117,7 @@ class ApartmentInstanceService_UnitTest {
 
         when(dateTimeUtils.reserveFrom(dateFrom)).thenReturn(MIN);
         when(dateTimeUtils.reserveTo(dateTo)).thenReturn(MAX);
-        when(apartmentInstanceRepository.findFreeByRequestFetchApartmentAndPrices(id, MIN, MAX, people))
+        when(apartmentInstanceRepository.findFreeByRequestFetchApartmentAndPrices(reservationRequest))
                 .thenReturn(List.of());
 
         ApartmentIsNotAvailableForReservation e = assertThrows(

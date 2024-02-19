@@ -32,11 +32,11 @@ import org.springframework.web.bind.annotation.RestController;
 import ua.mibal.booking.adapter.in.web.security.annotation.ManagerAllowed;
 import ua.mibal.booking.adapter.in.web.security.annotation.UserAllowed;
 import ua.mibal.booking.application.ReservationService;
+import ua.mibal.booking.application.mapper.ReservationRequestMapper;
+import ua.mibal.booking.domain.ReservationRequest;
+import ua.mibal.booking.model.dto.ReservationRequestDto;
 import ua.mibal.booking.model.dto.request.ReservationRejectingFormDto;
 import ua.mibal.booking.model.dto.response.ReservationDto;
-import ua.mibal.booking.application.mapper.ReservationRequestMapper;
-import ua.mibal.booking.model.request.ReservationRequest;
-import ua.mibal.booking.model.request.ReservationRequestDto;
 
 /**
  * @author Mykhailo Balakhon

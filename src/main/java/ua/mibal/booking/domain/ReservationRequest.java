@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.request;
+package ua.mibal.booking.domain;
 
 import java.time.LocalDateTime;
 

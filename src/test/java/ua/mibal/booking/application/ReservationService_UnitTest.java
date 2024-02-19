@@ -21,13 +21,13 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.data.domain.PageImpl;
 import ua.mibal.booking.application.component.ReservationBuilder;
+import ua.mibal.booking.application.mapper.ReservationMapper;
 import ua.mibal.booking.application.port.jpa.ReservationRepository;
 import ua.mibal.booking.domain.Reservation;
+import ua.mibal.booking.domain.ReservationRequest;
 import ua.mibal.booking.domain.User;
 import ua.mibal.booking.model.dto.response.ReservationDto;
 import ua.mibal.booking.model.exception.UserHasNoAccessToReservationException;
-import ua.mibal.booking.application.mapper.ReservationMapper;
-import ua.mibal.booking.model.request.ReservationRequest;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.util.List;

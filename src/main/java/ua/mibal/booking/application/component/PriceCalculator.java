@@ -17,9 +17,9 @@
 package ua.mibal.booking.application.component;
 
 import org.springframework.stereotype.Component;
+import ua.mibal.booking.domain.ReservationRequest;
 import ua.mibal.booking.model.exception.IllegalReservationDateRangeException;
 import ua.mibal.booking.model.exception.service.PriceCalculatorException;
-import ua.mibal.booking.model.request.ReservationRequest;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

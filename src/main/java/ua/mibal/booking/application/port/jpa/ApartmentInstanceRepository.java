@@ -17,7 +17,7 @@
 package ua.mibal.booking.application.port.jpa;
 
 import ua.mibal.booking.domain.ApartmentInstance;
-import ua.mibal.booking.model.request.ReservationRequest;
+import ua.mibal.booking.domain.ReservationRequest;
 
 import java.util.List;
 import java.util.Optional;

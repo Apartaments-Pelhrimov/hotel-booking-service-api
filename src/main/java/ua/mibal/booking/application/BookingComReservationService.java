@@ -20,8 +20,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.domain.Event;
+import ua.mibal.booking.domain.ReservationRequest;
 import ua.mibal.booking.model.exception.service.BookingComServiceException;
-import ua.mibal.booking.model.request.ReservationRequest;
 
 import java.io.IOException;
 import java.io.InputStream;

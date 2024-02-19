@@ -19,8 +19,8 @@ package ua.mibal.booking.application.mapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ua.mibal.booking.application.util.DateTimeUtils;
-import ua.mibal.booking.model.request.ReservationRequest;
-import ua.mibal.booking.model.request.ReservationRequestDto;
+import ua.mibal.booking.domain.ReservationRequest;
+import ua.mibal.booking.model.dto.ReservationRequestDto;
 
 import java.time.LocalDateTime;
 

@@ -27,8 +27,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.domain.Event;
+import ua.mibal.booking.domain.ReservationRequest;
 import ua.mibal.booking.model.exception.service.BookingComServiceException;
-import ua.mibal.booking.model.request.ReservationRequest;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.time.LocalDateTime;

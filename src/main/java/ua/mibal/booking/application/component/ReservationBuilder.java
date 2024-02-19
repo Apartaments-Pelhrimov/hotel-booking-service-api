@@ -25,8 +25,8 @@ import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.domain.Price;
 import ua.mibal.booking.domain.Reservation;
 import ua.mibal.booking.domain.ReservationDetails;
+import ua.mibal.booking.domain.ReservationRequest;
 import ua.mibal.booking.domain.User;
-import ua.mibal.booking.model.request.ReservationRequest;
 
 import java.math.BigDecimal;
 
