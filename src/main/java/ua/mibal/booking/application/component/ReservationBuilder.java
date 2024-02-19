@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.reservation.component;
+package ua.mibal.booking.application.component;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import ua.mibal.booking.application.ApartmentInstanceService;
+import ua.mibal.booking.application.UserService;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.domain.Price;
@@ -25,8 +27,6 @@ import ua.mibal.booking.domain.Reservation;
 import ua.mibal.booking.domain.ReservationDetails;
 import ua.mibal.booking.domain.User;
 import ua.mibal.booking.model.request.ReservationRequest;
-import ua.mibal.booking.application.ApartmentInstanceService;
-import ua.mibal.booking.application.UserService;
 
 import java.math.BigDecimal;
 

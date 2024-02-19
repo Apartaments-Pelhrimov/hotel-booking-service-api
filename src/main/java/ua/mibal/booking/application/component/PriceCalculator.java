@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.reservation.component;
+package ua.mibal.booking.application.component;
 
 import org.springframework.stereotype.Component;
 import ua.mibal.booking.model.exception.IllegalReservationDateRangeException;

@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import ua.mibal.booking.application.ReservationService;
 import ua.mibal.booking.config.security.annotation.ManagerAllowed;
 import ua.mibal.booking.config.security.annotation.UserAllowed;
 import ua.mibal.booking.model.dto.request.ReservationRejectingFormDto;
@@ -36,7 +37,6 @@ import ua.mibal.booking.model.dto.response.ReservationDto;
 import ua.mibal.booking.model.mapper.ReservationRequestMapper;
 import ua.mibal.booking.model.request.ReservationRequest;
 import ua.mibal.booking.model.request.ReservationRequestDto;
-import ua.mibal.booking.application.reservation.ReservationService;
 
 /**
  * @author Mykhailo Balakhon

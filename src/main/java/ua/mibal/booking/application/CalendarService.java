@@ -14,16 +14,12 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.calendar;
+package ua.mibal.booking.application;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ua.mibal.booking.application.ApartmentInstanceService;
-import ua.mibal.booking.application.ApartmentService;
-import ua.mibal.booking.application.TurningOffService;
 import ua.mibal.booking.application.port.jpa.HotelTurningOffRepository;
-import ua.mibal.booking.application.reservation.BookingComReservationService;
 import ua.mibal.booking.application.util.CollectionUtils;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.ApartmentInstance;

@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.reservation;
+package ua.mibal.booking.application;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ua.mibal.booking.application.UserService;
+import ua.mibal.booking.application.component.ReservationBuilder;
 import ua.mibal.booking.application.port.jpa.ReservationRepository;
-import ua.mibal.booking.application.reservation.component.ReservationBuilder;
 import ua.mibal.booking.domain.Reservation;
 import ua.mibal.booking.domain.User;
 import ua.mibal.booking.model.dto.response.ReservationDto;
