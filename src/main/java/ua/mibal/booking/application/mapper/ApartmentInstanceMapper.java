@@ -17,8 +17,8 @@
 package ua.mibal.booking.application.mapper;
 
 import org.mapstruct.Mapper;
+import ua.mibal.booking.application.dto.request.CreateApartmentInstanceDto;
 import ua.mibal.booking.domain.ApartmentInstance;
-import ua.mibal.booking.model.dto.request.CreateApartmentInstanceDto;
 
 import java.util.List;
 

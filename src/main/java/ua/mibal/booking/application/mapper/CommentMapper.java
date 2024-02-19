@@ -19,10 +19,10 @@ package ua.mibal.booking.application.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
+import ua.mibal.booking.application.dto.request.CreateCommentDto;
+import ua.mibal.booking.application.dto.response.CommentDto;
 import ua.mibal.booking.application.mapper.linker.UserPhotoLinker;
 import ua.mibal.booking.domain.Comment;
-import ua.mibal.booking.model.dto.request.CreateCommentDto;
-import ua.mibal.booking.model.dto.response.CommentDto;
 
 /**
  * @author Mykhailo Balakhon

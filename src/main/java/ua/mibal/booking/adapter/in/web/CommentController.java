@@ -32,8 +32,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ua.mibal.booking.adapter.in.web.security.annotation.UserAllowed;
 import ua.mibal.booking.application.CommentService;
-import ua.mibal.booking.model.dto.request.CreateCommentDto;
-import ua.mibal.booking.model.dto.response.CommentDto;
+import ua.mibal.booking.application.dto.request.CreateCommentDto;
+import ua.mibal.booking.application.dto.response.CommentDto;
 
 /**
  * @author Mykhailo Balakhon

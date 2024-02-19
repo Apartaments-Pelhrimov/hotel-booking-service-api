@@ -19,14 +19,14 @@ package ua.mibal.booking.application;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import ua.mibal.booking.application.dto.request.RoomDto;
+import ua.mibal.booking.application.mapper.RoomMapper;
 import ua.mibal.booking.application.port.jpa.ApartmentRepository;
 import ua.mibal.booking.application.port.jpa.RoomRepository;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.Room;
-import ua.mibal.booking.model.dto.request.RoomDto;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.model.exception.entity.RoomNotFoundException;
-import ua.mibal.booking.application.mapper.RoomMapper;
 import ua.mibal.test.annotation.UnitTest;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;

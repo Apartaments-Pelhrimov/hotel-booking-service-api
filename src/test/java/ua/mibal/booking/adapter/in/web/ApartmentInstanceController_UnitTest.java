@@ -31,9 +31,8 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import ua.mibal.booking.adapter.in.web.ApartmentInstanceController;
-import ua.mibal.booking.model.dto.request.CreateApartmentInstanceDto;
 import ua.mibal.booking.application.ApartmentInstanceService;
+import ua.mibal.booking.application.dto.request.CreateApartmentInstanceDto;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;

@@ -19,12 +19,12 @@ package ua.mibal.booking.application;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import ua.mibal.booking.application.dto.response.calendar.Calendar;
 import ua.mibal.booking.application.port.jpa.HotelTurningOffRepository;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.domain.Event;
 import ua.mibal.booking.domain.HotelTurningOffTime;
-import ua.mibal.booking.model.dto.response.calendar.Calendar;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.util.List;

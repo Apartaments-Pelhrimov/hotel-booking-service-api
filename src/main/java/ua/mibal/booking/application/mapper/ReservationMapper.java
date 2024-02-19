@@ -19,9 +19,9 @@ package ua.mibal.booking.application.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
+import ua.mibal.booking.application.dto.response.ReservationDto;
 import ua.mibal.booking.application.mapper.linker.ApartmentPhotoLinker;
 import ua.mibal.booking.domain.Reservation;
-import ua.mibal.booking.model.dto.response.ReservationDto;
 
 /**
  * @author Mykhailo Balakhon

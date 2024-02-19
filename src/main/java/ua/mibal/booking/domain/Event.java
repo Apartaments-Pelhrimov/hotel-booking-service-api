@@ -16,7 +16,7 @@
 
 package ua.mibal.booking.domain;
 
-import ua.mibal.booking.model.dto.response.SimpleEvent;
+import ua.mibal.booking.application.dto.response.SimpleEvent;
 
 import java.time.LocalDateTime;
 

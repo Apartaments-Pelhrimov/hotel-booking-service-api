@@ -34,10 +34,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import ua.mibal.booking.application.AuthService;
-import ua.mibal.booking.model.dto.auth.LoginDto;
-import ua.mibal.booking.model.dto.auth.NewPasswordDto;
-import ua.mibal.booking.model.dto.auth.RegistrationDto;
-import ua.mibal.booking.model.dto.auth.TokenDto;
+import ua.mibal.booking.application.dto.auth.LoginDto;
+import ua.mibal.booking.application.dto.auth.NewPasswordDto;
+import ua.mibal.booking.application.dto.auth.RegistrationDto;
+import ua.mibal.booking.application.dto.auth.TokenDto;
 import ua.mibal.booking.testUtils.RegistrationDtoArgumentConverter;
 
 import static org.mockito.Mockito.times;

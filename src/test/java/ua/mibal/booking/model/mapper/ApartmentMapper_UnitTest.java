@@ -23,10 +23,16 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.Spy;
+import ua.mibal.booking.application.dto.request.CreateApartmentDto;
+import ua.mibal.booking.application.dto.request.UpdateApartmentDto;
+import ua.mibal.booking.application.dto.request.UpdateApartmentOptionsDto;
+import ua.mibal.booking.application.dto.response.ApartmentCardDto;
+import ua.mibal.booking.application.dto.response.ApartmentDto;
 import ua.mibal.booking.application.mapper.ApartmentInstanceMapper;
 import ua.mibal.booking.application.mapper.ApartmentMapper;
 import ua.mibal.booking.application.mapper.PriceMapper;
 import ua.mibal.booking.application.mapper.RoomMapper;
+import ua.mibal.booking.application.mapper.linker.ApartmentPhotoLinker;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.Apartment.ApartmentClass;
 import ua.mibal.booking.domain.ApartmentInstance;
@@ -34,12 +40,6 @@ import ua.mibal.booking.domain.ApartmentOptions;
 import ua.mibal.booking.domain.Bed;
 import ua.mibal.booking.domain.Price;
 import ua.mibal.booking.domain.Room;
-import ua.mibal.booking.model.dto.request.CreateApartmentDto;
-import ua.mibal.booking.model.dto.request.UpdateApartmentDto;
-import ua.mibal.booking.model.dto.request.UpdateApartmentOptionsDto;
-import ua.mibal.booking.model.dto.response.ApartmentCardDto;
-import ua.mibal.booking.model.dto.response.ApartmentDto;
-import ua.mibal.booking.application.mapper.linker.ApartmentPhotoLinker;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.math.BigDecimal;
@@ -74,7 +74,7 @@ class ApartmentMapper_UnitTest {
     @Mock
     private List<Bed> beds;
 
-    private Integer people = 1_000_003;
+    private final Integer people = 1_000_003;
     @Mock
     private BigDecimal price;
     @Spy

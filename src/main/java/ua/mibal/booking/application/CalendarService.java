@@ -19,13 +19,13 @@ package ua.mibal.booking.application;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ua.mibal.booking.application.dto.response.calendar.Calendar;
 import ua.mibal.booking.application.port.jpa.HotelTurningOffRepository;
 import ua.mibal.booking.application.util.CollectionUtils;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.domain.Event;
 import ua.mibal.booking.domain.HotelTurningOffTime;
-import ua.mibal.booking.model.dto.response.calendar.Calendar;
 
 import java.util.Collection;
 import java.util.List;

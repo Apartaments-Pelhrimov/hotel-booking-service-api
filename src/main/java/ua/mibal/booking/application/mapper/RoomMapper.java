@@ -17,9 +17,9 @@
 package ua.mibal.booking.application.mapper;
 
 import org.mapstruct.Mapper;
+import ua.mibal.booking.application.dto.request.RoomDto;
 import ua.mibal.booking.domain.Bed;
 import ua.mibal.booking.domain.Room;
-import ua.mibal.booking.model.dto.request.RoomDto;
 
 import java.util.List;
 

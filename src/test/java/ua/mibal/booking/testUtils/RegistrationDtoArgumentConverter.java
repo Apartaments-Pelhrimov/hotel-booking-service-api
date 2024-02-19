@@ -18,7 +18,7 @@ package ua.mibal.booking.testUtils;
 
 import org.junit.jupiter.params.converter.ArgumentConversionException;
 import org.junit.jupiter.params.converter.SimpleArgumentConverter;
-import ua.mibal.booking.model.dto.auth.RegistrationDto;
+import ua.mibal.booking.application.dto.auth.RegistrationDto;
 
 /**
  * @author Mykhailo Balakhon

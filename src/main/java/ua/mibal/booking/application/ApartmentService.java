@@ -19,14 +19,14 @@ package ua.mibal.booking.application;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ua.mibal.booking.application.dto.request.CreateApartmentDto;
+import ua.mibal.booking.application.dto.request.UpdateApartmentDto;
+import ua.mibal.booking.application.dto.response.ApartmentCardDto;
+import ua.mibal.booking.application.dto.response.ApartmentDto;
 import ua.mibal.booking.application.mapper.ApartmentMapper;
 import ua.mibal.booking.application.port.jpa.ApartmentRepository;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.Photo;
-import ua.mibal.booking.model.dto.request.CreateApartmentDto;
-import ua.mibal.booking.model.dto.request.UpdateApartmentDto;
-import ua.mibal.booking.model.dto.response.ApartmentCardDto;
-import ua.mibal.booking.model.dto.response.ApartmentDto;
 import ua.mibal.booking.model.exception.ApartmentDoesNotHavePhotoException;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 
