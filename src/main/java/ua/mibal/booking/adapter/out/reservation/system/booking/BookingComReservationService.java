@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application;
+package ua.mibal.booking.adapter.out.reservation.system.booking;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ua.mibal.booking.adapter.out.reservation.system.booking.BookingComServiceException;
+import ua.mibal.booking.application.ICalService;
 import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.domain.Event;
 import ua.mibal.booking.domain.ReservationRequest;

@@ -19,6 +19,7 @@ package ua.mibal.booking.application;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ua.mibal.booking.adapter.out.reservation.system.booking.BookingComReservationService;
 import ua.mibal.booking.application.dto.response.calendar.Calendar;
 import ua.mibal.booking.application.port.jpa.HotelTurningOffRepository;
 import ua.mibal.booking.application.util.CollectionUtils;
