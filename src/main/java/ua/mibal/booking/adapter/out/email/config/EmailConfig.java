@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package ua.mibal.email.impl.config;
+package ua.mibal.booking.adapter.out.email.config;
 
 import jakarta.mail.Session;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import ua.mibal.email.impl.config.properties.EmailProps;
+import ua.mibal.booking.adapter.out.email.config.properties.EmailProps;
 
 import java.util.Objects;
 import java.util.Optional;

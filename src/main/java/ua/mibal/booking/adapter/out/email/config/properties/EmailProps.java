@@ -14,30 +14,25 @@
  * limitations under the License.
  */
 
-package ua.mibal.email.impl.component;
+package ua.mibal.booking.adapter.out.email.config.properties;
 
-import jakarta.mail.Session;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
-import ua.mibal.booking.application.port.email.model.Email;
-import ua.mibal.email.impl.model.MimeEmail;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.validation.annotation.Validated;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@RequiredArgsConstructor
-@Component
-public class MimeEmailBuilder {
-    private final Session session;
-
-    public MimeEmail buildBy(Email email) {
-        return MimeEmail.of(
-                session,
-                email.getSender(),
-                email.getRecipients(),
-                email.getContent().getSubject(),
-                email.getContent().getBody()
-        );
-    }
+@Validated
+@ConfigurationProperties("mail")
+public record EmailProps(
+        @NotNull
+        @NotBlank
+        String username,
+        @NotNull
+        @NotBlank
+        String password
+) {
 }

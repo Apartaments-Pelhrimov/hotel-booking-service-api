@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.email.impl.exception;
+package ua.mibal.booking.adapter.out.email.exception;
 
 import ua.mibal.booking.model.exception.marker.InternalServerException;
 
@@ -22,9 +22,9 @@ import ua.mibal.booking.model.exception.marker.InternalServerException;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class EmailSentFailedException extends InternalServerException {
+public class EmailCreationException extends InternalServerException {
 
-    public EmailSentFailedException(Throwable cause) {
-        super("Email send failed", cause);
+    public EmailCreationException(Throwable cause) {
+        super("Exception while creating email", cause);
     }
 }

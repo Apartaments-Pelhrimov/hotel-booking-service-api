@@ -14,25 +14,17 @@
  * limitations under the License.
  */
 
-package ua.mibal.email.impl.config.properties;
+package ua.mibal.booking.adapter.out.email.exception;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.validation.annotation.Validated;
+import ua.mibal.booking.model.exception.marker.InternalServerException;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Validated
-@ConfigurationProperties("mail")
-public record EmailProps(
-        @NotNull
-        @NotBlank
-        String username,
-        @NotNull
-        @NotBlank
-        String password
-) {
+public class EmailSentFailedException extends InternalServerException {
+
+    public EmailSentFailedException(Throwable cause) {
+        super("Email send failed", cause);
+    }
 }

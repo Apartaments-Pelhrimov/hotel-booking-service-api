@@ -26,8 +26,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
+import ua.mibal.booking.adapter.out.email.exception.EmailCreationException;
+import ua.mibal.booking.adapter.out.email.model.MimeEmail;
 import ua.mibal.test.annotation.UnitTest;
-import ua.mibal.email.impl.exception.EmailCreationException;
 
 import java.io.IOException;
 import java.util.Arrays;
