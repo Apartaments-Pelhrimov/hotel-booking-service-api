@@ -19,9 +19,7 @@ package ua.mibal.booking.application;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import ua.mibal.booking.adapter.out.reservation.system.booking.BookingComReservationService;
 import ua.mibal.booking.application.dto.response.calendar.Calendar;
-import ua.mibal.booking.application.port.jpa.HotelTurningOffRepository;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.domain.Event;
@@ -33,10 +31,7 @@ import java.util.List;
 import static java.time.LocalDateTime.now;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static ua.mibal.booking.application.util.CollectionUtils.union;
 
 /**
  * @author Mykhailo Balakhon
@@ -48,17 +43,13 @@ class CalendarService_UnitTest {
     private CalendarService service;
 
     @Mock
-    private BookingComReservationService bookingComReservationService;
+    private ReservationSystemManager reservationSystemManager;
     @Mock
     private ApartmentInstanceService apartmentInstanceService;
     @Mock
     private ApartmentService apartmentService;
     @Mock
     private TurningOffService turningOffService;
-    @Mock
-    private ICalService iCalService;
-    @Mock
-    private HotelTurningOffRepository hotelTurningOffRepository;
 
     @Mock
     private Apartment apartment;
@@ -77,7 +68,7 @@ class CalendarService_UnitTest {
 
     @BeforeEach
     void setup() {
-        service = new CalendarService(bookingComReservationService, apartmentInstanceService, apartmentService, turningOffService, iCalService, hotelTurningOffRepository);
+        service = new CalendarService(reservationSystemManager, apartmentInstanceService, apartmentService, turningOffService);
     }
 
     @Test
@@ -93,7 +84,7 @@ class CalendarService_UnitTest {
 
         when(apartmentInstance.getNotRejectedEventsForNow())
                 .thenReturn(List.of(apartmentInstanceEvent));
-        when(bookingComReservationService.getEventsFor(apartmentInstance))
+        when(reservationSystemManager.getEventsFor(apartmentInstance))
                 .thenReturn(List.of(bookingComEvent));
 
         List<Event> expectedEvents =
@@ -116,7 +107,7 @@ class CalendarService_UnitTest {
 
         when(apartmentInstance.getNotRejectedEventsForNow())
                 .thenReturn(List.of(apartmentInstanceEvent));
-        when(bookingComReservationService.getEventsFor(apartmentInstance))
+        when(reservationSystemManager.getEventsFor(apartmentInstance))
                 .thenReturn(List.of(bookingComEvent));
 
         List<Event> expectedEvents =
@@ -126,25 +117,5 @@ class CalendarService_UnitTest {
         Calendar actual = service.getCalendarForApartmentInstance(instanceId);
 
         assertEquals(expected, actual);
-    }
-
-    @Test
-    void getICalForApartmentInstance() {
-        Long instanceId = 1L;
-
-        when(apartmentInstanceService.getOneFetchReservations(instanceId))
-                .thenReturn(apartmentInstance);
-        when(hotelTurningOffRepository.findFromNow())
-                .thenReturn(List.of(hotelTurningOffTime, hotelTurningOffTime));
-        when(apartmentInstance.getNotRejectedEventsForNow())
-                .thenReturn(List.of(apartmentInstanceEvent, apartmentInstanceEvent));
-
-
-        service.getICalForApartmentInstance(instanceId);
-
-        verify(iCalService, times(1)).getCalendarFromEvents(
-                union(List.of(apartmentInstanceEvent, apartmentInstanceEvent),
-                        List.of(hotelTurningOffTime, hotelTurningOffTime))
-        );
     }
 }
