@@ -19,7 +19,7 @@ package ua.mibal.booking.application.validation;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import ua.mibal.booking.application.validation.constraints.ValidDateRange;
-import ua.mibal.booking.model.search.DateRangeValidRequest;
+import ua.mibal.booking.domain.DateRangeValidRequest;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
