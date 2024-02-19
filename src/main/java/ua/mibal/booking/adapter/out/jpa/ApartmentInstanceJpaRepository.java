@@ -18,6 +18,7 @@ package ua.mibal.booking.adapter.out.jpa;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import ua.mibal.booking.application.port.jpa.ApartmentInstanceRepository;
 import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.model.request.ReservationRequest;
 
@@ -29,7 +30,7 @@ import java.util.Optional;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public interface ApartmentInstanceRepository extends JpaRepository<ApartmentInstance, Long> {
+public interface ApartmentInstanceJpaRepository extends JpaRepository<ApartmentInstance, Long>, ApartmentInstanceRepository {
 
     @Query("""
             select ai

@@ -21,6 +21,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.adapter.out.jpa.custom.CustomUserRepository;
+import ua.mibal.booking.application.port.jpa.UserRepository;
 import ua.mibal.booking.domain.Photo;
 import ua.mibal.booking.domain.User;
 
@@ -30,7 +31,7 @@ import java.util.Optional;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public interface UserRepository extends JpaRepository<User, Long>, CustomUserRepository {
+public interface UserJpaRepository extends JpaRepository<User, Long>, CustomUserRepository, UserRepository {
 
     Optional<User> findByEmail(String email);
 

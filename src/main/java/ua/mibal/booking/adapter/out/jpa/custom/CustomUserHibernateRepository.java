@@ -25,7 +25,7 @@ import ua.mibal.booking.domain.User;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class CustomUserRepositoryImpl implements CustomUserRepository {
+public class CustomUserHibernateRepository implements CustomUserRepository {
 
     @PersistenceContext
     private EntityManager entityManager;

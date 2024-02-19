@@ -17,21 +17,31 @@
 package ua.mibal.booking.adapter.out.jpa;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import ua.mibal.booking.domain.HotelTurningOffTime;
+import org.springframework.transaction.annotation.Transactional;
+import ua.mibal.booking.application.port.jpa.TokenRepository;
+import ua.mibal.booking.domain.Token;
 
-import java.util.List;
+import java.util.Optional;
 
-/**
- * @author Mykhailo Balakhon
- * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
- */
-public interface HotelTurningOffRepository extends JpaRepository<HotelTurningOffTime, Long> {
+public interface TokenJpaRepository extends JpaRepository<Token, Long>, TokenRepository {
 
     @Query("""
-            select htot
-                from HotelTurningOffTime htot
-            where htot.to > now()
+            select t
+                from Token t
+            where
+                t.value = ?1
+            and
+                t.expiresAt > now()
             """)
-    List<HotelTurningOffTime> findFromNow();
+    Optional<Token> findNotExpiredByValue(String tokenValue);
+
+    @Transactional
+    @Modifying
+    @Query("""
+            delete Token t
+            where t.expiresAt < now()
+            """)
+    int deleteExpired();
 }

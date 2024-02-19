@@ -50,10 +50,10 @@ import static ua.mibal.booking.testUtils.DataGenerator.testUser;
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @JpaTest
-class ApartmentInstanceRepository_IntegrationTest {
+class ApartmentInstanceJpaRepository_IntegrationTest {
 
     @Autowired
-    private ApartmentInstanceRepository repo;
+    private ApartmentInstanceJpaRepository repo;
 
     @Autowired
     private TestEntityManager entityManager;

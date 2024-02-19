@@ -18,13 +18,14 @@ package ua.mibal.booking.adapter.out.jpa;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import ua.mibal.booking.application.port.jpa.ApartmentRepository;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.Photo;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface ApartmentRepository extends JpaRepository<Apartment, Long> {
+public interface ApartmentJpaRepository extends JpaRepository<Apartment, Long>, ApartmentRepository {
 
     @Query("""
             select a from Apartment a

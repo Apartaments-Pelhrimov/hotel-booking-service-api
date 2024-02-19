@@ -20,12 +20,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import ua.mibal.booking.application.port.jpa.ReservationRepository;
 import ua.mibal.booking.domain.Reservation;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-public interface ReservationRepository extends JpaRepository<Reservation, Long> {
+public interface ReservationJpaRepository extends JpaRepository<Reservation, Long>, ReservationRepository {
 
     @Query("""
             select r from Reservation r
