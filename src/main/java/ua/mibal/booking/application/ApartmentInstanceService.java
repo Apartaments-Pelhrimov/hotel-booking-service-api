@@ -18,7 +18,6 @@ package ua.mibal.booking.application;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ua.mibal.booking.adapter.out.reservation.system.booking.BookingComReservationService;
 import ua.mibal.booking.application.dto.request.CreateApartmentInstanceDto;
 import ua.mibal.booking.application.exception.ApartmentInstanceNotFoundException;
 import ua.mibal.booking.application.exception.ApartmentIsNotAvailableForReservation;
@@ -32,7 +31,6 @@ import ua.mibal.booking.domain.ReservationRequest;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 
 /**
  * @author Mykhailo Balakhon
@@ -43,8 +41,8 @@ import java.util.function.Predicate;
 public class ApartmentInstanceService {
     private final ApartmentInstanceRepository apartmentInstanceRepository;
     private final ApartmentRepository apartmentRepository;
-    private final BookingComReservationService bookingComReservationService;
     private final ApartmentInstanceMapper apartmentInstanceMapper;
+    private final ReservationSystemManager reservationSystemManager;
 
     public ApartmentInstance getFreeOneFetchApartmentAndPrices(ReservationRequest request) {
         List<ApartmentInstance> free = getFree(request);
@@ -72,25 +70,15 @@ public class ApartmentInstanceService {
     }
 
     private List<ApartmentInstance> getFree(ReservationRequest reservationRequest) {
-        List<ApartmentInstance> free = getFreeLocal(reservationRequest);
-        filterFreeAtBookingCom(free, reservationRequest);
-        return free;
+        List<ApartmentInstance> freeLocal = getFreeLocal(reservationRequest);
+        reservationSystemManager.filterForFree(freeLocal, reservationRequest);
+        return freeLocal;
     }
 
     private List<ApartmentInstance> getFreeLocal(ReservationRequest reservationRequest) {
         List<ApartmentInstance> freeLocal =
                 apartmentInstanceRepository.findFreeByRequestFetchApartmentAndPrices(reservationRequest);
         return new ArrayList<>(freeLocal);
-    }
-
-    private void filterFreeAtBookingCom(List<ApartmentInstance> freeLocal,
-                                        ReservationRequest reservationRequest) {
-        Predicate<ApartmentInstance> isNotFreeAtBookingCom =
-                apartmentInstance -> !bookingComReservationService.isFreeForReservation(
-                        apartmentInstance,
-                        reservationRequest
-                );
-        freeLocal.removeIf(isNotFreeAtBookingCom);
     }
 
     private ApartmentInstance selectMostSuitable(List<ApartmentInstance> variants,

@@ -19,7 +19,6 @@ package ua.mibal.booking.application;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ua.mibal.booking.adapter.out.reservation.system.booking.BookingComReservationService;
 import ua.mibal.booking.application.dto.response.calendar.Calendar;
 import ua.mibal.booking.application.port.jpa.HotelTurningOffRepository;
 import ua.mibal.booking.application.util.CollectionUtils;
@@ -38,7 +37,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class CalendarService {
-    private final BookingComReservationService bookingComReservationService;
+    private final ReservationSystemManager reservationSystemManager;
     private final ApartmentInstanceService apartmentInstanceService;
     private final ApartmentService apartmentService;
     private final TurningOffService turningOffService;
@@ -90,12 +89,12 @@ public class CalendarService {
 
     private Calendar calendarForApartmentInstance(ApartmentInstance apartmentInstance,
                                                   List<? extends Event> hotelEvents) {
-        List<Event> apartmentInstanceEvents =
+        List<Event> localApartmentInstanceEvents =
                 apartmentInstance.getNotRejectedEventsForNow();
-        List<Event> bookingComEvents =
-                bookingComReservationService.getEventsFor(apartmentInstance);
+        List<Event> integratedSystemEvents =
+                reservationSystemManager.getEventsFor(apartmentInstance);
         Collection<Event> events =
-                CollectionUtils.union(apartmentInstanceEvents, hotelEvents, bookingComEvents);
+                CollectionUtils.union(localApartmentInstanceEvents, hotelEvents, integratedSystemEvents);
         return Calendar.of(events);
     }
 }

@@ -19,6 +19,7 @@ package ua.mibal.booking.adapter.out.reservation.system.booking;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ua.mibal.booking.application.ICalService;
+import ua.mibal.booking.application.port.ReservationSystem;
 import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.domain.Event;
 import ua.mibal.booking.domain.ReservationRequest;
@@ -38,9 +39,10 @@ import static java.util.Collections.emptyList;
  */
 @RequiredArgsConstructor
 @Service
-public class BookingComReservationService {
+public class BookingComReservationService implements ReservationSystem {
     private final ICalService iCalService;
 
+    @Override
     public boolean isFreeForReservation(ApartmentInstance apartmentInstance,
                                         ReservationRequest reservationRequest) {
         List<Event> events = getEventsFor(apartmentInstance);
@@ -51,6 +53,7 @@ public class BookingComReservationService {
                 .noneMatch(eventIntersectsWithReservation);
     }
 
+    @Override
     public List<Event> getEventsFor(ApartmentInstance apartmentInstance) {
         Optional<String> calendarUrl = apartmentInstance.getBookingICalUrl();
         if (calendarUrl.isEmpty()) {
