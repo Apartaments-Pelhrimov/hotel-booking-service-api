@@ -37,7 +37,7 @@ import ua.mibal.booking.model.dto.LoginDto;
 import ua.mibal.booking.model.dto.auth.NewPasswordDto;
 import ua.mibal.booking.model.dto.auth.RegistrationDto;
 import ua.mibal.booking.model.dto.auth.TokenDto;
-import ua.mibal.booking.service.security.AuthService;
+import ua.mibal.booking.application.security.AuthService;
 import ua.mibal.booking.testUtils.RegistrationDtoArgumentConverter;
 
 import static org.mockito.Mockito.times;

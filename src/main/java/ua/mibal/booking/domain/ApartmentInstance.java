@@ -43,7 +43,7 @@ import java.util.function.Predicate;
 
 import static java.time.LocalDateTime.now;
 import static lombok.AccessLevel.PRIVATE;
-import static ua.mibal.booking.service.util.CollectionUtils.union;
+import static ua.mibal.booking.application.util.CollectionUtils.union;
 
 /**
  * @author Mykhailo Balakhon

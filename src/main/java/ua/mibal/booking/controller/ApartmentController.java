@@ -33,7 +33,7 @@ import ua.mibal.booking.model.dto.request.CreateApartmentDto;
 import ua.mibal.booking.model.dto.request.UpdateApartmentDto;
 import ua.mibal.booking.model.dto.response.ApartmentCardDto;
 import ua.mibal.booking.model.dto.response.ApartmentDto;
-import ua.mibal.booking.service.ApartmentService;
+import ua.mibal.booking.application.ApartmentService;
 
 import java.util.List;
 

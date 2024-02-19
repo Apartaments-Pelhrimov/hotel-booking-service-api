@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ua.mibal.booking.config.security.annotation.UserAllowed;
 import ua.mibal.booking.model.dto.request.CreateCommentDto;
 import ua.mibal.booking.model.dto.response.CommentDto;
-import ua.mibal.booking.service.CommentService;
+import ua.mibal.booking.application.CommentService;
 
 /**
  * @author Mykhailo Balakhon

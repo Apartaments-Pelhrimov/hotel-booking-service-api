@@ -33,7 +33,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ua.mibal.booking.config.security.annotation.ManagerAllowed;
 import ua.mibal.booking.config.security.annotation.UserAllowed;
 import ua.mibal.booking.controller.model.PhotoResponse;
-import ua.mibal.booking.service.PhotoService;
+import ua.mibal.booking.application.PhotoService;
 import ua.mibal.photo.storage.api.model.PhotoResource;
 
 /**

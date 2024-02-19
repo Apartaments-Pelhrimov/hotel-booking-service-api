@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ua.mibal.booking.config.security.annotation.ManagerAllowed;
 import ua.mibal.booking.model.dto.request.PriceDto;
-import ua.mibal.booking.service.PriceService;
+import ua.mibal.booking.application.PriceService;
 
 import java.util.List;
 

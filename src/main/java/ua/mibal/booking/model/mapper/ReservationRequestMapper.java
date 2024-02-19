@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ua.mibal.booking.model.request.ReservationRequest;
 import ua.mibal.booking.model.request.ReservationRequestDto;
-import ua.mibal.booking.service.util.DateTimeUtils;
+import ua.mibal.booking.application.util.DateTimeUtils;
 
 import java.time.LocalDateTime;
 

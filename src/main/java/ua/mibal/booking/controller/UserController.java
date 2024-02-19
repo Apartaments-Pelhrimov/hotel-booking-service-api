@@ -34,7 +34,7 @@ import ua.mibal.booking.model.dto.request.ChangePasswordDto;
 import ua.mibal.booking.model.dto.request.ChangeUserDetailsDto;
 import ua.mibal.booking.model.dto.request.DeleteMeDto;
 import ua.mibal.booking.model.dto.response.UserDto;
-import ua.mibal.booking.service.UserService;
+import ua.mibal.booking.application.UserService;
 
 /**
  * @author Mykhailo Balakhon
