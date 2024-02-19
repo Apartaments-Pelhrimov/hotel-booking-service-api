@@ -18,8 +18,8 @@ package ua.mibal.photo.storage.aws.model;
 
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
-import ua.mibal.photo.storage.api.exception.IllegalPhotoFormatException;
 import ua.mibal.photo.storage.api.model.PhotoExtension;
+import ua.mibal.photo.storage.aws.exception.IllegalPhotoFormatException;
 
 import java.io.IOException;
 import java.util.Objects;
