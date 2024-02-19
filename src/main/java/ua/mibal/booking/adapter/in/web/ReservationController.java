@@ -34,9 +34,8 @@ import ua.mibal.booking.adapter.in.web.security.annotation.UserAllowed;
 import ua.mibal.booking.application.ReservationService;
 import ua.mibal.booking.application.mapper.ReservationRequestMapper;
 import ua.mibal.booking.domain.ReservationRequest;
-import ua.mibal.booking.model.dto.ReservationRequestDto;
+import ua.mibal.booking.model.dto.request.ReservationDto;
 import ua.mibal.booking.model.dto.request.ReservationRejectingFormDto;
-import ua.mibal.booking.model.dto.response.ReservationDto;
 
 /**
  * @author Mykhailo Balakhon
@@ -51,13 +50,13 @@ public class ReservationController {
 
     @ManagerAllowed
     @GetMapping("/reservations")
-    public Page<ReservationDto> getAll(Pageable pageable) {
+    public Page<ua.mibal.booking.model.dto.response.ReservationDto> getAll(Pageable pageable) {
         return reservationService.getAll(pageable);
     }
 
     @UserAllowed
     @GetMapping("/users/me/reservations")
-    public Page<ReservationDto> getAllByUser(Authentication authentication, Pageable pageable) {
+    public Page<ua.mibal.booking.model.dto.response.ReservationDto> getAllByUser(Authentication authentication, Pageable pageable) {
         return reservationService.getAllByUser(authentication.getName(), pageable);
     }
 
@@ -65,7 +64,7 @@ public class ReservationController {
     @PatchMapping("/apartments/{id}/reserve")
     @ResponseStatus(HttpStatus.CREATED)
     public void reserve(@PathVariable Long id,
-                        @Valid ReservationRequestDto requestDto,
+                        @Valid ReservationDto requestDto,
                         Authentication authentication) {
         ReservationRequest request =
                 reservationRequestMapper.toRequest(requestDto, id, authentication.getName());

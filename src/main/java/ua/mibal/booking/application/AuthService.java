@@ -26,7 +26,7 @@ import ua.mibal.booking.application.port.email.EmailSendingService;
 import ua.mibal.booking.application.port.email.model.Email;
 import ua.mibal.booking.domain.Token;
 import ua.mibal.booking.domain.User;
-import ua.mibal.booking.model.dto.LoginDto;
+import ua.mibal.booking.model.dto.auth.LoginDto;
 import ua.mibal.booking.model.dto.auth.RegistrationDto;
 import ua.mibal.booking.model.dto.auth.TokenDto;
 import ua.mibal.booking.model.exception.EmailAlreadyExistsException;

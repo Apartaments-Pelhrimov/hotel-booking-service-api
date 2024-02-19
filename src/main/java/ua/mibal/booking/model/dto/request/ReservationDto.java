@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.dto;
+package ua.mibal.booking.model.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -31,7 +31,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @ValidDateRange
-public record ReservationRequestDto(
+public record ReservationDto(
 
         @NotNull
         @DateTimeFormat(iso = DATE)
