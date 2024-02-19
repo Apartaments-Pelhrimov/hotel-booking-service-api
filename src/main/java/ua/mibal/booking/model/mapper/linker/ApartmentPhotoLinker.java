@@ -19,7 +19,7 @@ package ua.mibal.booking.model.mapper.linker;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 import org.springframework.hateoas.Link;
-import ua.mibal.booking.controller.PhotoController;
+import ua.mibal.booking.adapter.in.web.PhotoController;
 import ua.mibal.booking.domain.Apartment;
 
 import java.util.ArrayList;
