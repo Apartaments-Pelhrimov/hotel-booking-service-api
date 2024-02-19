@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.mapper;
+package ua.mibal.booking.application.mapper;
 
 import org.mapstruct.Mapper;
 import ua.mibal.booking.domain.Bed;

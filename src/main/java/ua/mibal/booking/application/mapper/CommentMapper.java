@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,27 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.mapper;
+package ua.mibal.booking.application.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
-import ua.mibal.booking.domain.Reservation;
-import ua.mibal.booking.model.dto.response.ReservationDto;
-import ua.mibal.booking.model.mapper.linker.ApartmentPhotoLinker;
+import ua.mibal.booking.application.mapper.linker.UserPhotoLinker;
+import ua.mibal.booking.domain.Comment;
+import ua.mibal.booking.model.dto.request.CreateCommentDto;
+import ua.mibal.booking.model.dto.response.CommentDto;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Mapper(uses = ApartmentPhotoLinker.class,
+@Mapper(uses = UserPhotoLinker.class,
         componentModel = MappingConstants.ComponentModel.SPRING)
-public interface ReservationMapper {
+public interface CommentMapper {
 
-    @Mapping(target = "apartment.photos",
-            source = "reservation.apartmentInstance.apartment")
-    ReservationDto toDto(Reservation reservation);
+    @Mapping(target = ".", source = "comment.user")
+    @Mapping(target = "userPhotoLink", source = "comment.user")
+    CommentDto toDto(Comment comment);
+
+    Comment toEntity(CreateCommentDto createCommentDto);
 }

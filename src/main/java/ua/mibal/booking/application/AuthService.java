@@ -21,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.application.component.TemplateEmailFactory;
+import ua.mibal.booking.application.mapper.UserMapper;
 import ua.mibal.booking.application.port.email.EmailSendingService;
 import ua.mibal.booking.application.port.email.model.Email;
 import ua.mibal.booking.domain.Token;
@@ -32,7 +33,6 @@ import ua.mibal.booking.model.exception.EmailAlreadyExistsException;
 import ua.mibal.booking.model.exception.IllegalPasswordException;
 import ua.mibal.booking.model.exception.entity.UserNotFoundException;
 import ua.mibal.booking.model.exception.marker.NotAuthorizedException;
-import ua.mibal.booking.model.mapper.UserMapper;
 
 /**
  * @author Mykhailo Balakhon

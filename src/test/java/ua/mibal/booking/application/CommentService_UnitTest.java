@@ -35,7 +35,7 @@ import ua.mibal.booking.model.dto.response.CommentDto;
 import ua.mibal.booking.model.exception.UserHasNoAccessToCommentException;
 import ua.mibal.booking.model.exception.UserHasNoAccessToCommentsException;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
-import ua.mibal.booking.model.mapper.CommentMapper;
+import ua.mibal.booking.application.mapper.CommentMapper;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.util.List;

@@ -26,7 +26,7 @@ import ua.mibal.booking.domain.Reservation;
 import ua.mibal.booking.domain.User;
 import ua.mibal.booking.model.dto.response.ReservationDto;
 import ua.mibal.booking.model.exception.UserHasNoAccessToReservationException;
-import ua.mibal.booking.model.mapper.ReservationMapper;
+import ua.mibal.booking.application.mapper.ReservationMapper;
 import ua.mibal.booking.model.request.ReservationRequest;
 import ua.mibal.test.annotation.UnitTest;
 

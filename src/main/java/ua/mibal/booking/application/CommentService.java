@@ -21,6 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ua.mibal.booking.application.mapper.CommentMapper;
 import ua.mibal.booking.application.port.jpa.ApartmentRepository;
 import ua.mibal.booking.application.port.jpa.CommentRepository;
 import ua.mibal.booking.application.port.jpa.UserRepository;
@@ -32,7 +33,6 @@ import ua.mibal.booking.model.dto.response.CommentDto;
 import ua.mibal.booking.model.exception.UserHasNoAccessToCommentException;
 import ua.mibal.booking.model.exception.UserHasNoAccessToCommentsException;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
-import ua.mibal.booking.model.mapper.CommentMapper;
 
 /**
  * @author Mykhailo Balakhon

@@ -28,7 +28,7 @@ import ua.mibal.booking.model.dto.request.CreateApartmentInstanceDto;
 import ua.mibal.booking.model.exception.ApartmentIsNotAvailableForReservation;
 import ua.mibal.booking.model.exception.entity.ApartmentInstanceNotFoundException;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
-import ua.mibal.booking.model.mapper.ApartmentInstanceMapper;
+import ua.mibal.booking.application.mapper.ApartmentInstanceMapper;
 import ua.mibal.booking.model.request.ReservationRequest;
 import ua.mibal.test.annotation.UnitTest;
 

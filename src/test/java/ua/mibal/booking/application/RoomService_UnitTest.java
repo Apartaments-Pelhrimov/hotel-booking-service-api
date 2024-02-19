@@ -26,7 +26,7 @@ import ua.mibal.booking.domain.Room;
 import ua.mibal.booking.model.dto.request.RoomDto;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.model.exception.entity.RoomNotFoundException;
-import ua.mibal.booking.model.mapper.RoomMapper;
+import ua.mibal.booking.application.mapper.RoomMapper;
 import ua.mibal.test.annotation.UnitTest;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;

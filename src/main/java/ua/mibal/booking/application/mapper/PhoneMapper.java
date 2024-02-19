@@ -14,38 +14,24 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.mapper;
+package ua.mibal.booking.application.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
-import ua.mibal.booking.domain.Price;
-import ua.mibal.booking.model.dto.request.PriceDto;
-
-import java.math.BigDecimal;
-import java.util.List;
-
-import static java.lang.Integer.MAX_VALUE;
-import static java.math.BigDecimal.valueOf;
+import ua.mibal.booking.domain.Phone;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
-public interface PriceMapper {
+public class PhoneMapper {
 
-    Price toEntity(PriceDto priceDto);
+    public String toNumberString(Phone phone) {
+        return phone.getNumber();
+    }
 
-    List<Price> toEntities(List<PriceDto> priceDtos);
-
-    PriceDto toDto(Price price);
-
-    default BigDecimal findMinPrice(List<Price> prices) {
-        if (prices == null || prices.isEmpty()) {
-            return null;
-        }
-        return prices.stream()
-                .map(Price::getAmount)
-                .reduce(valueOf(MAX_VALUE), BigDecimal::min);
+    public Phone toNumberString(String number) {
+        return new Phone(number);
     }
 }

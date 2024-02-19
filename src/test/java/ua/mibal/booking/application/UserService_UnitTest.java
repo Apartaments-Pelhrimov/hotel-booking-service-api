@@ -34,7 +34,7 @@ import ua.mibal.booking.model.dto.request.DeleteMeDto;
 import ua.mibal.booking.model.dto.response.UserDto;
 import ua.mibal.booking.model.exception.IllegalPasswordException;
 import ua.mibal.booking.model.exception.entity.UserNotFoundException;
-import ua.mibal.booking.model.mapper.UserMapper;
+import ua.mibal.booking.application.mapper.UserMapper;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.util.Optional;

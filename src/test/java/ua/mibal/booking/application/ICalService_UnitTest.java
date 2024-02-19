@@ -29,7 +29,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ua.mibal.booking.config.properties.CalendarProps;
 import ua.mibal.booking.domain.Event;
 import ua.mibal.booking.model.exception.service.ICalServiceException;
-import ua.mibal.booking.model.mapper.CalendarFormatMapper;
+import ua.mibal.booking.application.mapper.CalendarFormatMapper;
 import ua.mibal.booking.testUtils.DataGenerator;
 
 import java.io.InputStream;

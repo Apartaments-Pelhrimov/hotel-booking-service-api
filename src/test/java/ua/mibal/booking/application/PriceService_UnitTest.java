@@ -19,13 +19,11 @@ package ua.mibal.booking.application;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import ua.mibal.booking.application.ApartmentService;
-import ua.mibal.booking.application.PriceService;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.Price;
 import ua.mibal.booking.model.dto.request.PriceDto;
 import ua.mibal.booking.model.exception.entity.PriceNotFoundException;
-import ua.mibal.booking.model.mapper.PriceMapper;
+import ua.mibal.booking.application.mapper.PriceMapper;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.math.BigDecimal;

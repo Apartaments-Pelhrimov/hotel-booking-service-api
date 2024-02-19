@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,22 +14,24 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.mapper;
+package ua.mibal.booking.application.mapper;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.MappingConstants;
-import ua.mibal.booking.domain.HotelTurningOffTime;
-import ua.mibal.booking.domain.TurningOffTime;
-import ua.mibal.booking.model.dto.request.TurnOffDto;
+import ua.mibal.booking.domain.ApartmentInstance;
+import ua.mibal.booking.model.dto.request.CreateApartmentInstanceDto;
+
+import java.util.List;
+
+import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
-public interface TurningOffTimeMapper {
+@Mapper(componentModel = SPRING)
+public interface ApartmentInstanceMapper {
 
-    TurningOffTime apartmentfromDto(TurnOffDto turnOffDto);
+    ApartmentInstance toEntity(CreateApartmentInstanceDto createApartmentInstanceDto);
 
-    HotelTurningOffTime hotelFromDto(TurnOffDto turnOffDto);
+    List<ApartmentInstance> toEntities(List<CreateApartmentInstanceDto> createApartmentInstanceDtos);
 }

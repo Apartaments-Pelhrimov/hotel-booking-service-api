@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ua.mibal.booking.application.mapper.UserMapper;
 import ua.mibal.booking.application.port.jpa.UserRepository;
 import ua.mibal.booking.domain.Photo;
 import ua.mibal.booking.domain.User;
@@ -31,7 +32,6 @@ import ua.mibal.booking.model.dto.request.DeleteMeDto;
 import ua.mibal.booking.model.dto.response.UserDto;
 import ua.mibal.booking.model.exception.IllegalPasswordException;
 import ua.mibal.booking.model.exception.entity.UserNotFoundException;
-import ua.mibal.booking.model.mapper.UserMapper;
 
 /**
  * @author Mykhailo Balakhon

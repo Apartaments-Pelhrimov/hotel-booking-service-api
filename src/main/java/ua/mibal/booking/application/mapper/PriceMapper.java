@@ -14,31 +14,38 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.mapper.linker;
+package ua.mibal.booking.application.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
-import org.springframework.hateoas.Link;
-import ua.mibal.booking.adapter.in.web.PhotoController;
-import ua.mibal.booking.domain.User;
+import ua.mibal.booking.domain.Price;
+import ua.mibal.booking.model.dto.request.PriceDto;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+import java.math.BigDecimal;
+import java.util.List;
+
+import static java.lang.Integer.MAX_VALUE;
+import static java.math.BigDecimal.valueOf;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
-public class UserPhotoLinker {
+public interface PriceMapper {
 
-    public String toLink(User user) {
-        if (user.getPhoto().isEmpty()) {
+    Price toEntity(PriceDto priceDto);
+
+    List<Price> toEntities(List<PriceDto> priceDtos);
+
+    PriceDto toDto(Price price);
+
+    default BigDecimal findMinPrice(List<Price> prices) {
+        if (prices == null || prices.isEmpty()) {
             return null;
         }
-        var getPhotoMethod = methodOn(PhotoController.class)
-                .getUserPhoto(user.getEmail());
-        Link photoLink = linkTo(getPhotoMethod).withSelfRel();
-        return photoLink.getHref();
+        return prices.stream()
+                .map(Price::getAmount)
+                .reduce(valueOf(MAX_VALUE), BigDecimal::min);
     }
 }

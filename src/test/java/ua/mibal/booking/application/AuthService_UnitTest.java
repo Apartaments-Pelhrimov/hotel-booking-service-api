@@ -34,7 +34,7 @@ import ua.mibal.booking.model.dto.auth.TokenDto;
 import ua.mibal.booking.model.exception.EmailAlreadyExistsException;
 import ua.mibal.booking.model.exception.entity.UserNotFoundException;
 import ua.mibal.booking.model.exception.marker.NotAuthorizedException;
-import ua.mibal.booking.model.mapper.UserMapper;
+import ua.mibal.booking.application.mapper.UserMapper;
 import ua.mibal.test.annotation.UnitTest;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;

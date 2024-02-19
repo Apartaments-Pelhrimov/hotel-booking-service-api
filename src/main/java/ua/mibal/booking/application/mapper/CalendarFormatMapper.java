@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.mapper;
+package ua.mibal.booking.application.mapper;
 
 import lombok.RequiredArgsConstructor;
 import net.fortuna.ical4j.data.CalendarBuilder;

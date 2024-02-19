@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.mapper;
+package ua.mibal.booking.application.mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import ua.mibal.booking.application.util.DateTimeUtils;
 import ua.mibal.booking.model.request.ReservationRequest;
 import ua.mibal.booking.model.request.ReservationRequestDto;
-import ua.mibal.booking.application.util.DateTimeUtils;
 
 import java.time.LocalDateTime;
 

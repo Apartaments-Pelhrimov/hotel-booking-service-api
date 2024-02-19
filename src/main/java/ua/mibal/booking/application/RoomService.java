@@ -18,13 +18,13 @@ package ua.mibal.booking.application;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ua.mibal.booking.application.mapper.RoomMapper;
 import ua.mibal.booking.application.port.jpa.ApartmentRepository;
 import ua.mibal.booking.application.port.jpa.RoomRepository;
 import ua.mibal.booking.domain.Room;
 import ua.mibal.booking.model.dto.request.RoomDto;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.model.exception.entity.RoomNotFoundException;
-import ua.mibal.booking.model.mapper.RoomMapper;
 
 /**
  * @author Mykhailo Balakhon
