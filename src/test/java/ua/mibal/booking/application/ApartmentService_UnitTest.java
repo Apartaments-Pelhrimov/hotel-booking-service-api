@@ -19,7 +19,7 @@ package ua.mibal.booking.application;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import ua.mibal.booking.application.ApartmentService;
+import ua.mibal.booking.adapter.out.jpa.ApartmentRepository;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.Photo;
 import ua.mibal.booking.model.dto.request.CreateApartmentDto;
@@ -29,7 +29,6 @@ import ua.mibal.booking.model.dto.response.ApartmentDto;
 import ua.mibal.booking.model.exception.ApartmentDoesNotHavePhotoException;
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.model.mapper.ApartmentMapper;
-import ua.mibal.booking.repository.ApartmentRepository;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.util.List;

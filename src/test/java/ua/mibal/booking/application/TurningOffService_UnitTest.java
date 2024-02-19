@@ -20,16 +20,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import ua.mibal.booking.application.ApartmentInstanceService;
-import ua.mibal.booking.application.TurningOffService;
+import ua.mibal.booking.adapter.out.jpa.HotelTurningOffRepository;
+import ua.mibal.booking.adapter.out.jpa.ReservationRepository;
 import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.domain.HotelTurningOffTime;
 import ua.mibal.booking.domain.TurningOffTime;
 import ua.mibal.booking.model.dto.request.TurnOffDto;
 import ua.mibal.booking.model.exception.IllegalTurningOffTimeException;
 import ua.mibal.booking.model.mapper.TurningOffTimeMapper;
-import ua.mibal.booking.repository.HotelTurningOffRepository;
-import ua.mibal.booking.repository.ReservationRepository;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.util.List;

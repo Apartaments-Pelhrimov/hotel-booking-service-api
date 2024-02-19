@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.repository;
+package ua.mibal.booking.adapter.out.jpa;
 
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.hibernate.SessionFactory;

@@ -19,6 +19,8 @@ package ua.mibal.booking.application;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import ua.mibal.booking.adapter.out.jpa.ApartmentInstanceRepository;
+import ua.mibal.booking.adapter.out.jpa.ApartmentRepository;
 import ua.mibal.booking.application.reservation.BookingComReservationService;
 import ua.mibal.booking.application.util.DateTimeUtils;
 import ua.mibal.booking.domain.Apartment;
@@ -29,8 +31,6 @@ import ua.mibal.booking.model.exception.entity.ApartmentInstanceNotFoundExceptio
 import ua.mibal.booking.model.exception.entity.ApartmentNotFoundException;
 import ua.mibal.booking.model.mapper.ApartmentInstanceMapper;
 import ua.mibal.booking.model.request.ReservationRequest;
-import ua.mibal.booking.repository.ApartmentInstanceRepository;
-import ua.mibal.booking.repository.ApartmentRepository;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.time.LocalDate;

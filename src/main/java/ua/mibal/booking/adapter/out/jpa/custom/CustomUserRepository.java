@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,26 +14,15 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.repository.custom;
+package ua.mibal.booking.adapter.out.jpa.custom;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import org.hibernate.Session;
 import ua.mibal.booking.domain.User;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class CustomUserRepositoryImpl implements CustomUserRepository {
+public interface CustomUserRepository {
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
-    @Override
-    public User getReferenceByEmail(String email) {
-        Session session = entityManager.unwrap(Session.class);
-        return session.bySimpleNaturalId(User.class)
-                .getReference(email);
-    }
+    User getReferenceByEmail(String email);
 }

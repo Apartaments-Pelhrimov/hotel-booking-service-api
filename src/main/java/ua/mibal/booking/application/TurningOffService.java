@@ -19,14 +19,14 @@ package ua.mibal.booking.application;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ua.mibal.booking.adapter.out.jpa.HotelTurningOffRepository;
+import ua.mibal.booking.adapter.out.jpa.ReservationRepository;
 import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.domain.HotelTurningOffTime;
 import ua.mibal.booking.domain.TurningOffTime;
 import ua.mibal.booking.model.dto.request.TurnOffDto;
 import ua.mibal.booking.model.exception.IllegalTurningOffTimeException;
 import ua.mibal.booking.model.mapper.TurningOffTimeMapper;
-import ua.mibal.booking.repository.HotelTurningOffRepository;
-import ua.mibal.booking.repository.ReservationRepository;
 
 import java.util.List;
 

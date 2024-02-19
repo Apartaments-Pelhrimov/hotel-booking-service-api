@@ -19,18 +19,16 @@ package ua.mibal.booking.application.calendar;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import ua.mibal.booking.application.calendar.CalendarService;
-import ua.mibal.booking.application.calendar.ICalService;
+import ua.mibal.booking.adapter.out.jpa.HotelTurningOffRepository;
+import ua.mibal.booking.application.ApartmentInstanceService;
+import ua.mibal.booking.application.ApartmentService;
+import ua.mibal.booking.application.TurningOffService;
+import ua.mibal.booking.application.reservation.BookingComReservationService;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.domain.Event;
 import ua.mibal.booking.domain.HotelTurningOffTime;
 import ua.mibal.booking.model.dto.response.calendar.Calendar;
-import ua.mibal.booking.repository.HotelTurningOffRepository;
-import ua.mibal.booking.application.ApartmentInstanceService;
-import ua.mibal.booking.application.ApartmentService;
-import ua.mibal.booking.application.TurningOffService;
-import ua.mibal.booking.application.reservation.BookingComReservationService;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.util.List;
@@ -70,13 +68,13 @@ class CalendarService_UnitTest {
     @Mock
     private ApartmentInstance apartmentInstance;
 
-    private Event apartmentInstanceEvent = spy(Event.from(
+    private final Event apartmentInstanceEvent = spy(Event.from(
             now(), now().plusDays(1), "ApartmentInstanceEvent"
     ));
-    private Event bookingComEvent = spy(Event.from(
+    private final Event bookingComEvent = spy(Event.from(
             now(), now().plusDays(1), "BookingComEvent"
     ));
-    private HotelTurningOffTime hotelTurningOffTime = spy(new HotelTurningOffTime(
+    private final HotelTurningOffTime hotelTurningOffTime = spy(new HotelTurningOffTime(
             1L, now(), now().plusDays(2), "Christmas holidays"
     ));
 

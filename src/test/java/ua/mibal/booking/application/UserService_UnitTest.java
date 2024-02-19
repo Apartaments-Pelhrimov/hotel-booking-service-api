@@ -22,7 +22,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import ua.mibal.booking.application.UserService;
+import ua.mibal.booking.adapter.out.jpa.UserRepository;
 import ua.mibal.booking.domain.NotificationSettings;
 import ua.mibal.booking.domain.Photo;
 import ua.mibal.booking.domain.User;
@@ -35,7 +35,6 @@ import ua.mibal.booking.model.dto.response.UserDto;
 import ua.mibal.booking.model.exception.IllegalPasswordException;
 import ua.mibal.booking.model.exception.entity.UserNotFoundException;
 import ua.mibal.booking.model.mapper.UserMapper;
-import ua.mibal.booking.repository.UserRepository;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.util.Optional;

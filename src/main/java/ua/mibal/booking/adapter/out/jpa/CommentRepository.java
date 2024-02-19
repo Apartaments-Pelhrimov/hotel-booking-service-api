@@ -14,12 +14,24 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.repository;
+package ua.mibal.booking.adapter.out.jpa;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import ua.mibal.booking.domain.Room;
+import org.springframework.data.jpa.repository.Query;
+import ua.mibal.booking.domain.Comment;
 
-public interface RoomRepository extends JpaRepository<Room, Long> {
+/**
+ * @author Mykhailo Balakhon
+ * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
+ */
+public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-
+    @Query("""
+            select c from Comment c
+                join fetch c.user
+            where c.apartment.id = ?1
+             """)
+    Page<Comment> findByApartmentIdFetchUser(Long apartmentId, Pageable pageable);
 }

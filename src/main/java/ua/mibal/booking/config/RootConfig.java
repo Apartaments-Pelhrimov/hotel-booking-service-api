@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import ua.mibal.booking.adapter.out.jpa.UserRepository;
 import ua.mibal.booking.config.properties.ApplicationProps;
 import ua.mibal.booking.config.properties.CalendarProps;
 import ua.mibal.booking.config.properties.LocalizedMessagesProps;
@@ -31,7 +32,6 @@ import ua.mibal.booking.config.properties.TokenProps;
 import ua.mibal.booking.domain.Phone;
 import ua.mibal.booking.domain.Role;
 import ua.mibal.booking.domain.User;
-import ua.mibal.booking.repository.UserRepository;
 
 /**
  * @author Mykhailo Balakhon
