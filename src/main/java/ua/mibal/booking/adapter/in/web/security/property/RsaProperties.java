@@ -14,22 +14,23 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.config.properties;
+package ua.mibal.booking.adapter.in.web.security.property;
 
 import jakarta.validation.constraints.NotNull;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.validation.annotation.Validated;
+
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Validated
-@ConfigurationProperties("cors")
-public record CorsProps(
+@ConfigurationProperties(prefix = "rsa")
+public record RsaProperties(
         @NotNull
-        String[] allowedOrigins,
+        RSAPublicKey publicKey,
         @NotNull
-        String[] allowedMethods
+        RSAPrivateKey privateKey
 ) {
 }
