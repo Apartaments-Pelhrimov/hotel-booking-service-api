@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.email.impl;
+package ua.mibal.booking.adapter.out.email;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.Transport;
@@ -25,7 +25,6 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
-import ua.mibal.booking.adapter.out.email.DefaultEmailSendingService;
 import ua.mibal.booking.adapter.out.email.component.MimeEmailBuilder;
 import ua.mibal.booking.adapter.out.email.config.properties.EmailProps;
 import ua.mibal.booking.adapter.out.email.exception.EmailSentFailedException;
