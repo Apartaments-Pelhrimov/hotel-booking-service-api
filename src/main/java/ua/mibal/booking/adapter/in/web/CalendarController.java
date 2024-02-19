@@ -21,8 +21,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ua.mibal.booking.application.CalendarService;
 import ua.mibal.booking.model.dto.response.calendar.Calendar;
-import ua.mibal.booking.application.calendar.CalendarService;
 
 import java.util.List;
 

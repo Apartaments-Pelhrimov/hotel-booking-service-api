@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.security.jwt.component;
+package ua.mibal.booking.application.component;
 
 import lombok.Getter;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,7 +23,6 @@ import org.mockito.Mock;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
-import ua.mibal.booking.application.security.jwt.component.JwtTokenBuilder;
 import ua.mibal.booking.config.properties.JwtTokenProps;
 import ua.mibal.test.annotation.UnitTest;
 

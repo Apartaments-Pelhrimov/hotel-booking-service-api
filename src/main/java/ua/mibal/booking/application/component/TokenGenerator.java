@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.security;
+package ua.mibal.booking.application.component;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,7 @@ import java.util.Random;
  */
 @RequiredArgsConstructor
 @Service
-public class TokenGenerationService {
+public class TokenGenerator {
     private static final String ALLOWED_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
                                                 "abcdefghijklmnopqrstuvwxyz" +
                                                 "0123456789" + "0123456789" +

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.security;
+package ua.mibal.booking.application;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

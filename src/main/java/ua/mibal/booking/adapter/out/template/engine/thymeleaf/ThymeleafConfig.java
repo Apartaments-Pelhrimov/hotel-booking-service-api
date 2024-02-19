@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.config.template;
+package ua.mibal.booking.adapter.out.template.engine.thymeleaf;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +29,7 @@ import static org.thymeleaf.templatemode.TemplateMode.HTML;
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @Configuration
-public class TemplateEngineConfig {
+public class ThymeleafConfig {
 
     @Bean
     public TemplateEngine thymeleafTemplateEngine(ITemplateResolver templateResolver) {

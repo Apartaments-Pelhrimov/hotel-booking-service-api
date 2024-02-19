@@ -20,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ua.mibal.booking.application.port.jpa.ApartmentInstanceRepository;
 import ua.mibal.booking.application.port.jpa.ApartmentRepository;
-import ua.mibal.booking.application.reservation.BookingComReservationService;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.model.dto.request.CreateApartmentInstanceDto;

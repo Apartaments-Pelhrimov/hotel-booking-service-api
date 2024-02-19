@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.security;
+package ua.mibal.booking.application;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ua.mibal.booking.application.component.TokenGenerator;
 import ua.mibal.booking.application.port.jpa.TokenRepository;
 import ua.mibal.booking.config.properties.TokenProps;
 import ua.mibal.booking.domain.Token;
@@ -33,7 +34,7 @@ import ua.mibal.booking.model.exception.entity.TokenNotFoundException;
 @Service
 public class TokenService {
     private final TokenRepository tokenRepository;
-    private final TokenGenerationService tokenGenerationService;
+    private final TokenGenerator tokenGenerator;
     private final TokenProps tokenProps;
 
     @Transactional
@@ -53,7 +54,7 @@ public class TokenService {
     }
 
     private Token generateTokenFor(User user) {
-        String value = tokenGenerationService.generateTokenValue();
+        String value = tokenGenerator.generateTokenValue();
         return Token.of(value, user, tokenProps.validForMinutes());
     }
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.security.jwt;
+package ua.mibal.booking.application;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,8 +26,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
-import ua.mibal.booking.application.security.jwt.JwtTokenService;
-import ua.mibal.booking.application.security.jwt.component.JwtTokenBuilder;
+import ua.mibal.booking.application.component.JwtTokenBuilder;
 import ua.mibal.test.annotation.UnitTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

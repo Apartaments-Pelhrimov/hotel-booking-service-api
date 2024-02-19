@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.security.component;
+package ua.mibal.booking.application.component;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.NotImplementedException;

@@ -21,7 +21,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import ua.mibal.booking.application.port.jpa.ApartmentInstanceRepository;
 import ua.mibal.booking.application.port.jpa.ApartmentRepository;
-import ua.mibal.booking.application.reservation.BookingComReservationService;
 import ua.mibal.booking.application.util.DateTimeUtils;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.ApartmentInstance;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.security;
+package ua.mibal.booking.application;
 
 import org.instancio.junit.InstancioSource;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,11 +23,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import ua.mibal.booking.application.UserService;
+import ua.mibal.booking.application.component.TemplateEmailFactory;
 import ua.mibal.booking.application.port.email.EmailSendingService;
 import ua.mibal.booking.application.port.email.model.Email;
-import ua.mibal.booking.application.security.component.TemplateEmailFactory;
-import ua.mibal.booking.application.security.jwt.JwtTokenService;
 import ua.mibal.booking.domain.Token;
 import ua.mibal.booking.domain.User;
 import ua.mibal.booking.model.dto.LoginDto;

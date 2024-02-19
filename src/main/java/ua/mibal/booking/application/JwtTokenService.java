@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.security.jwt;
+package ua.mibal.booking.application;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,7 +23,7 @@ import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
-import ua.mibal.booking.application.security.jwt.component.JwtTokenBuilder;
+import ua.mibal.booking.application.component.JwtTokenBuilder;
 
 /**
  * @author Mykhailo Balakhon

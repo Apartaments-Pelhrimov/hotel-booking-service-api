@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.reservation;
+package ua.mibal.booking.application;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,6 @@ import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.domain.Event;
 import ua.mibal.booking.model.exception.service.BookingComServiceException;
 import ua.mibal.booking.model.request.ReservationRequest;
-import ua.mibal.booking.application.calendar.ICalService;
 
 import java.io.IOException;
 import java.io.InputStream;
