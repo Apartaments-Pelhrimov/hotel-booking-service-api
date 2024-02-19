@@ -16,27 +16,26 @@
 
 package ua.mibal.photo.storage.aws;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
+import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.exception.SdkException;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.S3Utilities;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
-import software.amazon.awssdk.services.s3.model.GetUrlRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-import ua.mibal.test.annotation.UnitTest;
 import ua.mibal.photo.storage.aws.component.AwsRequestGenerator;
 import ua.mibal.photo.storage.aws.exception.AwsStorageException;
 import ua.mibal.photo.storage.aws.model.AwsPhoto;
+import ua.mibal.test.annotation.UnitTest;
 
 import java.io.IOException;
-import java.net.URL;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -57,74 +56,83 @@ class AwsPhotoStorage_UnitTest {
     private AwsRequestGenerator requestGenerator;
 
     @Mock
+    private MultipartFile file;
+    @Mock
     private AwsPhoto photo;
     @Mock
     private PutObjectRequest putRequest;
     @Mock
     private DeleteObjectRequest deleteRequest;
     @Mock
-    private GetUrlRequest getUrlRequest;
-    @Mock
     private RequestBody requestBody;
-    @Mock
-    private S3Utilities s3Utilities;
-    @Mock
-    private URL url;
+
+    private MockedStatic<RequestBody> mockedRequestBody;
+
+    private MockedStatic<AwsPhoto> mockedAwsPhoto;
+
 
     @BeforeEach
     public void beforeEach() {
         storage = new AwsPhotoStorage(s3Client, requestGenerator);
+        mockedRequestBody = Mockito.mockStatic(RequestBody.class);
+        mockedAwsPhoto = Mockito.mockStatic(AwsPhoto.class);
+    }
+
+    @AfterEach
+    public void closeMocks() {
+        mockedRequestBody.close();
+        mockedAwsPhoto.close();
     }
 
     @Test
     void uploadPhoto() throws IOException {
-        try (MockedStatic<RequestBody> mockedRequestBody = Mockito.mockStatic(RequestBody.class)) {
-            uploadPhoto_mocked_RequestBody(mockedRequestBody);
-        }
-    }
+        String photoKey = "KEY";
 
-    void uploadPhoto_mocked_RequestBody(MockedStatic<RequestBody> mockedRequestBody) throws IOException {
-        byte[] photoBytes = "BYTES".getBytes(UTF_8);
-
+        mockedAwsPhoto
+                .when(() -> AwsPhoto.of(file))
+                .thenReturn(photo);
         when(requestGenerator.generatePutRequest(photo))
                 .thenReturn(putRequest);
-        when(photo.getPhoto())
-                .thenReturn(photoBytes);
-        mockedRequestBody.when(() -> RequestBody.fromBytes(photoBytes))
+        when(photo.getRequestBody())
                 .thenReturn(requestBody);
-        when(RequestBody.fromBytes(photoBytes))
-                .thenReturn(requestBody);
+        when(photo.getKey())
+                .thenReturn(photoKey);
 
-        storage.uploadPhoto(photo);
+        String actualKey = storage.uploadPhoto(file);
 
+        assertEquals(photoKey, actualKey);
         verify(s3Client, times(1))
                 .putObject(putRequest, requestBody);
     }
 
     @Test
-    void uploadPhoto_should_throw_AwsStorageException() throws IOException {
-        try (MockedStatic<RequestBody> mockedRequestBody = Mockito.mockStatic(RequestBody.class)) {
-            uploadPhoto_should_throw_AwsStorageException_mocked_RequestBody(mockedRequestBody);
-        }
-    }
-
-    private void uploadPhoto_should_throw_AwsStorageException_mocked_RequestBody(MockedStatic<RequestBody> mockedRequestBody) throws IOException {
-        byte[] photoBytes = "BYTES".getBytes(UTF_8);
-
+    void uploadPhoto_should_throw_AwsStorageException_if_SdkException_thrown() throws IOException {
+        mockedAwsPhoto
+                .when(() -> AwsPhoto.of(file))
+                .thenReturn(photo);
         when(requestGenerator.generatePutRequest(photo))
                 .thenReturn(putRequest);
-        when(photo.getPhoto())
-                .thenReturn(photoBytes);
-        mockedRequestBody.when(() -> RequestBody.fromBytes(photoBytes))
+        when(photo.getRequestBody())
                 .thenReturn(requestBody);
-        when(RequestBody.fromBytes(photoBytes))
-                .thenReturn(requestBody);
-
         when(s3Client.putObject(putRequest, requestBody))
                 .thenThrow(SdkException.class);
 
         assertThrows(AwsStorageException.class,
-                () -> storage.uploadPhoto(photo));
+                () -> storage.uploadPhoto(file));
+    }
+
+    @Test
+    void uploadPhoto_should_throw_AwsStorageException_if_IOException_thrown() throws IOException {
+        mockedAwsPhoto
+                .when(() -> AwsPhoto.of(file))
+                .thenReturn(photo);
+        when(requestGenerator.generatePutRequest(photo))
+                .thenReturn(putRequest);
+        when(photo.getRequestBody())
+                .thenThrow(IOException.class);
+
+        assertThrows(AwsStorageException.class,
+                () -> storage.uploadPhoto(file));
     }
 
     @Test

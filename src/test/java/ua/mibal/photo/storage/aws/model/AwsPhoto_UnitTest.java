@@ -16,14 +16,17 @@
 
 package ua.mibal.photo.storage.aws.model;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.springframework.web.multipart.MultipartFile;
-import ua.mibal.test.annotation.UnitTest;
+import software.amazon.awssdk.core.sync.RequestBody;
 import ua.mibal.photo.storage.api.exception.IllegalPhotoFormatException;
+import ua.mibal.test.annotation.UnitTest;
 
 import java.io.IOException;
 
@@ -31,6 +34,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 /**
@@ -49,15 +53,19 @@ class AwsPhoto_UnitTest {
 
     @Mock
     private MultipartFile file;
+    @Mock
+    private RequestBody requestBody;
+
+    private MockedStatic<RequestBody> mockedRequestBody;
 
     @BeforeEach
-    void setup() throws IOException {
-        when(file.getOriginalFilename())
-                .thenReturn(fileName);
-        when(file.getBytes())
-                .thenReturn(fileBytes);
+    void setupStaticMocks() {
+        mockedRequestBody = mockStatic(RequestBody.class);
+    }
 
-        uploadPhoto = new AwsPhoto(file);
+    @AfterEach
+    void closeStaticMocks() {
+        mockedRequestBody.close();
     }
 
     @ParameterizedTest
@@ -69,7 +77,7 @@ class AwsPhoto_UnitTest {
                 .thenReturn(legalFileName);
 
         assertDoesNotThrow(
-                () -> new AwsPhoto(file));
+                () -> AwsPhoto.of(file));
     }
 
     @ParameterizedTest
@@ -81,21 +89,47 @@ class AwsPhoto_UnitTest {
                 .thenReturn(illegalFileName);
 
         assertThrows(IllegalPhotoFormatException.class,
-                () -> new AwsPhoto(file));
+                () -> AwsPhoto.of(file));
     }
 
     @Test
     void getContentType() {
         when(file.getOriginalFilename())
-                .thenReturn(fileName);
+                .thenReturn("image.jpg");
+        String expectedContentType = "image/jpg";
 
-        String contentType = "image/jpg";
+        AwsPhoto photo = AwsPhoto.of(file);
 
-        assertEquals(contentType, uploadPhoto.getContentType());
+        assertEquals(expectedContentType, photo.getContentType());
     }
 
     @Test
-    void getPhoto() throws IOException {
-        assertEquals(fileBytes, uploadPhoto.getPhoto());
+    void getRequestBody() throws IOException {
+        byte[] fileBytes = "CONTENT".getBytes(UTF_8);
+
+        when(file.getOriginalFilename())
+                .thenReturn("legalFileName.jpg");
+        when(file.getBytes())
+                .thenReturn(fileBytes);
+        mockedRequestBody
+                .when(() -> RequestBody.fromBytes(fileBytes))
+                .thenReturn(requestBody);
+
+        RequestBody actualRequestBody = AwsPhoto.of(file).getRequestBody();
+
+        assertEquals(requestBody, actualRequestBody);
     }
+
+    @Test
+    void getRequestBody_should_throw_IOException() throws IOException {
+        when(file.getOriginalFilename())
+                .thenReturn("legalFileName.jpg");
+        when(file.getBytes())
+                .thenThrow(IOException.class);
+
+        assertThrows(IOException.class,
+                () -> AwsPhoto.of(file).getRequestBody());
+    }
+
+    // todo key generating test
 }

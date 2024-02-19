@@ -17,23 +17,67 @@
 package ua.mibal.photo.storage.aws.model;
 
 import org.springframework.web.multipart.MultipartFile;
-import ua.mibal.photo.storage.api.model.Photo;
+import software.amazon.awssdk.core.sync.RequestBody;
+import ua.mibal.photo.storage.api.exception.IllegalPhotoFormatException;
+import ua.mibal.photo.storage.api.model.PhotoExtension;
+
+import java.io.IOException;
+import java.util.Objects;
+import java.util.Optional;
 
 import static java.time.LocalDateTime.now;
+import static java.util.Objects.requireNonNull;
+import static org.springframework.util.StringUtils.getFilenameExtension;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class AwsPhoto extends Photo {
+public class AwsPhoto {
+    private final String key;
+    private final PhotoExtension extension;
+    private final MultipartFile file;
 
-    public AwsPhoto(MultipartFile photo) {
-        super(photo);
+    private AwsPhoto(MultipartFile file) {
+        Objects.requireNonNull(file);
+        this.extension = getPhotoExtension(file.getOriginalFilename());
+        this.key = generateFileKey(file);
+        this.file = file;
     }
 
-    @Override
-    protected String generateFileKey(MultipartFile photo) {
-        String name = photo.getOriginalFilename();
+    public static AwsPhoto of(MultipartFile file) {
+        return new AwsPhoto(file);
+    }
+
+    public String getKey() {
+        return this.key;
+    }
+
+    public String getContentType() {
+        return "image/" + extension.getExtension();
+    }
+
+    public RequestBody getRequestBody() throws IOException {
+        return RequestBody.fromBytes(file.getBytes());
+    }
+
+    private PhotoExtension getPhotoExtension(String photoName) {
+        try {
+            return getPhotoExtensionFrom(photoName);
+        } catch (IllegalArgumentException | NullPointerException e) {
+            throw new IllegalPhotoFormatException(photoName);
+        }
+    }
+
+    private PhotoExtension getPhotoExtensionFrom(String photoName) {
+        String extension = getFilenameExtension(photoName);
+        requireNonNull(extension);
+        return PhotoExtension.of(extension);
+    }
+
+    private String generateFileKey(MultipartFile photo) {
+        String name = Optional.ofNullable(photo.getOriginalFilename())
+                .orElseGet(photo::getName);
         return "" + now().hashCode() + name.hashCode();
     }
 }

@@ -18,16 +18,16 @@ package ua.mibal.photo.storage.aws;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.exception.SdkException;
-import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import ua.mibal.photo.storage.api.PhotoStorage;
-import ua.mibal.photo.storage.api.model.Photo;
 import ua.mibal.photo.storage.aws.component.AwsRequestGenerator;
 import ua.mibal.photo.storage.aws.exception.AwsStorageException;
+import ua.mibal.photo.storage.aws.model.AwsPhoto;
 import ua.mibal.photo.storage.aws.model.AwsPhotoResource;
 
 import java.io.IOException;
@@ -54,13 +54,13 @@ public class AwsPhotoStorage implements PhotoStorage {
     }
 
     @Override
-    public void uploadPhoto(Photo photo) {
+    public String uploadPhoto(MultipartFile photo) {
         try {
-            uploadAwsPhoto(photo);
+            return uploadAwsPhoto(photo);
         } catch (IOException | SdkException e) {
             throw new AwsStorageException(
                     "Exception while uploading Photo with " +
-                    "key '%s'".formatted(photo.getKey()), e);
+                    "name '%s'".formatted(photo.getOriginalFilename()), e);
         }
     }
 
@@ -84,10 +84,11 @@ public class AwsPhotoStorage implements PhotoStorage {
         );
     }
 
-    private void uploadAwsPhoto(Photo photo) throws IOException {
+    private String uploadAwsPhoto(MultipartFile file) throws IOException {
+        AwsPhoto photo = AwsPhoto.of(file);
         PutObjectRequest putRequest = requestGenerator.generatePutRequest(photo);
-        RequestBody requestBody = RequestBody.fromBytes(photo.getPhoto());
-        s3Client.putObject(putRequest, requestBody);
+        s3Client.putObject(putRequest, photo.getRequestBody());
+        return photo.getKey();
     }
 
     private void deleteAwsPhotoBy(String key) {

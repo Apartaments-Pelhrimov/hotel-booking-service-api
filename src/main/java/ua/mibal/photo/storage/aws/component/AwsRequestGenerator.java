@@ -21,8 +21,8 @@ import org.springframework.stereotype.Component;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-import ua.mibal.photo.storage.api.model.Photo;
 import ua.mibal.photo.storage.aws.config.AwsProps;
+import ua.mibal.photo.storage.aws.model.AwsPhoto;
 
 /**
  * @author Mykhailo Balakhon
@@ -33,7 +33,7 @@ import ua.mibal.photo.storage.aws.config.AwsProps;
 public class AwsRequestGenerator {
     private final AwsProps.AwsBucketProps awsBucketProps;
 
-    public PutObjectRequest generatePutRequest(Photo photo) {
+    public PutObjectRequest generatePutRequest(AwsPhoto photo) {
         return PutObjectRequest.builder()
                 .bucket(awsBucketProps.name())
                 .key(photo.getKey())
