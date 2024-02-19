@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.exception.service;
-
-import ua.mibal.booking.application.exception.InternalServerException;
+package ua.mibal.booking.application.exception;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class PriceCalculatorException extends InternalServerException {
+public class ICalServiceException extends InternalServerException {
 
-    public PriceCalculatorException(String message) {
-        super(message);
+    public ICalServiceException(String message, Exception cause) {
+        super(message, cause);
     }
 }

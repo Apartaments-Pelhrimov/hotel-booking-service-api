@@ -25,10 +25,10 @@ import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.CalScale;
 import net.fortuna.ical4j.model.property.Version;
 import org.springframework.stereotype.Service;
+import ua.mibal.booking.application.exception.ICalServiceException;
 import ua.mibal.booking.application.mapper.CalendarFormatMapper;
 import ua.mibal.booking.config.properties.CalendarProps;
 import ua.mibal.booking.domain.Event;
-import ua.mibal.booking.model.exception.service.ICalServiceException;
 
 import java.io.IOException;
 import java.io.InputStream;
