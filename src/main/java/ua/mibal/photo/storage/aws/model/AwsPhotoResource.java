@@ -18,7 +18,7 @@ package ua.mibal.photo.storage.aws.model;
 
 import lombok.Getter;
 import org.springframework.http.MediaType;
-import ua.mibal.photo.storage.api.model.PhotoResource;
+import ua.mibal.booking.application.port.photo.storage.model.PhotoResource;
 
 /**
  * @author Mykhailo Balakhon

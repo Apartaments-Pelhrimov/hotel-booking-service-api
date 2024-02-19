@@ -14,21 +14,25 @@
  * limitations under the License.
  */
 
-package ua.mibal.photo.storage.api;
-
-import org.springframework.web.multipart.MultipartFile;
-import ua.mibal.photo.storage.api.model.PhotoResource;
+package ua.mibal.booking.application.port.photo.storage.model;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-// TODO add javadoc
-public interface PhotoStorage {
+public enum PhotoExtension {
+    PNG, JPG, JPEG, NONE;
 
-    PhotoResource getPhotoBy(String key);
+    public static PhotoExtension of(String extension) {
+        return valueOf(extension.toUpperCase());
+    }
 
-    String uploadPhoto(MultipartFile photo);
-
-    void deletePhotoBy(String key);
+    public String getExtension() {
+        if (this == NONE) {
+            throw new UnsupportedOperationException(
+                    "Trying to call PhotoExtension.getExtension() " +
+                    "on PhotoExtension.NONE instance");
+        }
+        return name().toLowerCase();
+    }
 }

@@ -20,10 +20,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import ua.mibal.booking.application.port.photo.storage.PhotoStorage;
+import ua.mibal.booking.application.port.photo.storage.model.PhotoResource;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.User;
-import ua.mibal.photo.storage.api.PhotoStorage;
-import ua.mibal.photo.storage.api.model.PhotoResource;
 
 /**
  * @author Mykhailo Balakhon

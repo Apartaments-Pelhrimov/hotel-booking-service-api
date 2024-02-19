@@ -19,7 +19,7 @@ package ua.mibal.booking.adapter.in.web.model;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import ua.mibal.photo.storage.api.model.PhotoResource;
+import ua.mibal.booking.application.port.photo.storage.model.PhotoResource;
 
 /**
  * @author Mykhailo Balakhon
