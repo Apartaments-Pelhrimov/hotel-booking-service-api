@@ -20,12 +20,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.application.dto.response.calendar.Calendar;
-import ua.mibal.booking.application.port.jpa.HotelTurningOffRepository;
 import ua.mibal.booking.application.util.CollectionUtils;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.domain.Event;
-import ua.mibal.booking.domain.HotelTurningOffTime;
 
 import java.util.Collection;
 import java.util.List;
@@ -41,8 +39,6 @@ public class CalendarService {
     private final ApartmentInstanceService apartmentInstanceService;
     private final ApartmentService apartmentService;
     private final TurningOffService turningOffService;
-    private final ICalService iCalService;
-    private final HotelTurningOffRepository hotelTurningOffRepository;
 
     @Transactional(readOnly = true)
     public List<Calendar> getCalendarsForApartment(Long apartmentId) {
@@ -58,23 +54,6 @@ public class CalendarService {
         List<? extends Event> hotelEvents =
                 turningOffService.getForHotelForNow();
         return calendarForApartmentInstance(instance, hotelEvents);
-    }
-
-    @Transactional(readOnly = true) // For LAZY ApartmentInstance.turningOffTimes loading
-    public String getICalForApartmentInstance(Long instanceId) {
-        ApartmentInstance apartmentInstance =
-                apartmentInstanceService.getOneFetchReservations(instanceId);
-        Collection<Event> allEvents =
-                getAllActualLocalEventsFor(apartmentInstance);
-        return iCalService.getCalendarFromEvents(allEvents);
-    }
-
-    private Collection<Event> getAllActualLocalEventsFor(ApartmentInstance apartmentInstance) {
-        List<HotelTurningOffTime> hotelEvents =
-                hotelTurningOffRepository.findFromNow();
-        List<Event> apartmentEvents =
-                apartmentInstance.getNotRejectedEventsForNow();
-        return CollectionUtils.union(apartmentEvents, hotelEvents);
     }
 
     private List<Calendar> calendarsForApartment(Apartment apartment) {
