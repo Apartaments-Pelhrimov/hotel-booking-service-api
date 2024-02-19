@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.exception.service;
+package ua.mibal.booking.adapter.out.reservation.system.booking;
 
 import ua.mibal.booking.application.exception.InternalServerException;
 

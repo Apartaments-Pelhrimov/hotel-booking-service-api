@@ -18,10 +18,10 @@ package ua.mibal.booking.application;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ua.mibal.booking.adapter.out.reservation.system.booking.BookingComServiceException;
 import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.domain.Event;
 import ua.mibal.booking.domain.ReservationRequest;
-import ua.mibal.booking.model.exception.service.BookingComServiceException;
 
 import java.io.IOException;
 import java.io.InputStream;
