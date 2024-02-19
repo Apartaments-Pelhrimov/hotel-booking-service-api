@@ -23,8 +23,6 @@ import org.springframework.web.multipart.MultipartFile;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.User;
 import ua.mibal.photo.storage.api.PhotoStorage;
-import ua.mibal.photo.storage.api.component.PhotoFactory;
-import ua.mibal.photo.storage.api.model.Photo;
 import ua.mibal.photo.storage.api.model.PhotoResource;
 
 /**
@@ -37,7 +35,6 @@ public class PhotoService {
     private final PhotoStorage storage;
     private final UserService userService;
     private final ApartmentService apartmentService;
-    private final PhotoFactory photoFactory;
 
     public PhotoResource getUserPhoto(String email) {
         User user = userService.getOne(email);
@@ -46,13 +43,12 @@ public class PhotoService {
     }
 
     @Transactional
-    public void changeUserPhoto(String email, MultipartFile photoFile) {
+    public void changeUserPhoto(String email, MultipartFile photo) {
         User user = userService.getOne(email);
         String oldPhotoKey = user.getPhotoKey();
         storage.deletePhotoBy(oldPhotoKey);
-        Photo newPhoto = photoFactory.getInstance(photoFile);
-        storage.uploadPhoto(newPhoto);
-        user.setPhoto(newPhoto.getKey());
+        String newPhotoKey = storage.uploadPhoto(photo);
+        user.setPhoto(newPhotoKey);
     }
 
     @Transactional
@@ -70,11 +66,10 @@ public class PhotoService {
     }
 
     @Transactional
-    public void createApartmentPhoto(Long id, MultipartFile photoFile) {
+    public void createApartmentPhoto(Long id, MultipartFile photo) {
         Apartment apartment = apartmentService.getOne(id);
-        Photo photo = photoFactory.getInstance(photoFile);
-        storage.uploadPhoto(photo);
-        apartment.addPhoto(photo.getKey());
+        String newPhotoKey = storage.uploadPhoto(photo);
+        apartment.addPhoto(newPhotoKey);
     }
 
     @Transactional

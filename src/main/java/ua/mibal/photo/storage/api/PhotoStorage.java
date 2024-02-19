@@ -16,18 +16,19 @@
 
 package ua.mibal.photo.storage.api;
 
+import org.springframework.web.multipart.MultipartFile;
 import ua.mibal.photo.storage.api.model.PhotoResource;
-import ua.mibal.photo.storage.api.model.Photo;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
+// TODO add javadoc
 public interface PhotoStorage {
 
     PhotoResource getPhotoBy(String key);
 
-    void uploadPhoto(Photo photo);
+    String uploadPhoto(MultipartFile photo);
 
     void deletePhotoBy(String key);
 }

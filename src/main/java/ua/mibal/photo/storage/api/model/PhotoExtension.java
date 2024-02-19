@@ -14,16 +14,25 @@
  * limitations under the License.
  */
 
-package ua.mibal.photo.storage.api.component;
-
-import org.springframework.web.multipart.MultipartFile;
-import ua.mibal.photo.storage.api.model.Photo;
+package ua.mibal.photo.storage.api.model;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public interface PhotoFactory {
+public enum PhotoExtension {
+    PNG, JPG, JPEG, NONE;
 
-    Photo getInstance(MultipartFile photo);
+    public static PhotoExtension of(String extension) {
+        return valueOf(extension.toUpperCase());
+    }
+
+    public String getExtension() {
+        if (this == NONE) {
+            throw new UnsupportedOperationException(
+                    "Trying to call PhotoExtension.getExtension() " +
+                    "on PhotoExtension.NONE instance");
+        }
+        return name().toLowerCase();
+    }
 }

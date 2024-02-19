@@ -23,14 +23,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.mockito.Mock;
 import org.springframework.web.multipart.MultipartFile;
-import ua.mibal.booking.application.ApartmentService;
-import ua.mibal.booking.application.PhotoService;
-import ua.mibal.booking.application.UserService;
 import ua.mibal.booking.domain.Apartment;
+import ua.mibal.booking.domain.Photo;
 import ua.mibal.booking.domain.User;
 import ua.mibal.photo.storage.api.PhotoStorage;
-import ua.mibal.photo.storage.api.component.PhotoFactory;
-import ua.mibal.photo.storage.api.model.Photo;
 import ua.mibal.photo.storage.api.model.PhotoResource;
 import ua.mibal.test.annotation.UnitTest;
 
@@ -57,8 +53,6 @@ class PhotoService_UnitTest {
     private UserService userService;
     @Mock
     private ApartmentService apartmentService;
-    @Mock
-    private PhotoFactory photoFactory;
 
     @Mock
     private MultipartFile photoFile;
@@ -73,7 +67,7 @@ class PhotoService_UnitTest {
 
     @BeforeEach
     void setup() {
-        service = new PhotoService(storage, userService, apartmentService, photoFactory);
+        service = new PhotoService(storage, userService, apartmentService);
     }
 
     @AfterEach
@@ -104,8 +98,6 @@ class PhotoService_UnitTest {
     void changeUserPhoto(User user, String email, String key) {
         when(userService.getOne(email))
                 .thenReturn(user);
-        when(photoFactory.getInstance(photoFile))
-                .thenReturn(photo);
         when(photo.getKey())
                 .thenReturn(key);
 
@@ -116,7 +108,7 @@ class PhotoService_UnitTest {
         String afterKey = user.getPhotoKey();
 
         verify(storage, times(1))
-                .uploadPhoto(photo);
+                .uploadPhoto(photoFile);
         verify(storage, times(1))
                 .deletePhotoBy(beforeKey);
         assertThat(afterKey, is(key));
@@ -165,15 +157,13 @@ class PhotoService_UnitTest {
 
         when(apartmentService.getOne(id))
                 .thenReturn(apartment);
-        when(photoFactory.getInstance(photoFile))
-                .thenReturn(photo);
         when(photo.getKey())
                 .thenReturn(key);
 
         service.createApartmentPhoto(id, photoFile);
 
         verify(storage, times(1))
-                .uploadPhoto(photo);
+                .uploadPhoto(photoFile);
         verify(apartment, times(1))
                 .addPhoto(key);
     }
