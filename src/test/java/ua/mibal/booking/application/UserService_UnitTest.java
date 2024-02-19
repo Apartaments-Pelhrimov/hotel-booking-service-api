@@ -22,7 +22,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import ua.mibal.booking.adapter.out.jpa.UserRepository;
+import ua.mibal.booking.application.port.jpa.UserRepository;
 import ua.mibal.booking.domain.NotificationSettings;
 import ua.mibal.booking.domain.Photo;
 import ua.mibal.booking.domain.User;

@@ -19,7 +19,7 @@ package ua.mibal.booking.application.security;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import ua.mibal.booking.adapter.out.jpa.TokenRepository;
+import ua.mibal.booking.application.port.jpa.TokenRepository;
 import ua.mibal.booking.config.properties.TokenProps;
 import ua.mibal.booking.domain.Token;
 import ua.mibal.booking.domain.User;

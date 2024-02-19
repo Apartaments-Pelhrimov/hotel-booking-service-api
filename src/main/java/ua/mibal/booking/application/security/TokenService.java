@@ -19,7 +19,7 @@ package ua.mibal.booking.application.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ua.mibal.booking.adapter.out.jpa.TokenRepository;
+import ua.mibal.booking.application.port.jpa.TokenRepository;
 import ua.mibal.booking.config.properties.TokenProps;
 import ua.mibal.booking.domain.Token;
 import ua.mibal.booking.domain.User;

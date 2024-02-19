@@ -19,7 +19,7 @@ package ua.mibal.booking.application;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ua.mibal.booking.adapter.out.jpa.ApartmentRepository;
+import ua.mibal.booking.application.port.jpa.ApartmentRepository;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.Photo;
 import ua.mibal.booking.model.dto.request.CreateApartmentDto;

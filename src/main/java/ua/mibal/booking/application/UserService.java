@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ua.mibal.booking.adapter.out.jpa.UserRepository;
+import ua.mibal.booking.application.port.jpa.UserRepository;
 import ua.mibal.booking.domain.Photo;
 import ua.mibal.booking.domain.User;
 import ua.mibal.booking.model.dto.auth.RegistrationDto;

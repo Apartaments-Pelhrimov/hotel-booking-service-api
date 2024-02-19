@@ -24,7 +24,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import ua.mibal.booking.adapter.out.jpa.UserRepository;
+import ua.mibal.booking.application.port.jpa.UserRepository;
 import ua.mibal.booking.config.properties.ApplicationProps;
 import ua.mibal.booking.config.properties.CalendarProps;
 import ua.mibal.booking.config.properties.LocalizedMessagesProps;

@@ -1,0 +1,40 @@
+/*
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package ua.mibal.booking.application.port.jpa;
+
+import ua.mibal.booking.domain.ApartmentInstance;
+import ua.mibal.booking.model.request.ReservationRequest;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * @author Mykhailo Balakhon
+ * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
+ */
+public interface ApartmentInstanceRepository extends Repository<ApartmentInstance, Long> {
+
+    List<ApartmentInstance> findFreeByRequestFetchApartmentAndPrices(Long id, LocalDateTime from, LocalDateTime to, int people);
+
+    List<ApartmentInstance> findFreeByRequestFetchApartmentAndPrices(ReservationRequest request);
+
+    Optional<ApartmentInstance> findByIdFetchReservations(Long id);
+
+    // TODO delete
+    List<ApartmentInstance> findByApartmentIdFetchReservations(Long apartmentId);
+}

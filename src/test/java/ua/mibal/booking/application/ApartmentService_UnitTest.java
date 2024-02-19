@@ -19,7 +19,7 @@ package ua.mibal.booking.application;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import ua.mibal.booking.adapter.out.jpa.ApartmentRepository;
+import ua.mibal.booking.application.port.jpa.ApartmentRepository;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.Photo;
 import ua.mibal.booking.model.dto.request.CreateApartmentDto;
