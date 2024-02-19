@@ -26,9 +26,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import ua.mibal.booking.config.security.annotation.ManagerAllowed;
-import ua.mibal.booking.model.dto.request.CreateApartmentInstanceDto;
+import ua.mibal.booking.adapter.in.web.security.annotation.ManagerAllowed;
 import ua.mibal.booking.application.ApartmentInstanceService;
+import ua.mibal.booking.model.dto.request.CreateApartmentInstanceDto;
 
 /**
  * @author Mykhailo Balakhon

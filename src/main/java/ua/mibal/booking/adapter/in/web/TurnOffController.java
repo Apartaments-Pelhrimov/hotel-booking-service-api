@@ -23,9 +23,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ua.mibal.booking.config.security.annotation.ManagerAllowed;
-import ua.mibal.booking.model.dto.request.TurnOffDto;
+import ua.mibal.booking.adapter.in.web.security.annotation.ManagerAllowed;
 import ua.mibal.booking.application.TurningOffService;
+import ua.mibal.booking.model.dto.request.TurnOffDto;
 
 /**
  * @author Mykhailo Balakhon

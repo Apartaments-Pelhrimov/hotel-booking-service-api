@@ -28,13 +28,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import ua.mibal.booking.config.security.annotation.UserAllowed;
+import ua.mibal.booking.adapter.in.web.security.annotation.UserAllowed;
+import ua.mibal.booking.application.UserService;
 import ua.mibal.booking.model.dto.request.ChangeNotificationSettingsDto;
 import ua.mibal.booking.model.dto.request.ChangePasswordDto;
 import ua.mibal.booking.model.dto.request.ChangeUserDetailsDto;
 import ua.mibal.booking.model.dto.request.DeleteMeDto;
 import ua.mibal.booking.model.dto.response.UserDto;
-import ua.mibal.booking.application.UserService;
 
 /**
  * @author Mykhailo Balakhon

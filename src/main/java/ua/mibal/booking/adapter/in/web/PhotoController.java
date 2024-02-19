@@ -31,10 +31,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import ua.mibal.booking.adapter.in.web.model.PhotoResponse;
+import ua.mibal.booking.adapter.in.web.security.annotation.ManagerAllowed;
+import ua.mibal.booking.adapter.in.web.security.annotation.UserAllowed;
 import ua.mibal.booking.application.PhotoService;
 import ua.mibal.booking.application.port.photo.storage.model.PhotoResource;
-import ua.mibal.booking.config.security.annotation.ManagerAllowed;
-import ua.mibal.booking.config.security.annotation.UserAllowed;
 
 /**
  * @author Mykhailo Balakhon

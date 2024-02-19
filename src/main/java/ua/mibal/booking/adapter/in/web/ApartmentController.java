@@ -28,12 +28,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import ua.mibal.booking.config.security.annotation.ManagerAllowed;
+import ua.mibal.booking.adapter.in.web.security.annotation.ManagerAllowed;
+import ua.mibal.booking.application.ApartmentService;
 import ua.mibal.booking.model.dto.request.CreateApartmentDto;
 import ua.mibal.booking.model.dto.request.UpdateApartmentDto;
 import ua.mibal.booking.model.dto.response.ApartmentCardDto;
 import ua.mibal.booking.model.dto.response.ApartmentDto;
-import ua.mibal.booking.application.ApartmentService;
 
 import java.util.List;
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.config.security.annotation;
+package ua.mibal.booking.adapter.in.web.security.annotation;
 
 import jakarta.annotation.security.RolesAllowed;
 
