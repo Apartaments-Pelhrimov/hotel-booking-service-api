@@ -20,10 +20,10 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.ITemplateEngine;
+import ua.mibal.booking.application.port.email.model.Email;
 import ua.mibal.booking.config.properties.ApplicationProps;
 import ua.mibal.booking.domain.Token;
 import ua.mibal.booking.model.exception.marker.ApiException;
-import ua.mibal.email.api.model.Email;
 
 /**
  * @author Mykhailo Balakhon

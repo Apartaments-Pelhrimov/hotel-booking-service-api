@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.email.api.model;
+package ua.mibal.booking.application.port.email.model;
 
 /**
  * @author Mykhailo Balakhon
