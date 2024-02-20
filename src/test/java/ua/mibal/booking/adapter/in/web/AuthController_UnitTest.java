@@ -24,7 +24,6 @@ import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -38,7 +37,6 @@ import ua.mibal.booking.application.dto.auth.LoginDto;
 import ua.mibal.booking.application.dto.auth.NewPasswordDto;
 import ua.mibal.booking.application.dto.auth.RegistrationDto;
 import ua.mibal.booking.application.dto.auth.TokenDto;
-import ua.mibal.booking.testUtils.RegistrationDtoArgumentConverter;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -106,41 +104,46 @@ class AuthController_UnitTest {
 
     @ParameterizedTest
     @CsvSource(nullValues = "null", value = {
-            // firstName
-            "12345 Test +380951234567 example@example.com password1",
-            "aa Test +380951234567 example@example.com password1",
-            // lastName
-            "Test 12345 +380951234567 example@example.com password1",
-            "Test aa +380951234567 example@example.com password1",
-            // phone
-            "Test Test aaa example@example.com password1",
-            "Test Test 380951234567 example@example.com password1",
-            "Test Test 38095 1234567 example@example.com password1",
-            "Test Test +38095123456774187987348978937984 example@example.com password1",
-            // mail
-            "Test Test +380951234567 example@exacom password1",
-            "Test Test +380951234567 exampleexacom password1",
-            "Test Test +380951234567 example@g.com password1",
-            "Test Test +380951234567 @g.com password1",
-            // password
-            "Test Test +380951234567 example@example.com password",
-            "Test Test +380951234567 example@example.com pa1",
-            "Test Test +380951234567 example@example.com 23424242"
+            // incorrect firstName
+            //first last    phone                               email                   password
+            "12345, Test,   +380951234567,                      example@example.com,    password1",
+            "aa,    Test,   +380951234567,                      example@example.com,    password1",
+            // incorrect lastName
+            "Test,  12345,  +380951234567,                      example@example.com,    password1",
+            "Test,  aa,     +380951234567,                      example@example.com,    password1",
+            // incorrect phone
+            "Test,  Test,   aaa,                                example@example.com,    password1",
+            "Test,  Test,   380951234567,                       example@example.com,    password1",
+            "Test,  Test,   38095 1234567,                      example@example.com,    password1",
+            "Test,  Test,   +38095123456774187987348978937984,  example@example.com,    password1",
+            // incorrect mail
+            "Test,  Test,   +380951234567,                      example@exacom,         password1",
+            "Test,  Test,   +380951234567,                      exampleexacom,          password1",
+            "Test,  Test,   +380951234567,                      example@g.com,          password1",
+            "Test,  Test,   +380951234567,                      @g.com,                 password1",
+            // incorrect password
+            "Test,  Test,   +380951234567,                      example@example.com,    password",
+            "Test,  Test,   +380951234567,                      example@example.com,    pa1",
+            "Test,  Test,   +380951234567,                      example@example.com,    23424242"
     })
-    void register_should_throw_ValidationException_while_pass_incorrect_RegistrationDto(@ConvertWith(RegistrationDtoArgumentConverter.class)
-                                                                                        RegistrationDto registrationDto) throws Exception {
+    void register_should_throw_ValidationException_while_pass_incorrect_RegistrationDto(
+            String firstName, String lastName, String phone, String email, String password) throws Exception {
         mvc.perform(post("/api/auth/register")
                         .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(registrationDto)))
+                        .content(objectMapper.writeValueAsString(new RegistrationDto(firstName, lastName, phone, email, password))))
                 .andExpect(status().isBadRequest());
 
         verifyNoInteractions(authService);
     }
 
     @ParameterizedTest
-    @CsvSource("Test Test +380951234567 example@example.com password123")
-    void register_should_accept_correct_RegistrationDto(@ConvertWith(RegistrationDtoArgumentConverter.class)
-                                                        RegistrationDto registrationDto) throws Exception {
+    @CsvSource(
+            //first last    phone           email                   password
+            "Test,  Test,   +380951234567,  example@example.com,    password123")
+    void register_should_accept_correct_RegistrationDto(
+            String firstName, String lastName, String phone, String email, String password) throws Exception {
+        RegistrationDto registrationDto = new RegistrationDto(firstName, lastName, phone, email, password);
+
         mvc.perform(post("/api/auth/register")
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(registrationDto)))
