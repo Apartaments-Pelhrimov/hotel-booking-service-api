@@ -50,7 +50,7 @@ class PriceCalculator_UnitTest {
     }
 
     @ParameterizedTest
-    @MethodSource("ua.mibal.booking.testUtils.DataGenerator#correctPriceCalculation")
+    @MethodSource("ua.mibal.test.util.DataGenerator#correctPriceCalculation")
     void calculatePrice(BigDecimal oneNightPrice, LocalDate from, LocalDate to, BigDecimal expected) {
         when(request.from()).thenReturn(from.atStartOfDay());
         when(request.to()).thenReturn(to.atStartOfDay());
@@ -60,7 +60,7 @@ class PriceCalculator_UnitTest {
     }
 
     @ParameterizedTest
-    @MethodSource("ua.mibal.booking.testUtils.DataGenerator#incorrectPriceForCalculation")
+    @MethodSource("ua.mibal.test.util.DataGenerator#incorrectPriceForCalculation")
     void calculatePrice_should_throw_PriceCalculatorException(BigDecimal oneNightPrice,
                                                               LocalDate from,
                                                               LocalDate to) {
@@ -74,7 +74,7 @@ class PriceCalculator_UnitTest {
     }
 
     @ParameterizedTest
-    @MethodSource("ua.mibal.booking.testUtils.DataGenerator#incorrectDateRangeForCalculation")
+    @MethodSource("ua.mibal.test.util.DataGenerator#incorrectDateRangeForCalculation")
     void calculatePrice_should_throw_IllegalReservationDateRangeException(BigDecimal oneNightPrice,
                                                                           LocalDate from,
                                                                           LocalDate to) {

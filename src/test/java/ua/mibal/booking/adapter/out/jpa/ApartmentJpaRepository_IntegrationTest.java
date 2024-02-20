@@ -35,9 +35,9 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static ua.mibal.booking.testUtils.DataGenerator.testApartment;
-import static ua.mibal.booking.testUtils.DataGenerator.testComment;
-import static ua.mibal.booking.testUtils.DataGenerator.testUser;
+import static ua.mibal.test.util.DataGenerator.testApartment;
+import static ua.mibal.test.util.DataGenerator.testComment;
+import static ua.mibal.test.util.DataGenerator.testUser;
 
 /**
  * @author Mykhailo Balakhon

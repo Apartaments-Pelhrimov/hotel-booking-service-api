@@ -166,7 +166,7 @@ class ApartmentMapper_UnitTest {
     }
 
     @ParameterizedTest
-    @MethodSource("ua.mibal.booking.testUtils.DataGenerator#testApartments")
+    @MethodSource("ua.mibal.test.util.DataGenerator#testApartments")
     void update_Apartment(Apartment original, UpdateApartmentDto changes) {
         mapper.update(original, changes);
 
@@ -182,7 +182,7 @@ class ApartmentMapper_UnitTest {
     }
 
     @ParameterizedTest
-    @MethodSource("ua.mibal.booking.testUtils.DataGenerator#testApartmentOptions")
+    @MethodSource("ua.mibal.test.util.DataGenerator#testApartmentOptions")
     void update_ApartmentOptions(ApartmentOptions original, UpdateApartmentOptionsDto changes) {
         mapper.update(original, changes);
 

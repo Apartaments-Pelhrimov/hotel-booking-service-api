@@ -109,7 +109,7 @@ class BookingComReservationService_UnitTest {
 
     @ParameterizedTest
     @Order(4)
-    @MethodSource("ua.mibal.booking.testUtils.DataGenerator#eventsFactory")
+    @MethodSource("ua.mibal.test.util.DataGenerator#eventsFactory")
     void isFreeForReservation(List<Event> events, LocalDateTime from, LocalDateTime to, boolean expected) {
         when(apartmentInstance.getBookingICalUrl()).thenReturn(Optional.of(calendarUrl));
         when(iCalService.getEventsFromCalendarFile(any()))

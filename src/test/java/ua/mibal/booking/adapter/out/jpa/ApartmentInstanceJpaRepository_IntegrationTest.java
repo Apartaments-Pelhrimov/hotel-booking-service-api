@@ -37,13 +37,13 @@ import java.util.List;
 import static java.time.LocalDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static ua.mibal.booking.testUtils.DataGenerator.testApartment;
-import static ua.mibal.booking.testUtils.DataGenerator.testApartmentInstance;
-import static ua.mibal.booking.testUtils.DataGenerator.testApartmentInstanceWithReservations;
-import static ua.mibal.booking.testUtils.DataGenerator.testApartmentInstanceWithoutReservation;
-import static ua.mibal.booking.testUtils.DataGenerator.testApartmentWithPriceFor;
-import static ua.mibal.booking.testUtils.DataGenerator.testReservationOf;
-import static ua.mibal.booking.testUtils.DataGenerator.testUser;
+import static ua.mibal.test.util.DataGenerator.testApartment;
+import static ua.mibal.test.util.DataGenerator.testApartmentInstance;
+import static ua.mibal.test.util.DataGenerator.testApartmentInstanceWithReservations;
+import static ua.mibal.test.util.DataGenerator.testApartmentInstanceWithoutReservation;
+import static ua.mibal.test.util.DataGenerator.testApartmentWithPriceFor;
+import static ua.mibal.test.util.DataGenerator.testReservationOf;
+import static ua.mibal.test.util.DataGenerator.testUser;
 
 /**
  * @author Mykhailo Balakhon

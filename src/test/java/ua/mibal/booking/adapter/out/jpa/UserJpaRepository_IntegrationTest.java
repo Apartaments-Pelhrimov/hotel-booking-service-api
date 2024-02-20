@@ -33,11 +33,11 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static ua.mibal.booking.testUtils.DataGenerator.testApartment;
-import static ua.mibal.booking.testUtils.DataGenerator.testApartmentInstance;
-import static ua.mibal.booking.testUtils.DataGenerator.testComment;
-import static ua.mibal.booking.testUtils.DataGenerator.testReservation;
-import static ua.mibal.booking.testUtils.DataGenerator.testUser;
+import static ua.mibal.test.util.DataGenerator.testApartment;
+import static ua.mibal.test.util.DataGenerator.testApartmentInstance;
+import static ua.mibal.test.util.DataGenerator.testComment;
+import static ua.mibal.test.util.DataGenerator.testReservation;
+import static ua.mibal.test.util.DataGenerator.testUser;
 
 /**
  * @author Mykhailo Balakhon

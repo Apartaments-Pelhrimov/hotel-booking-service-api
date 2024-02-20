@@ -67,7 +67,7 @@ class ApartmentInstanceController_UnitTest {
     }
 
     @ParameterizedTest
-    @MethodSource("ua.mibal.booking.testUtils.DataGenerator#validCreateApartmentInstanceDto")
+    @MethodSource("ua.mibal.test.util.DataGenerator#validCreateApartmentInstanceDto")
     void create(CreateApartmentInstanceDto createApartmentInstanceDto) throws Exception {
         mvc.perform(post("/api/apartments/{id}/instances", 1)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -79,7 +79,7 @@ class ApartmentInstanceController_UnitTest {
     }
 
     @ParameterizedTest
-    @MethodSource("ua.mibal.booking.testUtils.DataGenerator#invalidCreateApartmentInstanceDto")
+    @MethodSource("ua.mibal.test.util.DataGenerator#invalidCreateApartmentInstanceDto")
     void create_should_throw_if_dto_is_invalid(CreateApartmentInstanceDto createApartmentInstanceDto) throws Exception {
         mvc.perform(post("/api/apartments/{id}/instances", 1)
                         .contentType(MediaType.APPLICATION_JSON)

@@ -21,7 +21,7 @@ import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import ua.mibal.test.annotation.UnitTest;
-import ua.mibal.booking.test.model.TestBindingResult;
+import ua.mibal.test.model.TestBindingResult;
 
 import java.util.Map;
 

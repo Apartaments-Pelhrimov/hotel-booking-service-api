@@ -19,7 +19,7 @@ package ua.mibal.booking.domain;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
-import ua.mibal.booking.testUtils.DataGenerator;
+import ua.mibal.test.util.DataGenerator;
 
 import java.time.LocalDateTime;
 import java.util.List;

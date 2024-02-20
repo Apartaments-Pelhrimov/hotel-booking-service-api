@@ -30,7 +30,7 @@ import ua.mibal.booking.application.exception.ICalServiceException;
 import ua.mibal.booking.application.mapper.CalendarFormatMapper;
 import ua.mibal.booking.config.properties.CalendarProps;
 import ua.mibal.booking.domain.Event;
-import ua.mibal.booking.testUtils.DataGenerator;
+import ua.mibal.test.util.DataGenerator;
 
 import java.io.InputStream;
 import java.time.ZoneId;
@@ -39,7 +39,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
-import static ua.mibal.booking.testUtils.ICalTestUtils.mustContainEvents;
+import static ua.mibal.test.util.ICalTestUtils.mustContainEvents;
 
 /**
  * @author Mykhailo Balakhon

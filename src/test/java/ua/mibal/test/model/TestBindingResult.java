@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.test.model;
+package ua.mibal.test.model;
 
 import org.springframework.beans.PropertyEditorRegistry;
 import org.springframework.validation.BindingResult;

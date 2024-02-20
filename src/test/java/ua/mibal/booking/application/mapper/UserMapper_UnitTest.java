@@ -138,7 +138,7 @@ class UserMapper_UnitTest {
     }
 
     @ParameterizedTest
-    @MethodSource("ua.mibal.booking.testUtils.DataGenerator#testUsers")
+    @MethodSource("ua.mibal.test.util.DataGenerator#testUsers")
     void update_User(User source, ChangeUserDetailsDto userChanges) {
         when(phoneMapper.toNumberString(userChanges.phone()))
                 .thenReturn(mappedPhone);
@@ -161,7 +161,7 @@ class UserMapper_UnitTest {
     }
 
     @ParameterizedTest
-    @MethodSource("ua.mibal.booking.testUtils.DataGenerator#testNotificationSettings")
+    @MethodSource("ua.mibal.test.util.DataGenerator#testNotificationSettings")
     void update_NotificationSettings(NotificationSettings source,
                                      ChangeNotificationSettingsDto userChanges) {
         boolean expectedOrderEmails = userChanges.receiveOrderEmails() == null
