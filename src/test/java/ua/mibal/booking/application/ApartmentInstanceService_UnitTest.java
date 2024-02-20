@@ -19,7 +19,6 @@ package ua.mibal.booking.application;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import ua.mibal.booking.adapter.out.reservation.system.booking.BookingComReservationService;
 import ua.mibal.booking.application.dto.request.CreateApartmentInstanceDto;
 import ua.mibal.booking.application.exception.ApartmentInstanceNotFoundException;
 import ua.mibal.booking.application.exception.ApartmentIsNotAvailableForReservation;
@@ -27,13 +26,11 @@ import ua.mibal.booking.application.exception.ApartmentNotFoundException;
 import ua.mibal.booking.application.mapper.ApartmentInstanceMapper;
 import ua.mibal.booking.application.port.jpa.ApartmentInstanceRepository;
 import ua.mibal.booking.application.port.jpa.ApartmentRepository;
-import ua.mibal.booking.application.util.DateTimeUtils;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.domain.ReservationRequest;
 import ua.mibal.test.annotation.UnitTest;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,6 +38,7 @@ import static java.time.LocalDateTime.MAX;
 import static java.time.LocalDateTime.MIN;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -61,11 +59,9 @@ class ApartmentInstanceService_UnitTest {
     @Mock
     private ApartmentRepository apartmentRepository;
     @Mock
-    private DateTimeUtils dateTimeUtils;
-    @Mock
-    private BookingComReservationService bookingComReservationService;
-    @Mock
     private ApartmentInstanceMapper apartmentInstanceMapper;
+    @Mock
+    private ReservationSystemManager reservationSystemManager;
 
     @Mock
     private ApartmentInstance apartmentInstance;
@@ -75,14 +71,10 @@ class ApartmentInstanceService_UnitTest {
     private Apartment apartment;
     @Mock
     private CreateApartmentInstanceDto createApartmentInstanceDto;
-    @Mock
-    private LocalDate dateFrom;
-    @Mock
-    private LocalDate dateTo;
 
     @BeforeEach
     void setup() {
-        service = new ApartmentInstanceService(apartmentInstanceRepository, apartmentRepository, bookingComReservationService, apartmentInstanceMapper);
+        service = new ApartmentInstanceService(apartmentInstanceRepository, apartmentRepository, apartmentInstanceMapper, reservationSystemManager);
     }
 
     @Test
@@ -91,17 +83,15 @@ class ApartmentInstanceService_UnitTest {
         Long id = 1L;
         int people = 1;
         ReservationRequest reservationRequest = new ReservationRequest(MIN, MAX, people, id, userEmail);
+        List<ApartmentInstance> apartmentInstances = List.of(apartmentInstance2, apartmentInstance);
 
-        when(dateTimeUtils.reserveFrom(dateFrom))
-                .thenReturn(MIN);
-        when(dateTimeUtils.reserveTo(dateTo))
-                .thenReturn(MAX);
         when(apartmentInstanceRepository.findFreeByRequestFetchApartmentAndPrices(reservationRequest))
-                .thenReturn(List.of(apartmentInstance2, apartmentInstance));
-        when(bookingComReservationService.isFreeForReservation(apartmentInstance2, reservationRequest))
-                .thenReturn(false);
-        when(bookingComReservationService.isFreeForReservation(apartmentInstance, reservationRequest))
-                .thenReturn(true);
+                .thenReturn(apartmentInstances);
+        doAnswer(invocation -> {
+            List<ApartmentInstance> apartmentInstancesArg = invocation.getArgument(0);
+            apartmentInstancesArg.remove(apartmentInstance2);
+            return null;
+        }).when(reservationSystemManager).filterForFree(apartmentInstances, reservationRequest);
 
         ApartmentInstance actual = service
                 .getFreeOneFetchApartmentAndPrices(reservationRequest);
@@ -116,8 +106,6 @@ class ApartmentInstanceService_UnitTest {
         int people = 1;
         ReservationRequest reservationRequest = new ReservationRequest(MIN, MAX, people, id, userEmail);
 
-        when(dateTimeUtils.reserveFrom(dateFrom)).thenReturn(MIN);
-        when(dateTimeUtils.reserveTo(dateTo)).thenReturn(MAX);
         when(apartmentInstanceRepository.findFreeByRequestFetchApartmentAndPrices(reservationRequest))
                 .thenReturn(List.of());
 
