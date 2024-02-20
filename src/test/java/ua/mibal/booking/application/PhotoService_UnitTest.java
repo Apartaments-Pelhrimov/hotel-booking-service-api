@@ -100,6 +100,8 @@ class PhotoService_UnitTest {
                 .thenReturn(user);
         when(photo.getKey())
                 .thenReturn(key);
+        when(storage.uploadPhoto(photoFile))
+                .thenReturn(key);
 
         String beforeKey = user.getPhotoKey();
 
@@ -107,8 +109,6 @@ class PhotoService_UnitTest {
 
         String afterKey = user.getPhotoKey();
 
-        verify(storage, times(1))
-                .uploadPhoto(photoFile);
         verify(storage, times(1))
                 .deletePhotoBy(beforeKey);
         assertThat(afterKey, is(key));
