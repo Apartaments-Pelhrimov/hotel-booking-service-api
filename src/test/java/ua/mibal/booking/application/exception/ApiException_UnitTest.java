@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.exception.marker;
+package ua.mibal.booking.application.exception;
 
 import org.instancio.junit.InstancioSource;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.mockito.Mock;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
-import ua.mibal.booking.application.exception.ApiException;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.util.Locale;
