@@ -18,7 +18,14 @@ package ua.mibal.booking.application;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.application.port.jpa.HotelTurningOffRepository;
+import ua.mibal.booking.domain.ApartmentInstance;
+import ua.mibal.booking.domain.Event;
+
+import java.util.List;
+
+import static ua.mibal.booking.application.util.CollectionUtils.union;
 
 /**
  * @author Mykhailo Balakhon
@@ -29,9 +36,21 @@ import ua.mibal.booking.application.port.jpa.HotelTurningOffRepository;
 public class ReservationCalendarExportService {
     private final ICalService iCalService;
     private final HotelTurningOffRepository hotelTurningOffRepository;
+    private final ApartmentInstanceService apartmentInstanceService;
+    private final ReservationSystemManager reservationSystemManager;
 
-    // TODO
+    @Transactional(readOnly = true) // For LAZY ApartmentInstance.turningOffTimes loading
     public String getCalendarForApartmentInstanceBy(Long apartmentInstanceId) {
-        return null;
+        ApartmentInstance apartmentInstance =
+                apartmentInstanceService.getOneFetchReservations(apartmentInstanceId);
+        List<Event> events = getActualEventsFor(apartmentInstance);
+        return iCalService.getCalendarFromEvents(events);
+    }
+
+    private List<Event> getActualEventsFor(ApartmentInstance apartmentInstance) {
+        var apartmentEvents = apartmentInstance.getNotRejectedEventsForNow();
+        var localHotelEvents = hotelTurningOffRepository.findFromNow();
+        var anotherReservationSystemEvents = reservationSystemManager.getEventsFor(apartmentInstance);
+        return union(localHotelEvents, apartmentEvents, anotherReservationSystemEvents);
     }
 }
