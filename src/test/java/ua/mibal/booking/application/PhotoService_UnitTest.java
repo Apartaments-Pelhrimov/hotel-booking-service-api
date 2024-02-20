@@ -16,6 +16,7 @@
 
 package ua.mibal.booking.application;
 
+import org.assertj.core.api.Assertions;
 import org.instancio.junit.InstancioSource;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -150,22 +151,17 @@ class PhotoService_UnitTest {
         assertEquals(awsPhotoResponse, actual);
     }
 
-    @Test
-    void createApartmentPhoto() {
-        Long id = 1L;
-        String key = "photoKey";
-
+    @ParameterizedTest
+    @InstancioSource
+    void createApartmentPhoto(Apartment apartment, Long id,  String key) {
         when(apartmentService.getOne(id))
                 .thenReturn(apartment);
-        when(photo.getKey())
+        when(storage.uploadPhoto(photoFile))
                 .thenReturn(key);
 
         service.createApartmentPhoto(id, photoFile);
 
-        verify(storage, times(1))
-                .uploadPhoto(photoFile);
-        verify(apartment, times(1))
-                .addPhoto(key);
+        Assertions.assertThat(apartment.getPhotos()).contains(new Photo(key));
     }
 
     @Test
