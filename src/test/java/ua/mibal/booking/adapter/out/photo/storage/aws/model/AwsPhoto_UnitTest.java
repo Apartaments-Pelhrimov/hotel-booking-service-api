@@ -29,8 +29,11 @@ import ua.mibal.booking.adapter.out.photo.storage.aws.exception.IllegalPhotoForm
 import ua.mibal.test.annotation.UnitTest;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -43,13 +46,6 @@ import static org.mockito.Mockito.when;
  */
 @UnitTest
 class AwsPhoto_UnitTest {
-
-    private AwsPhoto uploadPhoto;
-
-    private String name = "name";
-    private String folder = "folder";
-    private String fileName = "fileName.jpg";
-    private byte[] fileBytes = "fileBytes".getBytes(UTF_8);
 
     @Mock
     private MultipartFile file;
@@ -70,7 +66,7 @@ class AwsPhoto_UnitTest {
 
     @ParameterizedTest
     @CsvSource({"png", "jpg", "jpeg"})
-    void constructor(String allowedExtension) {
+    void of(String allowedExtension) {
         String legalFileName = "fileName." + allowedExtension;
 
         when(file.getOriginalFilename())
@@ -82,7 +78,7 @@ class AwsPhoto_UnitTest {
 
     @ParameterizedTest
     @CsvSource({"txt", "pdf", "svg", "''"})
-    void constructor_should_throw_IllegalPhotoFormatException(String illegalExtension) {
+    void of_should_throw_IllegalPhotoFormatException(String illegalExtension) {
         String illegalFileName = "fileName." + illegalExtension;
 
         when(file.getOriginalFilename())
@@ -90,6 +86,21 @@ class AwsPhoto_UnitTest {
 
         assertThrows(IllegalPhotoFormatException.class,
                 () -> AwsPhoto.of(file));
+    }
+
+    @Test
+    void getKey_should_return_unique_value_for_different_photos() {
+        when(file.getOriginalFilename())
+                .thenReturn("fileName.jpg");
+
+        List<String> keys = new ArrayList<>();
+
+        for (int i = 0; i < 100_000; i++) {
+            AwsPhoto photo = AwsPhoto.of(file);
+            keys.add(photo.getKey());
+        }
+
+        assertThat(keys).doesNotHaveDuplicates();
     }
 
     @Test
