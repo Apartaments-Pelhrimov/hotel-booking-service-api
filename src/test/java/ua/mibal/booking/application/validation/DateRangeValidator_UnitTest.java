@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.validation;
+package ua.mibal.booking.application.validation;
 
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import ua.mibal.booking.application.validation.DateRangeValidator;
 import ua.mibal.booking.domain.DateRangeValidRequest;
 
 import java.time.LocalDate;
