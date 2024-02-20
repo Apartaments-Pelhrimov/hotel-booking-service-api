@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.model.mapper;
+package ua.mibal.booking.application.mapper;
 
 import org.instancio.junit.InstancioSource;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,8 +27,6 @@ import ua.mibal.booking.application.dto.auth.TokenDto;
 import ua.mibal.booking.application.dto.request.ChangeNotificationSettingsDto;
 import ua.mibal.booking.application.dto.request.ChangeUserDetailsDto;
 import ua.mibal.booking.application.dto.response.UserDto;
-import ua.mibal.booking.application.mapper.PhoneMapper;
-import ua.mibal.booking.application.mapper.UserMapper;
 import ua.mibal.booking.application.mapper.linker.UserPhotoLinker;
 import ua.mibal.booking.domain.NotificationSettings;
 import ua.mibal.booking.domain.Phone;
