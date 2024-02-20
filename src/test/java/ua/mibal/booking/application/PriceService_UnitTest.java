@@ -20,20 +20,20 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import ua.mibal.booking.application.dto.request.PriceDto;
+import ua.mibal.booking.application.exception.PriceNotFoundException;
 import ua.mibal.booking.application.mapper.PriceMapper;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.Price;
-import ua.mibal.booking.application.exception.PriceNotFoundException;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.math.BigDecimal;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
-import static ua.mibal.booking.testUtils.CustomAssertions.assertEqualsList;
 
 /**
  * @author Mykhailo Balakhon
@@ -62,7 +62,7 @@ class PriceService_UnitTest {
     }
 
     @Test
-    public void getAllByApartment() {
+    void getAllByApartment() {
         Long id = 1L;
         when(apartmentService.getOneFetchPrices(id)).thenReturn(apartment);
         when(apartment.getPrices()).thenReturn(List.of(price));
@@ -70,11 +70,11 @@ class PriceService_UnitTest {
 
         List<PriceDto> actual = service.getAllByApartment(id);
 
-        assertEqualsList(List.of(priceDto), actual);
+        assertThat(actual).containsOnly(priceDto);
     }
 
     @Test
-    public void delete() {
+    void delete() {
         Long id = 1L;
         Integer person = 2;
         when(apartmentService.getOneFetchPrices(id)).thenReturn(apartment);
@@ -84,7 +84,7 @@ class PriceService_UnitTest {
     }
 
     @Test
-    public void delete_should_throw_PriceNotFoundException() {
+    void delete_should_throw_PriceNotFoundException() {
         Long id = 1L;
         Integer person = 2;
         when(apartmentService.getOneFetchPrices(id)).thenReturn(apartment);
@@ -97,7 +97,7 @@ class PriceService_UnitTest {
     }
 
     @Test
-    public void put_should_create_if_price_not_found() {
+    void put_should_create_if_price_not_found() {
         int people = 2;
 
         Apartment apartment = new Apartment();
@@ -116,7 +116,7 @@ class PriceService_UnitTest {
     }
 
     @Test
-    public void put_should_change_price_if_price_exists() {
+    void put_should_change_price_if_price_exists() {
         int people = 2;
 
         Apartment apartment = new Apartment();
