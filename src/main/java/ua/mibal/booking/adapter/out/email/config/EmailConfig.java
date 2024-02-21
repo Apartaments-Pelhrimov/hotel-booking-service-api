@@ -21,6 +21,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.EnableAsync;
 import ua.mibal.booking.adapter.out.email.config.properties.EmailProps;
 
 import java.util.Objects;
@@ -31,6 +32,7 @@ import java.util.Properties;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
+@EnableAsync
 @EnableConfigurationProperties(EmailProps.class)
 @Configuration
 public class EmailConfig {

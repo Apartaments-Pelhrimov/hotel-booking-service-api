@@ -19,6 +19,7 @@ package ua.mibal.booking.adapter.out.email;
 import jakarta.mail.MessagingException;
 import jakarta.mail.Transport;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import ua.mibal.booking.adapter.out.email.component.MimeEmailBuilder;
 import ua.mibal.booking.adapter.out.email.config.properties.EmailProps;
@@ -37,23 +38,21 @@ public class DefaultEmailSendingService implements EmailSendingService {
     private final MimeEmailBuilder mimeEmailBuilder;
     private final EmailProps emailProps;
 
+    @Async
     public void send(Email email) {
         MimeEmail mimeEmail = mimeEmailBuilder.buildBy(email);
-        sendAsync(mimeEmail);
+        sendEmail(mimeEmail);
     }
 
-    // TODO use ExecutorService
-    private void sendAsync(MimeEmail mimeEmail) {
-        new Thread(() -> {
-            try {
-                send(mimeEmail);
-            } catch (MessagingException e) {
-                throw new EmailSentFailedException(e);
-            }
-        }, "Email-sending-Thread").start();
+    private void sendEmail(MimeEmail mimeEmail) {
+        try {
+            sendMimeEmail(mimeEmail);
+        } catch (MessagingException e) {
+            throw new EmailSentFailedException(e);
+        }
     }
 
-    private synchronized void send(MimeEmail mimeEmail) throws MessagingException {
+    private synchronized void sendMimeEmail(MimeEmail mimeEmail) throws MessagingException {
         Transport.send(mimeEmail, emailProps.username(), emailProps.password());
     }
 }
