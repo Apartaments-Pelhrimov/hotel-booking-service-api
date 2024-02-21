@@ -20,10 +20,10 @@ import org.assertj.core.api.Assertions;
 import org.instancio.junit.InstancioSource;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.mockito.Mock;
 import org.springframework.web.multipart.MultipartFile;
+import ua.mibal.booking.application.exception.ApartmentDoesNotHavePhotoException;
 import ua.mibal.booking.application.port.photo.storage.PhotoStorage;
 import ua.mibal.booking.application.port.photo.storage.model.PhotoResource;
 import ua.mibal.booking.domain.Apartment;
@@ -34,9 +34,11 @@ import ua.mibal.test.annotation.UnitTest;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.clearAllCaches;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 /**
@@ -64,7 +66,7 @@ class PhotoService_UnitTest {
     @Mock
     private Photo photo;
     @Mock
-    private PhotoResource awsPhotoResponse;
+    private PhotoResource photoResource;
 
     @BeforeEach
     void setup() {
@@ -76,21 +78,15 @@ class PhotoService_UnitTest {
         clearAllCaches();
     }
 
-    @Test
-    void getUserPhoto() {
-        String email = "email";
-        String key = "photoKey";
-
-        when(userService.getOne(email))
-                .thenReturn(user);
-        when(user.getPhotoKey())
-                .thenReturn(key);
+    @ParameterizedTest
+    @InstancioSource
+    void getPhotoBy(String key) {
         when(storage.getPhotoBy(key))
-                .thenReturn(awsPhotoResponse);
+                .thenReturn(photoResource);
 
-        PhotoResource actual = service.getUserPhoto(email);
+        PhotoResource actual = service.getPhotoBy(key);
 
-        assertEquals(awsPhotoResponse, actual);
+        assertEquals(photoResource, actual);
     }
 
 
@@ -115,11 +111,9 @@ class PhotoService_UnitTest {
         assertThat(afterKey, is(key));
     }
 
-    @Test
-    void deleteUserPhoto() {
-        String email = "email@";
-        String key = "photoKey";
-
+    @ParameterizedTest
+    @InstancioSource
+    void deleteUserPhoto(String email, String key) {
         when(userService.getOne(email))
                 .thenReturn(user);
         when(user.getPhotoKey())
@@ -133,27 +127,9 @@ class PhotoService_UnitTest {
                 .deletePhoto();
     }
 
-    @Test
-    void getApartmentPhoto() {
-        Long id = 1L;
-        Integer photoIndex = 123;
-        String key = "key";
-
-        when(apartmentService.getOneFetchPhotos(id))
-                .thenReturn(apartment);
-        when(apartment.getPhotoKey(photoIndex))
-                .thenReturn(key);
-        when(storage.getPhotoBy(key))
-                .thenReturn(awsPhotoResponse);
-
-        PhotoResource actual = service.getApartmentPhoto(id, photoIndex);
-
-        assertEquals(awsPhotoResponse, actual);
-    }
-
     @ParameterizedTest
     @InstancioSource
-    void createApartmentPhoto(Apartment apartment, Long id,  String key) {
+    void createApartmentPhoto(Apartment apartment, Long id, String key) {
         when(apartmentService.getOne(id))
                 .thenReturn(apartment);
         when(storage.uploadPhoto(photoFile))
@@ -164,22 +140,33 @@ class PhotoService_UnitTest {
         Assertions.assertThat(apartment.getPhotos()).contains(new Photo(key));
     }
 
-    @Test
-    void deleteApartmentPhoto() {
-        Long id = 1L;
-        Integer photoIndex = 123;
-        String key = "key";
-
+    @ParameterizedTest
+    @InstancioSource
+    void deleteApartmentPhoto(Long id, String key) {
         when(apartmentService.getOneFetchPhotos(id))
                 .thenReturn(apartment);
-        when(apartment.getPhotoKey(photoIndex))
-                .thenReturn(key);
+        when(apartment.hasPhoto(key))
+                .thenReturn(true);
 
-        service.deleteApartmentPhoto(id, photoIndex);
+        service.deleteApartmentPhoto(id, key);
 
         verify(storage, times(1))
                 .deletePhotoBy(key);
         verify(apartment, times(1))
                 .deletePhoto(key);
+    }
+
+    @ParameterizedTest
+    @InstancioSource
+    void deleteApartmentPhoto_should_throw_ApartmentDoesNotHavePhotoException(Long id, String key) {
+        when(apartmentService.getOneFetchPhotos(id))
+                .thenReturn(apartment);
+        when(apartment.hasPhoto(key))
+                .thenReturn(false);
+
+        assertThrows(ApartmentDoesNotHavePhotoException.class,
+                () -> service.deleteApartmentPhoto(id, key));
+
+        verifyNoInteractions(storage);
     }
 }
