@@ -23,12 +23,10 @@ import ua.mibal.booking.application.dto.request.CreateApartmentDto;
 import ua.mibal.booking.application.dto.request.UpdateApartmentDto;
 import ua.mibal.booking.application.dto.response.ApartmentCardDto;
 import ua.mibal.booking.application.dto.response.ApartmentDto;
+import ua.mibal.booking.application.exception.ApartmentNotFoundException;
 import ua.mibal.booking.application.mapper.ApartmentMapper;
 import ua.mibal.booking.application.port.jpa.ApartmentRepository;
 import ua.mibal.booking.domain.Apartment;
-import ua.mibal.booking.domain.Photo;
-import ua.mibal.booking.application.exception.ApartmentDoesNotHavePhotoException;
-import ua.mibal.booking.application.exception.ApartmentNotFoundException;
 
 import java.util.List;
 
@@ -91,12 +89,6 @@ public class ApartmentService {
     public void delete(Long id) {
         validateExists(id);
         apartmentRepository.deleteById(id);
-    }
-
-    public void validateApartmentHasPhoto(Long id, String link) {
-        if (!apartmentRepository.doesApartmentHavePhoto(id, new Photo(link))) {
-            throw new ApartmentDoesNotHavePhotoException();
-        }
     }
 
     private void validateExists(Long id) {

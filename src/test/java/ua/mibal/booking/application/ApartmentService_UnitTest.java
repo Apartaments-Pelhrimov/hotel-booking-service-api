@@ -23,12 +23,10 @@ import ua.mibal.booking.application.dto.request.CreateApartmentDto;
 import ua.mibal.booking.application.dto.request.UpdateApartmentDto;
 import ua.mibal.booking.application.dto.response.ApartmentCardDto;
 import ua.mibal.booking.application.dto.response.ApartmentDto;
+import ua.mibal.booking.application.exception.ApartmentNotFoundException;
 import ua.mibal.booking.application.mapper.ApartmentMapper;
 import ua.mibal.booking.application.port.jpa.ApartmentRepository;
 import ua.mibal.booking.domain.Apartment;
-import ua.mibal.booking.domain.Photo;
-import ua.mibal.booking.application.exception.ApartmentDoesNotHavePhotoException;
-import ua.mibal.booking.application.exception.ApartmentNotFoundException;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.util.List;
@@ -263,29 +261,5 @@ class ApartmentService_UnitTest {
         );
 
         verify(apartmentRepository, never()).deleteById(id);
-    }
-
-    @Test
-    void validateApartmentHasPhoto() {
-        Long id = 1L;
-        String link = "link";
-
-        when(apartmentRepository.doesApartmentHavePhoto(id, new Photo(link)))
-                .thenReturn(true);
-
-        assertDoesNotThrow(
-                () -> service.validateApartmentHasPhoto(id, link));
-    }
-
-    @Test
-    void validateApartmentHasPhoto_should_throw_() {
-        Long id = 1L;
-        String link = "link";
-
-        when(apartmentRepository.doesApartmentHavePhoto(id, new Photo(link)))
-                .thenReturn(false);
-
-        assertThrows(ApartmentDoesNotHavePhotoException.class,
-                () -> service.validateApartmentHasPhoto(id, link));
     }
 }
