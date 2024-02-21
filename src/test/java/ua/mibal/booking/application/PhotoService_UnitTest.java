@@ -18,7 +18,6 @@ package ua.mibal.booking.application;
 
 import org.assertj.core.api.Assertions;
 import org.instancio.junit.InstancioSource;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.mockito.Mock;
@@ -31,11 +30,13 @@ import ua.mibal.booking.domain.Photo;
 import ua.mibal.booking.domain.User;
 import ua.mibal.test.annotation.UnitTest;
 
+import static java.util.Optional.empty;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.clearAllCaches;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -62,20 +63,11 @@ class PhotoService_UnitTest {
     @Mock
     private Apartment apartment;
     @Mock
-    private User user;
-    @Mock
-    private Photo photo;
-    @Mock
     private PhotoResource photoResource;
 
     @BeforeEach
     void setup() {
         service = new PhotoService(storage, userService, apartmentService);
-    }
-
-    @AfterEach
-    void after() {
-        clearAllCaches();
     }
 
     @ParameterizedTest
@@ -92,39 +84,62 @@ class PhotoService_UnitTest {
 
     @ParameterizedTest
     @InstancioSource
-    void changeUserPhoto(User user, String email, String key) {
+    void changeUserPhoto_should_change(User user, String email, String oldKey, String newKey) {
+        user.setPhoto(oldKey);
+
         when(userService.getOne(email))
                 .thenReturn(user);
-        when(photo.getKey())
-                .thenReturn(key);
         when(storage.uploadPhoto(photoFile))
-                .thenReturn(key);
-
-        String beforeKey = user.getPhotoKey();
+                .thenReturn(newKey);
 
         service.changeUserPhoto(email, photoFile);
 
-        String afterKey = user.getPhotoKey();
-
         verify(storage, times(1))
-                .deletePhotoBy(beforeKey);
-        assertThat(afterKey, is(key));
+                .deletePhotoBy(oldKey);
+        assertThat(user.getPhoto().get().getKey(), is(newKey));
     }
 
     @ParameterizedTest
     @InstancioSource
-    void deleteUserPhoto(String email, String key) {
+    void changeUserPhoto_should_create_if_User_has_no_photo(String email, String key) {
+        User user = new User();
+
         when(userService.getOne(email))
                 .thenReturn(user);
-        when(user.getPhotoKey())
+        when(storage.uploadPhoto(photoFile))
                 .thenReturn(key);
+
+        service.changeUserPhoto(email, photoFile);
+
+        verify(storage, never())
+                .deletePhotoBy(any());
+        assertThat(user.getPhoto().get().getKey(), is(key));
+    }
+
+    @ParameterizedTest
+    @InstancioSource
+    void deleteUserPhoto_should_delete(User user, String email, String key) {
+        user.setPhoto(key);
+
+        when(userService.getOne(email))
+                .thenReturn(user);
 
         service.deleteUserPhoto(email);
 
         verify(storage, times(1))
                 .deletePhotoBy(key);
-        verify(user, times(1))
-                .deletePhoto();
+        assertEquals(empty(), user.getPhoto());
+    }
+
+    @ParameterizedTest
+    @InstancioSource
+    void deleteUserPhoto_should_ignore_if_User_has_no_photo(String email) {
+        when(userService.getOne(email))
+                .thenReturn(new User());
+
+        service.deleteUserPhoto(email);
+
+        verifyNoInteractions(storage);
     }
 
     @ParameterizedTest

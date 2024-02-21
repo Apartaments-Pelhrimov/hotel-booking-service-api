@@ -37,7 +37,6 @@ import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.type.NumericBooleanConverter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import ua.mibal.booking.application.exception.PhotoNotFoundException;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -70,7 +69,7 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String lastName;
 
-    // make email lowerCase
+    // TODO make email lowerCase
     @NaturalId
     @Column(nullable = false, unique = true)
     private String email;
@@ -144,12 +143,6 @@ public class User implements UserDetails {
 
     public void deletePhoto() {
         this.photo = null;
-    }
-
-    public String getPhotoKey() {
-        return Optional.ofNullable(photo)
-                .map(Photo::getKey)
-                .orElseThrow(PhotoNotFoundException::new);
     }
 
     @Override

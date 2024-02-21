@@ -24,7 +24,10 @@ import ua.mibal.booking.application.exception.ApartmentDoesNotHavePhotoException
 import ua.mibal.booking.application.port.photo.storage.PhotoStorage;
 import ua.mibal.booking.application.port.photo.storage.model.PhotoResource;
 import ua.mibal.booking.domain.Apartment;
+import ua.mibal.booking.domain.Photo;
 import ua.mibal.booking.domain.User;
+
+import java.util.Optional;
 
 /**
  * @author Mykhailo Balakhon
@@ -44,8 +47,10 @@ public class PhotoService {
     @Transactional
     public void changeUserPhoto(String email, MultipartFile photo) {
         User user = userService.getOne(email);
-        String oldPhotoKey = user.getPhotoKey();
-        storage.deletePhotoBy(oldPhotoKey);
+        Optional<Photo> oldPhoto = user.getPhoto();
+        if (oldPhoto.isPresent()) {
+            storage.deletePhotoBy(oldPhoto.get().getKey());
+        }
         String newPhotoKey = storage.uploadPhoto(photo);
         user.setPhoto(newPhotoKey);
     }
@@ -53,8 +58,11 @@ public class PhotoService {
     @Transactional
     public void deleteUserPhoto(String email) {
         User user = userService.getOne(email);
-        String photoKey = user.getPhotoKey();
-        storage.deletePhotoBy(photoKey);
+        Optional<Photo> photo = user.getPhoto();
+        if (photo.isEmpty()) {
+            return;
+        }
+        storage.deletePhotoBy(photo.get().getKey());
         user.deletePhoto();
     }
 
