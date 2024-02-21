@@ -28,6 +28,9 @@ import org.springframework.validation.annotation.Validated;
 @ConfigurationProperties("app")
 public record ApplicationProps(
         @NotBlank
-        String developerEmails
+        String developerEmails,
+
+        @NotBlank
+        String email
 ) {
 }

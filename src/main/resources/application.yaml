@@ -58,7 +58,6 @@ calendar:
 mail:
   username: ${MAIL_USERNAME}
   password: ${MAIL_PASSWORD}
-  developers: 9mohapx9@gmail.com,balakhon.michael@lll.kpi.ua
   smtp:
     host: smtp.gmail.com
     port: 587
@@ -67,3 +66,7 @@ mail:
 localized-bundles.paths:
   - classpath:localized/mail
   - classpath:localized/messages
+
+app:
+  email:
+  developer-emails:
