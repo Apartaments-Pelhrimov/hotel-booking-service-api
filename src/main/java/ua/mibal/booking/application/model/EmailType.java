@@ -22,17 +22,21 @@ package ua.mibal.booking.application.model;
  */
 public enum EmailType {
 
-    ACCOUNT_ACTIVATION,
-    PASSWORD_CHANGING,
-    EXCEPTION_REPORT;
+    ACCOUNT_ACTIVATION("Žádost o aktivaci účtu"),
+    PASSWORD_CHANGING("Žádost o změnu hesla"),
+    EXCEPTION_REPORT("Internal server Exception");
 
-    // TODO
+    private final String subject;
+
+    EmailType(String subject) {
+        this.subject = subject;
+    }
 
     public String templateName() {
-        return null;
+        return name().toLowerCase();
     }
 
     public String subject() {
-        return null;
+        return subject;
     }
 }
