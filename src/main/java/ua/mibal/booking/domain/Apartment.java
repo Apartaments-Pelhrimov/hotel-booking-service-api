@@ -29,7 +29,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OrderColumn;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
@@ -116,7 +115,6 @@ public class Apartment {
                     columnList = "aws_photo_key",
                     unique = true
             ))
-    @OrderColumn
     @Setter(PRIVATE)
     private List<Photo> photos = new ArrayList<>();
 
