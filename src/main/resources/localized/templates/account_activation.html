@@ -15,7 +15,7 @@
   -->
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="cs">
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
@@ -26,20 +26,20 @@
 <body>
 
 <h1>
-    Hello, <span th:text="${Token.user.firstName}">User</span>
+    Dobrý den, <span th:text="${token.user.firstName}">Uživatele</span>
 </h1>
 
-<p>Congrats with registration. So you should to activate your account!</p>
-<p>Click on the "Activate Account" link to activate your account</p>
+<p>Gratuluji k registraci. Takže byste měli aktivovat svůj účet!</p>
+<p>Pro aktivaci účtu klikněte na odkaz "Aktivovat účet".</p>
 
-<a th:href="@{${EmailType.frontLink}(token=${Token.value})}">Activate Account</a>
+<a th:href="@{https://apartmany-pe.cz/activate(token=${token.value})}">Aktivovat účet</a>
 
 <p>
-    Activation link expires in <span th:text="${TokenProps.validForMinutes}">some</span> minutes
+    Aktivační odkaz vyprší za <span th:text="${tokenProps.validForMinutes}">několik</span> minut
 </p>
 
-<p>Have a nice day</p>
-<p>Hotel booking service team</p>
+<p>Přeji hezký den</p>
+<p>Tým hotelové rezervační služby</p>
 
 </body>
 </html>
