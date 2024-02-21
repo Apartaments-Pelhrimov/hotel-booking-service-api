@@ -28,6 +28,7 @@ import java.util.Optional;
 
 public interface ReservationJpaRepository extends JpaRepository<Reservation, Long>, ReservationRepository {
 
+    @Override
     @Query("""
             select r from Reservation r
                 left join fetch r.apartmentInstance ai
@@ -38,6 +39,7 @@ public interface ReservationJpaRepository extends JpaRepository<Reservation, Lon
             """)
     Page<Reservation> findAllByUserEmail(String email, Pageable pageable);
 
+    @Override
     @Query("""
             select r from Reservation r
                 left join fetch r.rejections rr
@@ -45,6 +47,7 @@ public interface ReservationJpaRepository extends JpaRepository<Reservation, Lon
             """)
     Optional<Reservation> findByIdFetchRejections(Long id);
 
+    @Override
     @Query("""
             select count(r.id) > 0
                 from Reservation r

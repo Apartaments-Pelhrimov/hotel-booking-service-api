@@ -33,18 +33,23 @@ import java.util.Optional;
  */
 public interface UserJpaRepository extends JpaRepository<User, Long>, CustomUserRepository, UserRepository {
 
+    @Override
     Optional<User> findByEmail(String email);
 
+    @Override
     @Query("""
             select u.password from User u
             where u.email = ?1
             """)
     Optional<String> findPasswordByEmail(String email);
 
+    @Override
     boolean existsByEmail(String email);
 
+    @Override
     void deleteByEmail(String email);
 
+    @Override
     @Modifying
     @Query("""
             update User u
@@ -53,6 +58,7 @@ public interface UserJpaRepository extends JpaRepository<User, Long>, CustomUser
             """)
     void updateUserPasswordByEmail(String newEncodedPassword, String email);
 
+    @Override
     @Modifying
     @Query("""
             update User u
@@ -61,6 +67,7 @@ public interface UserJpaRepository extends JpaRepository<User, Long>, CustomUser
             """)
     void updateUserPhotoByEmail(Photo photo, String email);
 
+    @Override
     @Modifying
     @Query("""
             update User u
@@ -69,6 +76,7 @@ public interface UserJpaRepository extends JpaRepository<User, Long>, CustomUser
             """)
     void deleteUserPhotoByEmail(String email);
 
+    @Override
     @Query("""
             select count(r.id) >= 1 from Reservation r
                 left join r.user u
@@ -78,6 +86,7 @@ public interface UserJpaRepository extends JpaRepository<User, Long>, CustomUser
             """)
     boolean userHasReservationWithApartment(String email, Long apartmentId);
 
+    @Override
     @Query("""
             select count(c.id) = 1 from Comment c
                 left join c.user u
@@ -85,6 +94,7 @@ public interface UserJpaRepository extends JpaRepository<User, Long>, CustomUser
             """)
     boolean userHasComment(String email, Long commentId);
 
+    @Override
     @Transactional
     @Modifying
     @Query("""

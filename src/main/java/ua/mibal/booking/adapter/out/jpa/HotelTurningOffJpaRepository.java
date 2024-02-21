@@ -29,6 +29,7 @@ import java.util.List;
  */
 public interface HotelTurningOffJpaRepository extends JpaRepository<HotelTurningOffTime, Long>, HotelTurningOffRepository {
 
+    @Override
     @Query("""
             select htot
                 from HotelTurningOffTime htot

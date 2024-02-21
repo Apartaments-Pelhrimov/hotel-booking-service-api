@@ -58,6 +58,7 @@ public interface ApartmentInstanceJpaRepository extends JpaRepository<ApartmentI
             """)
     List<ApartmentInstance> findFreeByRequestFetchApartmentAndPrices(Long id, LocalDateTime from, LocalDateTime to, int people);
 
+    @Override
     default List<ApartmentInstance> findFreeByRequestFetchApartmentAndPrices(ReservationRequest request) {
         return findFreeByRequestFetchApartmentAndPrices(
                 request.apartmentId(),
@@ -67,6 +68,7 @@ public interface ApartmentInstanceJpaRepository extends JpaRepository<ApartmentI
         );
     }
 
+    @Override
     @Query("""
             select ai
                 from ApartmentInstance ai
@@ -75,6 +77,7 @@ public interface ApartmentInstanceJpaRepository extends JpaRepository<ApartmentI
             """)
     Optional<ApartmentInstance> findByIdFetchReservations(Long id);
 
+    @Override
     @Query("""
             select ai
                 from ApartmentInstance ai

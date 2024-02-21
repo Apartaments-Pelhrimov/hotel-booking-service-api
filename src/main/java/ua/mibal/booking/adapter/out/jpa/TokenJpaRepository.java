@@ -27,6 +27,7 @@ import java.util.Optional;
 
 public interface TokenJpaRepository extends JpaRepository<Token, Long>, TokenRepository {
 
+    @Override
     @Query("""
             select t
                 from Token t
@@ -37,6 +38,7 @@ public interface TokenJpaRepository extends JpaRepository<Token, Long>, TokenRep
             """)
     Optional<Token> findNotExpiredByValue(String tokenValue);
 
+    @Override
     @Transactional
     @Modifying
     @Query("""

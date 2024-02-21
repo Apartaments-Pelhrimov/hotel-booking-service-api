@@ -29,6 +29,7 @@ import ua.mibal.booking.domain.Comment;
  */
 public interface CommentJpaRepository extends JpaRepository<Comment, Long>, CommentRepository {
 
+    @Override
     @Query("""
             select c from Comment c
                 join fetch c.user
