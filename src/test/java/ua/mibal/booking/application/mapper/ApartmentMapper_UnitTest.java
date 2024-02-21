@@ -23,22 +23,18 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.Spy;
+import ua.mibal.booking.adapter.in.web.mapper.linker.PhotoLinker;
 import ua.mibal.booking.application.dto.request.CreateApartmentDto;
 import ua.mibal.booking.application.dto.request.UpdateApartmentDto;
 import ua.mibal.booking.application.dto.request.UpdateApartmentOptionsDto;
-import ua.mibal.booking.application.dto.response.ApartmentCardDto;
-import ua.mibal.booking.application.dto.response.ApartmentDto;
-import ua.mibal.booking.application.mapper.linker.ApartmentPhotoLinker;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.Apartment.ApartmentClass;
 import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.domain.ApartmentOptions;
-import ua.mibal.booking.domain.Bed;
 import ua.mibal.booking.domain.Price;
 import ua.mibal.booking.domain.Room;
 import ua.mibal.test.annotation.UnitTest;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,24 +51,15 @@ import static org.mockito.Mockito.when;
 class ApartmentMapper_UnitTest {
 
     private ApartmentMapper mapper;
-
     @Mock
     private ApartmentInstanceMapper apartmentInstanceMapper;
     @Mock
-    private ApartmentPhotoLinker photoLinker;
+    private PhotoLinker photoLinker;
     @Mock
     private RoomMapper roomMapper;
     @Mock
     private PriceMapper priceMapper;
 
-    @Mock
-    private List<String> photos;
-    @Mock
-    private List<Bed> beds;
-
-    private final Integer people = 1_000_003;
-    @Mock
-    private BigDecimal price;
     @Spy
     private List<Price> prices = new ArrayList<>();
     @Spy
@@ -83,59 +70,6 @@ class ApartmentMapper_UnitTest {
     @BeforeEach
     public void setup() {
         mapper = new ApartmentMapperImpl(apartmentInstanceMapper, photoLinker, roomMapper, priceMapper);
-    }
-
-    @ParameterizedTest
-    @InstancioSource
-    void toDto(Apartment source) {
-        when(photoLinker.toLinks(source))
-                .thenReturn(photos);
-        when(roomMapper.roomsToBeds(source.getRooms()))
-                .thenReturn(beds);
-        when(priceMapper.findMinPrice(source.getPrices()))
-                .thenReturn(price);
-
-        ApartmentDto actual = mapper.toDto(source);
-
-        assertThat(actual.name(), is(source.getName()));
-        assertThat(actual.photos(), is(photos));
-        assertThat(actual.options(), is(source.getOptions()));
-        assertThat(actual.beds(), is(beds));
-        assertThat(actual.price(), is(price));
-    }
-
-    @Test
-    void toDto_should_return_null() {
-        ApartmentDto actual = mapper.toDto(null);
-
-        assertThat(actual, nullValue());
-    }
-
-    @ParameterizedTest
-    @InstancioSource
-    void toCardDto(Apartment source) {
-        when(photoLinker.toLinks(source))
-                .thenReturn(photos);
-        when(roomMapper.roomsToPeopleCount(source.getRooms()))
-                .thenReturn(people);
-        when(priceMapper.findMinPrice(source.getPrices()))
-                .thenReturn(price);
-
-        ApartmentCardDto actual = mapper.toCardDto(source);
-
-        assertThat(actual.name(), is(source.getName()));
-        assertThat(actual.photos(), is(photos));
-        assertThat(actual.options(), is(source.getOptions()));
-        assertThat(actual.rating(), is(source.getRating()));
-        assertThat(actual.people(), is(people));
-        assertThat(actual.price(), is(price));
-    }
-
-    @Test
-    void toCardDto_should_return_null() {
-        ApartmentCardDto actual = mapper.toCardDto(null);
-
-        assertThat(actual, nullValue());
     }
 
     @ParameterizedTest
