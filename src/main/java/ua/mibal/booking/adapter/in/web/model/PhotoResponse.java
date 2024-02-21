@@ -16,10 +16,11 @@
 
 package ua.mibal.booking.adapter.in.web.model;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import ua.mibal.booking.application.port.photo.storage.model.PhotoResource;
+
+import static org.springframework.http.HttpStatus.OK;
 
 /**
  * @author Mykhailo Balakhon
@@ -27,12 +28,13 @@ import ua.mibal.booking.application.port.photo.storage.model.PhotoResource;
  */
 public class PhotoResponse extends ResponseEntity<byte[]> {
 
-    protected PhotoResponse(byte[] body, MediaType mediaType) {
-        super(body, HttpStatus.OK);
-        getHeaders().setContentType(mediaType);
+    protected PhotoResponse(byte[] body, HttpHeaders headers) {
+        super(body, headers, OK);
     }
 
     public static PhotoResponse of(PhotoResource photo) {
-        return new PhotoResponse(photo.getBytes(), photo.getContentType());
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(photo.getContentType());
+        return new PhotoResponse(photo.getBytes(), headers);
     }
 }
