@@ -23,7 +23,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import ua.mibal.booking.adapter.in.web.mapper.linker.PhotoLinker;
 import ua.mibal.booking.application.dto.request.CreateApartmentDto;
 import ua.mibal.booking.application.dto.request.UpdateApartmentDto;
 import ua.mibal.booking.application.dto.request.UpdateApartmentOptionsDto;
@@ -54,8 +53,6 @@ class ApartmentMapper_UnitTest {
     @Mock
     private ApartmentInstanceMapper apartmentInstanceMapper;
     @Mock
-    private PhotoLinker photoLinker;
-    @Mock
     private RoomMapper roomMapper;
     @Mock
     private PriceMapper priceMapper;
@@ -69,7 +66,7 @@ class ApartmentMapper_UnitTest {
 
     @BeforeEach
     public void setup() {
-        mapper = new ApartmentMapperImpl(apartmentInstanceMapper, photoLinker, roomMapper, priceMapper);
+        mapper = new ApartmentMapperImpl(priceMapper, roomMapper, apartmentInstanceMapper);
     }
 
     @ParameterizedTest

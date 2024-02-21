@@ -36,7 +36,11 @@ import static org.mapstruct.NullValuePropertyMappingStrategy.IGNORE;
  */
 @Mapper(componentModel = SPRING,
         injectionStrategy = CONSTRUCTOR,
-        uses = ApartmentInstanceMapper.class)
+        uses = {
+                PriceMapper.class,
+                RoomMapper.class,
+                ApartmentInstanceMapper.class
+        })
 public interface ApartmentMapper {
 
     @Mapping(target = "apartmentInstances", source = "instances")
