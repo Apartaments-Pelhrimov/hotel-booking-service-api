@@ -17,13 +17,23 @@
 package ua.mibal.booking.application.component;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.ITemplateEngine;
-import ua.mibal.booking.application.port.email.model.Email;
-import ua.mibal.booking.config.properties.ApplicationProps;
-import ua.mibal.booking.domain.Token;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.context.IContext;
 import ua.mibal.booking.application.exception.ApiException;
+import ua.mibal.booking.application.model.EmailType;
+import ua.mibal.booking.application.port.email.model.Email;
+import ua.mibal.booking.application.port.email.model.impl.DefaultEmail;
+import ua.mibal.booking.application.port.email.model.impl.DefaultEmailContent;
+import ua.mibal.booking.config.properties.ApplicationProps;
+import ua.mibal.booking.config.properties.TokenProps;
+import ua.mibal.booking.domain.Token;
+
+import java.util.Map;
+
+import static ua.mibal.booking.application.model.EmailType.ACCOUNT_ACTIVATION;
+import static ua.mibal.booking.application.model.EmailType.PASSWORD_CHANGING;
 
 /**
  * @author Mykhailo Balakhon
@@ -34,17 +44,44 @@ import ua.mibal.booking.application.exception.ApiException;
 public class TemplateEmailFactory {
     private final ITemplateEngine templateEngine;
     private final ApplicationProps applicationProps;
+    private final TokenProps tokenProps;
 
-    // TODO
     public Email getAccountActivationEmail(Token token) {
-        throw new NotImplementedException();
+        String recipients = token.getUser().getEmail();
+        return assembleEmailFor(ACCOUNT_ACTIVATION, recipients, Map.of(
+                "token", token,
+                "tokenProps", tokenProps
+        ));
     }
 
     public Email getPasswordChangingEmail(Token token) {
-        throw new NotImplementedException();
+        String recipients = token.getUser().getEmail();
+        return assembleEmailFor(PASSWORD_CHANGING, recipients, Map.of(
+                "token", token,
+                "tokenProps", tokenProps
+        ));
     }
 
     public Email getExceptionReportEmail(ApiException e) {
-        throw new NotImplementedException();
+        String recipients = applicationProps.developerEmails();
+        return assembleEmailFor(PASSWORD_CHANGING, recipients, Map.of(
+                "e", e
+        ));
+    }
+
+    private Email assembleEmailFor(EmailType type, String recipients, Map<String, Object> vars) {
+        String sender = applicationProps.email();
+        String subject = type.subject();
+        String body = getInsertedTemplate(type, vars);
+        return new DefaultEmail(
+                sender,
+                recipients,
+                new DefaultEmailContent(subject, body)
+        );
+    }
+
+    private String getInsertedTemplate(EmailType type, Map<String, Object> vars) {
+        IContext context = new Context(applicationProps.locale(), vars);
+        return templateEngine.process(type.templateName(), context);
     }
 }

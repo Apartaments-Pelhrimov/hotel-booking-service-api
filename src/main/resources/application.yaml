@@ -70,3 +70,4 @@ localized-bundles.paths:
 app:
   email:
   developer-emails:
+  locale:

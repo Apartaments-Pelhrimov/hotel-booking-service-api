@@ -14,28 +14,25 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.config.properties;
-
-import jakarta.validation.constraints.NotBlank;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.validation.annotation.Validated;
-
-import java.util.Locale;
+package ua.mibal.booking.application.model;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Validated
-@ConfigurationProperties("app")
-public record ApplicationProps(
-        @NotBlank
-        String developerEmails,
+public enum EmailType {
 
-        @NotBlank
-        String email,
+    ACCOUNT_ACTIVATION,
+    PASSWORD_CHANGING,
+    EXCEPTION_REPORT;
 
-        @NotBlank
-        Locale locale
-) {
+    // TODO
+
+    public String templateName() {
+        return null;
+    }
+
+    public String subject() {
+        return null;
+    }
 }
