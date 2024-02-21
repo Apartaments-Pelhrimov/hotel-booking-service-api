@@ -21,8 +21,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import ua.mibal.booking.application.dto.request.CreateApartmentDto;
 import ua.mibal.booking.application.dto.request.UpdateApartmentDto;
-import ua.mibal.booking.application.dto.response.ApartmentCardDto;
-import ua.mibal.booking.application.dto.response.ApartmentDto;
 import ua.mibal.booking.application.exception.ApartmentNotFoundException;
 import ua.mibal.booking.application.mapper.ApartmentMapper;
 import ua.mibal.booking.application.port.jpa.ApartmentRepository;
@@ -32,6 +30,7 @@ import ua.mibal.test.annotation.UnitTest;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -58,10 +57,6 @@ class ApartmentService_UnitTest {
     @Mock
     private Apartment apartment;
     @Mock
-    private ApartmentDto apartmentDto;
-    @Mock
-    private ApartmentCardDto apartmentCardDto;
-    @Mock
     private CreateApartmentDto createApartmentDto;
     @Mock
     private UpdateApartmentDto updateApartmentDto;
@@ -73,17 +68,12 @@ class ApartmentService_UnitTest {
 
     @Test
     void getAllFetchPhotosBeds() {
-        when(apartmentRepository.findAllFetchPhotos())
+        when(apartmentRepository.findAllFetchPhotosRoomsBeds())
                 .thenReturn(List.of(apartment, apartment));
-        when(apartmentMapper.toCardDto(apartment))
-                .thenReturn(apartmentCardDto);
 
-        List<ApartmentCardDto> actual = service.getAllFetchPhotosBeds();
+        List<Apartment> actual = service.getAllFetchPhotosBeds();
 
-        assertEquals(
-                List.of(apartmentCardDto, apartmentCardDto),
-                actual
-        );
+        assertThat(actual).containsOnly(apartment, apartment);
     }
 
     @Test
@@ -178,16 +168,14 @@ class ApartmentService_UnitTest {
 
     @Test
     void getOneFetchPhotosBeds() {
-        when(apartmentRepository.findByIdFetchPhotos(1L))
+        when(apartmentRepository.findByIdFetchPhotosRoomsBeds(1L))
                 .thenReturn(Optional.of(apartment));
-        when(apartmentMapper.toDto(apartment))
-                .thenReturn(apartmentDto);
 
-        ApartmentDto actual = assertDoesNotThrow(
+        Apartment actual = assertDoesNotThrow(
                 () -> service.getOneFetchPhotosBeds(1L)
         );
 
-        assertEquals(apartmentDto, actual);
+        assertEquals(apartment, actual);
     }
 
     @Test
