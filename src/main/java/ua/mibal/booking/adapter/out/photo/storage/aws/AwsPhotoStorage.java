@@ -23,11 +23,13 @@ import software.amazon.awssdk.core.exception.SdkException;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import ua.mibal.booking.adapter.out.photo.storage.aws.component.AwsRequestGenerator;
 import ua.mibal.booking.adapter.out.photo.storage.aws.exception.AwsStorageException;
 import ua.mibal.booking.adapter.out.photo.storage.aws.model.AwsPhoto;
 import ua.mibal.booking.adapter.out.photo.storage.aws.model.AwsPhotoResource;
+import ua.mibal.booking.application.exception.PhotoNotFoundException;
 import ua.mibal.booking.application.port.photo.storage.PhotoStorage;
 
 import java.io.IOException;
@@ -46,7 +48,9 @@ public class AwsPhotoStorage implements PhotoStorage {
     public AwsPhotoResource getPhotoBy(String key) {
         try {
             return getAwsPhotoBy(key);
-        } catch (IOException e) {
+        } catch (NoSuchKeyException e) {
+            throw new PhotoNotFoundException();
+        } catch (IOException | SdkException e) {
             throw new AwsStorageException(
                     "Exception while getting Photo with " +
                     "key '%s'".formatted(key), e);

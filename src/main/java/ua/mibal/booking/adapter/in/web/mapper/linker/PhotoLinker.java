@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.mapper.linker;
+package ua.mibal.booking.adapter.in.web.mapper.linker;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.MappingConstants;
-import org.springframework.hateoas.Link;
 import ua.mibal.booking.adapter.in.web.PhotoController;
-import ua.mibal.booking.domain.User;
+import ua.mibal.booking.domain.Photo;
 
+import java.util.List;
+import java.util.Optional;
+
+import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
@@ -29,16 +31,24 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
-public class UserPhotoLinker {
+@Mapper(componentModel = SPRING)
+public class PhotoLinker {
 
-    public String toLink(User user) {
-        if (user.getPhoto().isEmpty()) {
-            return null;
-        }
+    public List<String> getPhotoLinks(List<Photo> photos) {
+        return photos.stream()
+                .map(this::toLink)
+                .toList();
+    }
+
+    public String getPhotoLink(Optional<Photo> photo) {
+        return photo
+                .map(this::toLink)
+                .orElse(null);
+    }
+
+    private String toLink(Photo photo) {
         var getPhotoMethod = methodOn(PhotoController.class)
-                .getUserPhoto(user.getEmail());
-        Link photoLink = linkTo(getPhotoMethod).withSelfRel();
-        return photoLink.getHref();
+                .getPhoto(photo.getKey());
+        return linkTo(getPhotoMethod).withSelfRel().getHref();
     }
 }

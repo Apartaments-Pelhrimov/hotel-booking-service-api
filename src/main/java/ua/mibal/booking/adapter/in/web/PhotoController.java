@@ -18,7 +18,6 @@ package ua.mibal.booking.adapter.in.web;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,9 +45,9 @@ import ua.mibal.booking.application.port.photo.storage.model.PhotoResource;
 public class PhotoController {
     private final PhotoService photoService;
 
-    @GetMapping("/users/{email}/photo")
-    public ResponseEntity<byte[]> getUserPhoto(@PathVariable String email) {
-        PhotoResource photo = photoService.getUserPhoto(email);
+    @GetMapping("/photos/{key}")
+    public PhotoResponse getPhoto(@PathVariable String key) {
+        PhotoResource photo = photoService.getPhotoBy(key);
         return PhotoResponse.of(photo);
     }
 
@@ -67,13 +66,6 @@ public class PhotoController {
         photoService.deleteUserPhoto(authentication.getName());
     }
 
-    @GetMapping("/apartments/{apartmentId}/photos/{photoOrderIndex}")
-    public ResponseEntity<byte[]> getApartmentPhoto(@PathVariable Long apartmentId,
-                                                    @PathVariable Integer photoOrderIndex) {
-        PhotoResource photo = photoService.getApartmentPhoto(apartmentId, photoOrderIndex);
-        return PhotoResponse.of(photo);
-    }
-
     @ManagerAllowed
     @PostMapping("/apartments/{id}/photos")
     @ResponseStatus(HttpStatus.CREATED)
@@ -83,10 +75,10 @@ public class PhotoController {
     }
 
     @ManagerAllowed
-    @DeleteMapping("/apartments/{apartmentId}/photos/{photoOrderIndex}")
+    @DeleteMapping("/apartments/{apartmentId}/photos/{key}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteApartmentPhoto(@PathVariable Long apartmentId,
-                                     @PathVariable Integer photoOrderIndex) {
-        photoService.deleteApartmentPhoto(apartmentId, photoOrderIndex);
+                                     @PathVariable String key) {
+        photoService.deleteApartmentPhoto(apartmentId, key);
     }
 }

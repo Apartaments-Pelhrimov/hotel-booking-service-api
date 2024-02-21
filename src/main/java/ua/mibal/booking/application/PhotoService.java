@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import ua.mibal.booking.application.exception.ApartmentDoesNotHavePhotoException;
 import ua.mibal.booking.application.port.photo.storage.PhotoStorage;
 import ua.mibal.booking.application.port.photo.storage.model.PhotoResource;
 import ua.mibal.booking.domain.Apartment;
@@ -36,10 +37,8 @@ public class PhotoService {
     private final UserService userService;
     private final ApartmentService apartmentService;
 
-    public PhotoResource getUserPhoto(String email) {
-        User user = userService.getOne(email);
-        String photoKey = user.getPhotoKey();
-        return storage.getPhotoBy(photoKey);
+    public PhotoResource getPhotoBy(String key) {
+        return storage.getPhotoBy(key);
     }
 
     @Transactional
@@ -59,12 +58,6 @@ public class PhotoService {
         user.deletePhoto();
     }
 
-    public PhotoResource getApartmentPhoto(Long apartmentId, Integer photoIndex) {
-        Apartment apartment = apartmentService.getOneFetchPhotos(apartmentId);
-        String photoKey = apartment.getPhotoKey(photoIndex);
-        return storage.getPhotoBy(photoKey);
-    }
-
     @Transactional
     public void createApartmentPhoto(Long id, MultipartFile photo) {
         Apartment apartment = apartmentService.getOne(id);
@@ -73,10 +66,16 @@ public class PhotoService {
     }
 
     @Transactional
-    public void deleteApartmentPhoto(Long apartmentId, Integer photoIndex) {
+    public void deleteApartmentPhoto(Long apartmentId, String key) {
         Apartment apartment = apartmentService.getOneFetchPhotos(apartmentId);
-        String photoKey = apartment.getPhotoKey(photoIndex);
-        storage.deletePhotoBy(photoKey);
-        apartment.deletePhoto(photoKey);
+        validateApartmentHasPhoto(apartment, key);
+        storage.deletePhotoBy(key);
+        apartment.deletePhoto(key);
+    }
+
+    private void validateApartmentHasPhoto(Apartment apartment, String key) {
+        if (!apartment.hasPhoto(key)) {
+            throw new ApartmentDoesNotHavePhotoException();
+        }
     }
 }

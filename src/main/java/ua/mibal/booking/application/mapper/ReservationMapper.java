@@ -18,20 +18,21 @@ package ua.mibal.booking.application.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingConstants;
+import ua.mibal.booking.adapter.in.web.mapper.linker.PhotoLinker;
 import ua.mibal.booking.application.dto.response.ReservationDto;
-import ua.mibal.booking.application.mapper.linker.ApartmentPhotoLinker;
 import ua.mibal.booking.domain.Reservation;
+
+import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Mapper(uses = ApartmentPhotoLinker.class,
-        componentModel = MappingConstants.ComponentModel.SPRING)
+@Mapper(componentModel = SPRING,
+        uses = PhotoLinker.class)
 public interface ReservationMapper {
 
     @Mapping(target = "apartment.photos",
-            source = "reservation.apartmentInstance.apartment")
+            source = "reservation.apartmentInstance.apartment.photos")
     ReservationDto toDto(Reservation reservation);
 }

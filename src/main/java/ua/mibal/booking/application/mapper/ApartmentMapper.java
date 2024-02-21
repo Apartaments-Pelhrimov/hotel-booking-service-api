@@ -21,12 +21,12 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
+import ua.mibal.booking.adapter.in.web.mapper.linker.PhotoLinker;
 import ua.mibal.booking.application.dto.request.CreateApartmentDto;
 import ua.mibal.booking.application.dto.request.UpdateApartmentDto;
 import ua.mibal.booking.application.dto.request.UpdateApartmentOptionsDto;
 import ua.mibal.booking.application.dto.response.ApartmentCardDto;
 import ua.mibal.booking.application.dto.response.ApartmentDto;
-import ua.mibal.booking.application.mapper.linker.ApartmentPhotoLinker;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.ApartmentOptions;
 
@@ -42,7 +42,7 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
         injectionStrategy = CONSTRUCTOR,
         uses = {
                 ApartmentInstanceMapper.class,
-                ApartmentPhotoLinker.class,
+                PhotoLinker.class,
                 RoomMapper.class,
                 PriceMapper.class
         })
@@ -50,12 +50,10 @@ public interface ApartmentMapper {
 
     @Mapping(target = "price", source = "prices")
     @Mapping(target = "beds", source = "rooms")
-    @Mapping(target = "photos", source = "apartment")
     ApartmentDto toDto(Apartment apartment);
 
     @Mapping(target = "price", source = "prices")
     @Mapping(target = "people", source = "rooms")
-    @Mapping(target = "photos", source = "apartment")
     ApartmentCardDto toCardDto(Apartment apartment);
 
     @Mapping(target = "apartmentInstances", source = "instances")

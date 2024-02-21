@@ -17,11 +17,10 @@
 package ua.mibal.booking.adapter.in.web.mapper;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import ua.mibal.booking.adapter.in.web.mapper.linker.PhotoLinker;
 import ua.mibal.booking.adapter.in.web.model.UserAccountDto;
 import ua.mibal.booking.adapter.in.web.model.UserDto;
 import ua.mibal.booking.application.mapper.PhoneMapper;
-import ua.mibal.booking.application.mapper.linker.UserPhotoLinker;
 import ua.mibal.booking.domain.User;
 
 import static org.mapstruct.InjectionStrategy.CONSTRUCTOR;
@@ -34,13 +33,11 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 @Mapper(
         componentModel = SPRING,
         injectionStrategy = CONSTRUCTOR, uses = {
-        UserPhotoLinker.class, PhoneMapper.class
+        PhotoLinker.class, PhoneMapper.class
 })
 public interface UserDtoMapper {
 
-    @Mapping(target = "photo", source = "user")
     UserDto toDto(User user);
 
-    @Mapping(target = "photo", source = "user")
     UserAccountDto toAccountDto(User user);
 }
