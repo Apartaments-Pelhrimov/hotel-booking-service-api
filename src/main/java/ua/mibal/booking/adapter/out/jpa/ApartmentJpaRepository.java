@@ -20,13 +20,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ua.mibal.booking.application.port.jpa.ApartmentRepository;
 import ua.mibal.booking.domain.Apartment;
-import ua.mibal.booking.domain.Photo;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface ApartmentJpaRepository extends JpaRepository<Apartment, Long>, ApartmentRepository {
 
+    @Override
     @Query("""
             select a from Apartment a
                 left join fetch a.photos
@@ -34,12 +34,14 @@ public interface ApartmentJpaRepository extends JpaRepository<Apartment, Long>, 
             """)
     Optional<Apartment> findByIdFetchPhotos(Long id);
 
+    @Override
     @Query("""
             select a from Apartment a
                 left join fetch a.photos
             """)
     List<Apartment> findAllFetchPhotos();
 
+    @Override
     @Query("""
             select a from Apartment a
                 left join fetch a.prices
@@ -47,6 +49,7 @@ public interface ApartmentJpaRepository extends JpaRepository<Apartment, Long>, 
             """)
     Optional<Apartment> findByIdFetchPrices(Long id);
 
+    @Override
     @Query("""
             select a from Apartment a
                 left join fetch a.apartmentInstances
@@ -54,10 +57,11 @@ public interface ApartmentJpaRepository extends JpaRepository<Apartment, Long>, 
             """)
     Optional<Apartment> findByIdFetchInstances(Long id);
 
-    @Query("""
-            select count(a.id) = 1 from Apartment a
-                left join a.photos p
-            where a.id = ?1 and p = ?2
-            """)
-    boolean doesApartmentHavePhoto(Long id, Photo photo);
+    // TODO
+
+    @Override
+    Optional<Apartment> findByIdFetchPhotosRoomsBeds(Long id);
+
+    @Override
+    List<Apartment> findAllFetchPhotosRoomsBeds();
 }

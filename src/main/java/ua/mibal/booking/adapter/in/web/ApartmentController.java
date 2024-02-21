@@ -28,12 +28,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import ua.mibal.booking.adapter.in.web.mapper.ApartmentDtoMapper;
 import ua.mibal.booking.adapter.in.web.security.annotation.ManagerAllowed;
 import ua.mibal.booking.application.ApartmentService;
 import ua.mibal.booking.application.dto.request.CreateApartmentDto;
 import ua.mibal.booking.application.dto.request.UpdateApartmentDto;
 import ua.mibal.booking.application.dto.response.ApartmentCardDto;
 import ua.mibal.booking.application.dto.response.ApartmentDto;
+import ua.mibal.booking.domain.Apartment;
 
 import java.util.List;
 
@@ -46,15 +48,18 @@ import java.util.List;
 @RequestMapping("/api/apartments")
 public class ApartmentController {
     private final ApartmentService apartmentService;
+    private final ApartmentDtoMapper apartmentDtoMapper;
 
     @GetMapping("/{id}")
     public ApartmentDto getOne(@PathVariable Long id) {
-        return apartmentService.getOneFetchPhotosBeds(id);
+        Apartment apartment = apartmentService.getOneFetchPhotosBeds(id);
+        return apartmentDtoMapper.toDto(apartment);
     }
 
     @GetMapping
     public List<ApartmentCardDto> getAll() {
-        return apartmentService.getAllFetchPhotosBeds();
+        List<Apartment> apartments = apartmentService.getAllFetchPhotosBeds();
+        return apartmentDtoMapper.toCardDtos(apartments);
     }
 
     @ManagerAllowed

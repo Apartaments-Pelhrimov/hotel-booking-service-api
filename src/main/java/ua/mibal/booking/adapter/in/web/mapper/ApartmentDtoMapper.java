@@ -14,37 +14,41 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.mapper;
+package ua.mibal.booking.adapter.in.web.mapper;
 
-import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import ua.mibal.booking.application.dto.request.CreateApartmentDto;
-import ua.mibal.booking.application.dto.request.UpdateApartmentDto;
-import ua.mibal.booking.application.dto.request.UpdateApartmentOptionsDto;
+import ua.mibal.booking.adapter.in.web.mapper.linker.PhotoLinker;
+import ua.mibal.booking.application.dto.response.ApartmentCardDto;
+import ua.mibal.booking.application.dto.response.ApartmentDto;
+import ua.mibal.booking.application.mapper.PriceMapper;
+import ua.mibal.booking.application.mapper.RoomMapper;
 import ua.mibal.booking.domain.Apartment;
-import ua.mibal.booking.domain.ApartmentOptions;
+
+import java.util.List;
 
 import static org.mapstruct.InjectionStrategy.CONSTRUCTOR;
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
-import static org.mapstruct.NullValuePropertyMappingStrategy.IGNORE;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Mapper(componentModel = SPRING,
+@Mapper(
+        componentModel = SPRING,
         injectionStrategy = CONSTRUCTOR,
-        uses = ApartmentInstanceMapper.class)
-public interface ApartmentMapper {
+        uses = {
+                PhotoLinker.class,
+                RoomMapper.class,
+                PriceMapper.class
+        })
+public interface ApartmentDtoMapper {
 
-    @Mapping(target = "apartmentInstances", source = "instances")
-    Apartment toEntity(CreateApartmentDto createApartmentDto);
+    @Mapping(target = "price", source = "prices")
+    @Mapping(target = "beds", source = "rooms")
+    ApartmentDto toDto(Apartment apartment);
 
-    @BeanMapping(nullValuePropertyMappingStrategy = IGNORE)
-    void update(@MappingTarget Apartment apartment, UpdateApartmentDto updateApartmentDto);
-
-    @BeanMapping(nullValuePropertyMappingStrategy = IGNORE)
-    void update(@MappingTarget ApartmentOptions target, UpdateApartmentOptionsDto source);
+    @Mapping(target = "price", source = "prices")
+    @Mapping(target = "people", source = "rooms")
+    List<ApartmentCardDto> toCardDtos(List<Apartment> apartments);
 }

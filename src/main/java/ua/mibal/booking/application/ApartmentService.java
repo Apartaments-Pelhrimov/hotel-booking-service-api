@@ -21,8 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.application.dto.request.CreateApartmentDto;
 import ua.mibal.booking.application.dto.request.UpdateApartmentDto;
-import ua.mibal.booking.application.dto.response.ApartmentCardDto;
-import ua.mibal.booking.application.dto.response.ApartmentDto;
 import ua.mibal.booking.application.exception.ApartmentNotFoundException;
 import ua.mibal.booking.application.mapper.ApartmentMapper;
 import ua.mibal.booking.application.port.jpa.ApartmentRepository;
@@ -41,11 +39,8 @@ public class ApartmentService {
     private final ApartmentMapper apartmentMapper;
 
     @Transactional(readOnly = true) // for LAZY Apartment.beds fetch
-    public List<ApartmentCardDto> getAllFetchPhotosBeds() {
-        return apartmentRepository.findAllFetchPhotos()
-                .stream()
-                .map(apartmentMapper::toCardDto)
-                .toList();
+    public List<Apartment> getAllFetchPhotosBeds() {
+        return apartmentRepository.findAllFetchPhotosRoomsBeds();
     }
 
     public Apartment getOne(Long id) {
@@ -68,10 +63,8 @@ public class ApartmentService {
                 .orElseThrow(() -> new ApartmentNotFoundException(id));
     }
 
-    @Transactional(readOnly = true) // for LAZY Apartment.beds fetch
-    public ApartmentDto getOneFetchPhotosBeds(Long id) {
-        return apartmentRepository.findByIdFetchPhotos(id)
-                .map(apartmentMapper::toDto)
+    public Apartment getOneFetchPhotosBeds(Long id) {
+        return apartmentRepository.findByIdFetchPhotosRoomsBeds(id)
                 .orElseThrow(() -> new ApartmentNotFoundException(id));
     }
 

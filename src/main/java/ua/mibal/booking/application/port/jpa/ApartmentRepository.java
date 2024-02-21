@@ -17,7 +17,6 @@
 package ua.mibal.booking.application.port.jpa;
 
 import ua.mibal.booking.domain.Apartment;
-import ua.mibal.booking.domain.Photo;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,5 +31,7 @@ public interface ApartmentRepository extends Repository<Apartment, Long> {
 
     Optional<Apartment> findByIdFetchInstances(Long id);
 
-    boolean doesApartmentHavePhoto(Long id, Photo photo);
+    Optional<Apartment> findByIdFetchPhotosRoomsBeds(Long id);
+
+    List<Apartment> findAllFetchPhotosRoomsBeds();
 }
