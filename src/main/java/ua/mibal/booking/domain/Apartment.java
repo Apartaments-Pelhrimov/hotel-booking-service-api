@@ -203,6 +203,11 @@ public class Apartment {
         return getClass().hashCode();
     }
 
+    public boolean hasPhoto(String key) {
+        return photos.stream()
+                .anyMatch(p -> p.getKey().equals(key));
+    }
+
     private void checkPhotoIndexForBounds(Integer photoIndex) {
         if (photoIndex < 0 || photoIndex >= photos.size()) {
             throw new PhotoNotFoundException();
