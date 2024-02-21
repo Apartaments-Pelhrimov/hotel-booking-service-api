@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.dto.response;
-
-import ua.mibal.booking.domain.NotificationSettings;
-import ua.mibal.booking.domain.Role;
+package ua.mibal.booking.adapter.in.web.model;
 
 /**
  * @author Mykhailo Balakhon
@@ -27,9 +24,6 @@ public record UserDto(
         String firstName,
         String lastName,
         String photo,
-        String phone,
-        String email,
-        Role role,
-        NotificationSettings notificationSettings
+        String role
 ) {
 }

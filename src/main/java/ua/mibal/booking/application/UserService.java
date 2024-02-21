@@ -25,13 +25,12 @@ import ua.mibal.booking.application.dto.request.ChangeNotificationSettingsDto;
 import ua.mibal.booking.application.dto.request.ChangePasswordDto;
 import ua.mibal.booking.application.dto.request.ChangeUserDetailsDto;
 import ua.mibal.booking.application.dto.request.DeleteMeDto;
-import ua.mibal.booking.application.dto.response.UserDto;
+import ua.mibal.booking.application.exception.IllegalPasswordException;
+import ua.mibal.booking.application.exception.UserNotFoundException;
 import ua.mibal.booking.application.mapper.UserMapper;
 import ua.mibal.booking.application.port.jpa.UserRepository;
 import ua.mibal.booking.domain.Photo;
 import ua.mibal.booking.domain.User;
-import ua.mibal.booking.application.exception.IllegalPasswordException;
-import ua.mibal.booking.application.exception.UserNotFoundException;
 
 /**
  * @author Mykhailo Balakhon
@@ -43,10 +42,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
-
-    public UserDto getOneDto(String email) {
-        return userMapper.toDto(getOne(email));
-    }
 
     public User getOne(String email) {
         return userRepository.findByEmail(email)

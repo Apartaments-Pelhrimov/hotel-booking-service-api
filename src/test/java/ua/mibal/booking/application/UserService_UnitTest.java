@@ -27,14 +27,13 @@ import ua.mibal.booking.application.dto.request.ChangeNotificationSettingsDto;
 import ua.mibal.booking.application.dto.request.ChangePasswordDto;
 import ua.mibal.booking.application.dto.request.ChangeUserDetailsDto;
 import ua.mibal.booking.application.dto.request.DeleteMeDto;
-import ua.mibal.booking.application.dto.response.UserDto;
+import ua.mibal.booking.application.exception.IllegalPasswordException;
+import ua.mibal.booking.application.exception.UserNotFoundException;
 import ua.mibal.booking.application.mapper.UserMapper;
 import ua.mibal.booking.application.port.jpa.UserRepository;
 import ua.mibal.booking.domain.NotificationSettings;
 import ua.mibal.booking.domain.Photo;
 import ua.mibal.booking.domain.User;
-import ua.mibal.booking.application.exception.IllegalPasswordException;
-import ua.mibal.booking.application.exception.UserNotFoundException;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.util.Optional;
@@ -73,8 +72,6 @@ class UserService_UnitTest {
     @Mock
     private NotificationSettings notificationSettings;
     @Mock
-    private UserDto userDto;
-    @Mock
     private RegistrationDto registrationDto;
     @Mock
     private ChangePasswordDto changePasswordDto;
@@ -88,35 +85,6 @@ class UserService_UnitTest {
     @BeforeEach
     void setup() {
         service = new UserService(userRepository, userMapper, passwordEncoder);
-    }
-
-    @Test
-    void getOneDto() {
-        String email = "existing_email";
-
-        when(userRepository.findByEmail(email))
-                .thenReturn(Optional.of(user));
-        when(userMapper.toDto(user))
-                .thenReturn(userDto);
-
-        var actual = assertDoesNotThrow(
-                () -> service.getOneDto(email)
-        );
-
-        assertEquals(userDto, actual);
-    }
-
-    @Test
-    void getOneDto_should_throw_UserNotFoundException() {
-        String notExistingEmail = "not_existing_email";
-
-        when(userRepository.findByEmail(notExistingEmail))
-                .thenReturn(Optional.empty());
-
-        assertThrows(
-                UserNotFoundException.class,
-                () -> service.getOneDto(notExistingEmail)
-        );
     }
 
     @Test

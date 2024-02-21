@@ -22,11 +22,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
+import ua.mibal.booking.adapter.in.web.model.UserDto;
 import ua.mibal.booking.application.dto.auth.RegistrationDto;
 import ua.mibal.booking.application.dto.auth.TokenDto;
 import ua.mibal.booking.application.dto.request.ChangeNotificationSettingsDto;
 import ua.mibal.booking.application.dto.request.ChangeUserDetailsDto;
-import ua.mibal.booking.application.dto.response.UserDto;
 import ua.mibal.booking.application.mapper.linker.UserPhotoLinker;
 import ua.mibal.booking.domain.NotificationSettings;
 import ua.mibal.booking.domain.Phone;
@@ -124,10 +124,7 @@ class UserMapper_UnitTest {
         assertThat(userDto.firstName(), is(user.getFirstName()));
         assertThat(userDto.lastName(), is(user.getLastName()));
         assertThat(userDto.photo(), is(photoUrl));
-        assertThat(userDto.phone(), is(user.getPhone().getNumber()));
-        assertThat(userDto.email(), is(user.getEmail()));
         assertThat(userDto.role(), is(user.getRole()));
-        assertThat(userDto.notificationSettings(), is(user.getNotificationSettings()));
     }
 
     @Test

@@ -28,13 +28,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import ua.mibal.booking.adapter.in.web.model.UserAccountDto;
+import ua.mibal.booking.adapter.in.web.model.UserDto;
 import ua.mibal.booking.adapter.in.web.security.annotation.UserAllowed;
 import ua.mibal.booking.application.UserService;
 import ua.mibal.booking.application.dto.request.ChangeNotificationSettingsDto;
 import ua.mibal.booking.application.dto.request.ChangePasswordDto;
 import ua.mibal.booking.application.dto.request.ChangeUserDetailsDto;
 import ua.mibal.booking.application.dto.request.DeleteMeDto;
-import ua.mibal.booking.application.dto.response.UserDto;
+import ua.mibal.booking.application.mapper.UserMapper;
+import ua.mibal.booking.domain.User;
 
 /**
  * @author Mykhailo Balakhon
@@ -46,10 +49,18 @@ import ua.mibal.booking.application.dto.response.UserDto;
 @RequestMapping("/api/users")
 public class UserController {
     private final UserService userService;
+    private final UserMapper userMapper;
 
     @GetMapping("/me")
     public UserDto getOne(Authentication authentication) {
-        return userService.getOneDto(authentication.getName());
+        User user = userService.getOne(authentication.getName());
+        return userMapper.toDto(user);
+    }
+
+    @GetMapping("/me/account")
+    public UserAccountDto getAccount(Authentication authentication) {
+        User user = userService.getOne(authentication.getName());
+        return userMapper.toAccountDto(user);
     }
 
     @DeleteMapping("/me")

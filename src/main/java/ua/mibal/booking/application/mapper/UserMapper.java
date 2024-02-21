@@ -20,11 +20,12 @@ import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import ua.mibal.booking.adapter.in.web.model.UserAccountDto;
+import ua.mibal.booking.adapter.in.web.model.UserDto;
 import ua.mibal.booking.application.dto.auth.RegistrationDto;
 import ua.mibal.booking.application.dto.auth.TokenDto;
 import ua.mibal.booking.application.dto.request.ChangeNotificationSettingsDto;
 import ua.mibal.booking.application.dto.request.ChangeUserDetailsDto;
-import ua.mibal.booking.application.dto.response.UserDto;
 import ua.mibal.booking.application.mapper.linker.UserPhotoLinker;
 import ua.mibal.booking.domain.NotificationSettings;
 import ua.mibal.booking.domain.User;
@@ -52,6 +53,9 @@ public interface UserMapper {
 
     @Mapping(target = "photo", source = "user")
     UserDto toDto(User user);
+
+    @Mapping(target = "photo", source = "user")
+    UserAccountDto toAccountDto(User user);
 
     @BeanMapping(nullValuePropertyMappingStrategy = IGNORE)
     void update(@MappingTarget User user, ChangeUserDetailsDto changeUserDetailsDto);
