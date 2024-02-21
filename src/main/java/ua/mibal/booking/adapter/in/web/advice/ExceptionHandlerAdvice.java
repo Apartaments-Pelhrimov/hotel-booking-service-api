@@ -81,12 +81,4 @@ public class ExceptionHandlerAdvice {
         log.error("An Internal error occurred", e);
         return handleApiException(e, locale);
     }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiError> handleException(Exception e) {
-        log.error("An Internal error occurred", e);
-        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-        return ResponseEntity.status(status)
-                .body(ApiError.ofException(status, e));
-    }
 }
