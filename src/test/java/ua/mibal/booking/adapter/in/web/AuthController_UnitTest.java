@@ -32,11 +32,11 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import ua.mibal.booking.adapter.in.web.model.LoginDto;
+import ua.mibal.booking.adapter.in.web.model.NewPasswordDto;
+import ua.mibal.booking.adapter.in.web.model.TokenDto;
 import ua.mibal.booking.application.AuthService;
-import ua.mibal.booking.application.dto.auth.LoginDto;
-import ua.mibal.booking.application.dto.auth.NewPasswordDto;
 import ua.mibal.booking.application.dto.auth.RegistrationForm;
-import ua.mibal.booking.application.dto.auth.TokenDto;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -76,15 +76,15 @@ class AuthController_UnitTest {
 
     @ParameterizedTest
     @InstancioSource
-    void login(LoginDto loginDto, TokenDto expectedTokenDto) throws Exception {
-        when(authService.login(loginDto))
-                .thenReturn(expectedTokenDto);
+    void login(String username, String password, String token) throws Exception {
+        when(authService.login(username, password))
+                .thenReturn(token);
 
         mvc.perform(post("/api/auth/login")
                         .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(loginDto)))
+                        .content(objectMapper.writeValueAsString(new LoginDto(username, password))))
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(expectedTokenDto)));
+                .andExpect(content().json(objectMapper.writeValueAsString(new TokenDto(token))));
     }
 
     @ParameterizedTest

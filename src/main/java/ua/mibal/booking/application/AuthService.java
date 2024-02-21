@@ -21,14 +21,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.application.component.TemplateEmailFactory;
-import ua.mibal.booking.application.dto.auth.LoginDto;
 import ua.mibal.booking.application.dto.auth.RegistrationForm;
-import ua.mibal.booking.application.dto.auth.TokenDto;
 import ua.mibal.booking.application.exception.EmailAlreadyExistsException;
 import ua.mibal.booking.application.exception.IllegalPasswordException;
 import ua.mibal.booking.application.exception.NotAuthorizedException;
 import ua.mibal.booking.application.exception.UserNotFoundException;
-import ua.mibal.booking.application.mapper.UserMapper;
 import ua.mibal.booking.application.port.email.EmailSendingService;
 import ua.mibal.booking.application.port.email.model.Email;
 import ua.mibal.booking.domain.Token;
@@ -42,16 +39,20 @@ import ua.mibal.booking.domain.User;
 @Service
 public class AuthService {
     private final JwtTokenService jwtTokenService;
-    private final UserMapper userMapper;
     private final UserService userService;
     private final TokenService tokenService;
     private final EmailSendingService emailSendingService;
     private final PasswordEncoder passwordEncoder;
     private final TemplateEmailFactory emailFactory;
 
-    public TokenDto login(LoginDto login) {
+    /**
+     * @param username User's username to authenticate
+     * @param password User's password to authenticate
+     * @return String representation of JWT token
+     */
+    public String login(String username, String password) {
         try {
-            return loginByCredentials(login);
+            return loginBy(username, password);
         } catch (UserNotFoundException | IllegalPasswordException hidden) {
             // To hide from a client what is incorrect: username or password
             throw new NotAuthorizedException();
@@ -99,11 +100,10 @@ public class AuthService {
         emailSendingService.send(emailMessage);
     }
 
-    private TokenDto loginByCredentials(LoginDto login) {
-        User user = userService.getOne(login.username());
-        validatePasswordCorrect(login.password(), user.getPassword());
-        String token = jwtTokenService.generateJwtToken(user);
-        return userMapper.toToken(user, token);
+    private String loginBy(String username, String password) {
+        User user = userService.getOne(username);
+        validatePasswordCorrect(password, user.getPassword());
+        return jwtTokenService.generateJwtToken(user);
     }
 
     private void validatePasswordCorrect(String raw, String encoded) {

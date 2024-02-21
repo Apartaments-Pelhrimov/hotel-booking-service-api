@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.dto.auth;
+package ua.mibal.booking.adapter.in.web.model;
+
+import jakarta.validation.constraints.NotNull;
+import ua.mibal.booking.application.validation.constraints.Password;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public record TokenDto(
-        String firstName,
-        String lastName,
-        String token
-) {
+public record NewPasswordDto(@NotNull @Password String password) {
 }

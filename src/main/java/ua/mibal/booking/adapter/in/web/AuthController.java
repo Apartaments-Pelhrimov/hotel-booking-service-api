@@ -27,11 +27,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import ua.mibal.booking.adapter.in.web.mapper.AuthDtoMapper;
+import ua.mibal.booking.adapter.in.web.model.LoginDto;
+import ua.mibal.booking.adapter.in.web.model.NewPasswordDto;
+import ua.mibal.booking.adapter.in.web.model.TokenDto;
 import ua.mibal.booking.application.AuthService;
-import ua.mibal.booking.application.dto.auth.LoginDto;
-import ua.mibal.booking.application.dto.auth.NewPasswordDto;
 import ua.mibal.booking.application.dto.auth.RegistrationForm;
-import ua.mibal.booking.application.dto.auth.TokenDto;
 
 /**
  * @author Mykhailo Balakhon
@@ -42,10 +43,12 @@ import ua.mibal.booking.application.dto.auth.TokenDto;
 @RequestMapping("/api/auth")
 public class AuthController {
     private final AuthService authService;
+    private final AuthDtoMapper authDtoMapper;
 
     @PostMapping("/login")
     public TokenDto login(@Valid @RequestBody LoginDto loginDto) {
-        return authService.login(loginDto);
+        String token = authService.login(loginDto.username(), loginDto.password());
+        return authDtoMapper.toTokenDto(token);
     }
 
     @PostMapping("/register")

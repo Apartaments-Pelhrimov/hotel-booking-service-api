@@ -24,13 +24,10 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ua.mibal.booking.application.component.TemplateEmailFactory;
-import ua.mibal.booking.application.dto.auth.LoginDto;
 import ua.mibal.booking.application.dto.auth.RegistrationForm;
-import ua.mibal.booking.application.dto.auth.TokenDto;
 import ua.mibal.booking.application.exception.EmailAlreadyExistsException;
 import ua.mibal.booking.application.exception.NotAuthorizedException;
 import ua.mibal.booking.application.exception.UserNotFoundException;
-import ua.mibal.booking.application.mapper.UserMapper;
 import ua.mibal.booking.application.port.email.EmailSendingService;
 import ua.mibal.booking.application.port.email.model.Email;
 import ua.mibal.booking.domain.Token;
@@ -58,8 +55,6 @@ class AuthService_UnitTest {
     @Mock
     private JwtTokenService jwtTokenService;
     @Mock
-    private UserMapper userMapper;
-    @Mock
     private UserService userService;
     @Mock
     private TokenService tokenService;
@@ -75,35 +70,30 @@ class AuthService_UnitTest {
     @Mock
     private Token token;
     @Mock
-    private TokenDto expectedAuthDto;
-    @Mock
     private RegistrationForm registrationForm;
     @Mock
     private Email email;
 
     @BeforeEach
     void setup() {
-        service = new AuthService(jwtTokenService, userMapper, userService, tokenService, emailSendingService, passwordEncoder, emailFactory);
+        service = new AuthService(jwtTokenService, userService, tokenService, emailSendingService, passwordEncoder, emailFactory);
     }
 
     @ParameterizedTest
     @InstancioSource
-    void login(LoginDto loginDto, String token, String originalUserPassword) {
-
-        when(userService.getOne(loginDto.username()))
+    void login(String username, String password, String token, String originalUserPassword) {
+        when(userService.getOne(username))
                 .thenReturn(user);
         when(user.getPassword())
                 .thenReturn(originalUserPassword);
-        when(passwordEncoder.matches(loginDto.password(), originalUserPassword))
+        when(passwordEncoder.matches(password, originalUserPassword))
                 .thenReturn(true);
         when(jwtTokenService.generateJwtToken(user))
                 .thenReturn(token);
-        when(userMapper.toToken(user, token))
-                .thenReturn(expectedAuthDto);
 
-        var actual = service.login(loginDto);
+        String actual = service.login(username, password);
 
-        assertEquals(expectedAuthDto, actual);
+        assertEquals(token, actual);
     }
 
     @ParameterizedTest
@@ -116,8 +106,6 @@ class AuthService_UnitTest {
     void login_should_wrap_UserNotFoundException_and_IllegalPasswordException_into_NotAuthorizedException(
             String username, String password, String token, String correctUsername, String correctPassword
     ) {
-        LoginDto loginDto = new LoginDto(username, password);
-
         if (username.equals(correctUsername)) {
             when(userService.getOne(username))
                     .thenReturn(user);
@@ -131,11 +119,9 @@ class AuthService_UnitTest {
                 .thenReturn(password.equals(correctPassword));
         when(jwtTokenService.generateJwtToken(user))
                 .thenReturn(token);
-        when(userMapper.toToken(user, token))
-                .thenReturn(expectedAuthDto);
 
         assertThrows(NotAuthorizedException.class,
-                () -> service.login(loginDto));
+                () -> service.login(username, password));
     }
 
     @Test

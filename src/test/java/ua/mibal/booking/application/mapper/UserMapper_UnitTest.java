@@ -25,7 +25,6 @@ import org.mockito.Mock;
 import ua.mibal.booking.application.dto.ChangeNotificationSettingsForm;
 import ua.mibal.booking.application.dto.ChangeUserForm;
 import ua.mibal.booking.application.dto.auth.RegistrationForm;
-import ua.mibal.booking.application.dto.auth.TokenDto;
 import ua.mibal.booking.domain.NotificationSettings;
 import ua.mibal.booking.domain.Phone;
 import ua.mibal.booking.domain.User;
@@ -88,23 +87,6 @@ class UserMapper_UnitTest {
         User user = mapper.toEntity(null, null);
 
         assertThat(user, nullValue());
-    }
-
-    @ParameterizedTest
-    @InstancioSource
-    void toToken(User user, String jwtToken) {
-        TokenDto tokenDto = mapper.toToken(user, jwtToken);
-
-        assertThat(tokenDto.firstName(), is(user.getFirstName()));
-        assertThat(tokenDto.lastName(), is(user.getLastName()));
-        assertThat(tokenDto.token(), is(jwtToken));
-    }
-
-    @Test
-    void toToken_should_return_null_if_arguments_are_null() {
-        TokenDto tokenDto = mapper.toToken(null, null);
-
-        assertThat(tokenDto, nullValue());
     }
 
     @ParameterizedTest

@@ -23,8 +23,6 @@ import org.mapstruct.MappingTarget;
 import ua.mibal.booking.application.dto.ChangeNotificationSettingsForm;
 import ua.mibal.booking.application.dto.ChangeUserForm;
 import ua.mibal.booking.application.dto.auth.RegistrationForm;
-import ua.mibal.booking.application.dto.auth.TokenDto;
-import ua.mibal.booking.application.mapper.linker.UserPhotoLinker;
 import ua.mibal.booking.domain.NotificationSettings;
 import ua.mibal.booking.domain.User;
 
@@ -36,15 +34,10 @@ import static org.mapstruct.NullValuePropertyMappingStrategy.IGNORE;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Mapper(
-        componentModel = SPRING,
-        injectionStrategy = CONSTRUCTOR, uses = {
-        UserPhotoLinker.class, PhoneMapper.class
-})
+@Mapper(componentModel = SPRING,
+        injectionStrategy = CONSTRUCTOR,
+        uses = PhoneMapper.class)
 public interface UserMapper {
-
-    @Mapping(target = "token", source = "jwtToken")
-    TokenDto toToken(User user, String jwtToken);
 
     @Mapping(target = "password", source = "encodedPassword")
     User toEntity(RegistrationForm registrationForm, String encodedPassword);
