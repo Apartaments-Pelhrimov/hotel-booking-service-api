@@ -27,8 +27,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
-import ua.mibal.booking.adapter.in.web.advice.model.ValidationApiError;
 import ua.mibal.booking.adapter.in.web.advice.model.ApiError;
+import ua.mibal.booking.adapter.in.web.advice.model.ValidationApiError;
 import ua.mibal.booking.application.exception.ApiException;
 import ua.mibal.booking.application.exception.InternalServerException;
 
@@ -80,5 +80,13 @@ public class ExceptionHandlerAdvice {
                                                                   Locale locale) {
         log.error("An Internal error occurred", e);
         return handleApiException(e, locale);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiError> handleException(Exception e) {
+        log.error("An Internal error occurred", e);
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        return ResponseEntity.status(status)
+                .body(ApiError.ofException(status, e));
     }
 }
