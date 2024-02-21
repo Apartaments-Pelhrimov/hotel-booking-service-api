@@ -28,15 +28,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import ua.mibal.booking.adapter.in.web.mapper.UserDtoMapper;
+import ua.mibal.booking.adapter.in.web.model.ChangePasswordDto;
+import ua.mibal.booking.adapter.in.web.model.DeleteMeDto;
 import ua.mibal.booking.adapter.in.web.model.UserAccountDto;
 import ua.mibal.booking.adapter.in.web.model.UserDto;
 import ua.mibal.booking.adapter.in.web.security.annotation.UserAllowed;
 import ua.mibal.booking.application.UserService;
-import ua.mibal.booking.application.dto.request.ChangeNotificationSettingsDto;
-import ua.mibal.booking.application.dto.request.ChangePasswordDto;
-import ua.mibal.booking.application.dto.request.ChangeUserDetailsDto;
-import ua.mibal.booking.application.dto.request.DeleteMeDto;
-import ua.mibal.booking.application.mapper.UserMapper;
+import ua.mibal.booking.application.dto.ChangeNotificationSettingsForm;
+import ua.mibal.booking.application.dto.ChangeUserForm;
 import ua.mibal.booking.domain.User;
 
 /**
@@ -49,45 +49,45 @@ import ua.mibal.booking.domain.User;
 @RequestMapping("/api/users")
 public class UserController {
     private final UserService userService;
-    private final UserMapper userMapper;
+    private final UserDtoMapper userDtoMapper;
 
     @GetMapping("/me")
     public UserDto getOne(Authentication authentication) {
         User user = userService.getOne(authentication.getName());
-        return userMapper.toDto(user);
+        return userDtoMapper.toDto(user);
     }
 
     @GetMapping("/me/account")
     public UserAccountDto getAccount(Authentication authentication) {
         User user = userService.getOne(authentication.getName());
-        return userMapper.toAccountDto(user);
+        return userDtoMapper.toAccountDto(user);
     }
 
     @DeleteMapping("/me")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@Valid @RequestBody DeleteMeDto deleteMeDto,
                        Authentication authentication) {
-        userService.delete(deleteMeDto, authentication.getName());
+        userService.delete(authentication.getName(), deleteMeDto.password());
     }
 
     @PutMapping("/me/password")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void changePassword(@Valid @RequestBody ChangePasswordDto changePasswordDto,
                                Authentication authentication) {
-        userService.changePassword(changePasswordDto, authentication.getName());
+        userService.changePassword(authentication.getName(), changePasswordDto.oldPassword(), changePasswordDto.newPassword());
     }
 
     @PatchMapping("/me")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void changeDetails(@Valid @RequestBody ChangeUserDetailsDto changeUserDetailsDto,
-                              Authentication authentication) {
-        userService.changeDetails(changeUserDetailsDto, authentication.getName());
+    public void changeUser(@Valid @RequestBody ChangeUserForm changeUserForm,
+                           Authentication authentication) {
+        userService.changeUser(authentication.getName(), changeUserForm);
     }
 
     @PatchMapping("/me/notifications")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void changeNotificationSettings(@RequestBody ChangeNotificationSettingsDto changeNotificationSettingsDto,
+    public void changeNotificationSettings(@RequestBody ChangeNotificationSettingsForm changeNotificationSettingsForm,
                                            Authentication authentication) {
-        userService.changeNotificationSettings(changeNotificationSettingsDto, authentication.getName());
+        userService.changeNotificationSettings(authentication.getName(), changeNotificationSettingsForm);
     }
 }

@@ -22,12 +22,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
-import ua.mibal.booking.adapter.in.web.model.UserDto;
-import ua.mibal.booking.application.dto.auth.RegistrationDto;
+import ua.mibal.booking.application.dto.ChangeNotificationSettingsForm;
+import ua.mibal.booking.application.dto.ChangeUserForm;
+import ua.mibal.booking.application.dto.auth.RegistrationForm;
 import ua.mibal.booking.application.dto.auth.TokenDto;
-import ua.mibal.booking.application.dto.request.ChangeNotificationSettingsDto;
-import ua.mibal.booking.application.dto.request.ChangeUserDetailsDto;
-import ua.mibal.booking.application.mapper.linker.UserPhotoLinker;
 import ua.mibal.booking.domain.NotificationSettings;
 import ua.mibal.booking.domain.Phone;
 import ua.mibal.booking.domain.User;
@@ -52,8 +50,6 @@ class UserMapper_UnitTest {
     private UserMapper mapper;
 
     @Mock
-    private UserPhotoLinker photoLinker;
-    @Mock
     private PhoneMapper phoneMapper;
 
     @Mock
@@ -61,21 +57,21 @@ class UserMapper_UnitTest {
 
     @BeforeEach
     public void setup() {
-        mapper = new UserMapperImpl(photoLinker, phoneMapper);
+        mapper = new UserMapperImpl(phoneMapper);
     }
 
     @ParameterizedTest
     @InstancioSource
-    void toEntity(RegistrationDto registrationDto, String encodedPassword) {
-        when(phoneMapper.toNumberString(registrationDto.phone()))
+    void toEntity(RegistrationForm registrationForm, String encodedPassword) {
+        when(phoneMapper.toNumberString(registrationForm.phone()))
                 .thenReturn(mappedPhone);
 
-        User user = mapper.toEntity(registrationDto, encodedPassword);
+        User user = mapper.toEntity(registrationForm, encodedPassword);
 
         assertThat(user.getId(), nullValue());
-        assertThat(user.getFirstName(), is(registrationDto.firstName()));
-        assertThat(user.getLastName(), is(registrationDto.lastName()));
-        assertThat(user.getEmail(), is(registrationDto.email()));
+        assertThat(user.getFirstName(), is(registrationForm.firstName()));
+        assertThat(user.getLastName(), is(registrationForm.lastName()));
+        assertThat(user.getEmail(), is(registrationForm.email()));
         assertThat(user.getPassword(), is(encodedPassword));
         assertThat(user.getPhone(), is(mappedPhone));
         assertThat(user.getPhoto(), is(empty()));
@@ -112,31 +108,8 @@ class UserMapper_UnitTest {
     }
 
     @ParameterizedTest
-    @InstancioSource
-    void toDto(User user, String photoUrl) {
-        when(photoLinker.toLink(user))
-                .thenReturn(photoUrl);
-        when(phoneMapper.toNumberString(user.getPhone()))
-                .thenReturn(user.getPhone().getNumber());
-
-        UserDto userDto = mapper.toDto(user);
-
-        assertThat(userDto.firstName(), is(user.getFirstName()));
-        assertThat(userDto.lastName(), is(user.getLastName()));
-        assertThat(userDto.photo(), is(photoUrl));
-        assertThat(userDto.role(), is(user.getRole()));
-    }
-
-    @Test
-    void toDto_should_return_null_if_arguments_are_null() {
-        UserDto userDto = mapper.toDto(null);
-
-        assertThat(userDto, nullValue());
-    }
-
-    @ParameterizedTest
     @MethodSource("ua.mibal.test.util.DataGenerator#testUsers")
-    void update_User(User source, ChangeUserDetailsDto userChanges) {
+    void update_User(User source, ChangeUserForm userChanges) {
         when(phoneMapper.toNumberString(userChanges.phone()))
                 .thenReturn(mappedPhone);
 
@@ -160,7 +133,7 @@ class UserMapper_UnitTest {
     @ParameterizedTest
     @MethodSource("ua.mibal.test.util.DataGenerator#testNotificationSettings")
     void update_NotificationSettings(NotificationSettings source,
-                                     ChangeNotificationSettingsDto userChanges) {
+                                     ChangeNotificationSettingsForm userChanges) {
         boolean expectedOrderEmails = userChanges.receiveOrderEmails() == null
                 ? source.isReceiveOrderEmails()
                 : userChanges.receiveOrderEmails();

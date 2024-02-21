@@ -20,11 +20,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ua.mibal.booking.application.dto.auth.RegistrationDto;
-import ua.mibal.booking.application.dto.request.ChangeNotificationSettingsDto;
-import ua.mibal.booking.application.dto.request.ChangePasswordDto;
-import ua.mibal.booking.application.dto.request.ChangeUserDetailsDto;
-import ua.mibal.booking.application.dto.request.DeleteMeDto;
+import ua.mibal.booking.application.dto.ChangeNotificationSettingsForm;
+import ua.mibal.booking.application.dto.ChangeUserForm;
+import ua.mibal.booking.application.dto.auth.RegistrationForm;
 import ua.mibal.booking.application.exception.IllegalPasswordException;
 import ua.mibal.booking.application.exception.UserNotFoundException;
 import ua.mibal.booking.application.mapper.UserMapper;
@@ -52,38 +50,33 @@ public class UserService {
         return userRepository.existsByEmail(email);
     }
 
-    public void delete(DeleteMeDto deleteMeDto, String email) {
-        String password = deleteMeDto.password();
+    public void delete(String email, String password) {
         validatePassword(password, email);
         userRepository.deleteByEmail(email);
     }
 
-    public User save(RegistrationDto registrationDto) {
-        String encodedPass = passwordEncoder.encode(registrationDto.password());
-        User user = userMapper.toEntity(registrationDto, encodedPass);
+    public User save(RegistrationForm registrationForm) {
+        String encodedPass = passwordEncoder.encode(registrationForm.password());
+        User user = userMapper.toEntity(registrationForm, encodedPass);
         return userRepository.save(user);
     }
 
-    public void changePassword(ChangePasswordDto changePasswordDto,
-                               String email) {
-        String oldPassword = changePasswordDto.oldPassword();
+    public void changePassword(String email, String oldPassword, String newPassword) {
         validatePassword(oldPassword, email);
-        String newEncodedPassword = passwordEncoder.encode(changePasswordDto.newPassword());
+        String newEncodedPassword = passwordEncoder.encode(newPassword);
         userRepository.updateUserPasswordByEmail(newEncodedPassword, email);
     }
 
     @Transactional
-    public void changeDetails(ChangeUserDetailsDto changeUserDetailsDto,
-                              String email) {
+    public void changeUser(String email, ChangeUserForm form) {
         User user = getOne(email);
-        userMapper.update(user, changeUserDetailsDto);
+        userMapper.update(user, form);
     }
 
     @Transactional
-    public void changeNotificationSettings(ChangeNotificationSettingsDto changeNotificationSettingsDto,
-                                           String email) {
+    public void changeNotificationSettings(String email, ChangeNotificationSettingsForm form) {
         User user = getOne(email);
-        userMapper.update(user.getNotificationSettings(), changeNotificationSettingsDto);
+        userMapper.update(user.getNotificationSettings(), form);
     }
 
     @Transactional

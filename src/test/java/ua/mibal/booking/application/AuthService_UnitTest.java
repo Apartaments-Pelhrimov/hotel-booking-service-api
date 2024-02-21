@@ -25,16 +25,16 @@ import org.mockito.Mock;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ua.mibal.booking.application.component.TemplateEmailFactory;
 import ua.mibal.booking.application.dto.auth.LoginDto;
-import ua.mibal.booking.application.dto.auth.RegistrationDto;
+import ua.mibal.booking.application.dto.auth.RegistrationForm;
 import ua.mibal.booking.application.dto.auth.TokenDto;
+import ua.mibal.booking.application.exception.EmailAlreadyExistsException;
+import ua.mibal.booking.application.exception.NotAuthorizedException;
+import ua.mibal.booking.application.exception.UserNotFoundException;
 import ua.mibal.booking.application.mapper.UserMapper;
 import ua.mibal.booking.application.port.email.EmailSendingService;
 import ua.mibal.booking.application.port.email.model.Email;
 import ua.mibal.booking.domain.Token;
 import ua.mibal.booking.domain.User;
-import ua.mibal.booking.application.exception.EmailAlreadyExistsException;
-import ua.mibal.booking.application.exception.UserNotFoundException;
-import ua.mibal.booking.application.exception.NotAuthorizedException;
 import ua.mibal.test.annotation.UnitTest;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -77,7 +77,7 @@ class AuthService_UnitTest {
     @Mock
     private TokenDto expectedAuthDto;
     @Mock
-    private RegistrationDto registrationDto;
+    private RegistrationForm registrationForm;
     @Mock
     private Email email;
 
@@ -142,19 +142,19 @@ class AuthService_UnitTest {
     void register() {
         String notExistingEmail = "not_existing_email";
         String password = "test_pass";
-        when(registrationDto.email()).thenReturn(notExistingEmail);
-        when(registrationDto.password()).thenReturn(password);
+        when(registrationForm.email()).thenReturn(notExistingEmail);
+        when(registrationForm.password()).thenReturn(password);
 
         when(userService.isExistsByEmail(notExistingEmail))
                 .thenReturn(false);
-        when(userService.save(registrationDto))
+        when(userService.save(registrationForm))
                 .thenReturn(user);
         when(tokenService.generateAndSaveTokenFor(user))
                 .thenReturn(token);
         when(emailFactory.getAccountActivationEmail(token))
                 .thenReturn(email);
 
-        service.register(registrationDto);
+        service.register(registrationForm);
 
         verify(emailSendingService, times(1))
                 .send(email);
@@ -163,7 +163,7 @@ class AuthService_UnitTest {
     @Test
     void register_should_throw_EmailAlreadyExistsException() {
         String existingEmail = "existing_email";
-        when(registrationDto.email()).thenReturn(existingEmail);
+        when(registrationForm.email()).thenReturn(existingEmail);
 
         when(userService.isExistsByEmail(existingEmail))
                 .thenReturn(true);
@@ -172,7 +172,7 @@ class AuthService_UnitTest {
 
         EmailAlreadyExistsException e = assertThrows(
                 EmailAlreadyExistsException.class,
-                () -> service.register(registrationDto)
+                () -> service.register(registrationForm)
         );
         assertEquals(
                 new EmailAlreadyExistsException(existingEmail).getMessage(),

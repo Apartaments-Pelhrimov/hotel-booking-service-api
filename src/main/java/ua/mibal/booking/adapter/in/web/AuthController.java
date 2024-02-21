@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ua.mibal.booking.application.AuthService;
 import ua.mibal.booking.application.dto.auth.LoginDto;
 import ua.mibal.booking.application.dto.auth.NewPasswordDto;
-import ua.mibal.booking.application.dto.auth.RegistrationDto;
+import ua.mibal.booking.application.dto.auth.RegistrationForm;
 import ua.mibal.booking.application.dto.auth.TokenDto;
 
 /**
@@ -50,8 +50,8 @@ public class AuthController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public void register(@Valid @RequestBody RegistrationDto registrationDto) {
-        authService.register(registrationDto);
+    public void register(@Valid @RequestBody RegistrationForm registrationForm) {
+        authService.register(registrationForm);
     }
 
     @PostMapping("/activate")

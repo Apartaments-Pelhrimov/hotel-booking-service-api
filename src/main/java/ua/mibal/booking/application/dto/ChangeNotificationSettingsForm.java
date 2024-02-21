@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.dto.request;
-
-import jakarta.validation.constraints.NotNull;
+package ua.mibal.booking.application.dto;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public record DeleteMeDto(@NotNull String password) {
+public record ChangeNotificationSettingsForm(
+        Boolean receiveOrderEmails,
+        Boolean receiveNewsEmails
+) {
 }

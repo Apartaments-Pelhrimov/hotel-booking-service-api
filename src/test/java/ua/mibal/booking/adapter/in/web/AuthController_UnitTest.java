@@ -35,7 +35,7 @@ import org.springframework.web.context.WebApplicationContext;
 import ua.mibal.booking.application.AuthService;
 import ua.mibal.booking.application.dto.auth.LoginDto;
 import ua.mibal.booking.application.dto.auth.NewPasswordDto;
-import ua.mibal.booking.application.dto.auth.RegistrationDto;
+import ua.mibal.booking.application.dto.auth.RegistrationForm;
 import ua.mibal.booking.application.dto.auth.TokenDto;
 
 import static org.mockito.Mockito.times;
@@ -130,7 +130,7 @@ class AuthController_UnitTest {
             String firstName, String lastName, String phone, String email, String password) throws Exception {
         mvc.perform(post("/api/auth/register")
                         .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new RegistrationDto(firstName, lastName, phone, email, password))))
+                        .content(objectMapper.writeValueAsString(new RegistrationForm(firstName, lastName, phone, email, password))))
                 .andExpect(status().isBadRequest());
 
         verifyNoInteractions(authService);
@@ -142,15 +142,15 @@ class AuthController_UnitTest {
             "Test,  Test,   +380951234567,  example@example.com,    password123")
     void register_should_accept_correct_RegistrationDto(
             String firstName, String lastName, String phone, String email, String password) throws Exception {
-        RegistrationDto registrationDto = new RegistrationDto(firstName, lastName, phone, email, password);
+        RegistrationForm registrationForm = new RegistrationForm(firstName, lastName, phone, email, password);
 
         mvc.perform(post("/api/auth/register")
                         .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(registrationDto)))
+                        .content(objectMapper.writeValueAsString(registrationForm)))
                 .andExpect(status().isCreated());
 
         verify(authService, times(1))
-                .register(registrationDto);
+                .register(registrationForm);
     }
 
     @ParameterizedTest

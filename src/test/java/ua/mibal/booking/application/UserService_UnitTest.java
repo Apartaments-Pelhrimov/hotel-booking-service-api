@@ -22,11 +22,11 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import ua.mibal.booking.application.dto.auth.RegistrationDto;
-import ua.mibal.booking.application.dto.request.ChangeNotificationSettingsDto;
-import ua.mibal.booking.application.dto.request.ChangePasswordDto;
-import ua.mibal.booking.application.dto.request.ChangeUserDetailsDto;
-import ua.mibal.booking.application.dto.request.DeleteMeDto;
+import ua.mibal.booking.adapter.in.web.model.ChangePasswordDto;
+import ua.mibal.booking.adapter.in.web.model.DeleteMeDto;
+import ua.mibal.booking.application.dto.ChangeNotificationSettingsForm;
+import ua.mibal.booking.application.dto.ChangeUserForm;
+import ua.mibal.booking.application.dto.auth.RegistrationForm;
 import ua.mibal.booking.application.exception.IllegalPasswordException;
 import ua.mibal.booking.application.exception.UserNotFoundException;
 import ua.mibal.booking.application.mapper.UserMapper;
@@ -72,15 +72,15 @@ class UserService_UnitTest {
     @Mock
     private NotificationSettings notificationSettings;
     @Mock
-    private RegistrationDto registrationDto;
+    private RegistrationForm registrationForm;
     @Mock
     private ChangePasswordDto changePasswordDto;
     @Mock
     private DeleteMeDto deleteMeDto;
     @Mock
-    private ChangeUserDetailsDto changeUserDetailsDto;
+    private ChangeUserForm changeUserForm;
     @Mock
-    private ChangeNotificationSettingsDto changeNotificationSettingsDto;
+    private ChangeNotificationSettingsForm changeNotificationSettingsForm;
 
     @BeforeEach
     void setup() {
@@ -132,14 +132,12 @@ class UserService_UnitTest {
         String pass = "password";
         String email = "email";
 
-        when(deleteMeDto.password()).thenReturn(pass);
-
         when(userRepository.findPasswordByEmail(email))
                 .thenReturn(Optional.of(pass));
         when(passwordEncoder.matches(pass, pass))
                 .thenReturn(true);
 
-        service.delete(deleteMeDto, email);
+        service.delete(email, pass);
 
         verify(userRepository, times(1))
                 .deleteByEmail(email);
@@ -156,7 +154,7 @@ class UserService_UnitTest {
 
         assertThrows(
                 UserNotFoundException.class,
-                () -> service.delete(deleteMeDto, notExistingEmail)
+                () -> service.delete(notExistingEmail, "ignored_pass")
         );
     }
 
@@ -164,8 +162,6 @@ class UserService_UnitTest {
     void delete_should_throw_IllegalPasswordException() {
         String pass = "password";
         String email = "email";
-
-        when(deleteMeDto.password()).thenReturn(pass);
 
         when(userRepository.findPasswordByEmail(email))
                 .thenReturn(Optional.of(pass));
@@ -176,7 +172,7 @@ class UserService_UnitTest {
 
         assertThrows(
                 IllegalPasswordException.class,
-                () -> service.delete(deleteMeDto, email)
+                () -> service.delete(email, pass)
         );
     }
 
@@ -185,14 +181,14 @@ class UserService_UnitTest {
         String pass = "password";
         String encodedPass = "encoded_password";
 
-        when(registrationDto.password()).thenReturn(pass);
+        when(registrationForm.password()).thenReturn(pass);
 
         when(passwordEncoder.encode(pass))
                 .thenReturn(encodedPass);
-        when(userMapper.toEntity(registrationDto, encodedPass))
+        when(userMapper.toEntity(registrationForm, encodedPass))
                 .thenReturn(user);
 
-        service.save(registrationDto);
+        service.save(registrationForm);
 
         verify(userRepository, times(1))
                 .save(user);
@@ -206,9 +202,6 @@ class UserService_UnitTest {
         String newPass = "new_pass";
         String encodedNewPass = "encoded_new_pass";
 
-        when(changePasswordDto.oldPassword()).thenReturn(oldPass);
-        when(changePasswordDto.newPassword()).thenReturn(newPass);
-
         when(userRepository.findPasswordByEmail(email))
                 .thenReturn(Optional.of(oldOriginalPass));
         when(passwordEncoder.matches(oldOriginalPass, oldPass))
@@ -217,7 +210,7 @@ class UserService_UnitTest {
                 .thenReturn(encodedNewPass);
 
         assertDoesNotThrow(
-                () -> service.changePassword(changePasswordDto, email)
+                () -> service.changePassword(email, oldPass, newPass)
         );
 
         verify(userRepository, times(1))
@@ -235,7 +228,7 @@ class UserService_UnitTest {
 
         assertThrows(
                 UserNotFoundException.class,
-                () -> service.changePassword(changePasswordDto, notExistingEmail)
+                () -> service.changePassword(notExistingEmail, "ignored_pass", "ignored_pass")
         );
         verifyNoInteractions(passwordEncoder);
     }
@@ -257,7 +250,7 @@ class UserService_UnitTest {
 
         assertThrows(
                 IllegalPasswordException.class,
-                () -> service.changePassword(changePasswordDto, email)
+                () -> service.changePassword(email, "ignored_pass", "ignored_pass")
         );
     }
 
@@ -268,10 +261,10 @@ class UserService_UnitTest {
         when(userRepository.findByEmail(email))
                 .thenReturn(Optional.of(user));
 
-        service.changeDetails(changeUserDetailsDto, email);
+        service.changeUser(email, changeUserForm);
 
         verify(userMapper, times(1))
-                .update(user, changeUserDetailsDto);
+                .update(user, changeUserForm);
     }
 
     @Test
@@ -283,7 +276,7 @@ class UserService_UnitTest {
 
         assertThrows(
                 UserNotFoundException.class,
-                () -> service.changeDetails(changeUserDetailsDto, notExistingEmail)
+                () -> service.changeUser(notExistingEmail, changeUserForm)
         );
     }
 
@@ -296,7 +289,7 @@ class UserService_UnitTest {
 
         assertThrows(
                 UserNotFoundException.class,
-                () -> service.changeNotificationSettings(changeNotificationSettingsDto, notExistingEmail)
+                () -> service.changeNotificationSettings(notExistingEmail, changeNotificationSettingsForm)
         );
     }
 
@@ -309,10 +302,10 @@ class UserService_UnitTest {
         when(user.getNotificationSettings())
                 .thenReturn(notificationSettings);
 
-        service.changeNotificationSettings(changeNotificationSettingsDto, email);
+        service.changeNotificationSettings(email, changeNotificationSettingsForm);
 
         verify(userMapper, only())
-                .update(notificationSettings, changeNotificationSettingsDto);
+                .update(notificationSettings, changeNotificationSettingsForm);
     }
 
 

@@ -20,10 +20,10 @@ import org.instancio.Instancio;
 import org.instancio.settings.Keys;
 import org.instancio.settings.Settings;
 import org.junit.jupiter.params.provider.Arguments;
-import ua.mibal.booking.application.dto.auth.RegistrationDto;
+import ua.mibal.booking.application.dto.ChangeNotificationSettingsForm;
+import ua.mibal.booking.application.dto.ChangeUserForm;
+import ua.mibal.booking.application.dto.auth.RegistrationForm;
 import ua.mibal.booking.application.dto.request.BedDto;
-import ua.mibal.booking.application.dto.request.ChangeNotificationSettingsDto;
-import ua.mibal.booking.application.dto.request.ChangeUserDetailsDto;
 import ua.mibal.booking.application.dto.request.CreateApartmentDto;
 import ua.mibal.booking.application.dto.request.CreateApartmentInstanceDto;
 import ua.mibal.booking.application.dto.request.PhotoDto;
@@ -327,16 +327,16 @@ public class DataGenerator {
         );
     }
 
-    public static RegistrationDto testRegistrationDto(String email) {
-        return Instancio.of(RegistrationDto.class)
-                .set(field(RegistrationDto::email), email)
-                .generate(field(RegistrationDto::phone), gen -> gen.text().pattern("+#d#d#d#d#d#d#d#d#d#d#d#d#d#d"))
-                .generate(field(RegistrationDto::password), gen -> gen.oneOf("password1", "password123", "qwerty1234Michael"))
+    public static RegistrationForm testRegistrationForm(String email) {
+        return Instancio.of(RegistrationForm.class)
+                .set(field(RegistrationForm::email), email)
+                .generate(field(RegistrationForm::phone), gen -> gen.text().pattern("+#d#d#d#d#d#d#d#d#d#d#d#d#d#d"))
+                .generate(field(RegistrationForm::password), gen -> gen.oneOf("password1", "password123", "qwerty1234Michael"))
                 .create();
     }
 
-    public static RegistrationDto invalidRegistrationDto() {
-        return Instancio.of(RegistrationDto.class).create();
+    public static RegistrationForm invalidRegistrationForm() {
+        return Instancio.of(RegistrationForm.class).create();
     }
 
     public static ApartmentInstance testApartmentInstanceWithoutReservation(String name) {
@@ -386,7 +386,7 @@ public class DataGenerator {
     public static Stream<Arguments> testUsers() {
         Settings settings = Settings.create()
                 .set(Keys.STRING_NULLABLE, true);
-        return Instancio.ofMap(User.class, ChangeUserDetailsDto.class)
+        return Instancio.ofMap(User.class, ChangeUserForm.class)
                 .size(50)
                 .withSettings(settings)
                 .create()
@@ -398,7 +398,7 @@ public class DataGenerator {
     public static Stream<Arguments> testNotificationSettings() {
         Settings settings = Settings.create()
                 .set(BOOLEAN_NULLABLE, true);
-        return Instancio.ofMap(NotificationSettings.class, ChangeNotificationSettingsDto.class)
+        return Instancio.ofMap(NotificationSettings.class, ChangeNotificationSettingsForm.class)
                 .size(50)
                 .withSettings(settings)
                 .create()

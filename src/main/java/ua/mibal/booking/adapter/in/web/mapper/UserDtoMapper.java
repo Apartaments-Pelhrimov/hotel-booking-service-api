@@ -14,23 +14,18 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.mapper;
+package ua.mibal.booking.adapter.in.web.mapper;
 
-import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import ua.mibal.booking.application.dto.ChangeNotificationSettingsForm;
-import ua.mibal.booking.application.dto.ChangeUserForm;
-import ua.mibal.booking.application.dto.auth.RegistrationForm;
-import ua.mibal.booking.application.dto.auth.TokenDto;
+import ua.mibal.booking.adapter.in.web.model.UserAccountDto;
+import ua.mibal.booking.adapter.in.web.model.UserDto;
+import ua.mibal.booking.application.mapper.PhoneMapper;
 import ua.mibal.booking.application.mapper.linker.UserPhotoLinker;
-import ua.mibal.booking.domain.NotificationSettings;
 import ua.mibal.booking.domain.User;
 
 import static org.mapstruct.InjectionStrategy.CONSTRUCTOR;
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
-import static org.mapstruct.NullValuePropertyMappingStrategy.IGNORE;
 
 /**
  * @author Mykhailo Balakhon
@@ -41,18 +36,11 @@ import static org.mapstruct.NullValuePropertyMappingStrategy.IGNORE;
         injectionStrategy = CONSTRUCTOR, uses = {
         UserPhotoLinker.class, PhoneMapper.class
 })
-public interface UserMapper {
+public interface UserDtoMapper {
 
-    @Mapping(target = "token", source = "jwtToken")
-    TokenDto toToken(User user, String jwtToken);
+    @Mapping(target = "photo", source = "user")
+    UserDto toDto(User user);
 
-    @Mapping(target = "password", source = "encodedPassword")
-    User toEntity(RegistrationForm registrationForm, String encodedPassword);
-
-    @BeanMapping(nullValuePropertyMappingStrategy = IGNORE)
-    void update(@MappingTarget User user, ChangeUserForm changeUserForm);
-
-    @BeanMapping(nullValuePropertyMappingStrategy = IGNORE)
-    void update(@MappingTarget NotificationSettings notificationSettings,
-                ChangeNotificationSettingsForm changeNotificationSettingsForm);
+    @Mapping(target = "photo", source = "user")
+    UserAccountDto toAccountDto(User user);
 }

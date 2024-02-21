@@ -22,17 +22,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.application.component.TemplateEmailFactory;
 import ua.mibal.booking.application.dto.auth.LoginDto;
-import ua.mibal.booking.application.dto.auth.RegistrationDto;
+import ua.mibal.booking.application.dto.auth.RegistrationForm;
 import ua.mibal.booking.application.dto.auth.TokenDto;
+import ua.mibal.booking.application.exception.EmailAlreadyExistsException;
+import ua.mibal.booking.application.exception.IllegalPasswordException;
+import ua.mibal.booking.application.exception.NotAuthorizedException;
+import ua.mibal.booking.application.exception.UserNotFoundException;
 import ua.mibal.booking.application.mapper.UserMapper;
 import ua.mibal.booking.application.port.email.EmailSendingService;
 import ua.mibal.booking.application.port.email.model.Email;
 import ua.mibal.booking.domain.Token;
 import ua.mibal.booking.domain.User;
-import ua.mibal.booking.application.exception.EmailAlreadyExistsException;
-import ua.mibal.booking.application.exception.IllegalPasswordException;
-import ua.mibal.booking.application.exception.UserNotFoundException;
-import ua.mibal.booking.application.exception.NotAuthorizedException;
 
 /**
  * @author Mykhailo Balakhon
@@ -59,9 +59,9 @@ public class AuthService {
     }
 
     @Transactional
-    public void register(RegistrationDto registrationDto) {
-        validateEmailDoesNotExist(registrationDto.email());
-        User user = userService.save(registrationDto);
+    public void register(RegistrationForm registrationForm) {
+        validateEmailDoesNotExist(registrationForm.email());
+        User user = userService.save(registrationForm);
         Token token = tokenService.generateAndSaveTokenFor(user);
         Email email = emailFactory.getAccountActivationEmail(token);
         emailSendingService.send(email);

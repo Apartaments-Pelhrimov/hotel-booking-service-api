@@ -14,22 +14,24 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.dto.request;
+package ua.mibal.booking.application.dto;
 
-import jakarta.validation.constraints.NotNull;
-import ua.mibal.booking.application.validation.constraints.Password;
+import ua.mibal.booking.application.validation.constraints.Name;
+import ua.mibal.booking.application.validation.constraints.Phone;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public record ChangePasswordDto(
+public record ChangeUserForm(
 
-        @NotNull
-        @Password
-        String newPassword,
+        @Name
+        String firstName,
 
-        @NotNull
-        String oldPassword
+        @Name
+        String lastName,
+
+        @Phone
+        String phone
 ) {
 }
