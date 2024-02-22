@@ -15,20 +15,17 @@
  */
 
 alter table apartment_photos
-drop
-constraint if exists apartment_photos_pkey;
+    drop constraint if exists apartment_photos_pkey;
 
 alter table apartment_photos
-drop
-constraint if exists  apartment_photos_aws_photo_key_idx;
+    drop constraint if exists apartment_photos_aws_photo_key_idx;
 
 alter table apartment_photos
-drop
-column photos_order;
+    drop
+        column if exists photos_order;
 
 alter table if exists apartment_photos
-drop
-constraint if exists apartment_photos_aws_photo_key_idx;
+    drop constraint if exists apartment_photos_aws_photo_key_idx;
 
 alter table if exists apartment_photos
     add constraint apartment_photos_aws_photo_key_idx unique (aws_photo_key);
