@@ -33,6 +33,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import ua.mibal.booking.adapter.in.web.mapper.ApartmentDtoMapper;
 import ua.mibal.booking.application.ApartmentService;
 import ua.mibal.booking.application.dto.request.CreateApartmentDto;
 
@@ -59,6 +60,8 @@ class ApartmentController_UnitTest {
 
     @MockBean
     private ApartmentService apartmentService;
+    @MockBean
+    private ApartmentDtoMapper apartmentDtoMapper;
 
     @Autowired
     private ObjectMapper objectMapper;

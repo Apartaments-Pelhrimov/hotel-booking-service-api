@@ -32,6 +32,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import ua.mibal.booking.adapter.in.web.mapper.AuthDtoMapper;
 import ua.mibal.booking.adapter.in.web.model.LoginDto;
 import ua.mibal.booking.adapter.in.web.model.NewPasswordDto;
 import ua.mibal.booking.adapter.in.web.model.TokenDto;
@@ -68,6 +69,8 @@ class AuthController_UnitTest {
 
     @MockBean
     private AuthService authService;
+    @MockBean
+    private AuthDtoMapper authDtoMapper;
 
     @BeforeEach
     public void setup() {
@@ -79,6 +82,8 @@ class AuthController_UnitTest {
     void login(String username, String password, String token) throws Exception {
         when(authService.login(username, password))
                 .thenReturn(token);
+        when(authDtoMapper.toTokenDto(token))
+                .thenReturn(new TokenDto(token));
 
         mvc.perform(post("/api/auth/login")
                         .contentType(APPLICATION_JSON)
