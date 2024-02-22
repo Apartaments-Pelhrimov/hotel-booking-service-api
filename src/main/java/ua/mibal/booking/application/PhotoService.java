@@ -68,7 +68,7 @@ public class PhotoService {
 
     @Transactional
     public void createApartmentPhoto(Long id, MultipartFile photo) {
-        Apartment apartment = apartmentService.getOne(id);
+        Apartment apartment = apartmentService.getOneFetchPhotos(id);
         String newPhotoKey = storage.uploadPhoto(photo);
         apartment.addPhoto(newPhotoKey);
     }

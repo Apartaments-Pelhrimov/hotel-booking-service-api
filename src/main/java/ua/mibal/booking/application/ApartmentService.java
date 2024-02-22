@@ -42,11 +42,6 @@ public class ApartmentService {
         return apartmentRepository.findAllFetchPhotosRooms();
     }
 
-    public Apartment getOne(Long id) {
-        return apartmentRepository.findById(id)
-                .orElseThrow(() -> new ApartmentNotFoundException(id));
-    }
-
     public Apartment getOneFetchPhotos(Long id) {
         return apartmentRepository.findByIdFetchPhotos(id)
                 .orElseThrow(() -> new ApartmentNotFoundException(id));
@@ -81,6 +76,11 @@ public class ApartmentService {
     public void delete(Long id) {
         validateExists(id);
         apartmentRepository.deleteById(id);
+    }
+
+    private Apartment getOne(Long id) {
+        return apartmentRepository.findById(id)
+                .orElseThrow(() -> new ApartmentNotFoundException(id));
     }
 
     private void validateExists(Long id) {

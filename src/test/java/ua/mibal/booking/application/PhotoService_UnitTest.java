@@ -145,7 +145,7 @@ class PhotoService_UnitTest {
     @ParameterizedTest
     @InstancioSource
     void createApartmentPhoto(Apartment apartment, Long id, String key) {
-        when(apartmentService.getOne(id))
+        when(apartmentService.getOneFetchPhotos(id))
                 .thenReturn(apartment);
         when(storage.uploadPhoto(photoFile))
                 .thenReturn(key);

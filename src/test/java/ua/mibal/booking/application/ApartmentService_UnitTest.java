@@ -77,29 +77,6 @@ class ApartmentService_UnitTest {
     }
 
     @Test
-    void getOne() {
-        Long id = 1L;
-
-        when(apartmentRepository.findById(id))
-                .thenReturn(Optional.of(apartment));
-
-        var actual = service.getOne(id);
-
-        assertEquals(apartment, actual);
-    }
-
-    @Test
-    void getOne_should_throw_ApartmentNotFoundException() {
-        Long id = 1L;
-
-        when(apartmentRepository.findById(id))
-                .thenReturn(Optional.empty());
-
-        assertThrows(ApartmentNotFoundException.class,
-                () -> service.getOne(id));
-    }
-
-    @Test
     void getOneFetchPhotos() {
         Long id = 1L;
 
