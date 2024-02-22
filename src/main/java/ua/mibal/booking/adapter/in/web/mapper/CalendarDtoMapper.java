@@ -14,34 +14,24 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.dto.response.calendar;
+package ua.mibal.booking.adapter.in.web.mapper;
 
-import lombok.NoArgsConstructor;
+import org.mapstruct.Mapper;
+import ua.mibal.booking.adapter.in.web.model.CalendarDto;
 import ua.mibal.booking.domain.Event;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+
+import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@NoArgsConstructor
-public class Calendar extends ArrayList<CalendarEvent> {
+@Mapper(componentModel = SPRING)
+public interface CalendarDtoMapper {
 
-    private Calendar(Collection<CalendarEvent> events) {
-        super(events);
-    }
+    List<CalendarDto> toCalendars(List<List<Event>> events);
 
-    public static Calendar of(Collection<Event> events) {
-        List<CalendarEvent> calendarEvents = toCalendarEvents(events);
-        return new Calendar(calendarEvents);
-    }
-
-    private static List<CalendarEvent> toCalendarEvents(Collection<Event> events) {
-        return events.stream()
-                .map(CalendarEvent::of)
-                .toList();
-    }
+    CalendarDto toCalendar(List<Event> events);
 }

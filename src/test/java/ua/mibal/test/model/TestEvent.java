@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.dto.response.calendar;
+package ua.mibal.test.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,23 +28,14 @@ import java.time.LocalDateTime;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
-public class CalendarEvent {
+public class TestEvent implements Event {
     private LocalDateTime start;
     private LocalDateTime end;
-    private String name;
-
-    private CalendarEvent(Event event) {
-        start = event.getStart();
-        end = event.getEnd();
-        name = event.getEventName();
-    }
-
-    public static CalendarEvent of(Event event) {
-        return new CalendarEvent(event);
-    }
+    private String eventName;
 
     @Override
     public boolean equals(Object o) {
@@ -54,22 +46,22 @@ public class CalendarEvent {
             return false;
         }
 
-        CalendarEvent range = (CalendarEvent) o;
+        Event event = (Event) o;
 
-        if (!start.equals(range.start)) {
+        if (!start.equals(event.getStart())) {
             return false;
         }
-        if (!end.equals(range.end)) {
+        if (!end.equals(event.getEnd())) {
             return false;
         }
-        return name.equals(range.name);
+        return eventName.equals(event.getEventName());
     }
 
     @Override
     public int hashCode() {
         int result = start.hashCode();
         result = 31 * result + end.hashCode();
-        result = 31 * result + name.hashCode();
+        result = 31 * result + eventName.hashCode();
         return result;
     }
 }

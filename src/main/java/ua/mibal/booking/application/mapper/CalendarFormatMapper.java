@@ -25,6 +25,7 @@ import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.DateProperty;
 import org.springframework.stereotype.Component;
 import ua.mibal.booking.config.properties.CalendarProps;
+import ua.mibal.booking.domain.DefaultEvent;
 import ua.mibal.booking.domain.Event;
 
 import java.time.Instant;
@@ -67,7 +68,7 @@ public class CalendarFormatMapper {
     }
 
     private Event vEventToEvent(VEvent vEvent) {
-        return Event.from(
+        return new DefaultEvent(
                 fromICal(vEvent.getStartDate(), calendarProps.zoneId()),
                 fromICal(vEvent.getEndDate(), calendarProps.zoneId()),
                 vEvent.getSummary().getValue()

@@ -19,7 +19,6 @@ package ua.mibal.booking.application;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import ua.mibal.booking.application.dto.response.calendar.Calendar;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.domain.Event;
@@ -28,9 +27,7 @@ import ua.mibal.test.annotation.UnitTest;
 
 import java.util.List;
 
-import static java.time.LocalDateTime.now;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.spy;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 /**
@@ -38,10 +35,9 @@ import static org.mockito.Mockito.when;
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @UnitTest
-class CalendarService_UnitTest {
+class EventService_UnitTest {
 
-    private CalendarService service;
-
+    private EventService service;
     @Mock
     private ReservationSystemManager reservationSystemManager;
     @Mock
@@ -56,23 +52,20 @@ class CalendarService_UnitTest {
     @Mock
     private ApartmentInstance apartmentInstance;
 
-    private final Event apartmentInstanceEvent = spy(Event.from(
-            now(), now().plusDays(1), "ApartmentInstanceEvent"
-    ));
-    private final Event bookingComEvent = spy(Event.from(
-            now(), now().plusDays(1), "BookingComEvent"
-    ));
-    private final HotelTurningOffTime hotelTurningOffTime = spy(new HotelTurningOffTime(
-            1L, now(), now().plusDays(2), "Christmas holidays"
-    ));
+    @Mock
+    private Event apartmentInstanceEvent;
+    @Mock
+    private Event bookingComEvent;
+    @Mock
+    private HotelTurningOffTime hotelTurningOffTime;
 
     @BeforeEach
     void setup() {
-        service = new CalendarService(reservationSystemManager, apartmentInstanceService, apartmentService, turningOffService);
+        service = new EventService(reservationSystemManager, apartmentInstanceService, apartmentService, turningOffService);
     }
 
     @Test
-    void getCalendarsForApartment() {
+    void getEventsForApartmentBy() {
         Long apartmentId = 1L;
 
         when(apartmentService.getOneFetchInstances(apartmentId))
@@ -87,17 +80,13 @@ class CalendarService_UnitTest {
         when(reservationSystemManager.getEventsFor(apartmentInstance))
                 .thenReturn(List.of(bookingComEvent));
 
-        List<Event> expectedEvents =
-                List.of(apartmentInstanceEvent, hotelTurningOffTime, bookingComEvent);
-        List<Calendar> expected = List.of(Calendar.of(expectedEvents));
+        List<List<Event>> actual = service.getEventsForApartmentBy(apartmentId);
 
-        List<Calendar> actual = service.getCalendarsForApartment(apartmentId);
-
-        assertEquals(expected, actual);
+        assertThat(actual.get(0)).containsOnly(apartmentInstanceEvent, hotelTurningOffTime, bookingComEvent);
     }
 
     @Test
-    void getCalendarForApartmentInstance() {
+    void getEventsForApartmentInstanceBy() {
         Long instanceId = 1L;
 
         when(apartmentInstanceService.getOneFetchReservations(instanceId))
@@ -110,12 +99,8 @@ class CalendarService_UnitTest {
         when(reservationSystemManager.getEventsFor(apartmentInstance))
                 .thenReturn(List.of(bookingComEvent));
 
-        List<Event> expectedEvents =
-                List.of(apartmentInstanceEvent, hotelTurningOffTime, bookingComEvent);
-        Calendar expected = Calendar.of(expectedEvents);
+        List<Event> actual = service.getEventsForApartmentInstanceBy(instanceId);
 
-        Calendar actual = service.getCalendarForApartmentInstance(instanceId);
-
-        assertEquals(expected, actual);
+        assertThat(actual).containsOnly(apartmentInstanceEvent, hotelTurningOffTime, bookingComEvent);
     }
 }

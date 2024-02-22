@@ -43,6 +43,7 @@ import ua.mibal.booking.domain.Reservation;
 import ua.mibal.booking.domain.ReservationDetails;
 import ua.mibal.booking.domain.TurningOffTime;
 import ua.mibal.booking.domain.User;
+import ua.mibal.test.model.TestEvent;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -82,9 +83,9 @@ public class DataGenerator {
         LocalDateTime twentyFifth = LocalDate.of(2023, 12, 25).atStartOfDay();
         LocalDateTime birthday = LocalDate.of(2004, 9, 18).atStartOfDay();
         return of(
-                Event.from(first, first, "New Year"),
-                Event.from(twentyFifth, first, "Christmas holidays"),
-                Event.from(birthday, birthday, "My Birthday")
+                new TestEvent(first, first, "New Year"),
+                new TestEvent(twentyFifth, first, "Christmas holidays"),
+                new TestEvent(birthday, birthday, "My Birthday")
         );
     }
 
@@ -101,9 +102,9 @@ public class DataGenerator {
         LocalDateTime birthday = timeAtToOurZoneId(
                 LocalDate.of(2004, 9, 18).atStartOfDay(), australia, targetZoneId);
         return of(
-                Event.from(first, first, "New Year"),
-                Event.from(twentyFifth, first, "Christmas holidays"),
-                Event.from(birthday, birthday, "My Birthday")
+                new TestEvent(first, first, "New Year"),
+                new TestEvent(twentyFifth, first, "Christmas holidays"),
+                new TestEvent(birthday, birthday, "My Birthday")
         );
     }
 
@@ -118,10 +119,10 @@ public class DataGenerator {
         LocalDateTime sixth = LocalDate.of(2023, 12, 6).atStartOfDay();
         return Stream.of(
                 Arguments.of(of(), first, fifth, true),
-                Arguments.of(of(Event.from(first, third, "")), fifth, sixth, true),
-                Arguments.of(of(Event.from(first, fifth, "")), first, fifth, false),
-                Arguments.of(of(Event.from(first, third, "")), first, fifth, false),
-                Arguments.of(of(Event.from(third, fifth, "")), first, fifth, false)
+                Arguments.of(of(new TestEvent(first, third, "")), fifth, sixth, true),
+                Arguments.of(of(new TestEvent(first, fifth, "")), first, fifth, false),
+                Arguments.of(of(new TestEvent(first, third, "")), first, fifth, false),
+                Arguments.of(of(new TestEvent(third, fifth, "")), first, fifth, false)
         );
     }
 

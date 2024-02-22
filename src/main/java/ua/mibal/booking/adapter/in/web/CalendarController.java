@@ -21,8 +21,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ua.mibal.booking.application.CalendarService;
-import ua.mibal.booking.application.dto.response.calendar.Calendar;
+import ua.mibal.booking.adapter.in.web.mapper.CalendarDtoMapper;
+import ua.mibal.booking.adapter.in.web.model.CalendarDto;
+import ua.mibal.booking.application.EventService;
+import ua.mibal.booking.domain.Event;
 
 import java.util.List;
 
@@ -34,15 +36,18 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 public class CalendarController {
-    private final CalendarService calendarService;
+    private final EventService eventService;
+    private final CalendarDtoMapper calendarDtoMapper;
 
     @GetMapping("/apartments/{id}/calendar")
-    public List<Calendar> getCalendarForApartment(@PathVariable Long id) {
-        return calendarService.getCalendarsForApartment(id);
+    public List<CalendarDto> getCalendarForApartment(@PathVariable Long id) {
+        List<List<Event>> events = eventService.getEventsForApartmentBy(id);
+        return calendarDtoMapper.toCalendars(events);
     }
 
     @GetMapping("/apartments/instances/{id}/calendar")
-    public Calendar getCalendarForApartmentInstance(@PathVariable Long id) {
-        return calendarService.getCalendarForApartmentInstance(id);
+    public CalendarDto getCalendarForApartmentInstance(@PathVariable Long id) {
+        List<Event> events = eventService.getEventsForApartmentInstanceBy(id);
+        return calendarDtoMapper.toCalendar(events);
     }
 }

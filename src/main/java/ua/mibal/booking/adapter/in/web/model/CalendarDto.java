@@ -14,19 +14,17 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.domain;
+package ua.mibal.booking.adapter.in.web.model;
 
-import java.time.LocalDateTime;
+import lombok.NoArgsConstructor;
+import ua.mibal.booking.domain.Event;
+
+import java.util.ArrayList;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public interface Event {
-
-    LocalDateTime getStart();
-
-    LocalDateTime getEnd();
-
-    String getEventName();
+@NoArgsConstructor
+public class CalendarDto extends ArrayList<Event> {
 }
