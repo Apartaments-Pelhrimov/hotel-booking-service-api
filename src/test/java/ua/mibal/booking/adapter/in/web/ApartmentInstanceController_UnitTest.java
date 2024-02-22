@@ -32,7 +32,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import ua.mibal.booking.application.ApartmentInstanceService;
-import ua.mibal.booking.application.dto.request.CreateApartmentInstanceDto;
+import ua.mibal.booking.application.dto.CreateApartmentInstanceForm;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -67,23 +67,26 @@ class ApartmentInstanceController_UnitTest {
     }
 
     @ParameterizedTest
-    @MethodSource("ua.mibal.test.util.DataGenerator#validCreateApartmentInstanceDto")
-    void create(CreateApartmentInstanceDto createApartmentInstanceDto) throws Exception {
+    @MethodSource("ua.mibal.test.util.DataGenerator#validCreateApartmentInstanceForms")
+    void create(CreateApartmentInstanceForm form) throws Exception {
+        Long apartmentId = 1L;
+
         mvc.perform(post("/api/apartments/{id}/instances", 1)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(createApartmentInstanceDto)))
+                        .content(objectMapper.writeValueAsString(form)))
                 .andExpect(status().isCreated());
 
-        verify(apartmentInstanceService, times(1))
-                .create(1L, createApartmentInstanceDto);
+        form.setApartmentId(apartmentId);
+
+        verify(apartmentInstanceService, times(1)).create(form);
     }
 
     @ParameterizedTest
-    @MethodSource("ua.mibal.test.util.DataGenerator#invalidCreateApartmentInstanceDto")
-    void create_should_throw_if_dto_is_invalid(CreateApartmentInstanceDto createApartmentInstanceDto) throws Exception {
+    @MethodSource("ua.mibal.test.util.DataGenerator#invalidCreateApartmentInstanceForms")
+    void create_should_throw_if_dto_is_invalid(CreateApartmentInstanceForm form) throws Exception {
         mvc.perform(post("/api/apartments/{id}/instances", 1)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(createApartmentInstanceDto)))
+                        .content(objectMapper.writeValueAsString(form)))
                 .andExpect(status().isBadRequest());
 
         verifyNoInteractions(apartmentInstanceService);
@@ -95,7 +98,6 @@ class ApartmentInstanceController_UnitTest {
         mvc.perform(delete("/api/apartments/instances/{id}", id))
                 .andExpect(status().isNoContent());
 
-        verify(apartmentInstanceService, times(1))
-                .delete(id);
+        verify(apartmentInstanceService, times(1)).delete(id);
     }
 }

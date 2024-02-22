@@ -24,9 +24,9 @@ import ua.mibal.booking.application.dto.ChangeApartmentForm;
 import ua.mibal.booking.application.dto.ChangeNotificationSettingsForm;
 import ua.mibal.booking.application.dto.ChangeUserForm;
 import ua.mibal.booking.application.dto.CreateApartmentForm;
+import ua.mibal.booking.application.dto.CreateApartmentInstanceForm;
 import ua.mibal.booking.application.dto.RegistrationForm;
 import ua.mibal.booking.application.dto.request.BedDto;
-import ua.mibal.booking.application.dto.request.CreateApartmentInstanceDto;
 import ua.mibal.booking.application.dto.request.PhotoDto;
 import ua.mibal.booking.application.dto.request.PriceDto;
 import ua.mibal.booking.application.dto.request.RoomDto;
@@ -302,28 +302,28 @@ public class DataGenerator {
                 .create();
     }
 
-    public static Stream<Arguments> invalidCreateApartmentInstanceDto() {
+    public static Stream<Arguments> invalidCreateApartmentInstanceForms() {
         return Stream.of(
-                Arguments.of(new CreateApartmentInstanceDto("na", null)),
-                Arguments.of(new CreateApartmentInstanceDto("       ", null)),
-                Arguments.of(new CreateApartmentInstanceDto("correct_name", "")),
-                Arguments.of(new CreateApartmentInstanceDto("correct_name", "invalid.com")),
-                Arguments.of(new CreateApartmentInstanceDto("correct_name", "http://invalid")),
-                Arguments.of(new CreateApartmentInstanceDto("correct_name", "https://invalid")),
-                Arguments.of(new CreateApartmentInstanceDto("correct_name", "https://invalid/fjdskl")),
-                Arguments.of(new CreateApartmentInstanceDto("correct_name", "https://invalid.com\\"))
+                Arguments.of(new CreateApartmentInstanceForm("na", null, null)),
+                Arguments.of(new CreateApartmentInstanceForm("       ", null, null)),
+                Arguments.of(new CreateApartmentInstanceForm("correct_name", "", null)),
+                Arguments.of(new CreateApartmentInstanceForm("correct_name", "invalid.com", null)),
+                Arguments.of(new CreateApartmentInstanceForm("correct_name", "http://invalid", null)),
+                Arguments.of(new CreateApartmentInstanceForm("correct_name", "https://invalid", null)),
+                Arguments.of(new CreateApartmentInstanceForm("correct_name", "https://invalid/fjdskl", null)),
+                Arguments.of(new CreateApartmentInstanceForm("correct_name", "https://invalid.com\\", null))
         );
     }
 
-    public static Stream<Arguments> validCreateApartmentInstanceDto() {
+    public static Stream<Arguments> validCreateApartmentInstanceForms() {
         return Stream.of(
-                Arguments.of(new CreateApartmentInstanceDto("correct_name ", null)),
-                Arguments.of(new CreateApartmentInstanceDto("correct name", null)),
-                Arguments.of(new CreateApartmentInstanceDto("aaa", null)),
-                Arguments.of(new CreateApartmentInstanceDto("correct_name", "https://valid.com")),
-                Arguments.of(new CreateApartmentInstanceDto("correct_name", "https://valid.com/page")),
-                Arguments.of(new CreateApartmentInstanceDto("correct_name", "http://valid.com")),
-                Arguments.of(new CreateApartmentInstanceDto("correct_name", "http://valid.com/page"))
+                Arguments.of(new CreateApartmentInstanceForm("correct_name ", null, null)),
+                Arguments.of(new CreateApartmentInstanceForm("correct name", null, null)),
+                Arguments.of(new CreateApartmentInstanceForm("aaa", null, null)),
+                Arguments.of(new CreateApartmentInstanceForm("correct_name", "https://valid.com", null)),
+                Arguments.of(new CreateApartmentInstanceForm("correct_name", "https://valid.com/page", null)),
+                Arguments.of(new CreateApartmentInstanceForm("correct_name", "http://valid.com", null)),
+                Arguments.of(new CreateApartmentInstanceForm("correct_name", "http://valid.com/page", null))
         );
     }
 

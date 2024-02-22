@@ -19,7 +19,7 @@ package ua.mibal.booking.application;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import ua.mibal.booking.application.dto.request.CreateApartmentInstanceDto;
+import ua.mibal.booking.application.dto.CreateApartmentInstanceForm;
 import ua.mibal.booking.application.exception.ApartmentInstanceNotFoundException;
 import ua.mibal.booking.application.exception.ApartmentIsNotAvailableForReservation;
 import ua.mibal.booking.application.exception.ApartmentNotFoundException;
@@ -70,7 +70,7 @@ class ApartmentInstanceService_UnitTest {
     @Mock
     private Apartment apartment;
     @Mock
-    private CreateApartmentInstanceDto createApartmentInstanceDto;
+    private CreateApartmentInstanceForm form;
 
     @BeforeEach
     void setup() {
@@ -124,11 +124,14 @@ class ApartmentInstanceService_UnitTest {
     @Test
     void create() {
         Long id = 1L;
+        when(form.getApartmentId())
+                .thenReturn(id);
+
         when(apartmentRepository.existsById(id)).thenReturn(true);
-        when(apartmentInstanceMapper.toEntity(createApartmentInstanceDto)).thenReturn(apartmentInstance);
+        when(apartmentInstanceMapper.assemble(form)).thenReturn(apartmentInstance);
         when(apartmentRepository.getReferenceById(id)).thenReturn(apartment);
 
-        service.create(id, createApartmentInstanceDto);
+        service.create(form);
 
         verify(apartmentInstance, times(1)).setApartment(apartment);
         verify(apartmentInstanceRepository, times(1)).save(apartmentInstance);
@@ -137,11 +140,14 @@ class ApartmentInstanceService_UnitTest {
     @Test
     void create_should_throw_ApartmentNotFoundException() {
         Long id = 1L;
+        when(form.getApartmentId())
+                .thenReturn(id);
+
         when(apartmentRepository.existsById(id)).thenReturn(false);
 
         assertThrows(
                 ApartmentNotFoundException.class,
-                () -> service.create(id, createApartmentInstanceDto)
+                () -> service.create(form)
         );
 
         verifyNoInteractions(apartmentInstanceMapper, apartmentInstance, apartmentInstanceRepository);

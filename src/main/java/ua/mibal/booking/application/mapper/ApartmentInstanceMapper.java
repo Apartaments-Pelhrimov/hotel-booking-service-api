@@ -17,7 +17,7 @@
 package ua.mibal.booking.application.mapper;
 
 import org.mapstruct.Mapper;
-import ua.mibal.booking.application.dto.request.CreateApartmentInstanceDto;
+import ua.mibal.booking.application.dto.CreateApartmentInstanceForm;
 import ua.mibal.booking.domain.ApartmentInstance;
 
 import java.util.List;
@@ -31,7 +31,7 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 @Mapper(componentModel = SPRING)
 public interface ApartmentInstanceMapper {
 
-    ApartmentInstance toEntity(CreateApartmentInstanceDto createApartmentInstanceDto);
+    ApartmentInstance assemble(CreateApartmentInstanceForm form);
 
-    List<ApartmentInstance> toEntities(List<CreateApartmentInstanceDto> createApartmentInstanceDtos);
+    List<ApartmentInstance> assemble(List<CreateApartmentInstanceForm> forms);
 }

@@ -18,7 +18,6 @@ package ua.mibal.booking.application.dto;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import ua.mibal.booking.application.dto.request.CreateApartmentInstanceDto;
 import ua.mibal.booking.application.dto.request.PriceDto;
 import ua.mibal.booking.application.dto.request.RoomDto;
 import ua.mibal.booking.application.validation.constraints.Name;
@@ -49,6 +48,6 @@ public record CreateApartmentForm(
         List<RoomDto> rooms,
 
         @Valid
-        List<CreateApartmentInstanceDto> instances
+        List<CreateApartmentInstanceForm> instances
 ) {
 }

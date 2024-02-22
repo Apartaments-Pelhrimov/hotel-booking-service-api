@@ -16,6 +16,7 @@
 
 package ua.mibal.booking.application.mapper;
 
+import org.assertj.core.api.Assertions;
 import org.instancio.junit.InstancioSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -61,8 +62,8 @@ class ApartmentMapper_UnitTest {
     private List<Price> prices = new ArrayList<>();
     @Spy
     private List<Room> rooms = new ArrayList<>();
-    @Spy
-    private List<ApartmentInstance> apartmentInstances = new ArrayList<>();
+    @Mock
+    private ApartmentInstance apartmentInstance;
 
     @BeforeEach
     public void setup() {
@@ -76,8 +77,9 @@ class ApartmentMapper_UnitTest {
                 .thenReturn(prices);
         when(roomMapper.toEntities(source.rooms()))
                 .thenReturn(rooms);
-        when(apartmentInstanceMapper.toEntities(source.instances()))
-                .thenReturn(apartmentInstances);
+        source.instances().forEach(inst ->
+                when(apartmentInstanceMapper.assemble(inst))
+                        .thenReturn(apartmentInstance));
 
         Apartment actual = mapper.assemble(source);
 
@@ -86,7 +88,7 @@ class ApartmentMapper_UnitTest {
         assertThat(actual.getOptions(), is(source.options()));
         assertThat(actual.getPrices(), is(prices));
         assertThat(actual.getRooms(), is(rooms));
-        assertThat(actual.getApartmentInstances(), is(apartmentInstances));
+        Assertions.assertThat(actual.getApartmentInstances()).containsOnly(apartmentInstance);
     }
 
     @Test

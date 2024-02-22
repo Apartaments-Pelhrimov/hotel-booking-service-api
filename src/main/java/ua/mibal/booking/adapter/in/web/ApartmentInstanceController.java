@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ua.mibal.booking.adapter.in.web.security.annotation.ManagerAllowed;
 import ua.mibal.booking.application.ApartmentInstanceService;
-import ua.mibal.booking.application.dto.request.CreateApartmentInstanceDto;
+import ua.mibal.booking.application.dto.CreateApartmentInstanceForm;
 
 /**
  * @author Mykhailo Balakhon
@@ -44,8 +44,9 @@ public class ApartmentInstanceController {
     @PostMapping("/{apartmentId}/instances")
     @ResponseStatus(HttpStatus.CREATED)
     public void create(@PathVariable Long apartmentId,
-                       @RequestBody @Valid CreateApartmentInstanceDto createApartmentInstanceDto) {
-        apartmentInstanceService.create(apartmentId, createApartmentInstanceDto);
+                       @RequestBody @Valid CreateApartmentInstanceForm form) {
+        form.setApartmentId(apartmentId);
+        apartmentInstanceService.create(form);
     }
 
     @DeleteMapping("/instances/{id}")

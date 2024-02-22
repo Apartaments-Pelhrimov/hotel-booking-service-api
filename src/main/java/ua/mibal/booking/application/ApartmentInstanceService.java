@@ -18,7 +18,7 @@ package ua.mibal.booking.application;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ua.mibal.booking.application.dto.request.CreateApartmentInstanceDto;
+import ua.mibal.booking.application.dto.CreateApartmentInstanceForm;
 import ua.mibal.booking.application.exception.ApartmentInstanceNotFoundException;
 import ua.mibal.booking.application.exception.ApartmentIsNotAvailableForReservation;
 import ua.mibal.booking.application.exception.ApartmentNotFoundException;
@@ -49,13 +49,9 @@ public class ApartmentInstanceService {
         return selectMostSuitable(free, request);
     }
 
-    public void create(Long apartmentId,
-                       CreateApartmentInstanceDto createApartmentInstanceDto) {
-        validateApartmentExists(apartmentId);
-        ApartmentInstance newInstance =
-                apartmentInstanceMapper.toEntity(createApartmentInstanceDto);
-        Apartment apartmentReference = apartmentRepository.getReferenceById(apartmentId);
-        newInstance.setApartment(apartmentReference);
+    public void create(CreateApartmentInstanceForm form) {
+        validateApartmentExists(form.getApartmentId());
+        ApartmentInstance newInstance = assembleBy(form);
         apartmentInstanceRepository.save(newInstance);
     }
 
@@ -69,15 +65,22 @@ public class ApartmentInstanceService {
                 .orElseThrow(() -> new ApartmentInstanceNotFoundException(id));
     }
 
-    private List<ApartmentInstance> getFree(ReservationRequest reservationRequest) {
-        List<ApartmentInstance> freeLocal = getFreeLocal(reservationRequest);
-        reservationSystemManager.filterForFree(freeLocal, reservationRequest);
+    private ApartmentInstance assembleBy(CreateApartmentInstanceForm form) {
+        ApartmentInstance apartmentInstance = apartmentInstanceMapper.assemble(form);
+        Apartment apartmentRef = apartmentRepository.getReferenceById(form.getApartmentId());
+        apartmentInstance.setApartment(apartmentRef);
+        return apartmentInstance;
+    }
+
+    private List<ApartmentInstance> getFree(ReservationRequest request) {
+        List<ApartmentInstance> freeLocal = getFreeLocal(request);
+        reservationSystemManager.filterForFree(freeLocal, request);
         return freeLocal;
     }
 
-    private List<ApartmentInstance> getFreeLocal(ReservationRequest reservationRequest) {
+    private List<ApartmentInstance> getFreeLocal(ReservationRequest request) {
         List<ApartmentInstance> freeLocal =
-                apartmentInstanceRepository.findFreeByRequestFetchApartmentAndPrices(reservationRequest);
+                apartmentInstanceRepository.findFreeByRequestFetchApartmentAndPrices(request);
         return new ArrayList<>(freeLocal);
     }
 
