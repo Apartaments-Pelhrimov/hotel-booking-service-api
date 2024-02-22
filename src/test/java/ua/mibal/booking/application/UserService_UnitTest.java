@@ -22,8 +22,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import ua.mibal.booking.adapter.in.web.model.ChangePasswordDto;
-import ua.mibal.booking.adapter.in.web.model.DeleteMeDto;
 import ua.mibal.booking.application.dto.ChangeNotificationSettingsForm;
 import ua.mibal.booking.application.dto.ChangeUserForm;
 import ua.mibal.booking.application.dto.RegistrationForm;
@@ -32,7 +30,6 @@ import ua.mibal.booking.application.exception.UserNotFoundException;
 import ua.mibal.booking.application.mapper.UserMapper;
 import ua.mibal.booking.application.port.jpa.UserRepository;
 import ua.mibal.booking.domain.NotificationSettings;
-import ua.mibal.booking.domain.Photo;
 import ua.mibal.booking.domain.User;
 import ua.mibal.test.annotation.UnitTest;
 
@@ -41,8 +38,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -73,10 +68,6 @@ class UserService_UnitTest {
     private NotificationSettings notificationSettings;
     @Mock
     private RegistrationForm registrationForm;
-    @Mock
-    private ChangePasswordDto changePasswordDto;
-    @Mock
-    private DeleteMeDto deleteMeDto;
     @Mock
     private ChangeUserForm changeUserForm;
     @Mock
@@ -177,7 +168,7 @@ class UserService_UnitTest {
     }
 
     @Test
-    void save() {
+    void assemble() {
         String pass = "password";
         String encodedPass = "encoded_password";
 
@@ -185,7 +176,7 @@ class UserService_UnitTest {
 
         when(passwordEncoder.encode(pass))
                 .thenReturn(encodedPass);
-        when(userMapper.toEntity(registrationForm, encodedPass))
+        when(userMapper.assemble(registrationForm, encodedPass))
                 .thenReturn(user);
 
         service.save(registrationForm);
@@ -195,7 +186,7 @@ class UserService_UnitTest {
     }
 
     @Test
-    void changePassword() {
+    void putPassword() {
         String email = "email";
         String oldOriginalPass = "password";
         String oldPass = "password";
@@ -210,7 +201,7 @@ class UserService_UnitTest {
                 .thenReturn(encodedNewPass);
 
         assertDoesNotThrow(
-                () -> service.changePassword(email, oldPass, newPass)
+                () -> service.putPassword(email, oldPass, newPass)
         );
 
         verify(userRepository, times(1))
@@ -218,7 +209,7 @@ class UserService_UnitTest {
     }
 
     @Test
-    void changePassword_should_throw_UserNotFoundException() {
+    void putPassword_should_throw_UserNotFoundException() {
         String notExistingEmail = "not_existing";
 
         when(userRepository.findPasswordByEmail(notExistingEmail))
@@ -228,18 +219,16 @@ class UserService_UnitTest {
 
         assertThrows(
                 UserNotFoundException.class,
-                () -> service.changePassword(notExistingEmail, "ignored_pass", "ignored_pass")
+                () -> service.putPassword(notExistingEmail, "ignored_pass", "ignored_pass")
         );
         verifyNoInteractions(passwordEncoder);
     }
 
     @Test
-    void changePassword_should_throw_IllegalPasswordException() {
+    void putPassword_should_throw_IllegalPasswordException() {
         String email = "email";
         String oldOriginalPass = "oldOriginalPassword";
         String oldPass = "oldPassword";
-
-        when(changePasswordDto.oldPassword()).thenReturn(oldPass);
 
         when(userRepository.findPasswordByEmail(email))
                 .thenReturn(Optional.of(oldOriginalPass));
@@ -250,25 +239,25 @@ class UserService_UnitTest {
 
         assertThrows(
                 IllegalPasswordException.class,
-                () -> service.changePassword(email, "ignored_pass", "ignored_pass")
+                () -> service.putPassword(email, oldPass, "ignored_pass")
         );
     }
 
     @Test
-    void changeDetails_should_update_dynamic() {
+    void change_should_update_dynamic() {
         String email = "email";
 
         when(userRepository.findByEmail(email))
                 .thenReturn(Optional.of(user));
 
-        service.changeUser(email, changeUserForm);
+        service.change(email, changeUserForm);
 
         verify(userMapper, times(1))
-                .update(user, changeUserForm);
+                .change(user, changeUserForm);
     }
 
     @Test
-    void changeDetails_should_throw_UserNotFoundException() {
+    void change_should_throw_UserNotFoundException() {
         String notExistingEmail = "not_existing_email";
 
         when(userRepository.findByEmail(notExistingEmail))
@@ -276,7 +265,7 @@ class UserService_UnitTest {
 
         assertThrows(
                 UserNotFoundException.class,
-                () -> service.changeUser(notExistingEmail, changeUserForm)
+                () -> service.change(notExistingEmail, changeUserForm)
         );
     }
 
@@ -305,75 +294,7 @@ class UserService_UnitTest {
         service.changeNotificationSettings(email, changeNotificationSettingsForm);
 
         verify(userMapper, only())
-                .update(notificationSettings, changeNotificationSettingsForm);
-    }
-
-
-    @Test
-    void setNewPasswordForUser() {
-        Long userId = 1L;
-        String pass = "pass";
-        String encodedPass = "encoded_pass";
-
-        when(userRepository.findById(userId))
-                .thenReturn(Optional.of(user));
-        when(passwordEncoder.encode(pass))
-                .thenReturn(encodedPass);
-
-        service.setNewPasswordForUser(userId, pass);
-
-        verify(user, times(1))
-                .setPassword(encodedPass);
-    }
-
-    @Test
-    void setNewPasswordForUser_should_throw_UserNotFoundException() {
-        Long userId = 1L;
-        String pass = "pass";
-
-        when(userRepository.findById(userId))
-                .thenReturn(Optional.empty());
-
-        assertThrows(UserNotFoundException.class,
-                () -> service.setNewPasswordForUser(userId, pass));
-
-        verify(user, never()).setPassword(any());
-    }
-
-    @Test
-    void activateUserById() {
-        Long userId = 1L;
-
-        when(userRepository.findById(userId))
-                .thenReturn(Optional.of(user));
-
-        service.activateUserById(userId);
-
-        verify(user, times(1)).enable();
-    }
-
-    @Test
-    void activateUserById_should_throw_UserNotFoundException() {
-        Long userId = 1L;
-
-        when(userRepository.findById(userId))
-                .thenReturn(Optional.empty());
-
-        assertThrows(UserNotFoundException.class,
-                () -> service.activateUserById(userId));
-
-        verify(user, never()).enable();
-    }
-
-    @Test
-    void changeUserPhoto() {
-        String email = "emaiil";
-        String link = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
-
-        service.changeUserPhoto(email, link);
-
-        verify(userRepository, times(1))
-                .updateUserPhotoByEmail(new Photo(link), email);
+                .changeNotificationSettings(notificationSettings, changeNotificationSettingsForm);
     }
 
     @Test

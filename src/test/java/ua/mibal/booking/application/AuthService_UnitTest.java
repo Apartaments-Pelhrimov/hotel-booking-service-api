@@ -178,8 +178,8 @@ class AuthService_UnitTest {
 
         service.activateNewAccountBy(code);
 
-        verify(userService, times(1))
-                .activateUserById(id);
+        verify(user, times(1))
+                .enable();
     }
 
     @Test
@@ -218,17 +218,21 @@ class AuthService_UnitTest {
 
     @Test
     void setNewPassword() {
-        String password = "pass";
+        String rawPassword = "pass";
+        String encodedPassword = "encoded";
         String code = "CODE";
         long id = 1L;
+
         when(tokenService.getOneByValue(code))
                 .thenReturn(token);
         when(token.getUser()).thenReturn(user);
         when(user.getId()).thenReturn(id);
+        when(passwordEncoder.encode(rawPassword))
+                .thenReturn(encodedPassword);
 
-        service.setNewPassword(code, password);
+        service.setNewPassword(code, rawPassword);
 
-        verify(userService, times(1))
-                .setNewPasswordForUser(id, password);
+        verify(user, times(1))
+                .setPassword(encodedPassword);
     }
 }

@@ -68,10 +68,11 @@ public class AuthService {
         emailSendingService.send(email);
     }
 
+    @Transactional
     public void activateNewAccountBy(String tokenValue) {
         Token token = tokenService.getOneByValue(tokenValue);
-        Long userId = token.getUser().getId();
-        userService.activateUserById(userId);
+        User user = token.getUser();
+        user.enable();
     }
 
     @Transactional
@@ -86,8 +87,9 @@ public class AuthService {
     @Transactional
     public void setNewPassword(String tokenValue, String newPassword) {
         Token token = tokenService.getOneByValue(tokenValue);
-        Long userId = token.getUser().getId();
-        userService.setNewPasswordForUser(userId, newPassword);
+        User user = token.getUser();
+        String newEncodedPassword = passwordEncoder.encode(newPassword);
+        user.setPassword(newEncodedPassword);
     }
 
     private void restoreUserPassword(String email) {

@@ -27,7 +27,6 @@ import ua.mibal.booking.application.exception.IllegalPasswordException;
 import ua.mibal.booking.application.exception.UserNotFoundException;
 import ua.mibal.booking.application.mapper.UserMapper;
 import ua.mibal.booking.application.port.jpa.UserRepository;
-import ua.mibal.booking.domain.Photo;
 import ua.mibal.booking.domain.User;
 
 /**
@@ -79,31 +78,8 @@ public class UserService {
         userMapper.changeNotificationSettings(user.getNotificationSettings(), form);
     }
 
-    @Transactional
-    public void setNewPasswordForUser(Long userId, String newPassword) {
-        User user = getOneById(userId);
-        String newEncodedPassword = passwordEncoder.encode(newPassword);
-        user.setPassword(newEncodedPassword);
-    }
-
-    @Transactional
-    public void activateUserById(Long userId) {
-        User user = getOneById(userId);
-        user.enable();
-    }
-
-    public void changeUserPhoto(String email, String key) {
-        Photo photo = new Photo(key);
-        userRepository.updateUserPhotoByEmail(photo, email);
-    }
-
     public int clearNotEnabledWithNoTokens() {
         return userRepository.deleteNotEnabledWithNoTokens();
-    }
-
-    private User getOneById(Long userId) {
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(userId));
     }
 
     private void validatePassword(String password, String email) {
