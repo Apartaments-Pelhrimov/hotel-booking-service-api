@@ -20,16 +20,16 @@ import org.instancio.Instancio;
 import org.instancio.settings.Keys;
 import org.instancio.settings.Settings;
 import org.junit.jupiter.params.provider.Arguments;
+import ua.mibal.booking.application.dto.ChangeApartmentForm;
 import ua.mibal.booking.application.dto.ChangeNotificationSettingsForm;
 import ua.mibal.booking.application.dto.ChangeUserForm;
+import ua.mibal.booking.application.dto.CreateApartmentForm;
 import ua.mibal.booking.application.dto.RegistrationForm;
 import ua.mibal.booking.application.dto.request.BedDto;
-import ua.mibal.booking.application.dto.request.CreateApartmentDto;
 import ua.mibal.booking.application.dto.request.CreateApartmentInstanceDto;
 import ua.mibal.booking.application.dto.request.PhotoDto;
 import ua.mibal.booking.application.dto.request.PriceDto;
 import ua.mibal.booking.application.dto.request.RoomDto;
-import ua.mibal.booking.application.dto.request.UpdateApartmentDto;
 import ua.mibal.booking.application.dto.request.UpdateApartmentOptionsDto;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.ApartmentInstance;
@@ -156,8 +156,8 @@ public class DataGenerator {
         );
     }
 
-    public static Stream<Arguments> validApartmentDto() {
-        return Stream.of(Arguments.of(new CreateApartmentDto(
+    public static Stream<Arguments> validCreateApartmentForm() {
+        return Stream.of(Arguments.of(new CreateApartmentForm(
                 "correctName",
                 COMFORT,
                 DEFAULT,
@@ -170,45 +170,45 @@ public class DataGenerator {
     public static Stream<Arguments> invalidApartmentDto() {
         Stream<Arguments> simpleArgs = Stream.of(
                 // incorrect name
-                Arguments.of(new CreateApartmentDto("", COMFORT, DEFAULT, of(), of(), of())),
-                Arguments.of(new CreateApartmentDto(null, COMFORT, DEFAULT, of(), of(), of())),
+                Arguments.of(new CreateApartmentForm("", COMFORT, DEFAULT, of(), of(), of())),
+                Arguments.of(new CreateApartmentForm(null, COMFORT, DEFAULT, of(), of(), of())),
 
                 // incorrect type
-                Arguments.of(new CreateApartmentDto("correct_name", null, DEFAULT, of(), of(), of())),
+                Arguments.of(new CreateApartmentForm("correct_name", null, DEFAULT, of(), of(), of())),
 
                 // incorrect prices
-                Arguments.of(new CreateApartmentDto("correct_name", COMFORT, DEFAULT, incorrectPrices(), of(), of())),
+                Arguments.of(new CreateApartmentForm("correct_name", COMFORT, DEFAULT, incorrectPrices(), of(), of())),
 
 
                 // incorrect rooms
-                Arguments.of(new CreateApartmentDto("correct_name", COMFORT, DEFAULT, of(), incorrectRooms(), of()))
+                Arguments.of(new CreateApartmentForm("correct_name", COMFORT, DEFAULT, of(), incorrectRooms(), of()))
         );
         return of(
                 simpleArgs,
-                invalidApartmentDtoWithInvalidPrices(),
-                invalidApartmentDtoWithInvalidPhotos(),
-                invalidApartmentDtoWithInvalidRooms()
+                invalidCreateApartmentFormWithInvalidPrices(),
+                invalidCreateApartmentFormWithInvalidPhotos(),
+                invalidCreateApartmentFormWithInvalidRooms()
         ).parallelStream()
                 .flatMap(identity());
     }
 
-    private static Stream<Arguments> invalidApartmentDtoWithInvalidPrices() {
+    private static Stream<Arguments> invalidCreateApartmentFormWithInvalidPrices() {
         return incorrectPrices().stream()
-                .map(price -> Arguments.of(new CreateApartmentDto(
+                .map(price -> Arguments.of(new CreateApartmentForm(
                         "correct_name", COMFORT, DEFAULT, of(price), of(), of())
                 ));
     }
 
-    private static Stream<Arguments> invalidApartmentDtoWithInvalidPhotos() {
+    private static Stream<Arguments> invalidCreateApartmentFormWithInvalidPhotos() {
         return incorrectPhotos().stream()
-                .map(photo -> Arguments.of(new CreateApartmentDto(
+                .map(photo -> Arguments.of(new CreateApartmentForm(
                         "correct_name", COMFORT, DEFAULT, of(), of(), of())
                 ));
     }
 
-    private static Stream<Arguments> invalidApartmentDtoWithInvalidRooms() {
+    private static Stream<Arguments> invalidCreateApartmentFormWithInvalidRooms() {
         return incorrectRooms().stream()
-                .map(room -> Arguments.of(new CreateApartmentDto(
+                .map(room -> Arguments.of(new CreateApartmentForm(
                         "correct_name", COMFORT, DEFAULT, of(), of(room), of())
                 ));
     }
@@ -411,7 +411,7 @@ public class DataGenerator {
         Settings settings = Settings.create()
                 .set(STRING_NULLABLE, true)
                 .set(BOOLEAN_NULLABLE, true);
-        return Instancio.ofMap(Apartment.class, UpdateApartmentDto.class)
+        return Instancio.ofMap(Apartment.class, ChangeApartmentForm.class)
                 .size(50)
                 .withSettings(settings)
                 .create()

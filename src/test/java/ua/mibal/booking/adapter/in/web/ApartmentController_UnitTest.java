@@ -35,7 +35,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import ua.mibal.booking.adapter.in.web.mapper.ApartmentDtoMapper;
 import ua.mibal.booking.application.ApartmentService;
-import ua.mibal.booking.application.dto.request.CreateApartmentDto;
+import ua.mibal.booking.application.dto.CreateApartmentForm;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -100,20 +100,20 @@ class ApartmentController_UnitTest {
     }
 
     @ParameterizedTest
-    @MethodSource("ua.mibal.test.util.DataGenerator#validApartmentDto")
-    void create(CreateApartmentDto createApartmentDto) throws Exception {
+    @MethodSource("ua.mibal.test.util.DataGenerator#validCreateApartmentForm")
+    void create(CreateApartmentForm createApartmentForm) throws Exception {
         mvc.perform(post("/api/apartments")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(createApartmentDto)))
+                        .content(objectMapper.writeValueAsString(createApartmentForm)))
                 .andExpect(status().isCreated());
     }
 
     @ParameterizedTest
     @MethodSource("ua.mibal.test.util.DataGenerator#invalidApartmentDto")
-    void create_should_throw_if_dto_is_invalid(CreateApartmentDto createApartmentDto) throws Exception {
+    void create_should_throw_if_dto_is_invalid(CreateApartmentForm createApartmentForm) throws Exception {
         mvc.perform(post("/api/apartments")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(createApartmentDto)))
+                        .content(objectMapper.writeValueAsString(createApartmentForm)))
                 .andExpect(status().isBadRequest());
     }
 

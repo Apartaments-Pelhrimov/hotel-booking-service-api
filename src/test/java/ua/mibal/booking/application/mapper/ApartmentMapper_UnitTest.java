@@ -23,8 +23,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import ua.mibal.booking.application.dto.request.CreateApartmentDto;
-import ua.mibal.booking.application.dto.request.UpdateApartmentDto;
+import ua.mibal.booking.application.dto.ChangeApartmentForm;
+import ua.mibal.booking.application.dto.CreateApartmentForm;
 import ua.mibal.booking.application.dto.request.UpdateApartmentOptionsDto;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.Apartment.ApartmentClass;
@@ -71,7 +71,7 @@ class ApartmentMapper_UnitTest {
 
     @ParameterizedTest
     @InstancioSource
-    void toEntity(CreateApartmentDto source) {
+    void assemble(CreateApartmentForm source) {
         when(priceMapper.toEntities(source.prices()))
                 .thenReturn(prices);
         when(roomMapper.toEntities(source.rooms()))
@@ -79,7 +79,7 @@ class ApartmentMapper_UnitTest {
         when(apartmentInstanceMapper.toEntities(source.instances()))
                 .thenReturn(apartmentInstances);
 
-        Apartment actual = mapper.toEntity(source);
+        Apartment actual = mapper.assemble(source);
 
         assertThat(actual.getName(), is(source.name()));
         assertThat(actual.getApartmentClass(), is(source.apartmentClass()));
@@ -90,16 +90,16 @@ class ApartmentMapper_UnitTest {
     }
 
     @Test
-    void toEntity() {
-        Apartment actual = mapper.toEntity(null);
+    void assemble() {
+        Apartment actual = mapper.assemble(null);
 
         assertThat(actual, nullValue());
     }
 
     @ParameterizedTest
     @MethodSource("ua.mibal.test.util.DataGenerator#testApartments")
-    void update_Apartment(Apartment original, UpdateApartmentDto changes) {
-        mapper.update(original, changes);
+    void change_Apartment(Apartment original, ChangeApartmentForm changes) {
+        mapper.change(original, changes);
 
         String expectedName = changes.name() == null
                 ? original.getName()
@@ -114,8 +114,8 @@ class ApartmentMapper_UnitTest {
 
     @ParameterizedTest
     @MethodSource("ua.mibal.test.util.DataGenerator#testApartmentOptions")
-    void update_ApartmentOptions(ApartmentOptions original, UpdateApartmentOptionsDto changes) {
-        mapper.update(original, changes);
+    void change_ApartmentOptions(ApartmentOptions original, UpdateApartmentOptionsDto changes) {
+        mapper.change(original, changes);
 
         boolean expectedMealsIncluded = changes.mealsIncluded() == null
                 ? original.isMealsIncluded()

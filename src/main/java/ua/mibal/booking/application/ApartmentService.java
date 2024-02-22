@@ -19,8 +19,8 @@ package ua.mibal.booking.application;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ua.mibal.booking.application.dto.request.CreateApartmentDto;
-import ua.mibal.booking.application.dto.request.UpdateApartmentDto;
+import ua.mibal.booking.application.dto.ChangeApartmentForm;
+import ua.mibal.booking.application.dto.CreateApartmentForm;
 import ua.mibal.booking.application.exception.ApartmentNotFoundException;
 import ua.mibal.booking.application.mapper.ApartmentMapper;
 import ua.mibal.booking.application.port.jpa.ApartmentRepository;
@@ -62,15 +62,15 @@ public class ApartmentService {
                 .orElseThrow(() -> new ApartmentNotFoundException(id));
     }
 
-    public void create(CreateApartmentDto createApartmentDto) {
-        Apartment apartment = apartmentMapper.toEntity(createApartmentDto);
+    public void create(CreateApartmentForm form) {
+        Apartment apartment = apartmentMapper.assemble(form);
         apartmentRepository.save(apartment);
     }
 
     @Transactional
-    public void update(UpdateApartmentDto updateApartmentDto, Long id) {
+    public void change(Long id, ChangeApartmentForm form) {
         Apartment apartment = getOne(id);
-        apartmentMapper.update(apartment, updateApartmentDto);
+        apartmentMapper.change(apartment, form);
     }
 
     public void delete(Long id) {

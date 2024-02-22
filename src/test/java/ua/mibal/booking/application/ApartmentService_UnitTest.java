@@ -19,8 +19,8 @@ package ua.mibal.booking.application;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import ua.mibal.booking.application.dto.request.CreateApartmentDto;
-import ua.mibal.booking.application.dto.request.UpdateApartmentDto;
+import ua.mibal.booking.application.dto.ChangeApartmentForm;
+import ua.mibal.booking.application.dto.CreateApartmentForm;
 import ua.mibal.booking.application.exception.ApartmentNotFoundException;
 import ua.mibal.booking.application.mapper.ApartmentMapper;
 import ua.mibal.booking.application.port.jpa.ApartmentRepository;
@@ -57,9 +57,9 @@ class ApartmentService_UnitTest {
     @Mock
     private Apartment apartment;
     @Mock
-    private CreateApartmentDto createApartmentDto;
+    private CreateApartmentForm createApartmentForm;
     @Mock
-    private UpdateApartmentDto updateApartmentDto;
+    private ChangeApartmentForm changeApartmentForm;
 
     @BeforeEach
     void setup() {
@@ -175,31 +175,31 @@ class ApartmentService_UnitTest {
 
     @Test
     void create() {
-        when(apartmentMapper.toEntity(createApartmentDto)).thenReturn(apartment);
+        when(apartmentMapper.assemble(createApartmentForm)).thenReturn(apartment);
 
-        service.create(createApartmentDto);
+        service.create(createApartmentForm);
 
         verify(apartmentRepository).save(apartment);
     }
 
     @Test
-    void update() {
+    void change() {
         Long id = 1L;
         when(apartmentRepository.findById(id)).thenReturn(Optional.of(apartment));
 
-        service.update(updateApartmentDto, id);
+        service.change(id, changeApartmentForm);
 
-        verify(apartmentMapper, times(1)).update(apartment, updateApartmentDto);
+        verify(apartmentMapper, times(1)).change(apartment, changeApartmentForm);
     }
 
     @Test
-    void update_should_throw_ApartmentNotFoundException() {
+    void change_should_throw_ApartmentNotFoundException() {
         Long id = 1L;
         when(apartmentRepository.findById(id)).thenReturn(Optional.empty());
 
         assertThrows(
                 ApartmentNotFoundException.class,
-                () -> service.update(updateApartmentDto, id)
+                () -> service.change(id, changeApartmentForm)
         );
 
         verifyNoInteractions(apartmentMapper);

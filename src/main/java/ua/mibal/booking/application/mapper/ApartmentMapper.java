@@ -20,8 +20,8 @@ import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import ua.mibal.booking.application.dto.request.CreateApartmentDto;
-import ua.mibal.booking.application.dto.request.UpdateApartmentDto;
+import ua.mibal.booking.application.dto.ChangeApartmentForm;
+import ua.mibal.booking.application.dto.CreateApartmentForm;
 import ua.mibal.booking.application.dto.request.UpdateApartmentOptionsDto;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.ApartmentOptions;
@@ -44,11 +44,11 @@ import static org.mapstruct.NullValuePropertyMappingStrategy.IGNORE;
 public interface ApartmentMapper {
 
     @Mapping(target = "apartmentInstances", source = "instances")
-    Apartment toEntity(CreateApartmentDto createApartmentDto);
+    Apartment assemble(CreateApartmentForm createApartmentForm);
 
     @BeanMapping(nullValuePropertyMappingStrategy = IGNORE)
-    void update(@MappingTarget Apartment apartment, UpdateApartmentDto updateApartmentDto);
+    void change(@MappingTarget Apartment apartment, ChangeApartmentForm changeApartmentForm);
 
     @BeanMapping(nullValuePropertyMappingStrategy = IGNORE)
-    void update(@MappingTarget ApartmentOptions target, UpdateApartmentOptionsDto source);
+    void change(@MappingTarget ApartmentOptions target, UpdateApartmentOptionsDto source);
 }

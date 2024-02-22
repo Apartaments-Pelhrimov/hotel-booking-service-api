@@ -33,8 +33,8 @@ import ua.mibal.booking.adapter.in.web.model.ApartmentCardDto;
 import ua.mibal.booking.adapter.in.web.model.ApartmentDto;
 import ua.mibal.booking.adapter.in.web.security.annotation.ManagerAllowed;
 import ua.mibal.booking.application.ApartmentService;
-import ua.mibal.booking.application.dto.request.CreateApartmentDto;
-import ua.mibal.booking.application.dto.request.UpdateApartmentDto;
+import ua.mibal.booking.application.dto.ChangeApartmentForm;
+import ua.mibal.booking.application.dto.CreateApartmentForm;
 import ua.mibal.booking.domain.Apartment;
 
 import java.util.List;
@@ -65,16 +65,16 @@ public class ApartmentController {
     @ManagerAllowed
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody @Valid CreateApartmentDto createApartmentDto) {
-        apartmentService.create(createApartmentDto);
+    public void create(@RequestBody @Valid CreateApartmentForm form) {
+        apartmentService.create(form);
     }
 
     @ManagerAllowed
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@PathVariable Long id,
-                       @RequestBody @Valid UpdateApartmentDto updateApartmentDto) {
-        apartmentService.update(updateApartmentDto, id);
+    public void change(@PathVariable Long id,
+                       @RequestBody @Valid ChangeApartmentForm form) {
+        apartmentService.change(id, form);
     }
 
     // TODO update apartment options
