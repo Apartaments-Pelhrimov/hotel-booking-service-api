@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.exception;
+package ua.mibal.booking.adapter.out.reservation.system.ical;
+
+import ua.mibal.booking.application.exception.InternalServerException;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class ICalServiceException extends InternalServerException {
+public class ICalEventReaderException extends InternalServerException {
 
-    public ICalServiceException(String message, Exception cause) {
+    public ICalEventReaderException(String message, Exception cause) {
         super(message, cause);
     }
 }

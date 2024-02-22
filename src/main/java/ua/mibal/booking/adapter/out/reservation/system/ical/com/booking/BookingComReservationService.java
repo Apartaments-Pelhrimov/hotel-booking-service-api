@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.adapter.out.reservation.system.booking;
+package ua.mibal.booking.adapter.out.reservation.system.ical.com.booking;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ua.mibal.booking.application.ICalService;
-import ua.mibal.booking.application.port.ReservationSystem;
+import ua.mibal.booking.adapter.out.reservation.system.ical.ICalFileReader;
+import ua.mibal.booking.application.port.reservation.system.ReservationSystem;
 import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.domain.Event;
 import ua.mibal.booking.domain.ReservationRequest;
@@ -40,7 +40,7 @@ import static java.util.Collections.emptyList;
 @RequiredArgsConstructor
 @Service
 public class BookingComReservationService implements ReservationSystem {
-    private final ICalService iCalService;
+    private final ICalFileReader iCalFileReader;
 
     @Override
     public boolean isFreeForReservation(ApartmentInstance apartmentInstance,
@@ -76,7 +76,7 @@ public class BookingComReservationService implements ReservationSystem {
 
     private List<Event> getEventsByCalendarUrl0(String calendarUrl) throws IOException {
         try (InputStream calendar = streamFromUrl(calendarUrl)) {
-            return iCalService.getEventsFromCalendarFile(calendar);
+            return iCalFileReader.readEventsFromCalendar(calendar);
         }
     }
 

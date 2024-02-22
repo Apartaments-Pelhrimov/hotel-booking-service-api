@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.adapter.out.reservation.system.booking;
+package ua.mibal.booking.adapter.out.reservation.system.ical.com.booking;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -25,7 +25,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
-import ua.mibal.booking.application.ICalService;
+import ua.mibal.booking.adapter.out.reservation.system.ical.ICalFileReader;
 import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.domain.Event;
 import ua.mibal.booking.domain.ReservationRequest;
@@ -56,7 +56,7 @@ class BookingComReservationService_UnitTest {
     private BookingComReservationService service;
 
     @Mock
-    private ICalService iCalService;
+    private ICalFileReader iCalFileReader;
 
     @Mock
     private ApartmentInstance apartmentInstance;
@@ -65,14 +65,14 @@ class BookingComReservationService_UnitTest {
 
     @BeforeEach
     void setup() {
-        service = new BookingComReservationService(iCalService);
+        service = new BookingComReservationService(iCalFileReader);
     }
 
     @Test
     @Order(1)
     void getEventsFor() {
         when(apartmentInstance.getBookingICalUrl()).thenReturn(Optional.of(calendarUrl));
-        when(iCalService.getEventsFromCalendarFile(any())).thenReturn(of(event));
+        when(iCalFileReader.readEventsFromCalendar(any())).thenReturn(of(event));
 
         List<Event> actual = service.getEventsFor(apartmentInstance);
 
@@ -112,7 +112,7 @@ class BookingComReservationService_UnitTest {
     @MethodSource("ua.mibal.test.util.DataGenerator#eventsFactory")
     void isFreeForReservation(List<Event> events, LocalDateTime from, LocalDateTime to, boolean expected) {
         when(apartmentInstance.getBookingICalUrl()).thenReturn(Optional.of(calendarUrl));
-        when(iCalService.getEventsFromCalendarFile(any()))
+        when(iCalFileReader.readEventsFromCalendar(any()))
                 .thenReturn(events);
 
         boolean actual = service.isFreeForReservation(apartmentInstance, new ReservationRequest(from, to, -1, -1L, "ignored"));

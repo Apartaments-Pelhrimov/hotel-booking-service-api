@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application;
+package ua.mibal.booking.adapter.out.reservation.system.ical;
 
 import lombok.RequiredArgsConstructor;
 import net.fortuna.ical4j.data.CalendarBuilder;
@@ -22,17 +22,11 @@ import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.component.VEvent;
-import net.fortuna.ical4j.model.property.CalScale;
-import net.fortuna.ical4j.model.property.Version;
 import org.springframework.stereotype.Service;
-import ua.mibal.booking.application.exception.ICalServiceException;
-import ua.mibal.booking.application.mapper.CalendarFormatMapper;
-import ua.mibal.booking.config.properties.CalendarProps;
 import ua.mibal.booking.domain.Event;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -41,16 +35,8 @@ import java.util.List;
  */
 @RequiredArgsConstructor
 @Service
-public class ICalService {
-    private final CalendarProps calendarProps;
-    private final CalendarFormatMapper calendarFormatMapper;
-
-    public String getCalendarFromEvents(Collection<Event> events) {
-        Calendar calendar = initCalendar();
-        List<VEvent> vEvents = calendarFormatMapper.eventsToVEvents(events);
-        calendar.getComponents().addAll(vEvents);
-        return calendar.toString();
-    }
+public class ICalFileReader {
+    private final ICalEventMapper iCalEventMapper;
 
     /**
      * Returns {@link List} of {@link Event}s from {@link InputStream} calendar file.
@@ -59,27 +45,19 @@ public class ICalService {
      * @param calendarStream calendar source file with events.
      * @return {@link List} of {@link Event}
      */
-    public List<Event> getEventsFromCalendarFile(InputStream calendarStream) {
+    public List<Event> readEventsFromCalendar(InputStream calendarStream) {
         Calendar calendar = buildCalendarFromInputStream(calendarStream);
         List<VEvent> vEvents = calendar.getComponents(Component.VEVENT);
-        return calendarFormatMapper.vEventsToEvents(vEvents);
+        return iCalEventMapper.eventsFrom(vEvents);
     }
 
     private Calendar buildCalendarFromInputStream(InputStream file) {
         try {
             return new CalendarBuilder().build(file);
         } catch (IOException | ParserException | RuntimeException e) {
-            throw new ICalServiceException(
+            throw new ICalEventReaderException(
                     "Exception while building Calendar from ICal file", e
             );
         }
-    }
-
-    private Calendar initCalendar() {
-        Calendar calendar = new Calendar();
-        calendar.getProperties().add(calendarProps.iCal().prodId());
-        calendar.getProperties().add(Version.VERSION_2_0);
-        calendar.getProperties().add(CalScale.GREGORIAN);
-        return calendar;
     }
 }

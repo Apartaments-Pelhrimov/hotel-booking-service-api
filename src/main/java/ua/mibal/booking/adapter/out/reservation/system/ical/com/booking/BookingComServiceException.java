@@ -14,22 +14,17 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.port;
+package ua.mibal.booking.adapter.out.reservation.system.ical.com.booking;
 
-import ua.mibal.booking.domain.ApartmentInstance;
-import ua.mibal.booking.domain.Event;
-import ua.mibal.booking.domain.ReservationRequest;
-
-import java.util.List;
+import ua.mibal.booking.application.exception.InternalServerException;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public interface ReservationSystem {
+public class BookingComServiceException extends InternalServerException {
 
-    List<Event> getEventsFor(ApartmentInstance apartmentInstance);
-
-    boolean isFreeForReservation(ApartmentInstance apartmentInstance,
-                                 ReservationRequest reservationRequest);
+    public BookingComServiceException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

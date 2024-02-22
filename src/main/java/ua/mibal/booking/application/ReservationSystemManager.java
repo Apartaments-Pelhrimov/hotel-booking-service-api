@@ -18,7 +18,7 @@ package ua.mibal.booking.application;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ua.mibal.booking.application.port.ReservationSystem;
+import ua.mibal.booking.application.port.reservation.system.ReservationSystem;
 import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.domain.Event;
 import ua.mibal.booking.domain.ReservationRequest;
@@ -32,7 +32,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Component
 public class ReservationSystemManager {
-
     private final List<ReservationSystem> reservationSystems;
 
     public List<Event> getEventsFor(ApartmentInstance apartment) {

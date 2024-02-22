@@ -21,7 +21,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ua.mibal.booking.application.ReservationCalendarExportService;
+import ua.mibal.booking.adapter.in.web.mapper.ICalMapper;
+import ua.mibal.booking.application.EventService;
+import ua.mibal.booking.domain.Event;
+
+import java.util.List;
 
 /**
  * @author Mykhailo Balakhon
@@ -31,13 +35,15 @@ import ua.mibal.booking.application.ReservationCalendarExportService;
 @RestController
 @RequestMapping("/api")
 public class ReservationCalendarExportController {
-    private final ReservationCalendarExportService reservationCalendarExportService;
+    private final EventService eventService;
+    private final ICalMapper iCalMapper;
 
     @GetMapping(
             value = "/apartments/instances/{id}/calendar.ics",
             produces = "text/calendar"
     )
     public String getICalForApartmentInstance(@PathVariable Long id) {
-        return reservationCalendarExportService.getCalendarForApartmentInstanceBy(id);
+        List<Event> events = eventService.getEventsForApartmentInstanceBy(id);
+        return iCalMapper.toICal(events);
     }
 }
