@@ -25,7 +25,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import ua.mibal.booking.application.dto.request.CreateCommentDto;
-import ua.mibal.booking.application.dto.response.CommentDto;
+import ua.mibal.booking.application.exception.ApartmentNotFoundException;
+import ua.mibal.booking.application.exception.UserHasNoAccessToCommentException;
+import ua.mibal.booking.application.exception.UserHasNoAccessToCommentsException;
 import ua.mibal.booking.application.mapper.CommentMapper;
 import ua.mibal.booking.application.port.jpa.ApartmentRepository;
 import ua.mibal.booking.application.port.jpa.CommentRepository;
@@ -33,14 +35,11 @@ import ua.mibal.booking.application.port.jpa.UserRepository;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.Comment;
 import ua.mibal.booking.domain.User;
-import ua.mibal.booking.application.exception.UserHasNoAccessToCommentException;
-import ua.mibal.booking.application.exception.UserHasNoAccessToCommentsException;
-import ua.mibal.booking.application.exception.ApartmentNotFoundException;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -69,8 +68,6 @@ class CommentService_UnitTest {
     @Mock
     private Comment comment;
     @Mock
-    private CommentDto commentDto;
-    @Mock
     private CreateCommentDto createCommentDto;
     @Mock
     private Apartment apartment;
@@ -88,16 +85,13 @@ class CommentService_UnitTest {
         Pageable pageable = Pageable.ofSize(5);
 
         Page<Comment> commentPage = new PageImpl<>(List.of(comment, comment));
-        Page<CommentDto> expectedCommentDtoPage = new PageImpl<>(List.of(commentDto, commentDto));
 
         when(commentRepository.findByApartmentIdFetchUser(apartmentId, pageable))
                 .thenReturn(commentPage);
-        when(commentMapper.toDto(comment))
-                .thenReturn(commentDto);
 
         var actual = service.getAllByApartment(apartmentId, pageable);
 
-        assertEquals(expectedCommentDtoPage, actual);
+        assertThat(actual).containsOnly(comment, comment);
     }
 
     @Test

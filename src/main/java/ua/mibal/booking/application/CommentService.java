@@ -22,7 +22,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.application.dto.request.CreateCommentDto;
-import ua.mibal.booking.application.dto.response.CommentDto;
+import ua.mibal.booking.application.exception.ApartmentNotFoundException;
+import ua.mibal.booking.application.exception.UserHasNoAccessToCommentException;
+import ua.mibal.booking.application.exception.UserHasNoAccessToCommentsException;
 import ua.mibal.booking.application.mapper.CommentMapper;
 import ua.mibal.booking.application.port.jpa.ApartmentRepository;
 import ua.mibal.booking.application.port.jpa.CommentRepository;
@@ -30,9 +32,6 @@ import ua.mibal.booking.application.port.jpa.UserRepository;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.Comment;
 import ua.mibal.booking.domain.User;
-import ua.mibal.booking.application.exception.UserHasNoAccessToCommentException;
-import ua.mibal.booking.application.exception.UserHasNoAccessToCommentsException;
-import ua.mibal.booking.application.exception.ApartmentNotFoundException;
 
 /**
  * @author Mykhailo Balakhon
@@ -46,9 +45,8 @@ public class CommentService {
     private final UserRepository userRepository;
     private final ApartmentRepository apartmentRepository;
 
-    public Page<CommentDto> getAllByApartment(Long apartmentId, Pageable pageable) {
-        return commentRepository.findByApartmentIdFetchUser(apartmentId, pageable)
-                .map(commentMapper::toDto);
+    public Page<Comment> getAllByApartment(Long apartmentId, Pageable pageable) {
+        return commentRepository.findByApartmentIdFetchUser(apartmentId, pageable);
     }
 
     @Transactional

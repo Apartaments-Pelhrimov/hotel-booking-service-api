@@ -14,20 +14,18 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.mapper;
+package ua.mibal.booking.adapter.in.web.model;
 
-import org.mapstruct.Mapper;
-import ua.mibal.booking.application.dto.request.CreateCommentDto;
-import ua.mibal.booking.domain.Comment;
-
-import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
+import java.time.LocalDateTime;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Mapper(componentModel = SPRING)
-public interface CommentMapper {
-
-    Comment toEntity(CreateCommentDto createCommentDto);
+public record CommentDto(
+        UserDto user,
+        LocalDateTime createdAt,
+        Double rate,
+        String body
+) {
 }

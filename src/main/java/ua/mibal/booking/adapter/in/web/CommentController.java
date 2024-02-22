@@ -30,10 +30,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import ua.mibal.booking.adapter.in.web.mapper.CommentDtoMapper;
+import ua.mibal.booking.adapter.in.web.model.CommentDto;
 import ua.mibal.booking.adapter.in.web.security.annotation.UserAllowed;
 import ua.mibal.booking.application.CommentService;
 import ua.mibal.booking.application.dto.request.CreateCommentDto;
-import ua.mibal.booking.application.dto.response.CommentDto;
+import ua.mibal.booking.domain.Comment;
 
 /**
  * @author Mykhailo Balakhon
@@ -44,11 +46,13 @@ import ua.mibal.booking.application.dto.response.CommentDto;
 @RequestMapping("/api/apartments")
 public class CommentController {
     private final CommentService commentService;
+    private final CommentDtoMapper commentDtoMapper;
 
     @GetMapping("/{apartmentId}/comments")
     public Page<CommentDto> getAllByApartment(@PathVariable Long apartmentId,
                                               Pageable pageable) {
-        return commentService.getAllByApartment(apartmentId, pageable);
+        Page<Comment> comments = commentService.getAllByApartment(apartmentId, pageable);
+        return commentDtoMapper.toDtos(comments);
     }
 
     @UserAllowed

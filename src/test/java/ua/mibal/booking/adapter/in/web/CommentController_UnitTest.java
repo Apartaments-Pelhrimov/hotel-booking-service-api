@@ -32,6 +32,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import ua.mibal.booking.adapter.in.web.mapper.CommentDtoMapper;
 import ua.mibal.booking.application.CommentService;
 import ua.mibal.booking.application.dto.request.CreateCommentDto;
 
@@ -62,6 +63,8 @@ class CommentController_UnitTest {
 
     @MockBean
     private CommentService commentService;
+    @MockBean
+    private CommentDtoMapper commentDtoMapper;
 
     @BeforeEach
     public void setup() {

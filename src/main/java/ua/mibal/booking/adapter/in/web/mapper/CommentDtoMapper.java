@@ -14,20 +14,27 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.dto.response;
+package ua.mibal.booking.adapter.in.web.mapper;
 
-import java.time.LocalDateTime;
+import org.mapstruct.Mapper;
+import org.springframework.data.domain.Page;
+import ua.mibal.booking.adapter.in.web.mapper.linker.PhotoLinker;
+import ua.mibal.booking.adapter.in.web.model.CommentDto;
+import ua.mibal.booking.domain.Comment;
+
+import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public record CommentDto(
-        String firstName,
-        String lastName,
-        LocalDateTime createdAt,
-        Float rate,
-        String userPhotoLink,
-        String body
-) {
+@Mapper(componentModel = SPRING, uses = {
+        PhotoLinker.class, UserDtoMapper.class})
+public interface CommentDtoMapper {
+
+    default Page<CommentDto> toDtos(Page<Comment> comments) {
+        return comments.map(this::toDto);
+    }
+
+    CommentDto toDto(Comment comment);
 }
