@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.dto.request;
-
-import jakarta.validation.constraints.DecimalMax;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
+package ua.mibal.booking.adapter.in.web.model;
 
 import java.math.BigDecimal;
 
@@ -28,14 +23,7 @@ import java.math.BigDecimal;
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 public record PriceDto(
-
-        @NotNull
-        @Min(1)
         Integer person,
-
-        @NotNull
-        @DecimalMin("0")
-        @DecimalMax("100000")
         BigDecimal amount
 ) {
 }

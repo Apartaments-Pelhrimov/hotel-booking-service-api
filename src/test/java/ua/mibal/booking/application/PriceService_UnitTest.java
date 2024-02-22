@@ -19,7 +19,7 @@ package ua.mibal.booking.application;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import ua.mibal.booking.application.dto.request.PriceDto;
+import ua.mibal.booking.application.dto.PutPriceForm;
 import ua.mibal.booking.application.exception.PriceNotFoundException;
 import ua.mibal.booking.application.mapper.PriceMapper;
 import ua.mibal.booking.domain.Apartment;
@@ -54,7 +54,7 @@ class PriceService_UnitTest {
     @Mock
     private Price price;
     @Mock
-    private PriceDto priceDto;
+    private PutPriceForm form;
 
     @BeforeEach
     void setup() {
@@ -66,11 +66,10 @@ class PriceService_UnitTest {
         Long id = 1L;
         when(apartmentService.getOneFetchPrices(id)).thenReturn(apartment);
         when(apartment.getPrices()).thenReturn(List.of(price));
-        when(priceMapper.toDto(price)).thenReturn(priceDto);
 
-        List<PriceDto> actual = service.getAllByApartment(id);
+        List<Price> actual = service.getAllByApartment(id);
 
-        assertThat(actual).containsOnly(priceDto);
+        assertThat(actual).containsOnly(price);
     }
 
     @Test
@@ -104,10 +103,11 @@ class PriceService_UnitTest {
         Price price = new Price(people, BigDecimal.TEN);
 
         Long id = 1L;
-        when(priceMapper.toEntity(priceDto)).thenReturn(price);
+        when(form.getApartmentId()).thenReturn(id);
+        when(priceMapper.assemble(form)).thenReturn(price);
         when(apartmentService.getOneFetchPrices(id)).thenReturn(apartment);
 
-        service.put(id, priceDto);
+        service.put(form);
 
         assertEquals(
                 price,
@@ -126,10 +126,11 @@ class PriceService_UnitTest {
         Price newPrice = new Price(people, BigDecimal.ONE);
 
         Long id = 1L;
-        when(priceMapper.toEntity(priceDto)).thenReturn(newPrice);
+        when(form.getApartmentId()).thenReturn(id);
+        when(priceMapper.assemble(form)).thenReturn(newPrice);
         when(apartmentService.getOneFetchPrices(id)).thenReturn(apartment);
 
-        service.put(id, priceDto);
+        service.put(form);
 
         assertEquals(
                 newPrice,

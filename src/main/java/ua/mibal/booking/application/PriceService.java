@@ -19,11 +19,11 @@ package ua.mibal.booking.application;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ua.mibal.booking.application.dto.request.PriceDto;
+import ua.mibal.booking.application.dto.PutPriceForm;
+import ua.mibal.booking.application.exception.PriceNotFoundException;
 import ua.mibal.booking.application.mapper.PriceMapper;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.Price;
-import ua.mibal.booking.application.exception.PriceNotFoundException;
 
 import java.util.List;
 
@@ -37,17 +37,15 @@ public class PriceService {
     private final ApartmentService apartmentService;
     private final PriceMapper priceMapper;
 
-    public List<PriceDto> getAllByApartment(Long apartmentId) {
+    public List<Price> getAllByApartment(Long apartmentId) {
         return apartmentService.getOneFetchPrices(apartmentId)
-                .getPrices().stream()
-                .map(priceMapper::toDto)
-                .toList();
+                .getPrices();
     }
 
     @Transactional
-    public void put(Long apartmentId, PriceDto priceDto) {
-        Price price = priceMapper.toEntity(priceDto);
-        Apartment apartment = apartmentService.getOneFetchPrices(apartmentId);
+    public void put(PutPriceForm form) {
+        Price price = priceMapper.assemble(form);
+        Apartment apartment = apartmentService.getOneFetchPrices(form.getApartmentId());
         apartment.putPrice(price);
     }
 

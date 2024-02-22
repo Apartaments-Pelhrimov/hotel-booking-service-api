@@ -28,9 +28,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import ua.mibal.booking.adapter.in.web.mapper.PriceDtoMapper;
+import ua.mibal.booking.adapter.in.web.model.PriceDto;
 import ua.mibal.booking.adapter.in.web.security.annotation.ManagerAllowed;
 import ua.mibal.booking.application.PriceService;
-import ua.mibal.booking.application.dto.request.PriceDto;
+import ua.mibal.booking.application.dto.PutPriceForm;
+import ua.mibal.booking.domain.Price;
 
 import java.util.List;
 
@@ -43,18 +46,21 @@ import java.util.List;
 @RequestMapping("/api/apartments/{apartmentId}/prices")
 public class PriceController {
     private final PriceService priceService;
+    private final PriceDtoMapper priceDtoMapper;
 
     @GetMapping
     public List<PriceDto> getPrices(@PathVariable Long apartmentId) {
-        return priceService.getAllByApartment(apartmentId);
+        List<Price> allByApartment = priceService.getAllByApartment(apartmentId);
+        return priceDtoMapper.toDtos(allByApartment);
     }
 
     @ManagerAllowed
     @PutMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void put(@PathVariable Long apartmentId,
-                    @RequestBody @Valid PriceDto priceDto) {
-        priceService.put(apartmentId, priceDto);
+                    @RequestBody @Valid PutPriceForm form) {
+        form.setApartmentId(apartmentId);
+        priceService.put(form);
     }
 
     @ManagerAllowed

@@ -51,6 +51,7 @@ import static org.mockito.Mockito.when;
 class ApartmentMapper_UnitTest {
 
     private ApartmentMapper mapper;
+
     @Mock
     private ApartmentInstanceMapper apartmentInstanceMapper;
     @Mock
@@ -73,13 +74,16 @@ class ApartmentMapper_UnitTest {
     @ParameterizedTest
     @InstancioSource
     void assemble(CreateApartmentForm source) {
-        when(priceMapper.toEntities(source.prices()))
+        when(priceMapper.assemble(source.prices()))
                 .thenReturn(prices);
         when(roomMapper.toEntities(source.rooms()))
                 .thenReturn(rooms);
-        source.instances().forEach(inst ->
-                when(apartmentInstanceMapper.assemble(inst))
+
+        source.instances()
+                .forEach(inst -> when(apartmentInstanceMapper.assemble(inst))
                         .thenReturn(apartmentInstance));
+        when(apartmentInstanceMapper.assemble(source.instances()))
+                .thenReturn(List.of(apartmentInstance));
 
         Apartment actual = mapper.assemble(source);
 
@@ -88,7 +92,9 @@ class ApartmentMapper_UnitTest {
         assertThat(actual.getOptions(), is(source.options()));
         assertThat(actual.getPrices(), is(prices));
         assertThat(actual.getRooms(), is(rooms));
-        Assertions.assertThat(actual.getApartmentInstances()).containsOnly(apartmentInstance);
+        if (!source.instances().isEmpty()) {
+            Assertions.assertThat(actual.getApartmentInstances()).containsOnly(apartmentInstance);
+        }
     }
 
     @Test

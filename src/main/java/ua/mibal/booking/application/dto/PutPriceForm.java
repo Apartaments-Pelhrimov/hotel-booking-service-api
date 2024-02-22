@@ -16,37 +16,35 @@
 
 package ua.mibal.booking.application.dto;
 
-import jakarta.validation.Valid;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import ua.mibal.booking.application.dto.request.RoomDto;
-import ua.mibal.booking.application.validation.constraints.Name;
-import ua.mibal.booking.domain.Apartment.ApartmentClass;
-import ua.mibal.booking.domain.ApartmentOptions;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.util.List;
+import java.math.BigDecimal;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public record CreateApartmentForm(
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+public class PutPriceForm {
 
-        @Name
-        @NotNull
-        String name,
+    @NotNull
+    @Min(1)
+    private Integer person;
 
-        @NotNull
-        ApartmentClass apartmentClass,
+    @NotNull
+    @DecimalMin("0")
+    @DecimalMax("100000")
+    private BigDecimal amount;
 
-        ApartmentOptions options,
-
-        @Valid
-        List<PutPriceForm> prices,
-
-        @Valid
-        List<RoomDto> rooms,
-
-        @Valid
-        List<CreateApartmentInstanceForm> instances
-) {
+    private Long apartmentId;
 }

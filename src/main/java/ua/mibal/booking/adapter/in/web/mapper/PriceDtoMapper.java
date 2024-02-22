@@ -17,15 +17,14 @@
 package ua.mibal.booking.adapter.in.web.mapper;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import ua.mibal.booking.adapter.in.web.mapper.linker.PhotoLinker;
-import ua.mibal.booking.adapter.in.web.model.ApartmentCardDto;
-import ua.mibal.booking.adapter.in.web.model.ApartmentDto;
-import ua.mibal.booking.application.mapper.RoomMapper;
-import ua.mibal.booking.domain.Apartment;
+import ua.mibal.booking.adapter.in.web.model.PriceDto;
+import ua.mibal.booking.domain.Price;
 
+import java.math.BigDecimal;
 import java.util.List;
 
+import static java.lang.Integer.MAX_VALUE;
+import static java.math.BigDecimal.valueOf;
 import static org.mapstruct.InjectionStrategy.CONSTRUCTOR;
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
@@ -33,21 +32,18 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Mapper(
-        componentModel = SPRING,
-        injectionStrategy = CONSTRUCTOR,
-        uses = {
-                PhotoLinker.class,
-                RoomMapper.class,
-                PriceDtoMapper.class
-        })
-public interface ApartmentDtoMapper {
+@Mapper(componentModel = SPRING,
+        injectionStrategy = CONSTRUCTOR)
+public interface PriceDtoMapper {
 
-    @Mapping(target = "price", source = "prices")
-    @Mapping(target = "beds", source = "rooms")
-    ApartmentDto toDto(Apartment apartment);
+    List<PriceDto> toDtos(List<Price> prices);
 
-    @Mapping(target = "price", source = "prices")
-    @Mapping(target = "people", source = "rooms")
-    List<ApartmentCardDto> toCardDtos(List<Apartment> apartments);
+    default BigDecimal findMinPrice(List<Price> prices) {
+        if (prices == null || prices.isEmpty()) {
+            return null;
+        }
+        return prices.stream()
+                .map(Price::getAmount)
+                .reduce(valueOf(MAX_VALUE), BigDecimal::min);
+    }
 }

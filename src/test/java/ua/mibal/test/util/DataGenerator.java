@@ -25,10 +25,10 @@ import ua.mibal.booking.application.dto.ChangeNotificationSettingsForm;
 import ua.mibal.booking.application.dto.ChangeUserForm;
 import ua.mibal.booking.application.dto.CreateApartmentForm;
 import ua.mibal.booking.application.dto.CreateApartmentInstanceForm;
+import ua.mibal.booking.application.dto.PutPriceForm;
 import ua.mibal.booking.application.dto.RegistrationForm;
 import ua.mibal.booking.application.dto.request.BedDto;
 import ua.mibal.booking.application.dto.request.PhotoDto;
-import ua.mibal.booking.application.dto.request.PriceDto;
 import ua.mibal.booking.application.dto.request.RoomDto;
 import ua.mibal.booking.application.dto.request.UpdateApartmentOptionsDto;
 import ua.mibal.booking.domain.Apartment;
@@ -162,7 +162,7 @@ public class DataGenerator {
                 "correctName",
                 COMFORT,
                 DEFAULT,
-                of(new PriceDto(1, valueOf(10000))),
+                of(new PutPriceForm(1, valueOf(10000), null)),
                 of(new RoomDto("correctRoomName", of(new BedDto(1, Bed.Type.TRANSFORMER)), LIVING_ROOM)),
                 of()
         )));
@@ -214,17 +214,17 @@ public class DataGenerator {
                 ));
     }
 
-    public static List<PriceDto> incorrectPrices() {
+    public static List<PutPriceForm> incorrectPrices() {
         return of(
                 // incorrect person number
-                new PriceDto(null, ZERO),
-                new PriceDto(-1, ZERO),
-                new PriceDto(0, valueOf(100_000)),
+                new PutPriceForm(null, ZERO, null),
+                new PutPriceForm(-1, ZERO, null),
+                new PutPriceForm(0, valueOf(100_000), null),
 
                 // incorrect cost
-                new PriceDto(1, null),
-                new PriceDto(1, valueOf(-1)),
-                new PriceDto(1, valueOf(100_001))
+                new PutPriceForm(1, null, null),
+                new PutPriceForm(1, valueOf(-1), null),
+                new PutPriceForm(1, valueOf(100_001), null)
         );
     }
 
