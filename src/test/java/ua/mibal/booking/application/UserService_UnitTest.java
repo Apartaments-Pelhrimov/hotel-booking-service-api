@@ -26,7 +26,7 @@ import ua.mibal.booking.adapter.in.web.model.ChangePasswordDto;
 import ua.mibal.booking.adapter.in.web.model.DeleteMeDto;
 import ua.mibal.booking.application.dto.ChangeNotificationSettingsForm;
 import ua.mibal.booking.application.dto.ChangeUserForm;
-import ua.mibal.booking.application.dto.auth.RegistrationForm;
+import ua.mibal.booking.application.dto.RegistrationForm;
 import ua.mibal.booking.application.exception.IllegalPasswordException;
 import ua.mibal.booking.application.exception.UserNotFoundException;
 import ua.mibal.booking.application.mapper.UserMapper;

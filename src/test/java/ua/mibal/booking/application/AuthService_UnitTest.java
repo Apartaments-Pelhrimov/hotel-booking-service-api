@@ -24,7 +24,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ua.mibal.booking.application.component.TemplateEmailFactory;
-import ua.mibal.booking.application.dto.auth.RegistrationForm;
+import ua.mibal.booking.application.dto.RegistrationForm;
 import ua.mibal.booking.application.exception.EmailAlreadyExistsException;
 import ua.mibal.booking.application.exception.NotAuthorizedException;
 import ua.mibal.booking.application.exception.UserNotFoundException;

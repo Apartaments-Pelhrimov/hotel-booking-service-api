@@ -24,7 +24,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import ua.mibal.booking.application.dto.ChangeNotificationSettingsForm;
 import ua.mibal.booking.application.dto.ChangeUserForm;
-import ua.mibal.booking.application.dto.auth.RegistrationForm;
+import ua.mibal.booking.application.dto.RegistrationForm;
 import ua.mibal.booking.domain.NotificationSettings;
 import ua.mibal.booking.domain.Phone;
 import ua.mibal.booking.domain.User;

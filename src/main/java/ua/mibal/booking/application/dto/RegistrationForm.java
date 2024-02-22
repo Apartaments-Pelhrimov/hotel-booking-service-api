@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.dto.auth;
+package ua.mibal.booking.application.dto;
 
 import jakarta.validation.constraints.NotNull;
 import ua.mibal.booking.application.validation.constraints.Email;

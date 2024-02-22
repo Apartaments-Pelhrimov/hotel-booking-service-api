@@ -22,7 +22,7 @@ import org.instancio.settings.Settings;
 import org.junit.jupiter.params.provider.Arguments;
 import ua.mibal.booking.application.dto.ChangeNotificationSettingsForm;
 import ua.mibal.booking.application.dto.ChangeUserForm;
-import ua.mibal.booking.application.dto.auth.RegistrationForm;
+import ua.mibal.booking.application.dto.RegistrationForm;
 import ua.mibal.booking.application.dto.request.BedDto;
 import ua.mibal.booking.application.dto.request.CreateApartmentDto;
 import ua.mibal.booking.application.dto.request.CreateApartmentInstanceDto;
