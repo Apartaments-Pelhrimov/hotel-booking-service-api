@@ -68,7 +68,7 @@ class ApartmentService_UnitTest {
 
     @Test
     void getAllFetchPhotosBeds() {
-        when(apartmentRepository.findAllFetchPhotosRoomsBeds())
+        when(apartmentRepository.findAllFetchPhotosRooms())
                 .thenReturn(List.of(apartment, apartment));
 
         List<Apartment> actual = service.getAllFetchPhotosBeds();
@@ -168,7 +168,7 @@ class ApartmentService_UnitTest {
 
     @Test
     void getOneFetchPhotosBeds() {
-        when(apartmentRepository.findByIdFetchPhotosRoomsBeds(1L))
+        when(apartmentRepository.findByIdFetchPhotosRooms(1L))
                 .thenReturn(Optional.of(apartment));
 
         Apartment actual = assertDoesNotThrow(

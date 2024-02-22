@@ -18,6 +18,7 @@ package ua.mibal.booking.adapter.out.jpa;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.application.port.jpa.ApartmentRepository;
 import ua.mibal.booking.domain.Apartment;
 
@@ -57,11 +58,19 @@ public interface ApartmentJpaRepository extends JpaRepository<Apartment, Long>, 
             """)
     Optional<Apartment> findByIdFetchInstances(Long id);
 
-    // TODO
+    @Override
+    @Transactional(readOnly = true)
+    default Optional<Apartment> findByIdFetchPhotosRooms(Long id) {
+        Optional<Apartment> apartment = findByIdFetchPhotos(id);
+        apartment.ifPresent(a -> a.getRooms().size()); // to load Apartment.rooms
+        return apartment;
+    }
 
     @Override
-    Optional<Apartment> findByIdFetchPhotosRoomsBeds(Long id);
-
-    @Override
-    List<Apartment> findAllFetchPhotosRoomsBeds();
+    @Transactional(readOnly = true)
+    default List<Apartment> findAllFetchPhotosRooms() {
+        List<Apartment> apartments = findAllFetchPhotos();
+        apartments.forEach(a -> a.getRooms().size()); // to load Apartment.rooms
+        return apartments;
+    }
 }

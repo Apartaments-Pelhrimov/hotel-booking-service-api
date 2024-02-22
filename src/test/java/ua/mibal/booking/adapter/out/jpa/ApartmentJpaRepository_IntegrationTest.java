@@ -83,6 +83,8 @@ class ApartmentJpaRepository_IntegrationTest {
                 () -> managedApartment.getComments().size());
         assertThrows(LazyInitializationException.class,
                 () -> managedApartment.getRooms().size());
+        assertThrows(LazyInitializationException.class,
+                () -> managedApartment.getRooms().stream().forEach(r -> r.getBeds().size()));
 
         assertThat(stats.getEntityLoadCount()).isOne();
         assertThat(stats.getCollectionLoadCount()).isZero();
@@ -105,6 +107,8 @@ class ApartmentJpaRepository_IntegrationTest {
                 () -> managedApartment.getComments().size());
         assertDoesNotThrow(
                 () -> managedApartment.getRooms().size());
+        assertDoesNotThrow(
+                () -> managedApartment.getRooms().stream().forEach(r -> r.getBeds().size()));
 
         assertThat(stats.getEntityLoadCount()).isOne();
         assertThat(stats.getCollectionLoadCount()).isEqualTo(5);
@@ -185,6 +189,45 @@ class ApartmentJpaRepository_IntegrationTest {
 
         assertNotEquals(emptyRating, changedRating);
         assertEquals(newComment.getRate(), changedRating);
+    }
+
+    @Test
+    void findByIdFetchInstances() {
+        Long id = apartment.getId();
+
+        Apartment managedApartment = repo.findByIdFetchInstances(id)
+                .orElseThrow();
+
+        entityManager.detach(managedApartment);
+        assertDoesNotThrow(
+                () -> managedApartment.getApartmentInstances().size());
+    }
+
+    @Test
+    void findByIdFetchPhotosRooms() {
+        Long id = apartment.getId();
+
+        Apartment managedApartment = repo.findByIdFetchPhotosRooms(id)
+                .orElseThrow();
+
+        entityManager.detach(managedApartment);
+        assertDoesNotThrow(
+                () -> managedApartment.getPhotos().size());
+        assertDoesNotThrow(
+                () -> managedApartment.getRooms().stream().forEach(r -> r.getBeds().size()));
+    }
+
+    @Test
+    void findAllFetchPhotosRooms() {
+        List<Apartment> managedApartments = repo.findAllFetchPhotosRooms();
+
+        managedApartments.forEach(entityManager::detach);
+        managedApartments.forEach(a -> {
+            assertDoesNotThrow(
+                    () -> a.getPhotos().size());
+            assertDoesNotThrow(
+                    () -> a.getRooms().stream().forEach(r -> r.getBeds().size()));
+        });
     }
 
     private Comment persistTestCommentWithApartment(Apartment apartment) {

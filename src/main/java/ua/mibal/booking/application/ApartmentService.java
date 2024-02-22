@@ -38,9 +38,8 @@ public class ApartmentService {
     private final ApartmentRepository apartmentRepository;
     private final ApartmentMapper apartmentMapper;
 
-    @Transactional(readOnly = true) // for LAZY Apartment.beds fetch
     public List<Apartment> getAllFetchPhotosBeds() {
-        return apartmentRepository.findAllFetchPhotosRoomsBeds();
+        return apartmentRepository.findAllFetchPhotosRooms();
     }
 
     public Apartment getOne(Long id) {
@@ -64,7 +63,7 @@ public class ApartmentService {
     }
 
     public Apartment getOneFetchPhotosBeds(Long id) {
-        return apartmentRepository.findByIdFetchPhotosRoomsBeds(id)
+        return apartmentRepository.findByIdFetchPhotosRooms(id)
                 .orElseThrow(() -> new ApartmentNotFoundException(id));
     }
 
