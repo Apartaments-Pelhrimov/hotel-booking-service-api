@@ -34,7 +34,7 @@ import ua.mibal.booking.adapter.in.web.mapper.CommentDtoMapper;
 import ua.mibal.booking.adapter.in.web.model.CommentDto;
 import ua.mibal.booking.adapter.in.web.security.annotation.UserAllowed;
 import ua.mibal.booking.application.CommentService;
-import ua.mibal.booking.application.dto.request.CreateCommentDto;
+import ua.mibal.booking.application.dto.CreateCommentForm;
 import ua.mibal.booking.domain.Comment;
 
 /**
@@ -59,9 +59,11 @@ public class CommentController {
     @PostMapping("/{apartmentId}/comments")
     @ResponseStatus(HttpStatus.CREATED)
     public void create(@PathVariable Long apartmentId,
-                       @Valid @RequestBody CreateCommentDto createCommentDto,
+                       @Valid @RequestBody CreateCommentForm form,
                        Authentication authentication) {
-        commentService.create(createCommentDto, authentication.getName(), apartmentId);
+        form.setApartmentId(apartmentId);
+        form.setUserEmail(authentication.getName());
+        commentService.create(form);
     }
 
     @UserAllowed

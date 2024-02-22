@@ -21,7 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ua.mibal.booking.application.dto.request.CreateCommentDto;
+import ua.mibal.booking.application.dto.CreateCommentForm;
 import ua.mibal.booking.application.exception.ApartmentNotFoundException;
 import ua.mibal.booking.application.exception.UserHasNoAccessToCommentException;
 import ua.mibal.booking.application.exception.UserHasNoAccessToCommentsException;
@@ -50,42 +50,40 @@ public class CommentService {
     }
 
     @Transactional
-    public void create(CreateCommentDto createCommentDto,
-                       String userEmail,
-                       Long apartmentId) {
-        validateUserHasReservation(apartmentId, userEmail);
-        Comment newComment = createComment(createCommentDto, userEmail, apartmentId);
+    public void create(CreateCommentForm form) {
+        validateUserHasReservationWithThisApartment(form);
+        Comment newComment = assembleCommentBy(form);
         commentRepository.save(newComment);
     }
 
-    public void delete(Long id, String email) {
-        validateUserHasComment(id, email);
+    public void delete(Long id, String userEmail) {
+        validateUserHasComment(userEmail, id);
         commentRepository.deleteById(id);
     }
 
-    private Comment createComment(CreateCommentDto createCommentDto,
-                                  String userEmail,
-                                  Long apartmentId) {
-        Comment newComment = commentMapper.toEntity(createCommentDto);
-        Apartment apartmentRef = apartmentRepository.getReferenceById(apartmentId);
-        User userRef = userRepository.getReferenceByEmail(userEmail);
+    private Comment assembleCommentBy(CreateCommentForm form) {
+        Comment newComment = commentMapper.assemble(form);
+        Apartment apartmentRef = apartmentRepository.getReferenceById(form.getApartmentId());
+        User userRef = userRepository.getReferenceByEmail(form.getUserEmail());
         newComment.setApartment(apartmentRef);
         newComment.setUser(userRef);
         return newComment;
     }
 
-    private void validateUserHasComment(Long commentId, String userEmail) {
-        if (!userRepository.userHasComment(userEmail, commentId)) {
-            throw new UserHasNoAccessToCommentException();
-        }
-    }
-
-    private void validateUserHasReservation(Long apartmentId, String userEmail) {
+    private void validateUserHasReservationWithThisApartment(CreateCommentForm form) {
+        Long apartmentId = form.getApartmentId();
+        String userEmail = form.getUserEmail();
         if (!apartmentRepository.existsById(apartmentId)) {
             throw new ApartmentNotFoundException(apartmentId);
         }
         if (!userRepository.userHasReservationWithApartment(userEmail, apartmentId)) {
             throw new UserHasNoAccessToCommentsException();
+        }
+    }
+
+    private void validateUserHasComment(String userEmail, Long commentId) {
+        if (!userRepository.userHasComment(userEmail, commentId)) {
+            throw new UserHasNoAccessToCommentException();
         }
     }
 }

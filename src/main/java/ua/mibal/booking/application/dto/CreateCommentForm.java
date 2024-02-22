@@ -14,27 +14,38 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.dto.request;
+package ua.mibal.booking.application.dto;
 
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public record CreateCommentDto(
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
+public class CreateCommentForm {
 
-        @NotBlank
-        @Size(min = 1, max = 255)
-        String body,
+    @NotBlank
+    @Size(min = 1, max = 255)
+    private String body;
 
-        @NotNull
-        @DecimalMin("0")
-        @DecimalMax("5")
-        Double rate
-) {
+    @NotNull
+    @DecimalMin("0")
+    @DecimalMax("5")
+    private Double rate;
+
+    private Long apartmentId;
+
+    private String userEmail;
 }

@@ -34,7 +34,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import ua.mibal.booking.adapter.in.web.mapper.CommentDtoMapper;
 import ua.mibal.booking.application.CommentService;
-import ua.mibal.booking.application.dto.request.CreateCommentDto;
+import ua.mibal.booking.application.dto.CreateCommentForm;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -99,7 +99,7 @@ class CommentController_UnitTest {
     void create_should_allow_only_ROLE_USER() throws Exception {
         mvc.perform(post("/api/apartments/{apartmentId}/comments", 1)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new CreateCommentDto("body", 5.))))
+                        .content(objectMapper.writeValueAsString(new CreateCommentForm("body", 5., null, null))))
                 .andExpect(status().isBadRequest());
 
         verifyNoInteractions(commentService);
@@ -116,7 +116,7 @@ class CommentController_UnitTest {
     void create_should_validate_CreateCommentDto(String body, Double rate) throws Exception {
         mvc.perform(post("/api/apartments/{apartmentId}/comments", 1)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new CreateCommentDto(body, rate))))
+                        .content(objectMapper.writeValueAsString(new CreateCommentForm(body, rate, null, null))))
                 .andExpect(status().isBadRequest());
 
         verifyNoInteractions(commentService);
@@ -132,13 +132,13 @@ class CommentController_UnitTest {
             "4893749872138478, correct_body5, 3.21",
     })
     void create_should_handle_args_to_CommentService(Long apartmentId, String body, Double rate) throws Exception {
-        CreateCommentDto createCommentDto = new CreateCommentDto(body, rate);
+        CreateCommentForm createCommentForm = new CreateCommentForm(body, rate, null, null);
         mvc.perform(post("/api/apartments/{apartmentId}/comments", apartmentId)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(createCommentDto)))
+                        .content(objectMapper.writeValueAsString(createCommentForm)))
                 .andExpect(status().isOk());
 
         verify(commentService, times(1))
-                .create(createCommentDto, any(), apartmentId);
+                .create(createCommentForm);
     }
 }

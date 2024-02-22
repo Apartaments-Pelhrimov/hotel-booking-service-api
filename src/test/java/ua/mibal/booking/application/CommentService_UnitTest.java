@@ -24,7 +24,7 @@ import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import ua.mibal.booking.application.dto.request.CreateCommentDto;
+import ua.mibal.booking.application.dto.CreateCommentForm;
 import ua.mibal.booking.application.exception.ApartmentNotFoundException;
 import ua.mibal.booking.application.exception.UserHasNoAccessToCommentException;
 import ua.mibal.booking.application.exception.UserHasNoAccessToCommentsException;
@@ -68,7 +68,7 @@ class CommentService_UnitTest {
     @Mock
     private Comment comment;
     @Mock
-    private CreateCommentDto createCommentDto;
+    private CreateCommentForm createCommentForm;
     @Mock
     private Apartment apartment;
     @Mock
@@ -99,19 +99,24 @@ class CommentService_UnitTest {
         String email = "email";
         Long apartmentId = 1L;
 
+        when(createCommentForm.getApartmentId())
+                .thenReturn(apartmentId);
+        when(createCommentForm.getUserEmail())
+                .thenReturn(email);
+
         when(apartmentRepository.existsById(apartmentId))
                 .thenReturn(true);
         when(userRepository.userHasReservationWithApartment(email, apartmentId))
                 .thenReturn(true);
 
-        when(commentMapper.toEntity(createCommentDto))
+        when(commentMapper.assemble(createCommentForm))
                 .thenReturn(comment);
         when(apartmentRepository.getReferenceById(apartmentId))
                 .thenReturn(apartment);
         when(userRepository.getReferenceByEmail(email))
                 .thenReturn(user);
 
-        service.create(createCommentDto, email, apartmentId);
+        service.create(createCommentForm);
 
         verify(comment, times(1)).setApartment(apartment);
         verify(comment, times(1)).setUser(user);
@@ -122,11 +127,16 @@ class CommentService_UnitTest {
         String email = "email";
         Long apartmentId = 1L;
 
+        when(createCommentForm.getApartmentId())
+                .thenReturn(apartmentId);
+        when(createCommentForm.getUserEmail())
+                .thenReturn(email);
+
         when(apartmentRepository.existsById(apartmentId))
                 .thenReturn(false);
 
         assertThrows(ApartmentNotFoundException.class,
-                () -> service.create(createCommentDto, email, apartmentId));
+                () -> service.create(createCommentForm));
 
         verifyNoInteractions(comment);
     }
@@ -136,13 +146,18 @@ class CommentService_UnitTest {
         String email = "email";
         Long apartmentId = 1L;
 
+        when(createCommentForm.getApartmentId())
+                .thenReturn(apartmentId);
+        when(createCommentForm.getUserEmail())
+                .thenReturn(email);
+
         when(apartmentRepository.existsById(apartmentId))
                 .thenReturn(true);
         when(userRepository.userHasReservationWithApartment(email, apartmentId))
                 .thenReturn(false);
 
         assertThrows(UserHasNoAccessToCommentsException.class,
-                () -> service.create(createCommentDto, email, apartmentId));
+                () -> service.create(createCommentForm));
 
         verifyNoInteractions(comment);
     }

@@ -17,7 +17,7 @@
 package ua.mibal.booking.application.mapper;
 
 import org.mapstruct.Mapper;
-import ua.mibal.booking.application.dto.request.CreateCommentDto;
+import ua.mibal.booking.application.dto.CreateCommentForm;
 import ua.mibal.booking.domain.Comment;
 
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
@@ -29,5 +29,5 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 @Mapper(componentModel = SPRING)
 public interface CommentMapper {
 
-    Comment toEntity(CreateCommentDto createCommentDto);
+    Comment assemble(CreateCommentForm createCommentForm);
 }
