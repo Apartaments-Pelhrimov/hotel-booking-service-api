@@ -55,28 +55,28 @@ public class UserService {
         userRepository.deleteByEmail(email);
     }
 
-    public User save(RegistrationForm registrationForm) {
-        String encodedPass = passwordEncoder.encode(registrationForm.password());
-        User user = userMapper.toEntity(registrationForm, encodedPass);
+    public User save(RegistrationForm form) {
+        String encodedPass = passwordEncoder.encode(form.password());
+        User user = userMapper.assemble(form, encodedPass);
         return userRepository.save(user);
     }
 
-    public void changePassword(String email, String oldPassword, String newPassword) {
+    public void putPassword(String email, String oldPassword, String newPassword) {
         validatePassword(oldPassword, email);
         String newEncodedPassword = passwordEncoder.encode(newPassword);
         userRepository.updateUserPasswordByEmail(newEncodedPassword, email);
     }
 
     @Transactional
-    public void changeUser(String email, ChangeUserForm form) {
+    public void change(String email, ChangeUserForm form) {
         User user = getOne(email);
-        userMapper.update(user, form);
+        userMapper.change(user, form);
     }
 
     @Transactional
     public void changeNotificationSettings(String email, ChangeNotificationSettingsForm form) {
         User user = getOne(email);
-        userMapper.update(user.getNotificationSettings(), form);
+        userMapper.changeNotificationSettings(user.getNotificationSettings(), form);
     }
 
     @Transactional

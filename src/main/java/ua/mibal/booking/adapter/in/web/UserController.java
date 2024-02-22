@@ -65,29 +65,29 @@ public class UserController {
 
     @DeleteMapping("/me")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@Valid @RequestBody DeleteMeDto deleteMeDto,
+    public void delete(@Valid @RequestBody DeleteMeDto dto,
                        Authentication authentication) {
-        userService.delete(authentication.getName(), deleteMeDto.password());
+        userService.delete(authentication.getName(), dto.password());
     }
 
     @PutMapping("/me/password")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void changePassword(@Valid @RequestBody ChangePasswordDto changePasswordDto,
-                               Authentication authentication) {
-        userService.changePassword(authentication.getName(), changePasswordDto.oldPassword(), changePasswordDto.newPassword());
+    public void putPassword(@Valid @RequestBody ChangePasswordDto dto,
+                            Authentication authentication) {
+        userService.putPassword(authentication.getName(), dto.oldPassword(), dto.newPassword());
     }
 
     @PatchMapping("/me")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void changeUser(@Valid @RequestBody ChangeUserForm changeUserForm,
-                           Authentication authentication) {
-        userService.changeUser(authentication.getName(), changeUserForm);
+    public void change(@Valid @RequestBody ChangeUserForm form,
+                       Authentication authentication) {
+        userService.change(authentication.getName(), form);
     }
 
     @PatchMapping("/me/notifications")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void changeNotificationSettings(@RequestBody ChangeNotificationSettingsForm changeNotificationSettingsForm,
+    public void changeNotificationSettings(@RequestBody ChangeNotificationSettingsForm form,
                                            Authentication authentication) {
-        userService.changeNotificationSettings(authentication.getName(), changeNotificationSettingsForm);
+        userService.changeNotificationSettings(authentication.getName(), form);
     }
 }

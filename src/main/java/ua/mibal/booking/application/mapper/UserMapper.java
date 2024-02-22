@@ -40,12 +40,12 @@ import static org.mapstruct.NullValuePropertyMappingStrategy.IGNORE;
 public interface UserMapper {
 
     @Mapping(target = "password", source = "encodedPassword")
-    User toEntity(RegistrationForm registrationForm, String encodedPassword);
+    User assemble(RegistrationForm registrationForm, String encodedPassword);
 
     @BeanMapping(nullValuePropertyMappingStrategy = IGNORE)
-    void update(@MappingTarget User user, ChangeUserForm changeUserForm);
+    void change(@MappingTarget User user, ChangeUserForm changeUserForm);
 
     @BeanMapping(nullValuePropertyMappingStrategy = IGNORE)
-    void update(@MappingTarget NotificationSettings notificationSettings,
-                ChangeNotificationSettingsForm changeNotificationSettingsForm);
+    void changeNotificationSettings(NotificationSettings notificationSettings,
+                                    ChangeNotificationSettingsForm changeNotificationSettingsForm);
 }

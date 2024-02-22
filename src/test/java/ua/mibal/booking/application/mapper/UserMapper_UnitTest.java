@@ -61,11 +61,11 @@ class UserMapper_UnitTest {
 
     @ParameterizedTest
     @InstancioSource
-    void toEntity(RegistrationForm registrationForm, String encodedPassword) {
+    void assemble(RegistrationForm registrationForm, String encodedPassword) {
         when(phoneMapper.toNumberString(registrationForm.phone()))
                 .thenReturn(mappedPhone);
 
-        User user = mapper.toEntity(registrationForm, encodedPassword);
+        User user = mapper.assemble(registrationForm, encodedPassword);
 
         assertThat(user.getId(), nullValue());
         assertThat(user.getFirstName(), is(registrationForm.firstName()));
@@ -83,15 +83,15 @@ class UserMapper_UnitTest {
     }
 
     @Test
-    void toEntity_should_return_null_if_arguments_are_null() {
-        User user = mapper.toEntity(null, null);
+    void assemble_should_return_null_if_arguments_are_null() {
+        User user = mapper.assemble(null, null);
 
         assertThat(user, nullValue());
     }
 
     @ParameterizedTest
     @MethodSource("ua.mibal.test.util.DataGenerator#testUsers")
-    void update_User(User source, ChangeUserForm userChanges) {
+    void change(User source, ChangeUserForm userChanges) {
         when(phoneMapper.toNumberString(userChanges.phone()))
                 .thenReturn(mappedPhone);
 
@@ -105,7 +105,7 @@ class UserMapper_UnitTest {
                 ? source.getPhone()
                 : mappedPhone;
 
-        mapper.update(source, userChanges);
+        mapper.change(source, userChanges);
 
         assertThat(source.getFirstName(), is(expectedFirstName));
         assertThat(source.getLastName(), is(expectedLastName));
@@ -114,8 +114,8 @@ class UserMapper_UnitTest {
 
     @ParameterizedTest
     @MethodSource("ua.mibal.test.util.DataGenerator#testNotificationSettings")
-    void update_NotificationSettings(NotificationSettings source,
-                                     ChangeNotificationSettingsForm userChanges) {
+    void changeNotificationSettings(NotificationSettings source,
+                                    ChangeNotificationSettingsForm userChanges) {
         boolean expectedOrderEmails = userChanges.receiveOrderEmails() == null
                 ? source.isReceiveOrderEmails()
                 : userChanges.receiveOrderEmails();
@@ -123,7 +123,7 @@ class UserMapper_UnitTest {
                 ? source.isReceiveNewsEmails()
                 : userChanges.receiveNewsEmails();
 
-        mapper.update(source, userChanges);
+        mapper.changeNotificationSettings(source, userChanges);
 
         assertThat(source.isReceiveOrderEmails(), is(expectedOrderEmails));
         assertThat(source.isReceiveNewsEmails(), is(expectedNewsEmails));
