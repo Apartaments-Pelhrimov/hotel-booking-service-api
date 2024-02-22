@@ -46,6 +46,6 @@ public interface UserMapper {
     void change(@MappingTarget User user, ChangeUserForm changeUserForm);
 
     @BeanMapping(nullValuePropertyMappingStrategy = IGNORE)
-    void changeNotificationSettings(NotificationSettings notificationSettings,
+    void changeNotificationSettings(@MappingTarget NotificationSettings notificationSettings,
                                     ChangeNotificationSettingsForm changeNotificationSettingsForm);
 }
