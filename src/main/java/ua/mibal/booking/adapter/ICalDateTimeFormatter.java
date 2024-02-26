@@ -14,21 +14,22 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.adapter.out.reservation.system.ical;
+package ua.mibal.booking.adapter;
 
 import lombok.RequiredArgsConstructor;
-import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.data.CalendarBuilder;
+import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.TimeZone;
+import net.fortuna.ical4j.model.TimeZoneRegistry;
 import net.fortuna.ical4j.model.property.DateProperty;
 import org.springframework.stereotype.Component;
 import ua.mibal.booking.config.properties.CalendarProps;
-import ua.mibal.booking.domain.DefaultEvent;
-import ua.mibal.booking.domain.Event;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.List;
+
+import static java.util.Date.from;
 
 /**
  * @author Mykhailo Balakhon
@@ -36,26 +37,23 @@ import java.util.List;
  */
 @RequiredArgsConstructor
 @Component
-public class ICalEventMapper {
+public class ICalDateTimeFormatter {
     private final CalendarProps calendarProps;
 
-    public List<Event> eventsFrom(List<VEvent> vEvents) {
-        return vEvents.stream()
-                .map(this::eventFrom)
-                .toList();
-    }
-
-    private Event eventFrom(VEvent vEvent) {
-        return new DefaultEvent(
-                fromICal(vEvent.getStartDate(), calendarProps.zoneId()),
-                fromICal(vEvent.getEndDate(), calendarProps.zoneId()),
-                vEvent.getSummary().getValue()
-        );
-    }
-
-    private LocalDateTime fromICal(DateProperty dateProperty, ZoneId targetZoneId) {
+    public LocalDateTime fromICal(DateProperty dateProperty) {
         Instant instant = dateProperty.getDate().toInstant();
-        ZonedDateTime zonedDateTimeAtOurZone = instant.atZone(targetZoneId);
+        ZonedDateTime zonedDateTimeAtOurZone = instant.atZone(calendarProps.zoneId());
         return zonedDateTimeAtOurZone.toLocalDateTime();
+    }
+
+    public DateTime toIcal(LocalDateTime localDateTime) {
+        Instant instant = localDateTime.atZone(calendarProps.zoneId()).toInstant();
+        TimeZone timeZone = iCaltimeZone();
+        return new DateTime(from(instant), timeZone);
+    }
+
+    private TimeZone iCaltimeZone() {
+        TimeZoneRegistry registry = new CalendarBuilder().getRegistry();
+        return registry.getTimeZone(calendarProps.zoneId().getId());
     }
 }

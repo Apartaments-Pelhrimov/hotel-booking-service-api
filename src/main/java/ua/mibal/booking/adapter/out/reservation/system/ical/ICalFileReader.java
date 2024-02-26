@@ -23,6 +23,7 @@ import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.component.VEvent;
 import org.springframework.stereotype.Service;
+import ua.mibal.booking.adapter.ICalEventMapper;
 import ua.mibal.booking.domain.Event;
 
 import java.io.IOException;
@@ -48,7 +49,7 @@ public class ICalFileReader {
     public List<Event> readEventsFromCalendar(InputStream calendarStream) {
         Calendar calendar = buildCalendarFromInputStream(calendarStream);
         List<VEvent> vEvents = calendar.getComponents(Component.VEVENT);
-        return iCalEventMapper.eventsFrom(vEvents);
+        return iCalEventMapper.toEvents(vEvents);
     }
 
     private Calendar buildCalendarFromInputStream(InputStream file) {

@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.component.VEvent;
 import org.springframework.stereotype.Component;
+import ua.mibal.booking.adapter.ICalEventMapper;
 import ua.mibal.booking.config.properties.CalendarProps.ICalProps;
 import ua.mibal.booking.domain.Event;
 
@@ -40,7 +41,7 @@ public class ICalMapper {
 
     public String toICal(List<Event> events) {
         Calendar calendar = initCalendar();
-        List<VEvent> iCalEvents = iCalEventMapper.iCalEventsFrom(events);
+        List<VEvent> iCalEvents = iCalEventMapper.toICalEvents(events);
         calendar.getComponents().addAll(iCalEvents);
         return calendar.toString();
     }

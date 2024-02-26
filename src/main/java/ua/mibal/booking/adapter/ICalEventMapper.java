@@ -14,23 +14,15 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.adapter.in.web.mapper;
+package ua.mibal.booking.adapter;
 
 import lombok.RequiredArgsConstructor;
-import net.fortuna.ical4j.data.CalendarBuilder;
-import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.TimeZone;
-import net.fortuna.ical4j.model.TimeZoneRegistry;
 import net.fortuna.ical4j.model.component.VEvent;
 import org.springframework.stereotype.Component;
-import ua.mibal.booking.config.properties.CalendarProps;
+import ua.mibal.booking.domain.DefaultEvent;
 import ua.mibal.booking.domain.Event;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.List;
-
-import static java.util.Date.from;
 
 /**
  * @author Mykhailo Balakhon
@@ -39,30 +31,33 @@ import static java.util.Date.from;
 @RequiredArgsConstructor
 @Component
 public class ICalEventMapper {
-    private final CalendarProps calendarProps;
+    private final ICalDateTimeFormatter ICalDateTimeFormatter;
 
-    public List<VEvent> iCalEventsFrom(List<Event> events) {
+    public List<VEvent> toICalEvents(List<Event> events) {
         return events.stream()
                 .map(this::eventToVEvent)
                 .toList();
     }
 
+    public List<Event> toEvents(List<VEvent> vEvents) {
+        return vEvents.stream()
+                .map(this::eventFrom)
+                .toList();
+    }
+
     private VEvent eventToVEvent(Event event) {
         return new VEvent(
-                toIcal(event.getStart()),
-                toIcal(event.getEnd()),
+                ICalDateTimeFormatter.toIcal(event.getStart()),
+                ICalDateTimeFormatter.toIcal(event.getEnd()),
                 event.getEventName()
         );
     }
 
-    private DateTime toIcal(LocalDateTime localDateTime) {
-        Instant instant = localDateTime.atZone(calendarProps.zoneId()).toInstant();
-        TimeZone timeZone = iCaltimeZone(calendarProps.zoneId().getId());
-        return new DateTime(from(instant), timeZone);
-    }
-
-    private TimeZone iCaltimeZone(String id) {
-        TimeZoneRegistry registry = new CalendarBuilder().getRegistry();
-        return registry.getTimeZone(id);
+    private Event eventFrom(VEvent vEvent) {
+        return new DefaultEvent(
+                ICalDateTimeFormatter.fromICal(vEvent.getStartDate()),
+                ICalDateTimeFormatter.fromICal(vEvent.getEndDate()),
+                vEvent.getSummary().getValue()
+        );
     }
 }
