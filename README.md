@@ -1,6 +1,8 @@
 # Hotel booking service Project
 
-The **Hotel booking service** project serves as the back-end component of a hotel and hostel reservation system,
+[Design doc](https://mibal.notion.site/Hotel-booking-service-Design-doc-030209e70863473180285a4af2004028)
+
+The **Hotel booking service** project serves as the back-end component of a hotel reservation system,
 developed using Java Spring technologies. It provides an API for managing reservations, hotel rooms, clients, and other
 aspects of accommodation booking.
 
