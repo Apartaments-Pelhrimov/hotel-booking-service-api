@@ -22,10 +22,10 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
-import ua.mibal.booking.adapter.out.reservation.system.ical.ICalFileReader;
+import ua.mibal.booking.adapter.IcalBiweeklyMapper;
+import ua.mibal.booking.adapter.out.reservation.system.ical.WebContentReader;
 import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.domain.Event;
 import ua.mibal.booking.domain.ReservationRequest;
@@ -36,10 +36,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.List.of;
-import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 /**
@@ -56,7 +54,9 @@ class BookingComReservationService_UnitTest {
     private BookingComReservationService service;
 
     @Mock
-    private ICalFileReader iCalFileReader;
+    private WebContentReader webContentReader;
+    @Mock
+    private IcalBiweeklyMapper icalBiweeklyMapper;
 
     @Mock
     private ApartmentInstance apartmentInstance;
@@ -65,14 +65,18 @@ class BookingComReservationService_UnitTest {
 
     @BeforeEach
     void setup() {
-        service = new BookingComReservationService(iCalFileReader);
+        service = new BookingComReservationService(webContentReader, icalBiweeklyMapper);
     }
 
     @Test
     @Order(1)
     void getEventsFor() {
-        when(apartmentInstance.getBookingICalUrl()).thenReturn(Optional.of(calendarUrl));
-        when(iCalFileReader.readEventsFromCalendar(any())).thenReturn(of(event));
+        when(apartmentInstance.getBookingICalUrl())
+                .thenReturn(Optional.of(calendarUrl));
+        when(webContentReader.read(calendarUrl))
+                .thenReturn("FILE CONTENT");
+        when(icalBiweeklyMapper.getEvents("FILE CONTENT"))
+                .thenReturn(of(event));
 
         List<Event> actual = service.getEventsFor(apartmentInstance);
 
@@ -90,29 +94,14 @@ class BookingComReservationService_UnitTest {
     }
 
     @ParameterizedTest
-    @Order(3)
-    @CsvSource({
-            "invalid_url\"",
-            "invalid_url",
-            "./invalid_url/",
-            "//invalid_url/",
-            "~/invalid_url/",
-    })
-    void getEventsFor_should_throw_BookingComServiceException_if_ical_url_is_invalid(String url) {
-        when(apartmentInstance.getBookingICalUrl()).thenReturn(Optional.of(url));
-
-        assertThrows(
-                BookingComServiceException.class,
-                () -> service.getEventsFor(apartmentInstance)
-        );
-    }
-
-    @ParameterizedTest
     @Order(4)
     @MethodSource("ua.mibal.test.util.DataGenerator#eventsFactory")
     void isFreeForReservation(List<Event> events, LocalDateTime from, LocalDateTime to, boolean expected) {
-        when(apartmentInstance.getBookingICalUrl()).thenReturn(Optional.of(calendarUrl));
-        when(iCalFileReader.readEventsFromCalendar(any()))
+        when(apartmentInstance.getBookingICalUrl())
+                .thenReturn(Optional.of(calendarUrl));
+        when(webContentReader.read(calendarUrl))
+                .thenReturn("FILE CONTENT");
+        when(icalBiweeklyMapper.getEvents("FILE CONTENT"))
                 .thenReturn(events);
 
         boolean actual = service.isFreeForReservation(apartmentInstance, new ReservationRequest(from, to, -1, -1L, "ignored"));

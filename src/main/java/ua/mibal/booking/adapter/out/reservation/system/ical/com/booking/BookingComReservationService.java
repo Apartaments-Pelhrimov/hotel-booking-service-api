@@ -18,15 +18,13 @@ package ua.mibal.booking.adapter.out.reservation.system.ical.com.booking;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ua.mibal.booking.adapter.out.reservation.system.ical.ICalFileReader;
+import ua.mibal.booking.adapter.IcalBiweeklyMapper;
+import ua.mibal.booking.adapter.out.reservation.system.ical.WebContentReader;
 import ua.mibal.booking.application.port.reservation.system.ReservationSystem;
 import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.domain.Event;
 import ua.mibal.booking.domain.ReservationRequest;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -40,7 +38,8 @@ import static java.util.Collections.emptyList;
 @RequiredArgsConstructor
 @Service
 public class BookingComReservationService implements ReservationSystem {
-    private final ICalFileReader iCalFileReader;
+    private final WebContentReader webContentReader;
+    private final IcalBiweeklyMapper icalBiweeklyMapper;
 
     @Override
     public boolean isFreeForReservation(ApartmentInstance apartmentInstance,
@@ -59,29 +58,11 @@ public class BookingComReservationService implements ReservationSystem {
         if (calendarUrl.isEmpty()) {
             return emptyList();
         }
-        return getEventsByCalendarUrl(calendarUrl.get(), apartmentInstance);
+        return getEventsByCalendarUrl(calendarUrl.get());
     }
 
-    private List<Event> getEventsByCalendarUrl(String calendarUrl,
-                                               ApartmentInstance apartmentInstance) {
-        try {
-            return getEventsByCalendarUrl0(calendarUrl);
-        } catch (IOException e) {
-            throw new BookingComServiceException(
-                    "ApartmentInstance with id='%d' has illegal ICalendar format at URL='%s'"
-                            .formatted(apartmentInstance.getId(), calendarUrl), e
-            );
-        }
-    }
-
-    private List<Event> getEventsByCalendarUrl0(String calendarUrl) throws IOException {
-        try (InputStream calendar = streamFromUrl(calendarUrl)) {
-            return iCalFileReader.readEventsFromCalendar(calendar);
-        }
-    }
-
-    private InputStream streamFromUrl(String calendarUrl) throws IOException {
-        URL url = new URL(calendarUrl);
-        return url.openStream();
+    private List<Event> getEventsByCalendarUrl(String calendarUrl) {
+        String icalFile = webContentReader.read(calendarUrl);
+        return icalBiweeklyMapper.getEvents(icalFile);
     }
 }

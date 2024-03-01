@@ -16,15 +16,17 @@
 
 package ua.mibal.booking.adapter.out.reservation.system.ical;
 
-import ua.mibal.booking.application.exception.InternalServerException;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class ICalEventReaderException extends InternalServerException {
+@Component
+public class WebContentReader {
 
-    public ICalEventReaderException(String message, Exception cause) {
-        super(message, cause);
+    // TODO
+    public String read(String fileUrl) {
+        return null;
     }
 }
