@@ -39,14 +39,14 @@ import static org.mockito.Mockito.when;
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @UnitTest
-class IcalBiweeklyMapper_UnitTest {
+class IcalMapper_UnitTest {
 
-    private IcalBiweeklyMapper mapper;
+    private IcalMapper mapper;
 
     @Mock
     private ApplicationProps appProps;
     @Mock
-    private IcalBiweeklyEventMapper eventMapper;
+    private IcalEventMapper eventMapper;
 
     @Mock
     private Event stubEvent1;
@@ -55,7 +55,7 @@ class IcalBiweeklyMapper_UnitTest {
 
     @BeforeEach
     void setUp() {
-        mapper = new IcalBiweeklyMapper(appProps, eventMapper);
+        mapper = new IcalMapper(appProps, eventMapper);
     }
 
     @Test

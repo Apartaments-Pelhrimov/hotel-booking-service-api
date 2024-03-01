@@ -34,7 +34,7 @@ import java.util.List;
  */
 @RequiredArgsConstructor
 @Component
-public class IcalBiweeklyEventMapper {
+public class IcalEventMapper {
     private final CalendarProps calendarProps;
 
     public List<VEvent> toIcalEvents(List<Event> events) {

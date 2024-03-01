@@ -35,13 +35,13 @@ import static biweekly.property.CalendarScale.gregorian;
  */
 @RequiredArgsConstructor
 @Component
-public class IcalBiweeklyMapper {
+public class IcalMapper {
     private final ApplicationProps appProps;
-    private final IcalBiweeklyEventMapper icalBiweeklyEventMapper;
+    private final IcalEventMapper icalEventMapper;
 
     public String toIcal(List<Event> events) {
         ICalendar calendar = initIcal();
-        List<VEvent> icalEvents = icalBiweeklyEventMapper.toIcalEvents(events);
+        List<VEvent> icalEvents = icalEventMapper.toIcalEvents(events);
         icalEvents.forEach(calendar::addEvent);
         return Biweekly.write(calendar).go();
     }
@@ -49,7 +49,7 @@ public class IcalBiweeklyMapper {
     public List<Event> getEvents(String icalCalendar) {
         ICalendar calendar = Biweekly.parse(icalCalendar).first();
         List<VEvent> vevents = calendar.getEvents();
-        return icalBiweeklyEventMapper.toEvents(vevents);
+        return icalEventMapper.toEvents(vevents);
     }
 
     private ICalendar initIcal() {

@@ -42,10 +42,10 @@ import static org.mockito.Mockito.when;
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @UnitTest
-class IcalBiweeklyEventMapper_UnitTest {
+class IcalEventMapper_UnitTest {
     private final ZoneId zoneId = ZoneId.of("UTC+2");
 
-    private IcalBiweeklyEventMapper mapper;
+    private IcalEventMapper mapper;
 
     @Mock
     private CalendarProps calendarProps;
@@ -55,7 +55,7 @@ class IcalBiweeklyEventMapper_UnitTest {
     void setUp() {
         when(calendarProps.zoneId())
                 .thenReturn(zoneId);
-        mapper = new IcalBiweeklyEventMapper(calendarProps);
+        mapper = new IcalEventMapper(calendarProps);
     }
 
     @Test

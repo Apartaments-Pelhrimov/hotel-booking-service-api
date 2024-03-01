@@ -18,7 +18,7 @@ package ua.mibal.booking.adapter.out.reservation.system.ical.com.booking;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ua.mibal.booking.adapter.IcalBiweeklyMapper;
+import ua.mibal.booking.adapter.IcalMapper;
 import ua.mibal.booking.adapter.out.reservation.system.ical.WebContentReader;
 import ua.mibal.booking.application.port.reservation.system.ReservationSystem;
 import ua.mibal.booking.domain.ApartmentInstance;
@@ -39,7 +39,7 @@ import static java.util.Collections.emptyList;
 @Service
 public class BookingComReservationService implements ReservationSystem {
     private final WebContentReader webContentReader;
-    private final IcalBiweeklyMapper icalBiweeklyMapper;
+    private final IcalMapper icalMapper;
 
     @Override
     public boolean isFreeForReservation(ApartmentInstance apartmentInstance,
@@ -63,6 +63,6 @@ public class BookingComReservationService implements ReservationSystem {
 
     private List<Event> getEventsByCalendarUrl(String calendarUrl) {
         String icalFile = webContentReader.read(calendarUrl);
-        return icalBiweeklyMapper.getEvents(icalFile);
+        return icalMapper.getEvents(icalFile);
     }
 }

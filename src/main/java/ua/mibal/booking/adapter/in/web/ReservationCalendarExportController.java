@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ua.mibal.booking.adapter.IcalBiweeklyMapper;
+import ua.mibal.booking.adapter.IcalMapper;
 import ua.mibal.booking.application.EventService;
 import ua.mibal.booking.domain.Event;
 
@@ -36,7 +36,7 @@ import java.util.List;
 @RequestMapping("/api")
 public class ReservationCalendarExportController {
     private final EventService eventService;
-    private final IcalBiweeklyMapper icalBiweeklyMapper;
+    private final IcalMapper icalMapper;
 
     @GetMapping(
             value = "/apartments/instances/{id}/calendar.ics",
@@ -44,6 +44,6 @@ public class ReservationCalendarExportController {
     )
     public String getIcalForApartmentInstance(@PathVariable Long id) {
         List<Event> events = eventService.getEventsForApartmentInstanceBy(id);
-        return icalBiweeklyMapper.toIcal(events);
+        return icalMapper.toIcal(events);
     }
 }
