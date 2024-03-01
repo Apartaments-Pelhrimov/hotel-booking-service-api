@@ -23,6 +23,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ua.mibal.booking.application.dto.ReservationForm;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -50,7 +51,12 @@ public class ReservationDetails {
     @Column(nullable = false)
     private BigDecimal fullPrice;
 
-    public static ReservationDetails of(ReservationRequest request, Price oneNightPriceOption, BigDecimal reservationPrice) {
-        return new ReservationDetails(request.from(), request.to(), oneNightPriceOption, reservationPrice);
+    public static ReservationDetails of(ReservationForm form,
+                                        Price oneNightPriceOption,
+                                        BigDecimal reservationPrice) {
+        return new ReservationDetails(
+                form.from(), form.to(),
+                oneNightPriceOption, reservationPrice
+        );
     }
 }

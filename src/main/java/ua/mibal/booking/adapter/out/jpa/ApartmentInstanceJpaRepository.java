@@ -18,9 +18,9 @@ package ua.mibal.booking.adapter.out.jpa;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import ua.mibal.booking.application.dto.ReservationForm;
 import ua.mibal.booking.application.port.jpa.ApartmentInstanceRepository;
 import ua.mibal.booking.domain.ApartmentInstance;
-import ua.mibal.booking.domain.ReservationRequest;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -59,12 +59,12 @@ public interface ApartmentInstanceJpaRepository extends JpaRepository<ApartmentI
     List<ApartmentInstance> findFreeByRequestFetchApartmentAndPrices(Long id, LocalDateTime from, LocalDateTime to, int people);
 
     @Override
-    default List<ApartmentInstance> findFreeByRequestFetchApartmentAndPrices(ReservationRequest request) {
+    default List<ApartmentInstance> findFreeByRequestFetchApartmentAndPrices(ReservationForm form) {
         return findFreeByRequestFetchApartmentAndPrices(
-                request.apartmentId(),
-                request.from(),
-                request.to(),
-                request.people()
+                form.apartmentId(),
+                form.from(),
+                form.to(),
+                form.people()
         );
     }
 

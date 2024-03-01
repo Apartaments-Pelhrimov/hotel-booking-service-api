@@ -24,11 +24,11 @@ import ua.mibal.booking.application.exception.ApartmentInstanceNotFoundException
 import ua.mibal.booking.application.exception.ApartmentIsNotAvailableForReservation;
 import ua.mibal.booking.application.exception.ApartmentNotFoundException;
 import ua.mibal.booking.application.mapper.ApartmentInstanceMapper;
+import ua.mibal.booking.application.dto.ReservationForm;
 import ua.mibal.booking.application.port.jpa.ApartmentInstanceRepository;
 import ua.mibal.booking.application.port.jpa.ApartmentRepository;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.ApartmentInstance;
-import ua.mibal.booking.domain.ReservationRequest;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.util.List;
@@ -82,19 +82,19 @@ class ApartmentInstanceService_UnitTest {
         String userEmail = "userEmail";
         Long id = 1L;
         int people = 1;
-        ReservationRequest reservationRequest = new ReservationRequest(MIN, MAX, people, id, userEmail);
+        ReservationForm reservationForm = new ReservationForm(MIN, MAX, people, id, userEmail);
         List<ApartmentInstance> apartmentInstances = List.of(apartmentInstance2, apartmentInstance);
 
-        when(apartmentInstanceRepository.findFreeByRequestFetchApartmentAndPrices(reservationRequest))
+        when(apartmentInstanceRepository.findFreeByRequestFetchApartmentAndPrices(reservationForm))
                 .thenReturn(apartmentInstances);
         doAnswer(invocation -> {
             List<ApartmentInstance> apartmentInstancesArg = invocation.getArgument(0);
             apartmentInstancesArg.remove(apartmentInstance2);
             return null;
-        }).when(reservationSystemManager).filterForFree(apartmentInstances, reservationRequest);
+        }).when(reservationSystemManager).filterForFree(apartmentInstances, reservationForm);
 
         ApartmentInstance actual = service
-                .getFreeOneFetchApartmentAndPrices(reservationRequest);
+                .getFreeOneFetchApartmentAndPrices(reservationForm);
 
         assertEquals(apartmentInstance, actual);
     }
@@ -104,14 +104,14 @@ class ApartmentInstanceService_UnitTest {
         String userEmail = "userEmail";
         Long id = 1L;
         int people = 1;
-        ReservationRequest reservationRequest = new ReservationRequest(MIN, MAX, people, id, userEmail);
+        ReservationForm reservationForm = new ReservationForm(MIN, MAX, people, id, userEmail);
 
-        when(apartmentInstanceRepository.findFreeByRequestFetchApartmentAndPrices(reservationRequest))
+        when(apartmentInstanceRepository.findFreeByRequestFetchApartmentAndPrices(reservationForm))
                 .thenReturn(List.of());
 
         ApartmentIsNotAvailableForReservation e = assertThrows(
                 ApartmentIsNotAvailableForReservation.class,
-                () -> service.getFreeOneFetchApartmentAndPrices(reservationRequest)
+                () -> service.getFreeOneFetchApartmentAndPrices(reservationForm)
         );
 
         assertEquals(

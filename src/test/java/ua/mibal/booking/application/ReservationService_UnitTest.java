@@ -24,7 +24,7 @@ import ua.mibal.booking.application.component.ReservationBuilder;
 import ua.mibal.booking.application.exception.UserHasNoAccessToReservationException;
 import ua.mibal.booking.application.port.jpa.ReservationRepository;
 import ua.mibal.booking.domain.Reservation;
-import ua.mibal.booking.domain.ReservationRequest;
+import ua.mibal.booking.application.dto.ReservationForm;
 import ua.mibal.booking.domain.User;
 import ua.mibal.test.annotation.UnitTest;
 
@@ -62,7 +62,7 @@ class ReservationService_UnitTest {
     @Mock
     private User anotherUser;
     @Mock
-    private ReservationRequest request;
+    private ReservationForm form;
 
     @BeforeEach
     void setup() {
@@ -160,10 +160,10 @@ class ReservationService_UnitTest {
 
     @Test
     void reserve() {
-        when(reservationBuilder.buildBy(request))
+        when(reservationBuilder.buildBy(form))
                 .thenReturn(reservation);
 
-        service.reserve(request);
+        service.reserve(form);
 
         verify(reservationRepository, times(1))
                 .save(reservation);

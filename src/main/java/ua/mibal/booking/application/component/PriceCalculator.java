@@ -19,7 +19,7 @@ package ua.mibal.booking.application.component;
 import org.springframework.stereotype.Component;
 import ua.mibal.booking.application.exception.IllegalReservationDateRangeException;
 import ua.mibal.booking.application.exception.PriceCalculatorException;
-import ua.mibal.booking.domain.ReservationRequest;
+import ua.mibal.booking.application.dto.ReservationForm;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -35,16 +35,16 @@ import static java.math.BigDecimal.ZERO;
 public class PriceCalculator {
 
     public BigDecimal calculateReservationPrice(BigDecimal oneNightPrice,
-                                                ReservationRequest request) {
+                                                ReservationForm form) {
         validatePriceIsPositive(oneNightPrice);
-        validateReservationDates(request);
-        BigDecimal nights = calculateNights(request);
+        validateReservationDates(form);
+        BigDecimal nights = calculateNights(form);
         return nights.multiply(oneNightPrice);
     }
 
-    private BigDecimal calculateNights(ReservationRequest request) {
-        LocalDate from = request.from().toLocalDate();
-        LocalDate to = request.to().toLocalDate();
+    private BigDecimal calculateNights(ReservationForm form) {
+        LocalDate from = form.from().toLocalDate();
+        LocalDate to = form.to().toLocalDate();
         int nights = Period.between(from, to).getDays();
         return BigDecimal.valueOf(nights);
     }
@@ -57,8 +57,8 @@ public class PriceCalculator {
         }
     }
 
-    private void validateReservationDates(ReservationRequest request) {
-        if (!request.from().isBefore(request.to())) {
+    private void validateReservationDates(ReservationForm form) {
+        if (!form.from().isBefore(form.to())) {
             throw new IllegalReservationDateRangeException();
         }
     }

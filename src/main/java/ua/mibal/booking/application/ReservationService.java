@@ -26,7 +26,7 @@ import ua.mibal.booking.application.exception.ReservationNotFoundException;
 import ua.mibal.booking.application.exception.UserHasNoAccessToReservationException;
 import ua.mibal.booking.application.port.jpa.ReservationRepository;
 import ua.mibal.booking.domain.Reservation;
-import ua.mibal.booking.domain.ReservationRequest;
+import ua.mibal.booking.application.dto.ReservationForm;
 import ua.mibal.booking.domain.User;
 
 import static ua.mibal.booking.domain.Role.MANAGER;
@@ -62,8 +62,8 @@ public class ReservationService {
     }
 
     @Transactional
-    public void reserve(ReservationRequest request) {
-        Reservation reservation = reservationBuilder.buildBy(request);
+    public void reserve(ReservationForm form) {
+        Reservation reservation = reservationBuilder.buildBy(form);
         reservationRepository.save(reservation);
     }
 

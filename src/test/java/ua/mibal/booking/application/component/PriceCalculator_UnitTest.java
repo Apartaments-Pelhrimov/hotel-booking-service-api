@@ -22,7 +22,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import ua.mibal.booking.application.exception.IllegalReservationDateRangeException;
 import ua.mibal.booking.application.exception.PriceCalculatorException;
-import ua.mibal.booking.domain.ReservationRequest;
+import ua.mibal.booking.application.dto.ReservationForm;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.math.BigDecimal;
@@ -42,7 +42,7 @@ class PriceCalculator_UnitTest {
     private PriceCalculator service;
 
     @Mock
-    private ReservationRequest request;
+    private ReservationForm form;
 
     @BeforeEach
     void setup() {
@@ -52,10 +52,10 @@ class PriceCalculator_UnitTest {
     @ParameterizedTest
     @MethodSource("ua.mibal.test.util.DataGenerator#correctPriceCalculation")
     void calculatePrice(BigDecimal oneNightPrice, LocalDate from, LocalDate to, BigDecimal expected) {
-        when(request.from()).thenReturn(from.atStartOfDay());
-        when(request.to()).thenReturn(to.atStartOfDay());
+        when(form.from()).thenReturn(from.atStartOfDay());
+        when(form.to()).thenReturn(to.atStartOfDay());
 
-        var actual = service.calculateReservationPrice(oneNightPrice, request);
+        var actual = service.calculateReservationPrice(oneNightPrice, form);
         assertEquals(expected, actual);
     }
 
@@ -64,12 +64,12 @@ class PriceCalculator_UnitTest {
     void calculatePrice_should_throw_PriceCalculatorException(BigDecimal oneNightPrice,
                                                               LocalDate from,
                                                               LocalDate to) {
-        when(request.from()).thenReturn(from.atStartOfDay());
-        when(request.to()).thenReturn(to.atStartOfDay());
+        when(form.from()).thenReturn(from.atStartOfDay());
+        when(form.to()).thenReturn(to.atStartOfDay());
 
         assertThrows(
                 PriceCalculatorException.class,
-                () -> service.calculateReservationPrice(oneNightPrice, request)
+                () -> service.calculateReservationPrice(oneNightPrice, form)
         );
     }
 
@@ -78,12 +78,12 @@ class PriceCalculator_UnitTest {
     void calculatePrice_should_throw_IllegalReservationDateRangeException(BigDecimal oneNightPrice,
                                                                           LocalDate from,
                                                                           LocalDate to) {
-        when(request.from()).thenReturn(from.atStartOfDay());
-        when(request.to()).thenReturn(to.atStartOfDay());
+        when(form.from()).thenReturn(from.atStartOfDay());
+        when(form.to()).thenReturn(to.atStartOfDay());
 
         assertThrows(
                 IllegalReservationDateRangeException.class,
-                () -> service.calculateReservationPrice(oneNightPrice, request)
+                () -> service.calculateReservationPrice(oneNightPrice, form)
         );
     }
 }

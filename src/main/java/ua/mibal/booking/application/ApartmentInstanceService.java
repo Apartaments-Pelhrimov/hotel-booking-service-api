@@ -23,11 +23,11 @@ import ua.mibal.booking.application.exception.ApartmentInstanceNotFoundException
 import ua.mibal.booking.application.exception.ApartmentIsNotAvailableForReservation;
 import ua.mibal.booking.application.exception.ApartmentNotFoundException;
 import ua.mibal.booking.application.mapper.ApartmentInstanceMapper;
+import ua.mibal.booking.application.dto.ReservationForm;
 import ua.mibal.booking.application.port.jpa.ApartmentInstanceRepository;
 import ua.mibal.booking.application.port.jpa.ApartmentRepository;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.ApartmentInstance;
-import ua.mibal.booking.domain.ReservationRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,9 +44,9 @@ public class ApartmentInstanceService {
     private final ApartmentInstanceMapper apartmentInstanceMapper;
     private final ReservationSystemManager reservationSystemManager;
 
-    public ApartmentInstance getFreeOneFetchApartmentAndPrices(ReservationRequest request) {
-        List<ApartmentInstance> free = getFree(request);
-        return selectMostSuitable(free, request);
+    public ApartmentInstance getFreeOneFetchApartmentAndPrices(ReservationForm form) {
+        List<ApartmentInstance> free = getFree(form);
+        return selectMostSuitable(free, form);
     }
 
     public void create(CreateApartmentInstanceForm form) {
@@ -72,20 +72,20 @@ public class ApartmentInstanceService {
         return apartmentInstance;
     }
 
-    private List<ApartmentInstance> getFree(ReservationRequest request) {
-        List<ApartmentInstance> freeLocal = getFreeLocal(request);
-        reservationSystemManager.filterForFree(freeLocal, request);
+    private List<ApartmentInstance> getFree(ReservationForm form) {
+        List<ApartmentInstance> freeLocal = getFreeLocal(form);
+        reservationSystemManager.filterForFree(freeLocal, form);
         return freeLocal;
     }
 
-    private List<ApartmentInstance> getFreeLocal(ReservationRequest request) {
+    private List<ApartmentInstance> getFreeLocal(ReservationForm form) {
         List<ApartmentInstance> freeLocal =
-                apartmentInstanceRepository.findFreeByRequestFetchApartmentAndPrices(request);
+                apartmentInstanceRepository.findFreeByRequestFetchApartmentAndPrices(form);
         return new ArrayList<>(freeLocal);
     }
 
     private ApartmentInstance selectMostSuitable(List<ApartmentInstance> variants,
-                                                 ReservationRequest request) {
+                                                 ReservationForm form) {
         if (variants.isEmpty()) {
             throw new ApartmentIsNotAvailableForReservation();
         }

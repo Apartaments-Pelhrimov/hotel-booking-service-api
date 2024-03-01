@@ -30,14 +30,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ua.mibal.booking.adapter.in.web.mapper.ReservationDtoMapper;
+import ua.mibal.booking.adapter.in.web.model.ReservationFormDto;
 import ua.mibal.booking.adapter.in.web.security.annotation.ManagerAllowed;
 import ua.mibal.booking.adapter.in.web.security.annotation.UserAllowed;
 import ua.mibal.booking.application.ReservationService;
 import ua.mibal.booking.application.dto.request.ReservationRejectingFormDto;
 import ua.mibal.booking.application.dto.response.ReservationDto;
-import ua.mibal.booking.application.mapper.ReservationRequestMapper;
+import ua.mibal.booking.application.mapper.ReservationFormMapper;
 import ua.mibal.booking.domain.Reservation;
-import ua.mibal.booking.domain.ReservationRequest;
+import ua.mibal.booking.application.dto.ReservationForm;
 
 /**
  * @author Mykhailo Balakhon
@@ -48,8 +49,8 @@ import ua.mibal.booking.domain.ReservationRequest;
 @RequestMapping("/api")
 public class ReservationController {
     private final ReservationService reservationService;
-    private final ReservationRequestMapper reservationRequestMapper;
     private final ReservationDtoMapper reservationDtoMapper;
+    private final ReservationFormMapper reservationFormMapper;
 
     @ManagerAllowed
     @GetMapping("/reservations")
@@ -69,10 +70,10 @@ public class ReservationController {
     @PatchMapping("/apartments/{id}/reserve")
     @ResponseStatus(HttpStatus.CREATED)
     public void reserve(@PathVariable Long id,
-                        @Valid ua.mibal.booking.application.dto.request.ReservationDto requestDto,
+                        @Valid ReservationFormDto dto,
                         Authentication authentication) {
-        ReservationRequest request =
-                reservationRequestMapper.toRequest(requestDto, id, authentication.getName());
+        ReservationForm request =
+                reservationFormMapper.toForm(dto, id, authentication.getName());
         reservationService.reserve(request);
     }
 

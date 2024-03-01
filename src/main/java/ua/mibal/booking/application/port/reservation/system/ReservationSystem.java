@@ -16,9 +16,9 @@
 
 package ua.mibal.booking.application.port.reservation.system;
 
+import ua.mibal.booking.application.dto.ReservationForm;
 import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.domain.Event;
-import ua.mibal.booking.domain.ReservationRequest;
 
 import java.util.List;
 
@@ -31,5 +31,5 @@ public interface ReservationSystem {
     List<Event> getEventsFor(ApartmentInstance apartmentInstance);
 
     boolean isFreeForReservation(ApartmentInstance apartmentInstance,
-                                 ReservationRequest reservationRequest);
+                                 ReservationForm reservationForm);
 }

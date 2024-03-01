@@ -22,7 +22,7 @@ import org.mockito.Mock;
 import ua.mibal.booking.application.port.reservation.system.ReservationSystem;
 import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.domain.Event;
-import ua.mibal.booking.domain.ReservationRequest;
+import ua.mibal.booking.application.dto.ReservationForm;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.util.ArrayList;
@@ -59,7 +59,7 @@ class ReservationSystemManager_UnitTest {
     @Mock
     private Event event3;
     @Mock
-    private ReservationRequest request;
+    private ReservationForm form;
 
     @BeforeEach
     public void setup() {
@@ -91,12 +91,12 @@ class ReservationSystemManager_UnitTest {
     void filterForFree_should_remove_if_at_least_one_ReservationSystem_return_isFree_false() {
         List<ApartmentInstance> apartmentInstances = new ArrayList<>(List.of(apartmentInstance1));
 
-        when(reservationSystem1.isFreeForReservation(apartmentInstance1, request))
+        when(reservationSystem1.isFreeForReservation(apartmentInstance1, form))
                 .thenReturn(true);
-        when(reservationSystem2.isFreeForReservation(apartmentInstance1, request))
+        when(reservationSystem2.isFreeForReservation(apartmentInstance1, form))
                 .thenReturn(false);
 
-        tested.filterForFree(apartmentInstances, request);
+        tested.filterForFree(apartmentInstances, form);
 
         assertThat(apartmentInstances).isEmpty();
     }
@@ -105,12 +105,12 @@ class ReservationSystemManager_UnitTest {
     void filterForFree_should_not_remove_if_ApartmentInstance_isFree() {
         List<ApartmentInstance> apartmentInstances = new ArrayList<>(List.of(apartmentInstance1));
 
-        when(reservationSystem1.isFreeForReservation(apartmentInstance1, request))
+        when(reservationSystem1.isFreeForReservation(apartmentInstance1, form))
                 .thenReturn(true);
-        when(reservationSystem2.isFreeForReservation(apartmentInstance1, request))
+        when(reservationSystem2.isFreeForReservation(apartmentInstance1, form))
                 .thenReturn(true);
 
-        tested.filterForFree(apartmentInstances, request);
+        tested.filterForFree(apartmentInstances, form);
 
         assertThat(apartmentInstances).containsOnly(apartmentInstance1);
     }
@@ -122,7 +122,7 @@ class ReservationSystemManager_UnitTest {
         List<ApartmentInstance> apartmentInstances =
                 new ArrayList<>(List.of(apartmentInstance1, apartmentInstance2));
 
-        tested.filterForFree(apartmentInstances, request);
+        tested.filterForFree(apartmentInstances, form);
 
         assertThat(apartmentInstances).containsOnly(apartmentInstance1, apartmentInstance2);
     }

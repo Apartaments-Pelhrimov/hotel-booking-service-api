@@ -17,7 +17,7 @@
 package ua.mibal.booking.application.port.jpa;
 
 import ua.mibal.booking.domain.ApartmentInstance;
-import ua.mibal.booking.domain.ReservationRequest;
+import ua.mibal.booking.application.dto.ReservationForm;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +28,7 @@ import java.util.Optional;
  */
 public interface ApartmentInstanceRepository extends Repository<ApartmentInstance, Long> {
 
-    List<ApartmentInstance> findFreeByRequestFetchApartmentAndPrices(ReservationRequest request);
+    List<ApartmentInstance> findFreeByRequestFetchApartmentAndPrices(ReservationForm form);
 
     Optional<ApartmentInstance> findByIdFetchReservations(Long id);
 

@@ -20,10 +20,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ua.mibal.booking.adapter.IcalMapper;
 import ua.mibal.booking.adapter.out.reservation.system.ical.WebContentReader;
+import ua.mibal.booking.application.dto.ReservationForm;
 import ua.mibal.booking.application.port.reservation.system.ReservationSystem;
 import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.domain.Event;
-import ua.mibal.booking.domain.ReservationRequest;
 
 import java.util.List;
 import java.util.Optional;
@@ -43,11 +43,11 @@ public class BookingComReservationService implements ReservationSystem {
 
     @Override
     public boolean isFreeForReservation(ApartmentInstance apartmentInstance,
-                                        ReservationRequest reservationRequest) {
+                                        ReservationForm form) {
         List<Event> events = getEventsFor(apartmentInstance);
         Predicate<Event> eventIntersectsWithReservation =
-                event -> event.getEnd().isAfter(reservationRequest.from()) &&
-                         event.getStart().isBefore(reservationRequest.to());
+                event -> event.getEnd().isAfter(form.from())
+                         && event.getStart().isBefore(form.to());
         return events.stream()
                 .noneMatch(eventIntersectsWithReservation);
     }

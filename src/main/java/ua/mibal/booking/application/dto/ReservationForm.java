@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.domain;
+package ua.mibal.booking.application.dto;
 
 import java.time.LocalDateTime;
 
@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public record ReservationRequest(
+public record ReservationForm(
         LocalDateTime from,
         LocalDateTime to,
         int people,

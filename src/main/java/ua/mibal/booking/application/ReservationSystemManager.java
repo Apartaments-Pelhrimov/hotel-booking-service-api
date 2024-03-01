@@ -18,10 +18,10 @@ package ua.mibal.booking.application;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import ua.mibal.booking.application.dto.ReservationForm;
 import ua.mibal.booking.application.port.reservation.system.ReservationSystem;
 import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.domain.Event;
-import ua.mibal.booking.domain.ReservationRequest;
 
 import java.util.List;
 
@@ -41,13 +41,13 @@ public class ReservationSystemManager {
     }
 
     public void filterForFree(List<ApartmentInstance> apartments,
-                              ReservationRequest request) {
+                              ReservationForm form) {
         apartments.removeIf(apartment ->
-                !isFreeForReservation(apartment, request));
+                !isFreeForReservation(apartment, form));
     }
 
-    private boolean isFreeForReservation(ApartmentInstance apartment, ReservationRequest request) {
+    private boolean isFreeForReservation(ApartmentInstance apartment, ReservationForm form) {
         return reservationSystems.stream()
-                .allMatch(system -> system.isFreeForReservation(apartment, request));
+                .allMatch(system -> system.isFreeForReservation(apartment, form));
     }
 }
