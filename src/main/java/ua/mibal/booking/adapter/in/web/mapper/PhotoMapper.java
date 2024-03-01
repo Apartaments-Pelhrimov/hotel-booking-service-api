@@ -14,20 +14,23 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.adapter.in.web.model;
+package ua.mibal.booking.adapter.in.web.mapper;
 
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
-
-import static org.springframework.http.HttpStatus.OK;
+import org.springframework.stereotype.Component;
+import ua.mibal.booking.adapter.in.web.model.PhotoResponse;
+import ua.mibal.booking.application.port.photo.storage.model.PhotoResource;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class PhotoResponse extends ResponseEntity<byte[]> {
+@Component
+public class PhotoMapper {
 
-    public PhotoResponse(byte[] body, HttpHeaders headers) {
-        super(body, headers, OK);
+    public PhotoResponse toResponse(PhotoResource photo) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(photo.getContentType());
+        return new PhotoResponse(photo.getBytes(), headers);
     }
 }

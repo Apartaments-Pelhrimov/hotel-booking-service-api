@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import ua.mibal.booking.adapter.in.web.mapper.PhotoMapper;
 import ua.mibal.booking.adapter.in.web.model.PhotoResponse;
 import ua.mibal.booking.adapter.in.web.security.annotation.ManagerAllowed;
 import ua.mibal.booking.adapter.in.web.security.annotation.UserAllowed;
@@ -44,11 +45,12 @@ import ua.mibal.booking.application.port.photo.storage.model.PhotoResource;
 @RequestMapping("/api")
 public class PhotoController {
     private final PhotoService photoService;
+    private final PhotoMapper photoMapper;
 
     @GetMapping("/photos/{key}")
     public PhotoResponse getPhoto(@PathVariable String key) {
         PhotoResource photo = photoService.getPhotoBy(key);
-        return PhotoResponse.of(photo);
+        return photoMapper.toResponse(photo);
     }
 
     @UserAllowed
