@@ -30,6 +30,7 @@ import java.util.List;
 import static java.util.Calendar.SEPTEMBER;
 import static java.util.Date.UTC;
 import static java.util.Locale.CHINA;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -106,5 +107,51 @@ class IcalBiweeklyMapper_UnitTest {
                 END:VEVENT
                 END:VCALENDAR
                 """.replaceAll("\n", "\r\n"), actualCal);
+    }
+
+    @Test
+    void getEvents() {
+        String calendar = """
+                BEGIN:VCALENDAR
+                VERSION:2.0
+                PRODID:-//https://test.contact.link/contacts//TEST FULL NAME//CN
+                CALSCALE:GREGORIAN
+                BEGIN:VEVENT
+                UID:UID1
+                DTSTAMP:20240918T000000Z
+                DTSTART:20040918T121200Z
+                DTEND:20040918T141200Z
+                SUMMARY:Mykhailo's Birthday
+                END:VEVENT
+                BEGIN:VEVENT
+                UID:UID2
+                DTSTAMP:20240918T000000Z
+                DTSTART:20240918T000000Z
+                DTEND:20240918T235900Z
+                SUMMARY:Mykhailo's 20th Birthday
+                END:VEVENT
+                END:VCALENDAR
+                """;
+
+        VEvent event1 = new VEvent();
+        event1.setUid("UID1");
+        event1.setDateTimeStamp(new Date(UTC(2024 - 1900, SEPTEMBER, 18, 00, 00, 00)));
+        event1.setDateStart(new Date(UTC(2004 - 1900, SEPTEMBER, 18, 12, 12, 00)));
+        event1.setDateEnd(new Date(UTC(2004 - 1900, SEPTEMBER, 18, 14, 12, 00)));
+        event1.setSummary("Mykhailo's Birthday");
+
+        VEvent event2 = new VEvent();
+        event2.setUid("UID2");
+        event2.setDateTimeStamp(new Date(UTC(2024 - 1900, SEPTEMBER, 18, 00, 00, 00)));
+        event2.setDateStart(new Date(UTC(2024 - 1900, SEPTEMBER, 18, 00, 00, 00)));
+        event2.setDateEnd(new Date(UTC(2024 - 1900, SEPTEMBER, 18, 23, 59, 00)));
+        event2.setSummary("Mykhailo's 20th Birthday");
+
+        when(eventMapper.toEvents(List.of(event1, event2)))
+                .thenReturn(List.of(stubEvent1, stubEvent2));
+
+        List<Event> actualEvents = mapper.getEvents(calendar);
+
+        assertThat(actualEvents).containsOnly(stubEvent1, stubEvent2);
     }
 }

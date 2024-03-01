@@ -46,6 +46,12 @@ public class IcalBiweeklyMapper {
         return Biweekly.write(calendar).go();
     }
 
+    public List<Event> getEvents(String icalCalendar) {
+        ICalendar calendar = Biweekly.parse(icalCalendar).first();
+        List<VEvent> vevents = calendar.getEvents();
+        return icalBiweeklyEventMapper.toEvents(vevents);
+    }
+
     private ICalendar initIcal() {
         ICalendar calendar = new ICalendar();
         calendar.setProductId(generateProductId());

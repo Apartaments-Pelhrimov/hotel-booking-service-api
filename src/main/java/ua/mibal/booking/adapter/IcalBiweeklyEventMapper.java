@@ -33,4 +33,9 @@ public class IcalBiweeklyEventMapper {
     public List<VEvent> toIcalEvents(List<Event> events) {
         return null;
     }
+
+    // TODO
+    public List<Event> toEvents(List<VEvent> vevents) {
+        return null;
+    }
 }
