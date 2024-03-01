@@ -29,12 +29,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import ua.mibal.booking.adapter.in.web.mapper.ReservationDtoMapper;
 import ua.mibal.booking.adapter.in.web.security.annotation.ManagerAllowed;
 import ua.mibal.booking.adapter.in.web.security.annotation.UserAllowed;
 import ua.mibal.booking.application.ReservationService;
 import ua.mibal.booking.application.dto.request.ReservationRejectingFormDto;
 import ua.mibal.booking.application.dto.response.ReservationDto;
 import ua.mibal.booking.application.mapper.ReservationRequestMapper;
+import ua.mibal.booking.domain.Reservation;
 import ua.mibal.booking.domain.ReservationRequest;
 
 /**
@@ -47,17 +49,20 @@ import ua.mibal.booking.domain.ReservationRequest;
 public class ReservationController {
     private final ReservationService reservationService;
     private final ReservationRequestMapper reservationRequestMapper;
+    private final ReservationDtoMapper reservationDtoMapper;
 
     @ManagerAllowed
     @GetMapping("/reservations")
     public Page<ReservationDto> getAll(Pageable pageable) {
-        return reservationService.getAll(pageable);
+        Page<Reservation> reservations = reservationService.getAll(pageable);
+        return reservationDtoMapper.toDtos(reservations);
     }
 
     @UserAllowed
     @GetMapping("/users/me/reservations")
     public Page<ReservationDto> getAllByUser(Authentication authentication, Pageable pageable) {
-        return reservationService.getAllByUser(authentication.getName(), pageable);
+        Page<Reservation> reservations = reservationService.getAllByUser(authentication.getName(), pageable);
+        return reservationDtoMapper.toDtos(reservations);
     }
 
     @UserAllowed

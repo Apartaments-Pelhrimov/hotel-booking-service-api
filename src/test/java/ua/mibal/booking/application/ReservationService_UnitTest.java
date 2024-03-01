@@ -21,13 +21,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.data.domain.PageImpl;
 import ua.mibal.booking.application.component.ReservationBuilder;
-import ua.mibal.booking.application.dto.response.ReservationDto;
-import ua.mibal.booking.application.mapper.ReservationMapper;
+import ua.mibal.booking.application.exception.UserHasNoAccessToReservationException;
 import ua.mibal.booking.application.port.jpa.ReservationRepository;
 import ua.mibal.booking.domain.Reservation;
 import ua.mibal.booking.domain.ReservationRequest;
 import ua.mibal.booking.domain.User;
-import ua.mibal.booking.application.exception.UserHasNoAccessToReservationException;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.util.List;
@@ -53,16 +51,12 @@ class ReservationService_UnitTest {
     @Mock
     private ReservationRepository reservationRepository;
     @Mock
-    private ReservationMapper reservationMapper;
-    @Mock
     private UserService userService;
     @Mock
     private ReservationBuilder reservationBuilder;
 
     @Mock
     private Reservation reservation;
-    @Mock
-    private ReservationDto reservationDto;
     @Mock
     private User user;
     @Mock
@@ -72,7 +66,7 @@ class ReservationService_UnitTest {
 
     @BeforeEach
     void setup() {
-        service = new ReservationService(reservationRepository, reservationMapper, userService, reservationBuilder);
+        service = new ReservationService(reservationRepository, userService, reservationBuilder);
     }
 
     @Test
@@ -81,13 +75,11 @@ class ReservationService_UnitTest {
 
         when(reservationRepository.findAllByUserEmail(email, unpaged()))
                 .thenReturn(new PageImpl<>(List.of(reservation, reservation, reservation)));
-        when(reservationMapper.toDto(reservation))
-                .thenReturn(reservationDto);
 
         var actual = service.getAllByUser(email, unpaged());
 
         assertEquals(
-                new PageImpl<>(List.of(reservationDto, reservationDto, reservationDto)),
+                new PageImpl<>(List.of(reservation, reservation, reservation)),
                 actual
         );
     }
@@ -96,13 +88,11 @@ class ReservationService_UnitTest {
     void getAll() {
         when(reservationRepository.findAll(unpaged()))
                 .thenReturn(new PageImpl<>(List.of(reservation, reservation, reservation)));
-        when(reservationMapper.toDto(reservation))
-                .thenReturn(reservationDto);
 
         var actual = service.getAll(unpaged());
 
         assertEquals(
-                new PageImpl<>(List.of(reservationDto, reservationDto, reservationDto)),
+                new PageImpl<>(List.of(reservation, reservation, reservation)),
                 actual
         );
     }

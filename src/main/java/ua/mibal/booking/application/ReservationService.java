@@ -22,14 +22,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.application.component.ReservationBuilder;
-import ua.mibal.booking.application.dto.response.ReservationDto;
-import ua.mibal.booking.application.mapper.ReservationMapper;
+import ua.mibal.booking.application.exception.ReservationNotFoundException;
+import ua.mibal.booking.application.exception.UserHasNoAccessToReservationException;
 import ua.mibal.booking.application.port.jpa.ReservationRepository;
 import ua.mibal.booking.domain.Reservation;
 import ua.mibal.booking.domain.ReservationRequest;
 import ua.mibal.booking.domain.User;
-import ua.mibal.booking.application.exception.UserHasNoAccessToReservationException;
-import ua.mibal.booking.application.exception.ReservationNotFoundException;
 
 import static ua.mibal.booking.domain.Role.MANAGER;
 
@@ -41,18 +39,15 @@ import static ua.mibal.booking.domain.Role.MANAGER;
 @Service
 public class ReservationService {
     private final ReservationRepository reservationRepository;
-    private final ReservationMapper reservationMapper;
     private final UserService userService;
     private final ReservationBuilder reservationBuilder;
 
-    public Page<ReservationDto> getAllByUser(String email, Pageable pageable) {
-        return reservationRepository.findAllByUserEmail(email, pageable)
-                .map(reservationMapper::toDto);
+    public Page<Reservation> getAllByUser(String email, Pageable pageable) {
+        return reservationRepository.findAllByUserEmail(email, pageable);
     }
 
-    public Page<ReservationDto> getAll(Pageable pageable) {
-        return reservationRepository.findAll(pageable)
-                .map(reservationMapper::toDto);
+    public Page<Reservation> getAll(Pageable pageable) {
+        return reservationRepository.findAll(pageable);
     }
 
     @Transactional

@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.mapper;
+package ua.mibal.booking.adapter.in.web.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.springframework.data.domain.Page;
 import ua.mibal.booking.adapter.in.web.mapper.linker.PhotoLinker;
 import ua.mibal.booking.application.dto.response.ReservationDto;
 import ua.mibal.booking.domain.Reservation;
@@ -30,7 +31,12 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
  */
 @Mapper(componentModel = SPRING,
         uses = PhotoLinker.class)
-public interface ReservationMapper {
+public interface ReservationDtoMapper {
+
+    default Page<ReservationDto> toDtos(Page<Reservation> reservations) {
+        return reservations
+                .map(this::toDto);
+    }
 
     @Mapping(target = "apartment.photos",
             source = "reservation.apartmentInstance.apartment.photos")
