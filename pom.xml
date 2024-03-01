@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+  ~ Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -39,6 +39,7 @@
         <springdoc.version>2.2.0</springdoc.version>
         <jakarta.mail.version>2.0.1</jakarta.mail.version>
         <instancio.version>2.9.0</instancio.version>
+        <biweekly.version>0.6.8</biweekly.version>
     </properties>
 
     <dependencies>
@@ -103,6 +104,11 @@
             <groupId>org.mnode.ical4j</groupId>
             <artifactId>ical4j</artifactId>
             <version>${ical4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.biweekly</groupId>
+            <artifactId>biweekly</artifactId>
+            <version>${biweekly.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springdoc</groupId>

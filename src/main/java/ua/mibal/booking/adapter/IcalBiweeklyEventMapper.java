@@ -14,41 +14,23 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.config.properties;
+package ua.mibal.booking.adapter;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.validation.annotation.Validated;
+import biweekly.component.VEvent;
+import org.springframework.stereotype.Component;
+import ua.mibal.booking.domain.Event;
 
-import java.util.Locale;
+import java.util.List;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Validated
-@ConfigurationProperties("app")
-public record ApplicationProps(
-        @NotBlank
-        String name,
+@Component
+public class IcalBiweeklyEventMapper {
 
-        @NotBlank
-        String version,
-
-        @NotBlank
-        String contactLink,
-
-        @NotBlank
-        String developerEmails,
-
-        @NotBlank
-        String email,
-
-        @NotNull
-        Locale locale
-) {
-    public String fullName() {
-        return name + " " + version;
+    // TODO
+    public List<VEvent> toIcalEvents(List<Event> events) {
+        return null;
     }
 }
