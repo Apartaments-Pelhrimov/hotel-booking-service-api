@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.dto.response;
+package ua.mibal.booking.adapter.in.web.model;
 
 import ua.mibal.booking.domain.ReservationDetails;
 

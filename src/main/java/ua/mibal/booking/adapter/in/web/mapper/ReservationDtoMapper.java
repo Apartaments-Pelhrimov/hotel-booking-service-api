@@ -20,7 +20,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.data.domain.Page;
 import ua.mibal.booking.adapter.in.web.mapper.linker.PhotoLinker;
-import ua.mibal.booking.application.dto.response.ReservationDto;
+import ua.mibal.booking.adapter.in.web.model.ReservationDto;
 import ua.mibal.booking.domain.Reservation;
 
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
