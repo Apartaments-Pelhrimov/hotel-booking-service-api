@@ -18,7 +18,6 @@ package ua.mibal.booking.adapter.in.web;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,6 +35,8 @@ import ua.mibal.booking.application.model.PutPriceForm;
 import ua.mibal.booking.domain.Price;
 
 import java.util.List;
+
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 /**
  * @author Mykhailo Balakhon
@@ -56,7 +57,7 @@ public class PriceController {
 
     @ManagerAllowed
     @PutMapping
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(NO_CONTENT)
     public void put(@PathVariable Long apartmentId,
                     @RequestBody @Valid PutPriceForm form) {
         form.setApartmentId(apartmentId);
@@ -65,7 +66,7 @@ public class PriceController {
 
     @ManagerAllowed
     @DeleteMapping
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(NO_CONTENT)
     public void delete(@PathVariable Long apartmentId,
                        @RequestParam("person") Integer person) {
         priceService.delete(apartmentId, person);

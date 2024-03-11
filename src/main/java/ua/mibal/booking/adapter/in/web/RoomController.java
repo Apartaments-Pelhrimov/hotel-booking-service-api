@@ -18,7 +18,6 @@ package ua.mibal.booking.adapter.in.web;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,6 +28,9 @@ import org.springframework.web.bind.annotation.RestController;
 import ua.mibal.booking.adapter.in.web.security.annotation.ManagerAllowed;
 import ua.mibal.booking.application.RoomService;
 import ua.mibal.booking.application.model.CreateRoomForm;
+
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 /**
  * @author Mykhailo Balakhon
@@ -42,14 +44,14 @@ public class RoomController {
     private final RoomService roomService;
 
     @PostMapping("/{apartmentId}/rooms")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(CREATED)
     public void create(@PathVariable Long apartmentId,
                        @RequestBody @Valid CreateRoomForm createRoomForm) {
         roomService.create(apartmentId, createRoomForm);
     }
 
     @DeleteMapping("/rooms/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(NO_CONTENT)
     public void delete(@PathVariable Long id) {
         roomService.delete(id);
     }

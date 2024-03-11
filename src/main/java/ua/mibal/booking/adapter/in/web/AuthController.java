@@ -18,7 +18,6 @@ package ua.mibal.booking.adapter.in.web;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -33,6 +32,9 @@ import ua.mibal.booking.adapter.in.web.model.NewPasswordDto;
 import ua.mibal.booking.adapter.in.web.model.TokenDto;
 import ua.mibal.booking.application.AuthService;
 import ua.mibal.booking.application.model.RegistrationForm;
+
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 /**
  * @author Mykhailo Balakhon
@@ -52,25 +54,25 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(CREATED)
     public void register(@Valid @RequestBody RegistrationForm registrationForm) {
         authService.register(registrationForm);
     }
 
     @PostMapping("/activate")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(NO_CONTENT)
     public void activateNewAccount(@RequestParam("token") String activationToken) {
         authService.activateNewAccountBy(activationToken);
     }
 
     @GetMapping("/forget")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(NO_CONTENT)
     public void forgetPassword(@RequestParam("email") String email) {
         authService.restore(email);
     }
 
     @PutMapping("/forget/password")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(NO_CONTENT)
     public void setNewPassword(@RequestParam("token") String activationToken,
                                @Valid @RequestBody NewPasswordDto newPasswordDto) {
         authService.setNewPassword(activationToken, newPasswordDto.password());

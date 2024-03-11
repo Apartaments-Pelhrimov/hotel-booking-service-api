@@ -18,7 +18,6 @@ package ua.mibal.booking.adapter.in.web;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +37,8 @@ import ua.mibal.booking.application.UserService;
 import ua.mibal.booking.application.model.ChangeNotificationSettingsForm;
 import ua.mibal.booking.application.model.ChangeUserForm;
 import ua.mibal.booking.domain.User;
+
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 /**
  * @author Mykhailo Balakhon
@@ -64,28 +65,28 @@ public class UserController {
     }
 
     @DeleteMapping("/me")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(NO_CONTENT)
     public void delete(@Valid @RequestBody DeleteMeDto dto,
                        Authentication authentication) {
         userService.delete(authentication.getName(), dto.password());
     }
 
     @PutMapping("/me/password")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(NO_CONTENT)
     public void putPassword(@Valid @RequestBody ChangePasswordDto dto,
                             Authentication authentication) {
         userService.putPassword(authentication.getName(), dto.oldPassword(), dto.newPassword());
     }
 
     @PatchMapping("/me")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(NO_CONTENT)
     public void change(@Valid @RequestBody ChangeUserForm form,
                        Authentication authentication) {
         userService.change(authentication.getName(), form);
     }
 
     @PatchMapping("/me/notifications")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(NO_CONTENT)
     public void changeNotificationSettings(@RequestBody ChangeNotificationSettingsForm form,
                                            Authentication authentication) {
         userService.changeNotificationSettings(authentication.getName(), form);

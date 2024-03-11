@@ -17,7 +17,6 @@
 package ua.mibal.booking.adapter.in.web;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,6 +34,9 @@ import ua.mibal.booking.adapter.in.web.security.annotation.ManagerAllowed;
 import ua.mibal.booking.adapter.in.web.security.annotation.UserAllowed;
 import ua.mibal.booking.application.PhotoService;
 import ua.mibal.booking.application.port.photo.storage.model.PhotoResource;
+
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 /**
  * @author Mykhailo Balakhon
@@ -55,7 +57,7 @@ public class PhotoController {
 
     @UserAllowed
     @PutMapping("/users/me/photo")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(CREATED)
     public void changeMyPhoto(@RequestParam("file") MultipartFile file,
                               Authentication authentication) {
         photoService.changeUserPhoto(authentication.getName(), file);
@@ -63,14 +65,14 @@ public class PhotoController {
 
     @UserAllowed
     @DeleteMapping("/users/me/photo")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(NO_CONTENT)
     public void deleteMyPhoto(Authentication authentication) {
         photoService.deleteUserPhoto(authentication.getName());
     }
 
     @ManagerAllowed
     @PostMapping("/apartments/{id}/photos")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(CREATED)
     public void createApartmentPhoto(@PathVariable Long id,
                                      @RequestParam("file") MultipartFile file) {
         photoService.createApartmentPhoto(id, file);
@@ -78,7 +80,7 @@ public class PhotoController {
 
     @ManagerAllowed
     @DeleteMapping("/apartments/{apartmentId}/photos/{key}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(NO_CONTENT)
     public void deleteApartmentPhoto(@PathVariable Long apartmentId,
                                      @PathVariable String key) {
         photoService.deleteApartmentPhoto(apartmentId, key);

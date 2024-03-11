@@ -20,7 +20,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +35,9 @@ import ua.mibal.booking.adapter.in.web.security.annotation.UserAllowed;
 import ua.mibal.booking.application.CommentService;
 import ua.mibal.booking.application.model.CreateCommentForm;
 import ua.mibal.booking.domain.Comment;
+
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 /**
  * @author Mykhailo Balakhon
@@ -57,7 +59,7 @@ public class CommentController {
 
     @UserAllowed
     @PostMapping("/{apartmentId}/comments")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(CREATED)
     public void create(@PathVariable Long apartmentId,
                        @Valid @RequestBody CreateCommentForm form,
                        Authentication authentication) {
@@ -68,7 +70,7 @@ public class CommentController {
 
     @UserAllowed
     @DeleteMapping("/comments/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(NO_CONTENT)
     public void delete(@PathVariable Long id,
                        Authentication authentication) {
         commentService.delete(id, authentication.getName());

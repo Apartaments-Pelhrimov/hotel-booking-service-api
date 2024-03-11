@@ -20,7 +20,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -40,6 +39,9 @@ import ua.mibal.booking.application.mapper.ReservationFormMapper;
 import ua.mibal.booking.application.model.ReservationForm;
 import ua.mibal.booking.application.model.ReservationRejectingForm;
 import ua.mibal.booking.domain.Reservation;
+
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 /**
  * @author Mykhailo Balakhon
@@ -70,7 +72,7 @@ public class ReservationController {
 
     @UserAllowed
     @PatchMapping("/apartments/{id}/reserve")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(CREATED)
     public void reserve(@PathVariable Long id,
                         @Valid ReservationFormDto dto,
                         Authentication authentication) {
@@ -80,7 +82,7 @@ public class ReservationController {
 
     @UserAllowed
     @PatchMapping("/reservations/{id}/reject")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(NO_CONTENT)
     public void rejectReservation(@PathVariable("id") Long id,
                                   @Valid @RequestBody ReservationRejectingFormDto dto,
                                   Authentication authentication) {

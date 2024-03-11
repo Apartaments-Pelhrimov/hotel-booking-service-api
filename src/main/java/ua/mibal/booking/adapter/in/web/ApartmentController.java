@@ -18,7 +18,6 @@ package ua.mibal.booking.adapter.in.web;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -39,6 +38,9 @@ import ua.mibal.booking.application.model.CreateApartmentForm;
 import ua.mibal.booking.domain.Apartment;
 
 import java.util.List;
+
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 /**
  * @author Mykhailo Balakhon
@@ -65,14 +67,14 @@ public class ApartmentController {
 
     @ManagerAllowed
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(CREATED)
     public void create(@RequestBody @Valid CreateApartmentForm form) {
         apartmentService.create(form);
     }
 
     @ManagerAllowed
     @PatchMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(NO_CONTENT)
     public void change(@PathVariable Long id,
                        @RequestBody @Valid ChangeApartmentForm form) {
         apartmentService.change(id, form);
@@ -80,7 +82,7 @@ public class ApartmentController {
 
     @ManagerAllowed
     @PatchMapping("/{id}/options")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(NO_CONTENT)
     public void changeOptions(@PathVariable Long id,
                               @RequestBody @Valid ChangeApartmentOptionsForm form) {
         apartmentService.changeOptions(id, form);
@@ -88,7 +90,7 @@ public class ApartmentController {
 
     @ManagerAllowed
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(NO_CONTENT)
     public void delete(@PathVariable Long id) {
         apartmentService.delete(id);
     }
