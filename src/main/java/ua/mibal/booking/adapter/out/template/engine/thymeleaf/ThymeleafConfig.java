@@ -32,7 +32,7 @@ import static org.thymeleaf.templatemode.TemplateMode.HTML;
 public class ThymeleafConfig {
 
     @Bean
-    public TemplateEngine thymeleafTemplateEngine(ITemplateResolver templateResolver) {
+    public TemplateEngine thymeleafInnerTemplateEngine(ITemplateResolver templateResolver) {
         TemplateEngine templateEngine = new TemplateEngine();
         templateEngine.setTemplateResolver(templateResolver);
         return templateEngine;
