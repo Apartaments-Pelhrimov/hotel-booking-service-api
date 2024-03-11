@@ -24,7 +24,7 @@ import ua.mibal.booking.application.exception.InternalServerException;
  */
 public class TemplateEngineException extends InternalServerException {
 
-    protected TemplateEngineException(String message, Throwable cause) {
+    public TemplateEngineException(String message, Throwable cause) {
         super(message, cause);
     }
 }

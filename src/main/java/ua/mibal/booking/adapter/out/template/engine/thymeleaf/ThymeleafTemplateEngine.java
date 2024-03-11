@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 import org.thymeleaf.ITemplateEngine;
 import org.thymeleaf.context.Context;
 import ua.mibal.booking.application.port.template.engine.TemplateEngine;
+import ua.mibal.booking.application.port.template.engine.TemplateEngineException;
 
 import java.util.Locale;
 import java.util.Map;
@@ -36,6 +37,17 @@ public class ThymeleafTemplateEngine implements TemplateEngine {
 
     @Override
     public String process(String template, Locale locale, Map<String, Object> vars) {
+        try {
+            return processTemplate(template, locale, vars);
+        } catch (org.thymeleaf.exceptions.TemplateEngineException e) {
+            throw new TemplateEngineException(
+                    "Exception while processing '%s' thymeleaf template with vars: %s"
+                            .formatted(template, vars), e
+            );
+        }
+    }
+
+    private String processTemplate(String template, Locale locale, Map<String, Object> vars) {
         return templateEngine.process(template, new Context(locale, vars));
     }
 }
