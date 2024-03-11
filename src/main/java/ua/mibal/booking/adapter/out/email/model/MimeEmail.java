@@ -19,7 +19,6 @@ package ua.mibal.booking.adapter.out.email.model;
 import jakarta.mail.MessagingException;
 import jakarta.mail.Session;
 import jakarta.mail.internet.MimeMessage;
-import ua.mibal.booking.adapter.out.email.exception.EmailCreationException;
 
 import static jakarta.mail.Message.RecipientType.TO;
 
@@ -49,11 +48,8 @@ public class MimeEmail extends MimeMessage {
                                String sender,
                                String recipients,
                                String subject,
-                               String body) {
-        try {
-            return new MimeEmail(session, sender, recipients, subject, body);
-        } catch (MessagingException e) {
-            throw new EmailCreationException(e);
-        }
+                               String body) throws MessagingException {
+
+        return new MimeEmail(session, sender, recipients, subject, body);
     }
 }

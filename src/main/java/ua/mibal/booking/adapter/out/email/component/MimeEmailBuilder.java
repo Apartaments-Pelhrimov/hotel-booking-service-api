@@ -16,10 +16,12 @@
 
 package ua.mibal.booking.adapter.out.email.component;
 
+import jakarta.mail.MessagingException;
 import jakarta.mail.Session;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ua.mibal.booking.adapter.out.email.model.MimeEmail;
+import ua.mibal.booking.application.port.email.EmailSendingException;
 import ua.mibal.booking.application.port.email.model.Email;
 
 /**
@@ -32,6 +34,14 @@ public class MimeEmailBuilder {
     private final Session session;
 
     public MimeEmail buildBy(Email email) {
+        try {
+            return buildMimeEmail(email);
+        } catch (MessagingException e) {
+            throw new EmailSendingException("Exception while building email", e);
+        }
+    }
+
+    private MimeEmail buildMimeEmail(Email email) throws MessagingException {
         return MimeEmail.of(
                 session,
                 email.getSender(),

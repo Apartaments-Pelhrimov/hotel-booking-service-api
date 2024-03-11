@@ -23,8 +23,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import ua.mibal.booking.adapter.out.email.component.MimeEmailBuilder;
 import ua.mibal.booking.adapter.out.email.config.properties.EmailProps;
-import ua.mibal.booking.adapter.out.email.exception.EmailSentFailedException;
 import ua.mibal.booking.adapter.out.email.model.MimeEmail;
+import ua.mibal.booking.application.port.email.EmailSendingException;
 import ua.mibal.booking.application.port.email.EmailSendingService;
 import ua.mibal.booking.application.port.email.model.Email;
 
@@ -40,16 +40,16 @@ public class DefaultEmailSendingService implements EmailSendingService {
 
     @Async
     public void send(Email email) {
-        MimeEmail mimeEmail = mimeEmailBuilder.buildBy(email);
-        sendEmail(mimeEmail);
+        try {
+            sendEmail(email);
+        } catch (MessagingException e) {
+            throw new EmailSendingException("Exception while sending email", e);
+        }
     }
 
-    private void sendEmail(MimeEmail mimeEmail) {
-        try {
-            sendMimeEmail(mimeEmail);
-        } catch (MessagingException e) {
-            throw new EmailSentFailedException(e);
-        }
+    private void sendEmail(Email email) throws MessagingException {
+        MimeEmail mimeEmail = mimeEmailBuilder.buildBy(email);
+        sendMimeEmail(mimeEmail);
     }
 
     private synchronized void sendMimeEmail(MimeEmail mimeEmail) throws MessagingException {
