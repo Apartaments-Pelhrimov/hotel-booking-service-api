@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.dto.request;
+package ua.mibal.booking.application.dto;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public record UpdateApartmentOptionsDto(
+public record ChangeApartmentOptionsForm(
         Boolean mealsIncluded,
         Boolean kitchen,
         Boolean bathroom,

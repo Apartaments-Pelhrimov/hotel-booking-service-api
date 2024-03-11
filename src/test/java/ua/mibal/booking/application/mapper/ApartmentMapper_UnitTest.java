@@ -25,8 +25,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import ua.mibal.booking.application.dto.ChangeApartmentForm;
+import ua.mibal.booking.application.dto.ChangeApartmentOptionsForm;
 import ua.mibal.booking.application.dto.CreateApartmentForm;
-import ua.mibal.booking.application.dto.request.UpdateApartmentOptionsDto;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.Apartment.ApartmentClass;
 import ua.mibal.booking.domain.ApartmentInstance;
@@ -107,8 +107,6 @@ class ApartmentMapper_UnitTest {
     @ParameterizedTest
     @MethodSource("ua.mibal.test.util.DataGenerator#testApartments")
     void change_Apartment(Apartment original, ChangeApartmentForm changes) {
-        mapper.change(original, changes);
-
         String expectedName = changes.name() == null
                 ? original.getName()
                 : changes.name();
@@ -116,15 +114,15 @@ class ApartmentMapper_UnitTest {
                 ? original.getApartmentClass()
                 : changes.apartmentClass();
 
+        mapper.change(original, changes);
+
         assertThat(original.getName(), is(expectedName));
         assertThat(original.getApartmentClass(), is(expectedClass));
     }
 
     @ParameterizedTest
     @MethodSource("ua.mibal.test.util.DataGenerator#testApartmentOptions")
-    void change_ApartmentOptions(ApartmentOptions original, UpdateApartmentOptionsDto changes) {
-        mapper.change(original, changes);
-
+    void change_ApartmentOptions(ApartmentOptions original, ChangeApartmentOptionsForm changes) {
         boolean expectedMealsIncluded = changes.mealsIncluded() == null
                 ? original.isMealsIncluded()
                 : changes.mealsIncluded();
@@ -140,6 +138,8 @@ class ApartmentMapper_UnitTest {
         boolean expectedRefrigerator = changes.refrigerator() == null
                 ? original.isRefrigerator()
                 : changes.refrigerator();
+
+        mapper.change(original, changes);
 
         assertThat(original.isMealsIncluded(), is(expectedMealsIncluded));
         assertThat(original.isKitchen(), is(expectedKitchen));

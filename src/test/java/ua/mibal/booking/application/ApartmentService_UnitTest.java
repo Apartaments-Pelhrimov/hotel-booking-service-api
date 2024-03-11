@@ -20,11 +20,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import ua.mibal.booking.application.dto.ChangeApartmentForm;
+import ua.mibal.booking.application.dto.ChangeApartmentOptionsForm;
 import ua.mibal.booking.application.dto.CreateApartmentForm;
 import ua.mibal.booking.application.exception.ApartmentNotFoundException;
 import ua.mibal.booking.application.mapper.ApartmentMapper;
 import ua.mibal.booking.application.port.jpa.ApartmentRepository;
 import ua.mibal.booking.domain.Apartment;
+import ua.mibal.booking.domain.ApartmentOptions;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.util.List;
@@ -57,9 +59,13 @@ class ApartmentService_UnitTest {
     @Mock
     private Apartment apartment;
     @Mock
+    private ApartmentOptions apartmentOptions;
+    @Mock
     private CreateApartmentForm createApartmentForm;
     @Mock
     private ChangeApartmentForm changeApartmentForm;
+    @Mock
+    private ChangeApartmentOptionsForm changeApartmentOptionsForm;
 
     @BeforeEach
     void setup() {
@@ -200,6 +206,33 @@ class ApartmentService_UnitTest {
         assertThrows(
                 ApartmentNotFoundException.class,
                 () -> service.change(id, changeApartmentForm)
+        );
+
+        verifyNoInteractions(apartmentMapper);
+    }
+
+    @Test
+    void changeOptions() {
+        Long id = 1L;
+        when(apartmentRepository.findById(id))
+                .thenReturn(Optional.of(apartment));
+        when(apartment.getOptions())
+                .thenReturn(apartmentOptions);
+
+        service.changeOptions(id, changeApartmentOptionsForm);
+
+        verify(apartmentMapper, times(1)).change(apartmentOptions, changeApartmentOptionsForm);
+    }
+
+    @Test
+    void changeOptions_should_throw_ApartmentNotFoundException() {
+        Long id = 1L;
+        when(apartmentRepository.findById(id))
+                .thenReturn(Optional.empty());
+
+        assertThrows(
+                ApartmentNotFoundException.class,
+                () -> service.changeOptions(id, changeApartmentOptionsForm)
         );
 
         verifyNoInteractions(apartmentMapper);

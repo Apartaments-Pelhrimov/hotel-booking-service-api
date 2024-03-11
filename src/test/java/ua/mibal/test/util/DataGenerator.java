@@ -23,6 +23,7 @@ import org.instancio.settings.Keys;
 import org.instancio.settings.Settings;
 import org.junit.jupiter.params.provider.Arguments;
 import ua.mibal.booking.application.dto.ChangeApartmentForm;
+import ua.mibal.booking.application.dto.ChangeApartmentOptionsForm;
 import ua.mibal.booking.application.dto.ChangeNotificationSettingsForm;
 import ua.mibal.booking.application.dto.ChangeUserForm;
 import ua.mibal.booking.application.dto.CreateApartmentForm;
@@ -31,7 +32,6 @@ import ua.mibal.booking.application.dto.CreateBedForm;
 import ua.mibal.booking.application.dto.CreateRoomForm;
 import ua.mibal.booking.application.dto.PutPriceForm;
 import ua.mibal.booking.application.dto.RegistrationForm;
-import ua.mibal.booking.application.dto.request.UpdateApartmentOptionsDto;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.domain.ApartmentOptions;
@@ -406,7 +406,7 @@ public class DataGenerator {
         Settings settings = Settings.create()
                 .set(STRING_NULLABLE, true)
                 .set(BOOLEAN_NULLABLE, true);
-        return Instancio.ofMap(ApartmentOptions.class, UpdateApartmentOptionsDto.class)
+        return Instancio.ofMap(ApartmentOptions.class, ChangeApartmentOptionsForm.class)
                 .size(50)
                 .withSettings(settings)
                 .create()

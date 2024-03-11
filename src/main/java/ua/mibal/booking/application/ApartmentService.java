@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.application.dto.ChangeApartmentForm;
+import ua.mibal.booking.application.dto.ChangeApartmentOptionsForm;
 import ua.mibal.booking.application.dto.CreateApartmentForm;
 import ua.mibal.booking.application.exception.ApartmentNotFoundException;
 import ua.mibal.booking.application.mapper.ApartmentMapper;
@@ -71,6 +72,12 @@ public class ApartmentService {
     public void change(Long id, ChangeApartmentForm form) {
         Apartment apartment = getOne(id);
         apartmentMapper.change(apartment, form);
+    }
+
+    @Transactional
+    public void changeOptions(Long id, ChangeApartmentOptionsForm form) {
+        Apartment apartment = getOne(id);
+        apartmentMapper.change(apartment.getOptions(), form);
     }
 
     public void delete(Long id) {

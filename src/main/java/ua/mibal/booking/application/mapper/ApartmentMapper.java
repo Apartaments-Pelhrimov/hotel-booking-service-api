@@ -21,8 +21,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import ua.mibal.booking.application.dto.ChangeApartmentForm;
+import ua.mibal.booking.application.dto.ChangeApartmentOptionsForm;
 import ua.mibal.booking.application.dto.CreateApartmentForm;
-import ua.mibal.booking.application.dto.request.UpdateApartmentOptionsDto;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.ApartmentOptions;
 
@@ -50,5 +50,5 @@ public interface ApartmentMapper {
     void change(@MappingTarget Apartment apartment, ChangeApartmentForm changeApartmentForm);
 
     @BeanMapping(nullValuePropertyMappingStrategy = IGNORE)
-    void change(@MappingTarget ApartmentOptions target, UpdateApartmentOptionsDto source);
+    void change(@MappingTarget ApartmentOptions target, ChangeApartmentOptionsForm source);
 }

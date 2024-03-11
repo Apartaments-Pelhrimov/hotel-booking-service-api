@@ -34,6 +34,7 @@ import ua.mibal.booking.adapter.in.web.model.ApartmentDto;
 import ua.mibal.booking.adapter.in.web.security.annotation.ManagerAllowed;
 import ua.mibal.booking.application.ApartmentService;
 import ua.mibal.booking.application.dto.ChangeApartmentForm;
+import ua.mibal.booking.application.dto.ChangeApartmentOptionsForm;
 import ua.mibal.booking.application.dto.CreateApartmentForm;
 import ua.mibal.booking.domain.Apartment;
 
@@ -77,7 +78,13 @@ public class ApartmentController {
         apartmentService.change(id, form);
     }
 
-    // TODO update apartment options
+    @ManagerAllowed
+    @PatchMapping("/{id}/options")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void changeOptions(@PathVariable Long id,
+                              @RequestBody @Valid ChangeApartmentOptionsForm form) {
+        apartmentService.changeOptions(id, form);
+    }
 
     @ManagerAllowed
     @DeleteMapping("/{id}")
