@@ -31,7 +31,6 @@ import ua.mibal.booking.application.dto.CreateBedForm;
 import ua.mibal.booking.application.dto.CreateRoomForm;
 import ua.mibal.booking.application.dto.PutPriceForm;
 import ua.mibal.booking.application.dto.RegistrationForm;
-import ua.mibal.booking.application.dto.request.PhotoDto;
 import ua.mibal.booking.application.dto.request.UpdateApartmentOptionsDto;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.ApartmentInstance;
@@ -189,7 +188,6 @@ public class DataGenerator {
         return of(
                 simpleArgs,
                 invalidCreateApartmentFormWithInvalidPrices(),
-                invalidCreateApartmentFormWithInvalidPhotos(),
                 invalidCreateApartmentFormWithInvalidRooms()
         ).parallelStream()
                 .flatMap(identity());
@@ -199,13 +197,6 @@ public class DataGenerator {
         return incorrectPrices().stream()
                 .map(price -> Arguments.of(new CreateApartmentForm(
                         "correct_name", COMFORT, DEFAULT, of(price), of(), of())
-                ));
-    }
-
-    private static Stream<Arguments> invalidCreateApartmentFormWithInvalidPhotos() {
-        return incorrectPhotos().stream()
-                .map(photo -> Arguments.of(new CreateApartmentForm(
-                        "correct_name", COMFORT, DEFAULT, of(), of(), of())
                 ));
     }
 
@@ -227,18 +218,6 @@ public class DataGenerator {
                 new PutPriceForm(1, null, null),
                 new PutPriceForm(1, valueOf(-1), null),
                 new PutPriceForm(1, valueOf(100_001), null)
-        );
-    }
-
-    public static List<PhotoDto> incorrectPhotos() {
-        return of(
-                new PhotoDto(null),
-                new PhotoDto(""),
-                new PhotoDto("invalid.com"),
-                new PhotoDto("http://invalid"),
-                new PhotoDto("https://invalid"),
-                new PhotoDto("https://invalid/fjdskl"),
-                new PhotoDto("https://invalid.com\\")
         );
     }
 
