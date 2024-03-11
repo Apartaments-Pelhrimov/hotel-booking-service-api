@@ -18,7 +18,7 @@ package ua.mibal.booking.application.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
-import ua.mibal.booking.application.dto.request.TurnOffDto;
+import ua.mibal.booking.application.dto.TurnOffForm;
 import ua.mibal.booking.domain.HotelTurningOffTime;
 import ua.mibal.booking.domain.TurningOffTime;
 
@@ -29,7 +29,7 @@ import ua.mibal.booking.domain.TurningOffTime;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface TurningOffTimeMapper {
 
-    TurningOffTime apartmentfromDto(TurnOffDto turnOffDto);
+    TurningOffTime assembleForApartmentInstance(TurnOffForm turnOffForm);
 
-    HotelTurningOffTime hotelFromDto(TurnOffDto turnOffDto);
+    HotelTurningOffTime assembleForHotel(TurnOffForm turnOffForm);
 }

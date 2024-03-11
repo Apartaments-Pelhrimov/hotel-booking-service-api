@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ua.mibal.booking.adapter.in.web.security.annotation.ManagerAllowed;
 import ua.mibal.booking.application.TurningOffService;
-import ua.mibal.booking.application.dto.request.TurnOffDto;
+import ua.mibal.booking.application.dto.TurnOffForm;
 
 /**
  * @author Mykhailo Balakhon
@@ -39,13 +39,13 @@ public class TurnOffController {
     private final TurningOffService turningOffService;
 
     @PatchMapping("/hotel/off")
-    public void turnOffHotel(@Valid @RequestBody TurnOffDto turnOffDto) {
-        turningOffService.turnOffHotel(turnOffDto);
+    public void turnOffHotel(@Valid @RequestBody TurnOffForm form) {
+        turningOffService.turnOffHotel(form);
     }
 
     @PatchMapping("/apartments/instances/{id}/off")
     public void turnOffApartmentInstance(@PathVariable Long id,
-                                         @Valid @RequestBody TurnOffDto turnOffDto) {
-        turningOffService.turnOffApartmentInstance(id, turnOffDto);
+                                         @Valid @RequestBody TurnOffForm form) {
+        turningOffService.turnOffApartmentInstance(id, form);
     }
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.dto.request;
+package ua.mibal.booking.application.dto;
 
 import ua.mibal.booking.application.validation.constraints.ValidDateRange;
 import ua.mibal.booking.domain.DateRangeValidRequest;
@@ -26,7 +26,7 @@ import java.time.LocalDateTime;
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @ValidDateRange
-public record TurnOffDto(
+public record TurnOffForm(
         LocalDateTime from,
         LocalDateTime to,
         String event

@@ -20,14 +20,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import ua.mibal.booking.application.dto.request.TurnOffDto;
+import ua.mibal.booking.application.dto.TurnOffForm;
+import ua.mibal.booking.application.exception.IllegalTurningOffTimeException;
 import ua.mibal.booking.application.mapper.TurningOffTimeMapper;
 import ua.mibal.booking.application.port.jpa.HotelTurningOffRepository;
 import ua.mibal.booking.application.port.jpa.ReservationRepository;
 import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.domain.HotelTurningOffTime;
 import ua.mibal.booking.domain.TurningOffTime;
-import ua.mibal.booking.application.exception.IllegalTurningOffTimeException;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.util.List;
@@ -65,8 +65,8 @@ class TurningOffService_UnitTest {
     private TurningOffTime turningOffTime;
 
     @Spy
-    private TurnOffDto turnOffDto =
-            new TurnOffDto(now(), now().plusDays(1), "event");
+    private TurnOffForm turnOffForm =
+            new TurnOffForm(now(), now().plusDays(1), "event");
 
     @BeforeEach
     void setup() {
@@ -79,12 +79,12 @@ class TurningOffService_UnitTest {
 
         when(apartmentInstanceService.getOneFetchReservations(instanceId))
                 .thenReturn(apartmentInstance);
-        when(apartmentInstance.hasReservationsAt(turnOffDto.from(), turnOffDto.to()))
+        when(apartmentInstance.hasReservationsAt(turnOffForm.from(), turnOffForm.to()))
                 .thenReturn(false);
-        when(turningOffTimeMapper.apartmentfromDto(turnOffDto))
+        when(turningOffTimeMapper.assembleForApartmentInstance(turnOffForm))
                 .thenReturn(turningOffTime);
 
-        service.turnOffApartmentInstance(instanceId, turnOffDto);
+        service.turnOffApartmentInstance(instanceId, turnOffForm);
 
         verify(apartmentInstance, times(1))
                 .addTurningOffTime(turningOffTime);
@@ -96,22 +96,22 @@ class TurningOffService_UnitTest {
 
         when(apartmentInstanceService.getOneFetchReservations(instanceId))
                 .thenReturn(apartmentInstance);
-        when(apartmentInstance.hasReservationsAt(turnOffDto.from(), turnOffDto.to()))
+        when(apartmentInstance.hasReservationsAt(turnOffForm.from(), turnOffForm.to()))
                 .thenReturn(true);
 
         assertThrows(IllegalTurningOffTimeException.class,
-                () -> service.turnOffApartmentInstance(instanceId, turnOffDto));
+                () -> service.turnOffApartmentInstance(instanceId, turnOffForm));
     }
 
     @Test
     void turnOffHotel() {
         when(reservationRepository.existsReservationThatIntersectsRange(
-                turnOffDto.from(), turnOffDto.to()))
+                turnOffForm.from(), turnOffForm.to()))
                 .thenReturn(false);
-        when(turningOffTimeMapper.hotelFromDto(turnOffDto))
+        when(turningOffTimeMapper.assembleForHotel(turnOffForm))
                 .thenReturn(hotelTurningOffTime);
 
-        service.turnOffHotel(turnOffDto);
+        service.turnOffHotel(turnOffForm);
 
         verify(hotelTurningOffRepository, times(1))
                 .save(hotelTurningOffTime);
@@ -120,11 +120,11 @@ class TurningOffService_UnitTest {
     @Test
     void turnOffHotel_should_throw_IllegalTurningOffTimeException() {
         when(reservationRepository.existsReservationThatIntersectsRange(
-                turnOffDto.from(), turnOffDto.to()))
+                turnOffForm.from(), turnOffForm.to()))
                 .thenReturn(true);
 
         assertThrows(IllegalTurningOffTimeException.class,
-                () -> service.turnOffHotel(turnOffDto));
+                () -> service.turnOffHotel(turnOffForm));
     }
 
     @Test

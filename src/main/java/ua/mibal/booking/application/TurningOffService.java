@@ -19,14 +19,14 @@ package ua.mibal.booking.application;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ua.mibal.booking.application.dto.request.TurnOffDto;
+import ua.mibal.booking.application.dto.TurnOffForm;
+import ua.mibal.booking.application.exception.IllegalTurningOffTimeException;
 import ua.mibal.booking.application.mapper.TurningOffTimeMapper;
 import ua.mibal.booking.application.port.jpa.HotelTurningOffRepository;
 import ua.mibal.booking.application.port.jpa.ReservationRepository;
 import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.domain.HotelTurningOffTime;
 import ua.mibal.booking.domain.TurningOffTime;
-import ua.mibal.booking.application.exception.IllegalTurningOffTimeException;
 
 import java.util.List;
 
@@ -43,19 +43,19 @@ public class TurningOffService {
     private final HotelTurningOffRepository hotelTurningOffRepository;
 
     @Transactional
-    public void turnOffApartmentInstance(Long instanceId, TurnOffDto turnOffDto) {
+    public void turnOffApartmentInstance(Long instanceId, TurnOffForm form) {
         ApartmentInstance instance =
                 apartmentInstanceService.getOneFetchReservations(instanceId);
-        validateToTurnOffApartmentInstance(instance, turnOffDto);
+        validateToTurnOffApartmentInstance(instance, form);
         TurningOffTime turningOffTime =
-                turningOffTimeMapper.apartmentfromDto(turnOffDto);
+                turningOffTimeMapper.assembleForApartmentInstance(form);
         instance.addTurningOffTime(turningOffTime);
     }
 
-    public void turnOffHotel(TurnOffDto turnOffDto) {
-        validateToTurnOffHotel(turnOffDto);
+    public void turnOffHotel(TurnOffForm form) {
+        validateToTurnOffHotel(form);
         HotelTurningOffTime turningOffTime =
-                turningOffTimeMapper.hotelFromDto(turnOffDto);
+                turningOffTimeMapper.assembleForHotel(form);
         hotelTurningOffRepository.save(turningOffTime);
     }
 
@@ -64,15 +64,15 @@ public class TurningOffService {
     }
 
     private void validateToTurnOffApartmentInstance(ApartmentInstance instance,
-                                                    TurnOffDto turnOffDto) {
-        if (instance.hasReservationsAt(turnOffDto.from(), turnOffDto.to())) {
+                                                    TurnOffForm turnOffForm) {
+        if (instance.hasReservationsAt(turnOffForm.from(), turnOffForm.to())) {
             throw new IllegalTurningOffTimeException();
         }
     }
 
-    private void validateToTurnOffHotel(TurnOffDto turnOffDto) {
+    private void validateToTurnOffHotel(TurnOffForm turnOffForm) {
         if (reservationRepository.existsReservationThatIntersectsRange(
-                turnOffDto.from(), turnOffDto.to())) {
+                turnOffForm.from(), turnOffForm.to())) {
             throw new IllegalTurningOffTimeException();
         }
     }
