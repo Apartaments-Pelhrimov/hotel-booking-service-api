@@ -32,7 +32,7 @@ import ua.mibal.booking.adapter.in.web.model.LoginDto;
 import ua.mibal.booking.adapter.in.web.model.NewPasswordDto;
 import ua.mibal.booking.adapter.in.web.model.TokenDto;
 import ua.mibal.booking.application.AuthService;
-import ua.mibal.booking.application.dto.RegistrationForm;
+import ua.mibal.booking.application.model.RegistrationForm;
 
 /**
  * @author Mykhailo Balakhon

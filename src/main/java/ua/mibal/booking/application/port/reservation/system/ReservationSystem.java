@@ -16,7 +16,7 @@
 
 package ua.mibal.booking.application.port.reservation.system;
 
-import ua.mibal.booking.application.dto.ReservationForm;
+import ua.mibal.booking.application.model.ReservationForm;
 import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.domain.Event;
 

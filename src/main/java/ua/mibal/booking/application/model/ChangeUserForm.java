@@ -14,15 +14,24 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.dto;
+package ua.mibal.booking.application.model;
+
+import ua.mibal.booking.application.validation.constraints.Name;
+import ua.mibal.booking.application.validation.constraints.Phone;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public record ReservationRejectingForm(
-        Long id,
-        String email,
-        String reason
+public record ChangeUserForm(
+
+        @Name
+        String firstName,
+
+        @Name
+        String lastName,
+
+        @Phone
+        String phone
 ) {
 }

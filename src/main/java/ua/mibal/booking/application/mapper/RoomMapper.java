@@ -17,7 +17,7 @@
 package ua.mibal.booking.application.mapper;
 
 import org.mapstruct.Mapper;
-import ua.mibal.booking.application.dto.CreateRoomForm;
+import ua.mibal.booking.application.model.CreateRoomForm;
 import ua.mibal.booking.domain.Room;
 
 import java.util.List;

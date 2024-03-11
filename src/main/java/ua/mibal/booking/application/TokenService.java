@@ -20,11 +20,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.application.component.TokenGenerator;
+import ua.mibal.booking.application.exception.TokenNotFoundException;
 import ua.mibal.booking.application.port.jpa.TokenRepository;
 import ua.mibal.booking.config.properties.TokenProps;
 import ua.mibal.booking.domain.Token;
 import ua.mibal.booking.domain.User;
-import ua.mibal.booking.application.exception.TokenNotFoundException;
 
 /**
  * @author Mykhailo Balakhon

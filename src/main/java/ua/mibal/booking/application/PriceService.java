@@ -19,9 +19,9 @@ package ua.mibal.booking.application;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ua.mibal.booking.application.dto.PutPriceForm;
 import ua.mibal.booking.application.exception.PriceNotFoundException;
 import ua.mibal.booking.application.mapper.PriceMapper;
+import ua.mibal.booking.application.model.PutPriceForm;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.Price;
 

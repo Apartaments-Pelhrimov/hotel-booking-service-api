@@ -18,7 +18,7 @@ package ua.mibal.booking.application.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
-import ua.mibal.booking.application.dto.TurnOffForm;
+import ua.mibal.booking.application.model.TurnOffForm;
 import ua.mibal.booking.domain.HotelTurningOffTime;
 import ua.mibal.booking.domain.TurningOffTime;
 

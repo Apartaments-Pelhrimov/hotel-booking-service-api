@@ -20,12 +20,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ua.mibal.booking.application.dto.ChangeNotificationSettingsForm;
-import ua.mibal.booking.application.dto.ChangeUserForm;
-import ua.mibal.booking.application.dto.RegistrationForm;
 import ua.mibal.booking.application.exception.IllegalPasswordException;
 import ua.mibal.booking.application.exception.UserNotFoundException;
 import ua.mibal.booking.application.mapper.UserMapper;
+import ua.mibal.booking.application.model.ChangeNotificationSettingsForm;
+import ua.mibal.booking.application.model.ChangeUserForm;
+import ua.mibal.booking.application.model.RegistrationForm;
 import ua.mibal.booking.application.port.jpa.UserRepository;
 import ua.mibal.booking.domain.User;
 

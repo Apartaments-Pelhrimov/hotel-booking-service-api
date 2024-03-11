@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ua.mibal.booking.application.ApartmentInstanceService;
 import ua.mibal.booking.application.UserService;
-import ua.mibal.booking.application.dto.ReservationForm;
+import ua.mibal.booking.application.model.ReservationForm;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.domain.Price;

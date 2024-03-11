@@ -20,9 +20,9 @@ import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import ua.mibal.booking.application.dto.ChangeNotificationSettingsForm;
-import ua.mibal.booking.application.dto.ChangeUserForm;
-import ua.mibal.booking.application.dto.RegistrationForm;
+import ua.mibal.booking.application.model.ChangeNotificationSettingsForm;
+import ua.mibal.booking.application.model.ChangeUserForm;
+import ua.mibal.booking.application.model.RegistrationForm;
 import ua.mibal.booking.domain.NotificationSettings;
 import ua.mibal.booking.domain.User;
 

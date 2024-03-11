@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ua.mibal.booking.adapter.IcalMapper;
 import ua.mibal.booking.adapter.out.reservation.system.ical.WebContentReader;
-import ua.mibal.booking.application.dto.ReservationForm;
+import ua.mibal.booking.application.model.ReservationForm;
 import ua.mibal.booking.application.port.reservation.system.ReservationSystem;
 import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.domain.Event;

@@ -35,8 +35,8 @@ import ua.mibal.booking.adapter.in.web.model.UserAccountDto;
 import ua.mibal.booking.adapter.in.web.model.UserDto;
 import ua.mibal.booking.adapter.in.web.security.annotation.UserAllowed;
 import ua.mibal.booking.application.UserService;
-import ua.mibal.booking.application.dto.ChangeNotificationSettingsForm;
-import ua.mibal.booking.application.dto.ChangeUserForm;
+import ua.mibal.booking.application.model.ChangeNotificationSettingsForm;
+import ua.mibal.booking.application.model.ChangeUserForm;
 import ua.mibal.booking.domain.User;
 
 /**

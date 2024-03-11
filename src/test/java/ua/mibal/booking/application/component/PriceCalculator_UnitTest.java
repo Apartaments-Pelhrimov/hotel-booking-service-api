@@ -22,7 +22,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import ua.mibal.booking.application.exception.IllegalReservationDateRangeException;
 import ua.mibal.booking.application.exception.PriceCalculatorException;
-import ua.mibal.booking.application.dto.ReservationForm;
+import ua.mibal.booking.application.model.ReservationForm;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.math.BigDecimal;

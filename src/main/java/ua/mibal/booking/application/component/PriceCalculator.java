@@ -19,7 +19,7 @@ package ua.mibal.booking.application.component;
 import org.springframework.stereotype.Component;
 import ua.mibal.booking.application.exception.IllegalReservationDateRangeException;
 import ua.mibal.booking.application.exception.PriceCalculatorException;
-import ua.mibal.booking.application.dto.ReservationForm;
+import ua.mibal.booking.application.model.ReservationForm;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

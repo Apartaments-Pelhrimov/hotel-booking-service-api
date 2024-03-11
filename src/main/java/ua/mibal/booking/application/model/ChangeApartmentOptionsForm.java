@@ -14,38 +14,17 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.dto;
-
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
-import ua.mibal.booking.application.validation.constraints.Name;
-import ua.mibal.booking.domain.Apartment.ApartmentClass;
-import ua.mibal.booking.domain.ApartmentOptions;
-
-import java.util.List;
+package ua.mibal.booking.application.model;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public record CreateApartmentForm(
-
-        @Name
-        @NotNull
-        String name,
-
-        @NotNull
-        ApartmentClass apartmentClass,
-
-        ApartmentOptions options,
-
-        @Valid
-        List<PutPriceForm> prices,
-
-        @Valid
-        List<CreateRoomForm> rooms,
-
-        @Valid
-        List<CreateApartmentInstanceForm> instances
+public record ChangeApartmentOptionsForm(
+        Boolean mealsIncluded,
+        Boolean kitchen,
+        Boolean bathroom,
+        Boolean wifi,
+        Boolean refrigerator
 ) {
 }

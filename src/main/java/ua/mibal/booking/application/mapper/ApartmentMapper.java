@@ -20,9 +20,9 @@ import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import ua.mibal.booking.application.dto.ChangeApartmentForm;
-import ua.mibal.booking.application.dto.ChangeApartmentOptionsForm;
-import ua.mibal.booking.application.dto.CreateApartmentForm;
+import ua.mibal.booking.application.model.ChangeApartmentForm;
+import ua.mibal.booking.application.model.ChangeApartmentOptionsForm;
+import ua.mibal.booking.application.model.CreateApartmentForm;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.ApartmentOptions;
 

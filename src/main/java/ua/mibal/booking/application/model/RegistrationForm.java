@@ -14,17 +14,38 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.dto;
+package ua.mibal.booking.application.model;
+
+import jakarta.validation.constraints.NotNull;
+import ua.mibal.booking.application.validation.constraints.Email;
+import ua.mibal.booking.application.validation.constraints.Name;
+import ua.mibal.booking.application.validation.constraints.Password;
+import ua.mibal.booking.application.validation.constraints.Phone;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public record ChangeApartmentOptionsForm(
-        Boolean mealsIncluded,
-        Boolean kitchen,
-        Boolean bathroom,
-        Boolean wifi,
-        Boolean refrigerator
+public record RegistrationForm(
+
+        @NotNull
+        @Name
+        String firstName,
+
+        @NotNull
+        @Name
+        String lastName,
+
+        @NotNull
+        @Phone
+        String phone,
+
+        @NotNull
+        @Email
+        String email,
+
+        @NotNull
+        @Password
+        String password
 ) {
 }

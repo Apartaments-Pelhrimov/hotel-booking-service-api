@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.dto;
+package ua.mibal.booking.application.model;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;

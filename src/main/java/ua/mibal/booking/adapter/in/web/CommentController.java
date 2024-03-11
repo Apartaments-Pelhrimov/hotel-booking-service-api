@@ -34,7 +34,7 @@ import ua.mibal.booking.adapter.in.web.mapper.CommentDtoMapper;
 import ua.mibal.booking.adapter.in.web.model.CommentDto;
 import ua.mibal.booking.adapter.in.web.security.annotation.UserAllowed;
 import ua.mibal.booking.application.CommentService;
-import ua.mibal.booking.application.dto.CreateCommentForm;
+import ua.mibal.booking.application.model.CreateCommentForm;
 import ua.mibal.booking.domain.Comment;
 
 /**

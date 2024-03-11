@@ -32,7 +32,7 @@ import ua.mibal.booking.adapter.in.web.mapper.PriceDtoMapper;
 import ua.mibal.booking.adapter.in.web.model.PriceDto;
 import ua.mibal.booking.adapter.in.web.security.annotation.ManagerAllowed;
 import ua.mibal.booking.application.PriceService;
-import ua.mibal.booking.application.dto.PutPriceForm;
+import ua.mibal.booking.application.model.PutPriceForm;
 import ua.mibal.booking.domain.Price;
 
 import java.util.List;

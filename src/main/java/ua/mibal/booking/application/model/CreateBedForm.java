@@ -14,14 +14,23 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.dto;
+package ua.mibal.booking.application.model;
+
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import ua.mibal.booking.domain.Bed.Type;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public record ChangeNotificationSettingsForm(
-        Boolean receiveOrderEmails,
-        Boolean receiveNewsEmails
+public record CreateBedForm(
+
+        @NotNull
+        @Min(1)
+        Integer size,
+
+        @NotNull
+        Type type
 ) {
 }

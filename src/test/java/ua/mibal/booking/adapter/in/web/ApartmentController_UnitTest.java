@@ -35,7 +35,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import ua.mibal.booking.adapter.in.web.mapper.ApartmentDtoMapper;
 import ua.mibal.booking.application.ApartmentService;
-import ua.mibal.booking.application.dto.CreateApartmentForm;
+import ua.mibal.booking.application.model.CreateApartmentForm;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;

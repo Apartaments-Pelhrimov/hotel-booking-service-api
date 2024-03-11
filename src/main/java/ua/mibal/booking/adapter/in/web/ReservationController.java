@@ -36,9 +36,9 @@ import ua.mibal.booking.adapter.in.web.model.ReservationRejectingFormDto;
 import ua.mibal.booking.adapter.in.web.security.annotation.ManagerAllowed;
 import ua.mibal.booking.adapter.in.web.security.annotation.UserAllowed;
 import ua.mibal.booking.application.ReservationService;
-import ua.mibal.booking.application.dto.ReservationForm;
-import ua.mibal.booking.application.dto.ReservationRejectingForm;
 import ua.mibal.booking.application.mapper.ReservationFormMapper;
+import ua.mibal.booking.application.model.ReservationForm;
+import ua.mibal.booking.application.model.ReservationRejectingForm;
 import ua.mibal.booking.domain.Reservation;
 
 /**

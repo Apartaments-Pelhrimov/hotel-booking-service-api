@@ -37,7 +37,7 @@ import ua.mibal.booking.adapter.in.web.model.LoginDto;
 import ua.mibal.booking.adapter.in.web.model.NewPasswordDto;
 import ua.mibal.booking.adapter.in.web.model.TokenDto;
 import ua.mibal.booking.application.AuthService;
-import ua.mibal.booking.application.dto.RegistrationForm;
+import ua.mibal.booking.application.model.RegistrationForm;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;

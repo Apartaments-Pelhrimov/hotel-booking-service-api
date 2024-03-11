@@ -14,37 +14,19 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.dto;
+package ua.mibal.booking.application.model;
 
-import jakarta.validation.constraints.DecimalMax;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
-public class PutPriceForm {
-
-    @NotNull
-    @Min(1)
-    private Integer person;
-
-    @NotNull
-    @DecimalMin("0")
-    @DecimalMax("100000")
-    private BigDecimal amount;
-
-    private Long apartmentId;
+public record ReservationForm(
+        LocalDateTime from,
+        LocalDateTime to,
+        int people,
+        Long apartmentId,
+        String userEmail
+) {
 }

@@ -14,24 +14,20 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.dto;
+package ua.mibal.booking.application.model;
 
 import ua.mibal.booking.application.validation.constraints.Name;
-import ua.mibal.booking.application.validation.constraints.Phone;
+import ua.mibal.booking.domain.Apartment.ApartmentClass;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public record ChangeUserForm(
+public record ChangeApartmentForm(
 
         @Name
-        String firstName,
+        String name,
 
-        @Name
-        String lastName,
-
-        @Phone
-        String phone
+        ApartmentClass apartmentClass
 ) {
 }

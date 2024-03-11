@@ -26,7 +26,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import ua.mibal.booking.adapter.IcalMapper;
 import ua.mibal.booking.adapter.out.reservation.system.ical.WebContentReader;
-import ua.mibal.booking.application.dto.ReservationForm;
+import ua.mibal.booking.application.model.ReservationForm;
 import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.domain.Event;
 import ua.mibal.test.annotation.UnitTest;

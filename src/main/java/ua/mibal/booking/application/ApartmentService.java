@@ -19,11 +19,11 @@ package ua.mibal.booking.application;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ua.mibal.booking.application.dto.ChangeApartmentForm;
-import ua.mibal.booking.application.dto.ChangeApartmentOptionsForm;
-import ua.mibal.booking.application.dto.CreateApartmentForm;
 import ua.mibal.booking.application.exception.ApartmentNotFoundException;
 import ua.mibal.booking.application.mapper.ApartmentMapper;
+import ua.mibal.booking.application.model.ChangeApartmentForm;
+import ua.mibal.booking.application.model.ChangeApartmentOptionsForm;
+import ua.mibal.booking.application.model.CreateApartmentForm;
 import ua.mibal.booking.application.port.jpa.ApartmentRepository;
 import ua.mibal.booking.domain.Apartment;
 

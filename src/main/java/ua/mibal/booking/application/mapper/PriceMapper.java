@@ -18,7 +18,7 @@ package ua.mibal.booking.application.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
-import ua.mibal.booking.application.dto.PutPriceForm;
+import ua.mibal.booking.application.model.PutPriceForm;
 import ua.mibal.booking.domain.Price;
 
 import java.util.List;

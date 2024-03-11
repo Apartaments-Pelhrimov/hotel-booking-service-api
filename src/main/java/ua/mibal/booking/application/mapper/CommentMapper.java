@@ -17,7 +17,7 @@
 package ua.mibal.booking.application.mapper;
 
 import org.mapstruct.Mapper;
-import ua.mibal.booking.application.dto.CreateCommentForm;
+import ua.mibal.booking.application.model.CreateCommentForm;
 import ua.mibal.booking.domain.Comment;
 
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;

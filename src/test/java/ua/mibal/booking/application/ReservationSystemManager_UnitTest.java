@@ -19,10 +19,10 @@ package ua.mibal.booking.application;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import ua.mibal.booking.application.model.ReservationForm;
 import ua.mibal.booking.application.port.reservation.system.ReservationSystem;
 import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.domain.Event;
-import ua.mibal.booking.application.dto.ReservationForm;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.util.ArrayList;

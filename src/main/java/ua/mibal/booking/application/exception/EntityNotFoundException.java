@@ -17,7 +17,6 @@
 package ua.mibal.booking.application.exception;
 
 import ua.mibal.booking.domain.Token;
-import ua.mibal.booking.application.exception.NotFoundException;
 
 /**
  * @author Mykhailo Balakhon
