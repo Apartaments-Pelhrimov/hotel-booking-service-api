@@ -21,7 +21,6 @@ import org.mapstruct.Mapping;
 import ua.mibal.booking.adapter.in.web.mapper.linker.PhotoLinker;
 import ua.mibal.booking.adapter.in.web.model.ApartmentCardDto;
 import ua.mibal.booking.adapter.in.web.model.ApartmentDto;
-import ua.mibal.booking.application.mapper.RoomMapper;
 import ua.mibal.booking.domain.Apartment;
 
 import java.util.List;
@@ -38,7 +37,7 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
         injectionStrategy = CONSTRUCTOR,
         uses = {
                 PhotoLinker.class,
-                RoomMapper.class,
+                RoomDtoMapper.class,
                 PriceDtoMapper.class
         })
 public interface ApartmentDtoMapper {
@@ -49,5 +48,7 @@ public interface ApartmentDtoMapper {
 
     @Mapping(target = "price", source = "prices")
     @Mapping(target = "people", source = "rooms")
+    ApartmentCardDto toCardDto(Apartment apartment);
+
     List<ApartmentCardDto> toCardDtos(List<Apartment> apartments);
 }

@@ -18,13 +18,13 @@ package ua.mibal.booking.application;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ua.mibal.booking.application.dto.request.RoomDto;
+import ua.mibal.booking.application.dto.CreateRoomForm;
+import ua.mibal.booking.application.exception.ApartmentNotFoundException;
+import ua.mibal.booking.application.exception.RoomNotFoundException;
 import ua.mibal.booking.application.mapper.RoomMapper;
 import ua.mibal.booking.application.port.jpa.ApartmentRepository;
 import ua.mibal.booking.application.port.jpa.RoomRepository;
 import ua.mibal.booking.domain.Room;
-import ua.mibal.booking.application.exception.ApartmentNotFoundException;
-import ua.mibal.booking.application.exception.RoomNotFoundException;
 
 /**
  * @author Mykhailo Balakhon
@@ -37,9 +37,9 @@ public class RoomService {
     private final ApartmentRepository apartmentRepository;
     private final RoomMapper roomMapper;
 
-    public void create(Long apartmentId, RoomDto roomDto) {
+    public void create(Long apartmentId, CreateRoomForm form) {
         validateApartmentExists(apartmentId);
-        Room room = roomMapper.toEntity(roomDto);
+        Room room = roomMapper.assemble(form);
         room.setApartment(apartmentRepository.getReferenceById(apartmentId));
         roomRepository.save(room);
     }

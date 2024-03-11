@@ -27,11 +27,11 @@ import ua.mibal.booking.application.dto.ChangeNotificationSettingsForm;
 import ua.mibal.booking.application.dto.ChangeUserForm;
 import ua.mibal.booking.application.dto.CreateApartmentForm;
 import ua.mibal.booking.application.dto.CreateApartmentInstanceForm;
+import ua.mibal.booking.application.dto.CreateBedForm;
+import ua.mibal.booking.application.dto.CreateRoomForm;
 import ua.mibal.booking.application.dto.PutPriceForm;
 import ua.mibal.booking.application.dto.RegistrationForm;
-import ua.mibal.booking.application.dto.request.BedDto;
 import ua.mibal.booking.application.dto.request.PhotoDto;
-import ua.mibal.booking.application.dto.request.RoomDto;
 import ua.mibal.booking.application.dto.request.UpdateApartmentOptionsDto;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.ApartmentInstance;
@@ -165,7 +165,7 @@ public class DataGenerator {
                 COMFORT,
                 DEFAULT,
                 of(new PutPriceForm(1, valueOf(10000), null)),
-                of(new RoomDto("correctRoomName", of(new BedDto(1, Bed.Type.TRANSFORMER)), LIVING_ROOM)),
+                of(new CreateRoomForm("correctRoomName", of(new CreateBedForm(1, Bed.Type.TRANSFORMER)), LIVING_ROOM)),
                 of()
         )));
     }
@@ -242,24 +242,24 @@ public class DataGenerator {
         );
     }
 
-    public static List<RoomDto> incorrectRooms() {
-        List<RoomDto> rooms = new ArrayList<>(
+    public static List<CreateRoomForm> incorrectRooms() {
+        List<CreateRoomForm> rooms = new ArrayList<>(
                 incorrectBeds().stream()
-                        .map(bed -> new RoomDto("correctRoomName", of(bed), BEDROOM))
+                        .map(bed -> new CreateRoomForm("correctRoomName", of(bed), BEDROOM))
                         .toList()
         );
-        rooms.add(new RoomDto("correctRoomName", of(), null));
-        rooms.add(new RoomDto("", of(), BEDROOM)); // incorrect names
-        rooms.add(new RoomDto("b", of(), BEDROOM));
+        rooms.add(new CreateRoomForm("correctRoomName", of(), null));
+        rooms.add(new CreateRoomForm("", of(), BEDROOM)); // incorrect names
+        rooms.add(new CreateRoomForm("b", of(), BEDROOM));
         return rooms;
     }
 
-    public static List<BedDto> incorrectBeds() {
+    public static List<CreateBedForm> incorrectBeds() {
         return of(
-                new BedDto(null, Bed.Type.CONNECTED),
-                new BedDto(0, Bed.Type.CONNECTED),
+                new CreateBedForm(null, Bed.Type.CONNECTED),
+                new CreateBedForm(0, Bed.Type.CONNECTED),
 
-                new BedDto(1, null)
+                new CreateBedForm(1, null)
         );
     }
 

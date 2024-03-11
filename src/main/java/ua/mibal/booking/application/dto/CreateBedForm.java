@@ -16,36 +16,21 @@
 
 package ua.mibal.booking.application.dto;
 
-import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import ua.mibal.booking.application.validation.constraints.Name;
-import ua.mibal.booking.domain.Apartment.ApartmentClass;
-import ua.mibal.booking.domain.ApartmentOptions;
-
-import java.util.List;
+import ua.mibal.booking.domain.Bed.Type;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public record CreateApartmentForm(
-
-        @Name
-        @NotNull
-        String name,
+public record CreateBedForm(
 
         @NotNull
-        ApartmentClass apartmentClass,
+        @Min(1)
+        Integer size,
 
-        ApartmentOptions options,
-
-        @Valid
-        List<PutPriceForm> prices,
-
-        @Valid
-        List<CreateRoomForm> rooms,
-
-        @Valid
-        List<CreateApartmentInstanceForm> instances
+        @NotNull
+        Type type
 ) {
 }

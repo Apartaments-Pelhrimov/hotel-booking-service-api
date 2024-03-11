@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.dto.request;
+package ua.mibal.booking.adapter.in.web.mapper;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import ua.mibal.booking.domain.Room.Type;
+import org.springframework.stereotype.Component;
+import ua.mibal.booking.domain.Bed;
+import ua.mibal.booking.domain.Room;
 
 import java.util.List;
 
@@ -28,16 +26,21 @@ import java.util.List;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public record RoomDto(
+@Component
+public class RoomDtoMapper {
 
-        @NotBlank
-        @Size(min = 3)
-        String name,
+    List<Bed> toBeds(List<Room> rooms) {
+        return rooms.stream()
+                .flatMap(room -> room.getBeds().stream())
+                .toList();
+    }
 
-        @Valid
-        List<BedDto> beds,
-
-        @NotNull
-        Type type
-) {
+    Integer toPeopleCount(List<Room> rooms) {
+        return rooms.stream()
+                .map(Room::getBeds)
+                .mapToInt(beds -> beds.stream()
+                        .mapToInt(Bed::getSize)
+                        .sum()
+                ).sum();
+    }
 }

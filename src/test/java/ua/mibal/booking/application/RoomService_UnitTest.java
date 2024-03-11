@@ -19,14 +19,14 @@ package ua.mibal.booking.application;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import ua.mibal.booking.application.dto.request.RoomDto;
+import ua.mibal.booking.application.dto.CreateRoomForm;
+import ua.mibal.booking.application.exception.ApartmentNotFoundException;
+import ua.mibal.booking.application.exception.RoomNotFoundException;
 import ua.mibal.booking.application.mapper.RoomMapper;
 import ua.mibal.booking.application.port.jpa.ApartmentRepository;
 import ua.mibal.booking.application.port.jpa.RoomRepository;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.Room;
-import ua.mibal.booking.application.exception.ApartmentNotFoundException;
-import ua.mibal.booking.application.exception.RoomNotFoundException;
 import ua.mibal.test.annotation.UnitTest;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -57,7 +57,7 @@ class RoomService_UnitTest {
     @Mock
     private Room room;
     @Mock
-    private RoomDto roomDto;
+    private CreateRoomForm createRoomForm;
 
     @BeforeEach
     void setup() {
@@ -91,10 +91,10 @@ class RoomService_UnitTest {
     public void create() {
         when(apartment.getId()).thenReturn(1L);
         when(apartmentRepository.existsById(1L)).thenReturn(true);
-        when(roomMapper.toEntity(roomDto)).thenReturn(room);
+        when(roomMapper.assemble(createRoomForm)).thenReturn(room);
         when(apartmentRepository.getReferenceById(1L)).thenReturn(apartment);
 
-        service.create(apartment.getId(), roomDto);
+        service.create(apartment.getId(), createRoomForm);
 
         verify(room, times(1)).setApartment(apartment);
         verify(roomRepository, times(1)).save(room);
@@ -107,7 +107,7 @@ class RoomService_UnitTest {
 
         assertThrows(
                 ApartmentNotFoundException.class,
-                () -> service.create(apartment.getId(), roomDto)
+                () -> service.create(apartment.getId(), createRoomForm)
         );
 
         verifyNoInteractions(roomMapper, room, roomRepository);

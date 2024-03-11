@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ua.mibal.booking.adapter.in.web.security.annotation.ManagerAllowed;
 import ua.mibal.booking.application.RoomService;
-import ua.mibal.booking.application.dto.request.RoomDto;
+import ua.mibal.booking.application.dto.CreateRoomForm;
 
 /**
  * @author Mykhailo Balakhon
@@ -44,8 +44,8 @@ public class RoomController {
     @PostMapping("/{apartmentId}/rooms")
     @ResponseStatus(HttpStatus.CREATED)
     public void create(@PathVariable Long apartmentId,
-                       @RequestBody @Valid RoomDto roomDto) {
-        roomService.create(apartmentId, roomDto);
+                       @RequestBody @Valid CreateRoomForm createRoomForm) {
+        roomService.create(apartmentId, createRoomForm);
     }
 
     @DeleteMapping("/rooms/{id}")

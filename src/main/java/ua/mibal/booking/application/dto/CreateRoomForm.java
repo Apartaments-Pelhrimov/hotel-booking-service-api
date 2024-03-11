@@ -14,21 +14,28 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.dto.request;
+package ua.mibal.booking.application.dto;
 
-import jakarta.validation.constraints.Min;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import ua.mibal.booking.domain.Bed.Type;
+import jakarta.validation.constraints.Size;
+import ua.mibal.booking.domain.Room.Type;
+
+import java.util.List;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public record BedDto(
+public record CreateRoomForm(
 
-        @NotNull
-        @Min(1)
-        Integer size,
+        @NotBlank
+        @Size(min = 3)
+        String name,
+
+        @Valid
+        List<CreateBedForm> beds,
 
         @NotNull
         Type type

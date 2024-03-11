@@ -76,7 +76,7 @@ class ApartmentMapper_UnitTest {
     void assemble(CreateApartmentForm source) {
         when(priceMapper.assemble(source.prices()))
                 .thenReturn(prices);
-        when(roomMapper.toEntities(source.rooms()))
+        when(roomMapper.assemble(source.rooms()))
                 .thenReturn(rooms);
 
         source.instances()

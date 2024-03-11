@@ -17,8 +17,7 @@
 package ua.mibal.booking.application.mapper;
 
 import org.mapstruct.Mapper;
-import ua.mibal.booking.application.dto.request.RoomDto;
-import ua.mibal.booking.domain.Bed;
+import ua.mibal.booking.application.dto.CreateRoomForm;
 import ua.mibal.booking.domain.Room;
 
 import java.util.List;
@@ -32,22 +31,7 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 @Mapper(componentModel = SPRING)
 public interface RoomMapper {
 
-    Room toEntity(RoomDto roomDto);
+    Room assemble(CreateRoomForm createRoomForm);
 
-    List<Room> toEntities(List<RoomDto> roomDtos);
-
-    default List<Bed> roomsToBeds(List<Room> rooms) {
-        return rooms.stream()
-                .flatMap(room -> room.getBeds().stream())
-                .toList();
-    }
-
-    default Integer roomsToPeopleCount(List<Room> rooms) {
-        return rooms.stream()
-                .map(Room::getBeds)
-                .mapToInt(beds -> beds.stream()
-                        .mapToInt(Bed::getSize)
-                        .sum()
-                ).sum();
-    }
+    List<Room> assemble(List<CreateRoomForm> createRoomForms);
 }
