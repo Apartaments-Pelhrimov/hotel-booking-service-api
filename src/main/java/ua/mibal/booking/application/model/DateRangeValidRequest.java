@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.domain;
+package ua.mibal.booking.application.model;
 
 import java.time.temporal.Temporal;
 

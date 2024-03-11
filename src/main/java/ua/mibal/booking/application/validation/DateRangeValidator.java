@@ -18,14 +18,15 @@ package ua.mibal.booking.application.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import ua.mibal.booking.application.model.DateRangeValidRequest;
 import ua.mibal.booking.application.validation.constraints.ValidDateRange;
-import ua.mibal.booking.domain.DateRangeValidRequest;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoField;
 import java.time.temporal.Temporal;
 import java.util.Objects;
+
+import static java.time.temporal.ChronoField.HOUR_OF_DAY;
 
 /**
  * @author Mykhailo Balakhon
@@ -47,8 +48,7 @@ public class DateRangeValidator implements
 
     private Temporal getNowDependingOnRequest(DateRangeValidRequest request) {
         Temporal example = request.from();
-        if (example != null &&
-            example.isSupported(ChronoField.HOUR_OF_DAY)) {
+        if (example != null && example.isSupported(HOUR_OF_DAY)) {
             return LocalDateTime.now();
         }
         return LocalDate.now();

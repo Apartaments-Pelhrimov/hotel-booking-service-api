@@ -17,7 +17,6 @@
 package ua.mibal.booking.application.model;
 
 import ua.mibal.booking.application.validation.constraints.ValidDateRange;
-import ua.mibal.booking.domain.DateRangeValidRequest;
 
 import java.time.LocalDateTime;
 

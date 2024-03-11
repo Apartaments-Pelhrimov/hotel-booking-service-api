@@ -19,8 +19,8 @@ package ua.mibal.booking.adapter.in.web.model;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import org.springframework.format.annotation.DateTimeFormat;
+import ua.mibal.booking.application.model.DateRangeValidRequest;
 import ua.mibal.booking.application.validation.constraints.ValidDateRange;
-import ua.mibal.booking.domain.DateRangeValidRequest;
 
 import java.time.LocalDate;
 
