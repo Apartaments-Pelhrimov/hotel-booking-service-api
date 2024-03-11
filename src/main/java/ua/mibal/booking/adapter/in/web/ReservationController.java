@@ -63,7 +63,8 @@ public class ReservationController {
     @UserAllowed
     @GetMapping("/users/me/reservations")
     public Page<ReservationDto> getAllByUser(Authentication authentication, Pageable pageable) {
-        Page<Reservation> reservations = reservationService.getAllByUser(authentication.getName(), pageable);
+        Page<Reservation> reservations =
+                reservationService.getAllByUser(authentication.getName(), pageable);
         return reservationDtoMapper.toDtos(reservations);
     }
 
@@ -73,9 +74,8 @@ public class ReservationController {
     public void reserve(@PathVariable Long id,
                         @Valid ReservationFormDto dto,
                         Authentication authentication) {
-        ReservationForm request =
-                reservationFormMapper.toForm(dto, id, authentication.getName());
-        reservationService.reserve(request);
+        ReservationForm form = reservationFormMapper.toForm(dto, id, authentication.getName());
+        reservationService.reserve(form);
     }
 
     @UserAllowed
