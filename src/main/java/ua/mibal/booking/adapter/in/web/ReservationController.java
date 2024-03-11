@@ -32,11 +32,12 @@ import org.springframework.web.bind.annotation.RestController;
 import ua.mibal.booking.adapter.in.web.mapper.ReservationDtoMapper;
 import ua.mibal.booking.adapter.in.web.model.ReservationDto;
 import ua.mibal.booking.adapter.in.web.model.ReservationFormDto;
+import ua.mibal.booking.adapter.in.web.model.ReservationRejectingFormDto;
 import ua.mibal.booking.adapter.in.web.security.annotation.ManagerAllowed;
 import ua.mibal.booking.adapter.in.web.security.annotation.UserAllowed;
 import ua.mibal.booking.application.ReservationService;
 import ua.mibal.booking.application.dto.ReservationForm;
-import ua.mibal.booking.application.dto.request.ReservationRejectingFormDto;
+import ua.mibal.booking.application.dto.ReservationRejectingForm;
 import ua.mibal.booking.application.mapper.ReservationFormMapper;
 import ua.mibal.booking.domain.Reservation;
 
@@ -81,8 +82,10 @@ public class ReservationController {
     @PatchMapping("/reservations/{id}/reject")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void rejectReservation(@PathVariable("id") Long id,
-                                  @Valid @RequestBody ReservationRejectingFormDto reservationRejectingFormDto,
+                                  @Valid @RequestBody ReservationRejectingFormDto dto,
                                   Authentication authentication) {
-        reservationService.rejectReservation(id, authentication.getName(), reservationRejectingFormDto.reason());
+        ReservationRejectingForm form =
+                reservationFormMapper.toRejectingForm(dto, id, authentication.getName());
+        reservationService.rejectReservation(form);
     }
 }

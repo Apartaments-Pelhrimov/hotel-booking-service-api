@@ -22,11 +22,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.application.component.ReservationBuilder;
+import ua.mibal.booking.application.dto.ReservationForm;
+import ua.mibal.booking.application.dto.ReservationRejectingForm;
 import ua.mibal.booking.application.exception.ReservationNotFoundException;
 import ua.mibal.booking.application.exception.UserHasNoAccessToReservationException;
 import ua.mibal.booking.application.port.jpa.ReservationRepository;
 import ua.mibal.booking.domain.Reservation;
-import ua.mibal.booking.application.dto.ReservationForm;
 import ua.mibal.booking.domain.User;
 
 import static ua.mibal.booking.domain.Role.MANAGER;
@@ -51,14 +52,12 @@ public class ReservationService {
     }
 
     @Transactional
-    public void rejectReservation(Long id,
-                                  String email,
-                                  String reason) {
-        Reservation reservation = getOneFetchRejections(id);
-        User user = userService.getOne(email);
+    public void rejectReservation(ReservationRejectingForm form) {
+        Reservation reservation = getOneFetchRejections(form.id());
+        User user = userService.getOne(form.email());
         validateUserHasAccessToReservation(user, reservation);
         validateReservationToReject(reservation);
-        reservation.reject(user, reason);
+        reservation.reject(user, form.reason());
     }
 
     @Transactional

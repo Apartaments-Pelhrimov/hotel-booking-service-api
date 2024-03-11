@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.dto.request;
+package ua.mibal.booking.adapter.in.web.model;
+
+import jakarta.validation.constraints.NotBlank;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public record ReservationRejectingFormDto(
-        String reason
-) {
+public record ReservationRejectingFormDto(@NotBlank String reason) {
 }

@@ -21,10 +21,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.data.domain.PageImpl;
 import ua.mibal.booking.application.component.ReservationBuilder;
+import ua.mibal.booking.application.dto.ReservationForm;
+import ua.mibal.booking.application.dto.ReservationRejectingForm;
 import ua.mibal.booking.application.exception.UserHasNoAccessToReservationException;
 import ua.mibal.booking.application.port.jpa.ReservationRepository;
 import ua.mibal.booking.domain.Reservation;
-import ua.mibal.booking.application.dto.ReservationForm;
 import ua.mibal.booking.domain.User;
 import ua.mibal.test.annotation.UnitTest;
 
@@ -111,7 +112,7 @@ class ReservationService_UnitTest {
         when(user.is(MANAGER))
                 .thenReturn(true);
 
-        service.rejectReservation(id, email, reason);
+        service.rejectReservation(new ReservationRejectingForm(id, email, reason));
 
         verify(reservation, times(1))
                 .reject(user, reason);
@@ -133,7 +134,7 @@ class ReservationService_UnitTest {
         when(reservation.getUser())
                 .thenReturn(user);
 
-        service.rejectReservation(id, email, reason);
+        service.rejectReservation(new ReservationRejectingForm(id, email, reason));
 
         verify(reservation, times(1))
                 .reject(user, reason);
@@ -155,7 +156,7 @@ class ReservationService_UnitTest {
                 .thenReturn(anotherUser);
 
         assertThrows(UserHasNoAccessToReservationException.class,
-                () -> service.rejectReservation(id, email, reason));
+                () -> service.rejectReservation(new ReservationRejectingForm(id, email, reason)));
     }
 
     @Test
