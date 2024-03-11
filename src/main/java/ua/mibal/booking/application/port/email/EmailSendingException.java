@@ -14,19 +14,21 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.port.email.model;
+package ua.mibal.booking.application.port.email;
+
+import ua.mibal.booking.application.exception.InternalServerException;
 
 /**
- * The {@code EmailContent} interface defines the contract for representing the content of an email
- * message.
- * Implementations of this interface encapsulate the subject and message body of an email.
- *
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public interface EmailContent {
+public class EmailSendingException extends InternalServerException {
 
-    String getSubject();
+    public EmailSendingException(String message) {
+        super(message);
+    }
 
-    String getBody();
+    public EmailSendingException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

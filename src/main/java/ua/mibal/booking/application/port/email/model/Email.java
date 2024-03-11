@@ -17,15 +17,23 @@
 package ua.mibal.booking.application.port.email.model;
 
 /**
+ * The {@code Email} interface defines the contract for representing an email message.
+ * Implementations of this interface encapsulate essential information about an email, including
+ * the sender's address, recipient addresses, and the content of the email.
+ *
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-// TODO javadoc
 public interface Email {
 
     String getSender();
 
     String getRecipients();
 
+    /**
+     * Retrieves the content of this email.
+     *
+     * @return An {@code EmailContent} object containing the subject and message body of the email.
+     */
     EmailContent getContent();
 }
