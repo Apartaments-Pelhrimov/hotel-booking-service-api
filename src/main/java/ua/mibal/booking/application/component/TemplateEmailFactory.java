@@ -18,14 +18,12 @@ package ua.mibal.booking.application.component;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.thymeleaf.ITemplateEngine;
-import org.thymeleaf.context.Context;
-import org.thymeleaf.context.IContext;
 import ua.mibal.booking.application.exception.ApiException;
 import ua.mibal.booking.application.model.EmailType;
 import ua.mibal.booking.application.port.email.model.Email;
 import ua.mibal.booking.application.port.email.model.impl.DefaultEmail;
 import ua.mibal.booking.application.port.email.model.impl.DefaultEmailContent;
+import ua.mibal.booking.application.port.template.engine.TemplateEngine;
 import ua.mibal.booking.config.properties.ApplicationProps;
 import ua.mibal.booking.config.properties.TokenProps;
 import ua.mibal.booking.domain.Token;
@@ -42,7 +40,7 @@ import static ua.mibal.booking.application.model.EmailType.PASSWORD_CHANGING;
 @RequiredArgsConstructor
 @Component
 public class TemplateEmailFactory {
-    private final ITemplateEngine templateEngine;
+    private final TemplateEngine templateEngine;
     private final ApplicationProps applicationProps;
     private final TokenProps tokenProps;
 
@@ -72,16 +70,11 @@ public class TemplateEmailFactory {
     private Email assembleEmailFor(EmailType type, String recipients, Map<String, Object> vars) {
         String sender = applicationProps.email();
         String subject = type.subject();
-        String body = getInsertedTemplate(type, vars);
+        String body = templateEngine.process(type.templateName(), applicationProps.locale(), vars);
         return new DefaultEmail(
                 sender,
                 recipients,
                 new DefaultEmailContent(subject, body)
         );
-    }
-
-    private String getInsertedTemplate(EmailType type, Map<String, Object> vars) {
-        IContext context = new Context(applicationProps.locale(), vars);
-        return templateEngine.process(type.templateName(), context);
     }
 }
