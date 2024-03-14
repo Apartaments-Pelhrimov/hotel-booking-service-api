@@ -24,6 +24,7 @@ import ua.mibal.booking.application.model.ChangeNotificationSettingsForm;
 import ua.mibal.booking.application.model.ChangeUserForm;
 import ua.mibal.booking.application.model.RegistrationForm;
 import ua.mibal.booking.domain.NotificationSettings;
+import ua.mibal.booking.domain.Phone;
 import ua.mibal.booking.domain.User;
 
 import static org.mapstruct.InjectionStrategy.CONSTRUCTOR;
@@ -35,8 +36,7 @@ import static org.mapstruct.NullValuePropertyMappingStrategy.IGNORE;
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @Mapper(componentModel = SPRING,
-        injectionStrategy = CONSTRUCTOR,
-        uses = PhoneMapper.class)
+        injectionStrategy = CONSTRUCTOR)
 public interface UserMapper {
 
     @Mapping(target = "password", source = "encodedPassword")
@@ -48,4 +48,8 @@ public interface UserMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = IGNORE)
     void changeNotificationSettings(@MappingTarget NotificationSettings notificationSettings,
                                     ChangeNotificationSettingsForm changeNotificationSettingsForm);
+
+    default Phone toPhone(String number) {
+        return new Phone(number);
+    }
 }
