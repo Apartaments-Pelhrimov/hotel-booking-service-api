@@ -18,20 +18,20 @@ package ua.mibal.booking.adapter.out.email;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.Transport;
-import org.instancio.junit.InstancioSource;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.mockito.Mock;
+import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import ua.mibal.booking.adapter.out.email.component.MimeEmailBuilder;
 import ua.mibal.booking.adapter.out.email.config.properties.EmailProps;
-import ua.mibal.booking.adapter.out.email.exception.EmailSentFailedException;
 import ua.mibal.booking.adapter.out.email.model.MimeEmail;
+import ua.mibal.booking.application.port.email.EmailSendingException;
 import ua.mibal.booking.application.port.email.model.Email;
+import ua.mibal.booking.application.port.email.model.impl.DefaultEmail;
+import ua.mibal.booking.application.port.email.model.impl.DefaultEmailContent;
 import ua.mibal.test.annotation.UnitTest;
 
 import static org.junit.Assert.assertThrows;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
@@ -43,24 +43,18 @@ import static org.mockito.Mockito.when;
 @UnitTest
 class DefaultEmailSendingService_UnitTest {
 
-    private DefaultEmailSendingService service;
+    private final MimeEmailBuilder mimeEmailBuilder = mock();
+    private final EmailProps emailProps = new EmailProps("username", "password");
+    private final MockedStatic<Transport> mockedTransport = mockStatic(Transport.class);
 
-    @Mock
-    private MimeEmailBuilder mimeEmailBuilder;
-    @Mock
-    private EmailProps emailProps;
+    private final DefaultEmailSendingService service = new DefaultEmailSendingService(mimeEmailBuilder, emailProps);
 
-    @Mock
     private Email email;
-    @Mock
     private MimeEmail mimeEmail;
 
-    private MockedStatic<Transport> mockedTransport;
-
-    @BeforeEach
-    void setup() {
-        service = new DefaultEmailSendingService(mimeEmailBuilder, emailProps);
-        mockedTransport = mockStatic(Transport.class);
+    {
+        when(mimeEmailBuilder.buildBy(email))
+                .thenReturn(mimeEmail);
     }
 
     @AfterEach
@@ -68,40 +62,47 @@ class DefaultEmailSendingService_UnitTest {
         mockedTransport.close();
     }
 
-    @ParameterizedTest
-    @InstancioSource
-    void send(String username, String password) {
-        when(emailProps.username())
-                .thenReturn(username);
-        when(emailProps.password())
-                .thenReturn(password);
-        when(mimeEmailBuilder.buildBy(email))
-                .thenReturn(mimeEmail);
+    @Test
+    void send() {
+        givenEmail();
 
         service.send(email);
 
+        thenEmailShouldBeSent();
+    }
+
+    @Test
+    void send_should_throw_EmailSentFailedException() {
+        givenEmail();
+
+        whenTransportThrowsMessagingException();
+
+        thenServiceShouldThrowEmailSendingException();
+    }
+
+    private void givenEmail() {
+        email = new DefaultEmail(
+                "sender",
+                "recipient",
+                new DefaultEmailContent("subject", "html"));
+    }
+
+    private void whenTransportThrowsMessagingException() {
+        mockedTransport.when(
+                        () -> Transport.send(mimeEmail, "username", "password"))
+                .thenThrow(MessagingException.class);
+    }
+
+    private void thenEmailShouldBeSent() {
         mockedTransport.verify(
-                () -> Transport.send(mimeEmail, username, password),
+                () -> Transport.send(mimeEmail, "username", "password"),
                 times(1)
         );
     }
 
-    @ParameterizedTest
-    @InstancioSource
-    void send_should_throw_EmailSentFailedException(String username, String password) {
-        when(emailProps.username())
-                .thenReturn(username);
-        when(emailProps.password())
-                .thenReturn(password);
-        when(mimeEmailBuilder.buildBy(email))
-                .thenReturn(mimeEmail);
-
-        mockedTransport.when(
-                        () -> Transport.send(mimeEmail, username, password))
-                .thenThrow(MessagingException.class);
-
+    private void thenServiceShouldThrowEmailSendingException() {
         assertThrows(
-                EmailSentFailedException.class,
+                EmailSendingException.class,
                 () -> service.send(email)
         );
     }
