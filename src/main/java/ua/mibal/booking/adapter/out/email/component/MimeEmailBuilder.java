@@ -42,7 +42,7 @@ public class MimeEmailBuilder {
     }
 
     private MimeEmail buildMimeEmail(Email email) throws MessagingException {
-        return MimeEmail.of(
+        return new MimeEmail(
                 session,
                 email.getSender(),
                 email.getRecipients(),

@@ -28,28 +28,19 @@ import static jakarta.mail.Message.RecipientType.TO;
  */
 public class MimeEmail extends MimeMessage {
 
-    protected MimeEmail(Session session,
-                        String sender,
-                        String recipients,
-                        String subject,
-                        String body) throws MessagingException {
+    /**
+     * @param sender     comma separated address strings
+     * @param recipients comma separated address strings
+     */
+    public MimeEmail(Session session,
+                     String sender,
+                     String recipients,
+                     String subject,
+                     String body) throws MessagingException {
         super(session);
         setFrom(sender);
         setRecipients(TO, recipients);
         setSubject(subject, "UTF-8");
         setContent(body, "text/html; charset=UTF-8");
-    }
-
-    /**
-     * @param sender     comma separated address strings
-     * @param recipients comma separated address strings
-     */
-    public static MimeEmail of(Session session,
-                               String sender,
-                               String recipients,
-                               String subject,
-                               String body) throws MessagingException {
-
-        return new MimeEmail(session, sender, recipients, subject, body);
     }
 }
