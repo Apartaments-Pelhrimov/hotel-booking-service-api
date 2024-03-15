@@ -27,7 +27,7 @@
 
     <groupId>ua.mibal</groupId>
     <artifactId>hotel-booking-service</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1-SNAPSHOT</version>
     <name>hotel-booking-service</name>
     <description>hotel-booking-service</description>
 
