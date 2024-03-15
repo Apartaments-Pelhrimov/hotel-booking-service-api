@@ -36,4 +36,12 @@ public interface CommentJpaRepository extends JpaRepository<Comment, Long>, Comm
             where c.apartment.id = ?1
              """)
     Page<Comment> findByApartmentIdFetchUser(Long apartmentId, Pageable pageable);
+
+    @Override
+    @Query("""
+            select c from Comment c
+                join fetch c.user
+            order by c.createdAt desc
+             """)
+    Page<Comment> findLatestFetchUser(Pageable pageable);
 }

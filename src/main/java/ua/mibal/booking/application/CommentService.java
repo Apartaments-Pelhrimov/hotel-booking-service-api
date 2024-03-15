@@ -61,6 +61,10 @@ public class CommentService {
         commentRepository.deleteById(id);
     }
 
+    public Page<Comment> getAllLatest(Pageable pageable) {
+        return commentRepository.findLatestFetchUser(pageable);
+    }
+
     private Comment assembleCommentBy(CreateCommentForm form) {
         Comment newComment = commentMapper.assemble(form);
         Apartment apartmentRef = apartmentRepository.getReferenceById(form.getApartmentId());

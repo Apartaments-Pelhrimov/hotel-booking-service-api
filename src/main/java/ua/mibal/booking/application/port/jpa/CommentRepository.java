@@ -27,4 +27,6 @@ import ua.mibal.booking.domain.Comment;
 public interface CommentRepository extends Repository<Comment, Long> {
 
     Page<Comment> findByApartmentIdFetchUser(Long apartmentId, Pageable pageable);
+
+    Page<Comment> findLatestFetchUser(Pageable pageable);
 }
