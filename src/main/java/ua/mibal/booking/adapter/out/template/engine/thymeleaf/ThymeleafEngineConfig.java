@@ -29,10 +29,10 @@ import static org.thymeleaf.templatemode.TemplateMode.HTML;
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @Configuration
-public class ThymeleafConfig {
+public class ThymeleafEngineConfig {
 
     @Bean
-    public TemplateEngine thymeleafInnerTemplateEngine(ITemplateResolver templateResolver) {
+    public TemplateEngine thymeleafTemplateEngine(ITemplateResolver templateResolver) {
         TemplateEngine templateEngine = new TemplateEngine();
         templateEngine.setTemplateResolver(templateResolver);
         return templateEngine;

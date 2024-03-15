@@ -32,7 +32,7 @@ import java.util.Map;
  */
 @RequiredArgsConstructor
 @Component
-public class ThymeleafTemplateEngine implements TemplateEngine {
+public class ThymeleafTemplateEngineAdapter implements TemplateEngine {
     private final ITemplateEngine templateEngine;
 
     @Override

@@ -35,14 +35,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @SpringBootTest(classes = {
-        ThymeleafTemplateEngine.class,
-        ThymeleafConfig.class,
+        ThymeleafTemplateEngineAdapter.class,
+        ThymeleafEngineConfig.class,
 })
 @DisplayNameGeneration(ReplaceUnderscores.class)
-class ThymeleafTemplateEngine_IntegrationTest {
+class ThymeleafTemplateEngineAdapter_IntegrationTest {
 
     @Autowired
-    private ThymeleafTemplateEngine templateEngine;
+    private ThymeleafTemplateEngineAdapter templateEngine;
 
     @Test
     void process() {
