@@ -9,7 +9,7 @@ paths:
   /api/users/me:
     get:
       security:
-        - bearer: [ ]
+        - bearerAuth: [ ]
       summary: "GET api/users/me"
       operationId: "getOne"
       responses:
@@ -19,9 +19,80 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/UserDto"
+  /api/users/me/account:
+    get:
+      security:
+        - bearerAuth: [ ]
+      summary: "GET api/users/me/account"
+      operationId: "getAccount"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserAccountDto"
+    delete:
+      security:
+        - bearerAuth: [ ]
+      summary: "DELETE api/users/me/account"
+      operationId: "deleteAccount"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeleteMeDto"
+        required: true
+      responses:
+        "204":
+          description: "No Content"
+    patch:
+      security:
+        - bearerAuth: [ ]
+      summary: "PATCH api/users/me/account"
+      operationId: "changeAccount"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangeUserForm"
+        required: true
+      responses:
+        "204":
+          description: "No Content"
+  /api/users/me/account/password:
+    put:
+      security:
+        - bearerAuth: [ ]
+      summary: "PUT api/users/me/account/password"
+      operationId: "putPassword"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangePasswordDto"
+        required: true
+      responses:
+        "204":
+          description: "No Content"
+  /api/users/me/account/notifications:
+    patch:
+      security:
+        - bearerAuth: [ ]
+      summary: "PATCH api/users/me/account/notifications"
+      operationId: "changeNotificationSettings"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangeNotificationSettingsForm"
+        required: true
+      responses:
+        "204":
+          description: "No Content"
 components:
   securitySchemes:
-    bearer:
+    bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
@@ -40,3 +111,58 @@ components:
           enum:
             - "USER"
             - "MANAGER"
+    NotificationSettings:
+      type: "object"
+      properties:
+        receiveOrderEmails:
+          type: "boolean"
+        receiveNewsEmails:
+          type: "boolean"
+    UserAccountDto:
+      type: "object"
+      properties:
+        firstName:
+          type: "string"
+        lastName:
+          type: "string"
+        photo:
+          type: "string"
+        role:
+          type: "string"
+          enum:
+            - "USER"
+            - "MANAGER"
+        phone:
+          type: "string"
+        email:
+          type: "string"
+        notificationSettings:
+          $ref: "#/components/schemas/NotificationSettings"
+    DeleteMeDto:
+      type: "object"
+      properties:
+        password:
+          type: "string"
+    ChangePasswordDto:
+      type: "object"
+      properties:
+        newPassword:
+          type: "string"
+        oldPassword:
+          type: "string"
+    ChangeUserForm:
+      type: "object"
+      properties:
+        firstName:
+          type: "string"
+        lastName:
+          type: "string"
+        phone:
+          type: "string"
+    ChangeNotificationSettingsForm:
+      type: "object"
+      properties:
+        receiveOrderEmails:
+          type: "boolean"
+        receiveNewsEmails:
+          type: "boolean"
