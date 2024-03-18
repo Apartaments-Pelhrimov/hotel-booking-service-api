@@ -19,64 +19,6 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/UserDto"
-    delete:
-      security:
-        - bearer: [ ]
-      summary: "DELETE api/users/me"
-      operationId: "delete"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/DeleteMeDto"
-        required: true
-      responses:
-        "204":
-          description: "No Content"
-    patch:
-      security:
-        - bearer: [ ]
-      summary: "PATCH api/users/me"
-      operationId: "changeDetails"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ChangeUserDetailsDto"
-        required: true
-      responses:
-        "204":
-          description: "No Content"
-  /api/users/me/password:
-    put:
-      security:
-        - bearer: [ ]
-      summary: "PUT api/users/me/password"
-      operationId: "changePassword"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ChangePasswordDto"
-        required: true
-      responses:
-        "204":
-          description: "No Content"
-  /api/users/me/notifications:
-    patch:
-      security:
-        - bearer: [ ]
-      summary: "PATCH api/users/me/notifications"
-      operationId: "changeNotificationSettings"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ChangeNotificationSettingsDto"
-        required: true
-      responses:
-        "204":
-          description: "No Content"
 components:
   securitySchemes:
     bearer:
@@ -84,13 +26,6 @@ components:
       scheme: bearer
       bearerFormat: JWT
   schemas:
-    NotificationSettings:
-      type: "object"
-      properties:
-        receiveOrderEmails:
-          type: "boolean"
-        receiveNewsEmails:
-          type: "boolean"
     UserDto:
       type: "object"
       properties:
@@ -100,42 +35,8 @@ components:
           type: "string"
         photo:
           type: "string"
-        phone:
-          type: "string"
-        email:
-          type: "string"
         role:
           type: "string"
           enum:
             - "USER"
             - "MANAGER"
-        notificationSettings:
-          $ref: "#/components/schemas/NotificationSettings"
-    DeleteMeDto:
-      type: "object"
-      properties:
-        password:
-          type: "string"
-    ChangePasswordDto:
-      type: "object"
-      properties:
-        newPassword:
-          type: "string"
-        oldPassword:
-          type: "string"
-    ChangeUserDetailsDto:
-      type: "object"
-      properties:
-        firstName:
-          type: "string"
-        lastName:
-          type: "string"
-        phone:
-          type: "string"
-    ChangeNotificationSettingsDto:
-      type: "object"
-      properties:
-        receiveOrderEmails:
-          type: "boolean"
-        receiveNewsEmails:
-          type: "boolean"
