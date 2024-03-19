@@ -16,34 +16,15 @@
 
 package ua.mibal.booking.adapter.in.web;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
-import ua.mibal.booking.adapter.in.web.security.TestSecurityConfig;
-
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@ComponentScan(value = "ua.mibal.booking.adapter.in.web.mapper")
-@Import(TestSecurityConfig.class)
-public abstract class ControllerTest {
-
-    protected MockMvc mvc;
+public abstract class ControllerValidationTest {
 
     @Autowired
-    private WebApplicationContext context;
-
-    @BeforeEach
-    void setUp() {
-        mvc = MockMvcBuilders.webAppContextSetup(context)
-                .apply(springSecurity())
-                .build();
-    }
+    protected MockMvc mvc;
 }
