@@ -45,8 +45,8 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @RequiredArgsConstructor
-@RestController
 @UserAllowed
+@RestController
 @RequestMapping("/api/users")
 public class UserController {
     private final UserService userService;
@@ -64,28 +64,28 @@ public class UserController {
         return userDtoMapper.toAccountDto(user);
     }
 
-    @DeleteMapping("/me")
+    @DeleteMapping("/me/account")
     @ResponseStatus(NO_CONTENT)
-    public void delete(@Valid @RequestBody DeleteMeDto dto,
-                       Authentication authentication) {
+    public void deleteAccount(@Valid @RequestBody DeleteMeDto dto,
+                              Authentication authentication) {
         userService.delete(authentication.getName(), dto.password());
     }
 
-    @PutMapping("/me/password")
+    @PatchMapping("/me/account")
+    @ResponseStatus(NO_CONTENT)
+    public void changeAccount(@Valid @RequestBody ChangeUserForm form,
+                              Authentication authentication) {
+        userService.change(authentication.getName(), form);
+    }
+
+    @PutMapping("/me/account/password")
     @ResponseStatus(NO_CONTENT)
     public void putPassword(@Valid @RequestBody ChangePasswordDto dto,
                             Authentication authentication) {
         userService.putPassword(authentication.getName(), dto.oldPassword(), dto.newPassword());
     }
 
-    @PatchMapping("/me")
-    @ResponseStatus(NO_CONTENT)
-    public void change(@Valid @RequestBody ChangeUserForm form,
-                       Authentication authentication) {
-        userService.change(authentication.getName(), form);
-    }
-
-    @PatchMapping("/me/notifications")
+    @PatchMapping("/me/account/notifications")
     @ResponseStatus(NO_CONTENT)
     public void changeNotificationSettings(@RequestBody ChangeNotificationSettingsForm form,
                                            Authentication authentication) {

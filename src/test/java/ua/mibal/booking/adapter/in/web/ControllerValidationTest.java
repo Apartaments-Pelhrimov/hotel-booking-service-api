@@ -14,19 +14,17 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.port.jpa;
+package ua.mibal.booking.adapter.in.web;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import ua.mibal.booking.domain.Comment;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.web.servlet.MockMvc;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public interface CommentRepository extends Repository<Comment, Long> {
+public abstract class ControllerValidationTest {
 
-    Page<Comment> findByApartmentIdFetchUser(Long apartmentId, Pageable pageable);
-
-    Page<Comment> findLatestFetchUser(Pageable pageable);
+    @Autowired
+    protected MockMvc mvc;
 }

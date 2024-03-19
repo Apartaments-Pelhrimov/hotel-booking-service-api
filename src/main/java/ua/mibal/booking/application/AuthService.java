@@ -21,7 +21,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.application.component.TemplateEmailFactory;
-import ua.mibal.booking.application.exception.EmailAlreadyExistsException;
 import ua.mibal.booking.application.exception.IllegalPasswordException;
 import ua.mibal.booking.application.exception.NotAuthorizedException;
 import ua.mibal.booking.application.exception.UserNotFoundException;
@@ -61,7 +60,6 @@ public class AuthService {
 
     @Transactional
     public void register(RegistrationForm registrationForm) {
-        validateEmailDoesNotExist(registrationForm.email());
         User user = userService.save(registrationForm);
         Token token = tokenService.generateAndSaveTokenFor(user);
         Email email = emailFactory.getAccountActivationEmail(token);
@@ -111,12 +109,6 @@ public class AuthService {
     private void validatePasswordCorrect(String raw, String encoded) {
         if (!passwordEncoder.matches(raw, encoded)) {
             throw new IllegalPasswordException();
-        }
-    }
-
-    private void validateEmailDoesNotExist(String email) {
-        if (userService.isExistsByEmail(email)) {
-            throw new EmailAlreadyExistsException(email);
         }
     }
 }

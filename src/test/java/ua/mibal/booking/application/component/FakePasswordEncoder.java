@@ -14,24 +14,21 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.mapper;
+package ua.mibal.booking.application.component;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.MappingConstants;
-import ua.mibal.booking.domain.Phone;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
-public class PhoneMapper {
+public class FakePasswordEncoder implements PasswordEncoder {
 
-    public String toNumberString(Phone phone) {
-        return phone.getNumber();
+    public String encode(CharSequence rawPassword) {
+        return rawPassword.toString();
     }
 
-    public Phone toNumberString(String number) {
-        return new Phone(number);
+    public boolean matches(CharSequence rawPassword, String encodedPassword) {
+        return rawPassword.toString().equals(encodedPassword);
     }
 }

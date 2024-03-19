@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ua.mibal.booking.application.exception.EmailAlreadyExistsException;
 import ua.mibal.booking.application.exception.IllegalPasswordException;
 import ua.mibal.booking.application.exception.UserNotFoundException;
 import ua.mibal.booking.application.mapper.UserMapper;
@@ -45,25 +46,25 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException(email));
     }
 
-    public boolean isExistsByEmail(String email) {
-        return userRepository.existsByEmail(email);
-    }
-
     public void delete(String email, String password) {
-        validatePassword(password, email);
-        userRepository.deleteByEmail(email);
+        User user = getOne(email);
+        validatePassword(user.getPassword(), password);
+        userRepository.delete(user);
     }
 
     public User save(RegistrationForm form) {
+        validateEmailDoesNotExist(form.email());
         String encodedPass = passwordEncoder.encode(form.password());
         User user = userMapper.assemble(form, encodedPass);
         return userRepository.save(user);
     }
 
+    @Transactional
     public void putPassword(String email, String oldPassword, String newPassword) {
-        validatePassword(oldPassword, email);
+        User user = getOne(email);
+        validatePassword(user.getPassword(), oldPassword);
         String newEncodedPassword = passwordEncoder.encode(newPassword);
-        userRepository.updateUserPasswordByEmail(newEncodedPassword, email);
+        user.setPassword(newEncodedPassword);
     }
 
     @Transactional
@@ -82,11 +83,15 @@ public class UserService {
         return userRepository.deleteNotEnabledWithNoTokens();
     }
 
-    private void validatePassword(String password, String email) {
-        String encodedPassword = userRepository.findPasswordByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException(email));
-        if (!passwordEncoder.matches(password, encodedPassword)) {
+    private void validatePassword(String original, String attempt) {
+        if (!passwordEncoder.matches(attempt, original)) {
             throw new IllegalPasswordException();
+        }
+    }
+
+    private void validateEmailDoesNotExist(String email) {
+        if (userRepository.existsByEmail(email)) {
+            throw new EmailAlreadyExistsException(email);
         }
     }
 }

@@ -24,7 +24,6 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ua.mibal.booking.application.component.TemplateEmailFactory;
-import ua.mibal.booking.application.exception.EmailAlreadyExistsException;
 import ua.mibal.booking.application.exception.NotAuthorizedException;
 import ua.mibal.booking.application.exception.UserNotFoundException;
 import ua.mibal.booking.application.model.RegistrationForm;
@@ -131,8 +130,6 @@ class AuthService_UnitTest {
         when(registrationForm.email()).thenReturn(notExistingEmail);
         when(registrationForm.password()).thenReturn(password);
 
-        when(userService.isExistsByEmail(notExistingEmail))
-                .thenReturn(false);
         when(userService.save(registrationForm))
                 .thenReturn(user);
         when(tokenService.generateAndSaveTokenFor(user))
@@ -144,27 +141,6 @@ class AuthService_UnitTest {
 
         verify(emailSendingService, times(1))
                 .send(email);
-    }
-
-    @Test
-    void register_should_throw_EmailAlreadyExistsException() {
-        String existingEmail = "existing_email";
-        when(registrationForm.email()).thenReturn(existingEmail);
-
-        when(userService.isExistsByEmail(existingEmail))
-                .thenReturn(true);
-
-        verifyNoMoreInteractions(userService);
-
-        EmailAlreadyExistsException e = assertThrows(
-                EmailAlreadyExistsException.class,
-                () -> service.register(registrationForm)
-        );
-        assertEquals(
-                new EmailAlreadyExistsException(existingEmail).getMessage(),
-                e.getMessage()
-        );
-        verifyNoInteractions(tokenService, emailSendingService);
     }
 
     @Test

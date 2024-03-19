@@ -27,7 +27,7 @@ import java.util.Optional;
  */
 public interface Repository<T, ID> {
 
-    T save(T user);
+    T save(T entity);
 
     Optional<T> findById(ID id);
 
@@ -38,4 +38,6 @@ public interface Repository<T, ID> {
     boolean existsById(ID id);
 
     Page<T> findAll(Pageable pageable);
+
+    void delete(T entity);
 }

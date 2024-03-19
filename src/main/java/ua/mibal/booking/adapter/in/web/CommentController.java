@@ -57,6 +57,12 @@ public class CommentController {
         return commentDtoMapper.toDtos(comments);
     }
 
+    @GetMapping("/comments/latest")
+    public Page<CommentDto> getAllLatest(Pageable pageable) {
+        Page<Comment> comments = commentService.getAllLatest(pageable);
+        return commentDtoMapper.toDtos(comments);
+    }
+
     @UserAllowed
     @PostMapping("/{apartmentId}/comments")
     @ResponseStatus(CREATED)

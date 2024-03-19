@@ -20,7 +20,7 @@ import org.mapstruct.Mapper;
 import ua.mibal.booking.adapter.in.web.mapper.linker.PhotoLinker;
 import ua.mibal.booking.adapter.in.web.model.UserAccountDto;
 import ua.mibal.booking.adapter.in.web.model.UserDto;
-import ua.mibal.booking.application.mapper.PhoneMapper;
+import ua.mibal.booking.domain.Phone;
 import ua.mibal.booking.domain.User;
 
 import static org.mapstruct.InjectionStrategy.CONSTRUCTOR;
@@ -32,12 +32,16 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
  */
 @Mapper(
         componentModel = SPRING,
-        injectionStrategy = CONSTRUCTOR, uses = {
-        PhotoLinker.class, PhoneMapper.class
-})
+        injectionStrategy = CONSTRUCTOR,
+        uses = PhotoLinker.class
+)
 public interface UserDtoMapper {
 
     UserDto toDto(User user);
 
     UserAccountDto toAccountDto(User user);
+
+    default String toNumber(Phone phone) {
+        return phone.getNumber();
+    }
 }

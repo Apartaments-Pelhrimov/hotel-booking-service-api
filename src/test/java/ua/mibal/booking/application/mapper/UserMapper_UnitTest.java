@@ -17,16 +17,13 @@
 package ua.mibal.booking.application.mapper;
 
 import org.instancio.junit.InstancioSource;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.Mock;
 import ua.mibal.booking.application.model.ChangeNotificationSettingsForm;
 import ua.mibal.booking.application.model.ChangeUserForm;
 import ua.mibal.booking.application.model.RegistrationForm;
 import ua.mibal.booking.domain.NotificationSettings;
-import ua.mibal.booking.domain.Phone;
 import ua.mibal.booking.domain.User;
 import ua.mibal.test.annotation.UnitTest;
 
@@ -35,7 +32,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
-import static org.mockito.Mockito.when;
 import static ua.mibal.booking.domain.NotificationSettings.DEFAULT;
 import static ua.mibal.booking.domain.Role.USER;
 
@@ -46,25 +42,11 @@ import static ua.mibal.booking.domain.Role.USER;
 @UnitTest
 class UserMapper_UnitTest {
 
-    private UserMapper mapper;
-
-    @Mock
-    private PhoneMapper phoneMapper;
-
-    @Mock
-    private Phone mappedPhone;
-
-    @BeforeEach
-    public void setup() {
-        mapper = new UserMapperImpl(phoneMapper);
-    }
+    private UserMapper mapper = new UserMapperImpl();
 
     @ParameterizedTest
     @InstancioSource
     void assemble(RegistrationForm registrationForm, String encodedPassword) {
-        when(phoneMapper.toNumberString(registrationForm.phone()))
-                .thenReturn(mappedPhone);
-
         User user = mapper.assemble(registrationForm, encodedPassword);
 
         assertThat(user.getId(), nullValue());
@@ -72,7 +54,7 @@ class UserMapper_UnitTest {
         assertThat(user.getLastName(), is(registrationForm.lastName()));
         assertThat(user.getEmail(), is(registrationForm.email()));
         assertThat(user.getPassword(), is(encodedPassword));
-        assertThat(user.getPhone(), is(mappedPhone));
+        assertThat(user.getPhone().getNumber(), is(registrationForm.phone()));
         assertThat(user.getPhoto(), is(empty()));
         assertThat(user.getNotificationSettings(), is(DEFAULT));
         assertThat(user.isEnabled(), is(false));
@@ -92,8 +74,6 @@ class UserMapper_UnitTest {
     @ParameterizedTest
     @MethodSource("ua.mibal.test.util.DataGenerator#testUsers")
     void change(User source, ChangeUserForm userChanges) {
-        when(phoneMapper.toNumberString(userChanges.phone()))
-                .thenReturn(mappedPhone);
 
         String expectedFirstName = userChanges.firstName() == null
                 ? source.getFirstName()
@@ -101,15 +81,15 @@ class UserMapper_UnitTest {
         String expectedLastName = userChanges.lastName() == null
                 ? source.getLastName()
                 : userChanges.lastName();
-        Phone expectedPhone = userChanges.phone() == null
-                ? source.getPhone()
-                : mappedPhone;
+        String expectedPhoneNumber = userChanges.phone() == null
+                ? source.getPhone().getNumber()
+                : userChanges.phone();
 
         mapper.change(source, userChanges);
 
         assertThat(source.getFirstName(), is(expectedFirstName));
         assertThat(source.getLastName(), is(expectedLastName));
-        assertThat(source.getPhone(), is(expectedPhone));
+        assertThat(source.getPhone().getNumber(), is(expectedPhoneNumber));
     }
 
     @ParameterizedTest
