@@ -16,33 +16,30 @@
 
 package ua.mibal.booking.application;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
-import org.mockito.Mock;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import ua.mibal.booking.application.component.FakePasswordEncoder;
+import ua.mibal.booking.application.exception.EmailAlreadyExistsException;
 import ua.mibal.booking.application.exception.IllegalPasswordException;
 import ua.mibal.booking.application.exception.UserNotFoundException;
 import ua.mibal.booking.application.mapper.UserMapper;
 import ua.mibal.booking.application.model.ChangeNotificationSettingsForm;
 import ua.mibal.booking.application.model.ChangeUserForm;
 import ua.mibal.booking.application.model.RegistrationForm;
-import ua.mibal.booking.application.port.jpa.UserRepository;
+import ua.mibal.booking.application.port.jpa.FakeInMemoryUserRepository;
 import ua.mibal.booking.domain.NotificationSettings;
 import ua.mibal.booking.domain.User;
 import ua.mibal.test.annotation.UnitTest;
 
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.only;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 
@@ -53,259 +50,294 @@ import static org.mockito.Mockito.when;
 @UnitTest
 class UserService_UnitTest {
 
-    private UserService service;
+    private final FakeInMemoryUserRepository userRepository = new FakeInMemoryUserRepository();
+    private final PasswordEncoder passwordEncoder = new FakePasswordEncoder();
+    private final UserMapper userMapper = mock();
 
-    @Mock
-    private UserRepository userRepository;
-    @Mock
-    private UserMapper userMapper;
-    @Mock
-    private PasswordEncoder passwordEncoder;
+    private final UserService service = new UserService(userRepository, userMapper, passwordEncoder);
 
-    @Mock
     private User user;
-    @Mock
-    private NotificationSettings notificationSettings;
-    @Mock
     private RegistrationForm registrationForm;
-    @Mock
     private ChangeUserForm changeUserForm;
-    @Mock
+    private NotificationSettings notificationSettings;
     private ChangeNotificationSettingsForm changeNotificationSettingsForm;
-
-    @BeforeEach
-    void setup() {
-        service = new UserService(userRepository, userMapper, passwordEncoder);
-    }
 
     @Test
     void getOne() {
-        String email = "existing_email";
+        givenRepositoryWithUser("user@email");
 
-        when(userRepository.findByEmail(email))
-                .thenReturn(Optional.of(user));
-
-        User actual = assertDoesNotThrow(
-                () -> service.getOne(email)
-        );
-
-        assertEquals(user, actual);
+        thenGetOneShouldReturnUser("user@email");
     }
 
     @Test
-    void getOne_should_throw_UserNotFoundException() {
-        String notExistingEmail = "not_existing_email";
+    void getOne_should_throw() {
+        givenEmptyRepository();
 
-        when(userRepository.findByEmail(notExistingEmail))
-                .thenReturn(Optional.empty());
-
-        assertThrows(
-                UserNotFoundException.class,
-                () -> service.getOne(notExistingEmail)
-        );
-    }
-
-    @ParameterizedTest
-    @CsvSource({"true", "false"})
-    void isExistsByEmail(boolean value) {
-        String email = "email";
-
-        when(userRepository.existsByEmail(email))
-                .thenReturn(value);
-
-        boolean actual = service.isExistsByEmail(email);
-
-        assertEquals(value, actual);
+        thenGetOneShouldThrowNotFoundException("user@email");
     }
 
     @Test
     void delete() {
-        String pass = "password";
-        String email = "email";
+        givenRepositoryWithUser("user@email");
+        givenUserWithPassword("password");
 
-        when(userRepository.findPasswordByEmail(email))
-                .thenReturn(Optional.of(pass));
-        when(passwordEncoder.matches(pass, pass))
-                .thenReturn(true);
+        whenDeleteUserWithPassword("user@email", "password");
 
-        service.delete(email, pass);
-
-        verify(userRepository, times(1))
-                .deleteByEmail(email);
-    }
-
-    @Test
-    void delete_should_throw_UserNotFoundException() {
-        String notExistingEmail = "not_existing_email";
-
-        when(userRepository.findPasswordByEmail(notExistingEmail))
-                .thenReturn(Optional.empty());
-
-        verifyNoMoreInteractions(userRepository, passwordEncoder);
-
-        assertThrows(
-                UserNotFoundException.class,
-                () -> service.delete(notExistingEmail, "ignored_pass")
-        );
+        thenUserDeleted("user@email");
     }
 
     @Test
     void delete_should_throw_IllegalPasswordException() {
-        String pass = "password";
-        String email = "email";
+        givenRepositoryWithUser("user@email");
+        givenUserWithPassword("password");
 
-        when(userRepository.findPasswordByEmail(email))
-                .thenReturn(Optional.of(pass));
-        when(passwordEncoder.matches(pass, pass))
-                .thenReturn(false);
-
-        verifyNoMoreInteractions(userRepository);
-
-        assertThrows(
-                IllegalPasswordException.class,
-                () -> service.delete(email, pass)
-        );
+        thenDeleteUserWithPasswordShouldThrow("user@email", "wrong_pass",
+                IllegalPasswordException.class);
+        thenUserExists("user@email");
     }
 
     @Test
-    void assemble() {
-        String pass = "password";
-        String encodedPass = "encoded_password";
+    void delete_should_throw_NotFoundException() {
+        givenEmptyRepository();
 
-        when(registrationForm.password()).thenReturn(pass);
+        thenDeleteUserWithPasswordShouldThrow("any_user@email", "any_pass",
+                UserNotFoundException.class);
+    }
 
-        when(passwordEncoder.encode(pass))
-                .thenReturn(encodedPass);
-        when(userMapper.assemble(registrationForm, encodedPass))
-                .thenReturn(user);
+    @Test
+    void save() {
+        givenRegistrationForm("user2@email", "password");
 
-        service.save(registrationForm);
+        whenSaveUserByForm();
 
-        verify(userRepository, times(1))
-                .save(user);
+        thenUserExists("user2@email");
+    }
+
+    @Test
+    void save_should_throw_EmailAlreadyExistsException() {
+        givenRepositoryWithUser("user@email");
+        givenRegistrationForm("user@email", "password");
+
+        thenSaveUserByFormShouldThrowEmailAlreadyExistsException();
     }
 
     @Test
     void putPassword() {
-        String email = "email";
-        String oldOriginalPass = "password";
-        String oldPass = "password";
-        String newPass = "new_pass";
-        String encodedNewPass = "encoded_new_pass";
+        givenRepositoryWithUser("user@email");
+        givenUserWithPassword("old_pass");
 
-        when(userRepository.findPasswordByEmail(email))
-                .thenReturn(Optional.of(oldOriginalPass));
-        when(passwordEncoder.matches(oldOriginalPass, oldPass))
-                .thenReturn(true);
-        when(passwordEncoder.encode(newPass))
-                .thenReturn(encodedNewPass);
+        whenPutPassword("user@email", "old_pass", "new_pass");
 
-        assertDoesNotThrow(
-                () -> service.putPassword(email, oldPass, newPass)
-        );
-
-        verify(userRepository, times(1))
-                .updateUserPasswordByEmail(encodedNewPass, email);
+        thenUserPasswordShouldBe("user@email", "new_pass");
     }
 
     @Test
     void putPassword_should_throw_UserNotFoundException() {
-        String notExistingEmail = "not_existing";
+        givenEmptyRepository();
 
-        when(userRepository.findPasswordByEmail(notExistingEmail))
-                .thenReturn(Optional.empty());
-
-        verifyNoMoreInteractions(userRepository);
-
-        assertThrows(
-                UserNotFoundException.class,
-                () -> service.putPassword(notExistingEmail, "ignored_pass", "ignored_pass")
+        thenPutPasswordShouldThrowUserNotFoundException(
+                "user@email", "old_pass", "new_pass",
+                UserNotFoundException.class
         );
-        verifyNoInteractions(passwordEncoder);
     }
 
     @Test
     void putPassword_should_throw_IllegalPasswordException() {
-        String email = "email";
-        String oldOriginalPass = "oldOriginalPassword";
-        String oldPass = "oldPassword";
+        givenRepositoryWithUser("user@email");
+        givenUserWithPassword("old_pass");
 
-        when(userRepository.findPasswordByEmail(email))
-                .thenReturn(Optional.of(oldOriginalPass));
-        when(passwordEncoder.matches(oldPass, oldOriginalPass))
-                .thenReturn(false);
-
-        verifyNoMoreInteractions(userRepository, passwordEncoder);
-
-        assertThrows(
-                IllegalPasswordException.class,
-                () -> service.putPassword(email, oldPass, "ignored_pass")
+        thenPutPasswordShouldThrowUserNotFoundException(
+                "user@email", "wrong_pass", "new_pass",
+                IllegalPasswordException.class
         );
     }
 
     @Test
-    void change_should_update_dynamic() {
-        String email = "email";
+    void change() {
+        givenRepositoryWithUser("user@email");
+        givenChangeUserForm();
 
-        when(userRepository.findByEmail(email))
-                .thenReturn(Optional.of(user));
+        whenChangeUser("user@email");
 
-        service.change(email, changeUserForm);
-
-        verify(userMapper, times(1))
-                .change(user, changeUserForm);
+        thenMapperChangeShouldBeCalled("user@email");
     }
 
     @Test
-    void change_should_throw_UserNotFoundException() {
-        String notExistingEmail = "not_existing_email";
+    void change_should_throw() {
+        givenEmptyRepository();
+        givenChangeUserForm();
 
-        when(userRepository.findByEmail(notExistingEmail))
-                .thenReturn(Optional.empty());
-
-        assertThrows(
-                UserNotFoundException.class,
-                () -> service.change(notExistingEmail, changeUserForm)
-        );
+        thenChangeUserShouldThrowException("user@email");
     }
 
     @Test
-    void changeNotificationSettings_should_throw_UserNotFoundException() {
-        String notExistingEmail = "not_existing_email";
+    void changeNotificationSettings() {
+        givenRepositoryWithUser("user@email");
+        givenСhangeNotificationSettingsForm();
 
-        when(userRepository.findByEmail(notExistingEmail))
-                .thenReturn(Optional.empty());
+        whenChangeNotificationSettingsOfUser("user@email");
 
-        assertThrows(
-                UserNotFoundException.class,
-                () -> service.changeNotificationSettings(notExistingEmail, changeNotificationSettingsForm)
-        );
+        thenMapperChangeNotificationSettingsShouldBeCalled("user@email");
     }
 
     @Test
-    void changeNotificationSettings_should_update_dynamic() {
-        String email = "email";
+    void changeNotificationSettings_should_throw() {
+        givenEmptyRepository();
+        givenСhangeNotificationSettingsForm();
 
-        when(userRepository.findByEmail(email))
-                .thenReturn(Optional.of(user));
-        when(user.getNotificationSettings())
-                .thenReturn(notificationSettings);
-
-        service.changeNotificationSettings(email, changeNotificationSettingsForm);
-
-        verify(userMapper, only())
-                .changeNotificationSettings(notificationSettings, changeNotificationSettingsForm);
+        thenChangeNotificationSettingsOfUserShouldThrowException("user@email");
     }
 
     @Test
     void clearNotEnabledWithNoTokens() {
-        int count = 100500;
+        givenRepositoryWithNotEnabledUsers(5);
+        givenRepositoryWithUser("user@email");
 
-        when(userRepository.deleteNotEnabledWithNoTokens())
-                .thenReturn(count);
+        thenClearNotEnabledWithNoTokensShouldReturn(5);
+    }
 
+    private void givenChangeUserForm() {
+        changeUserForm = Instancio.of(ChangeUserForm.class).create();
+    }
+
+    private void givenRepositoryWithUser(String username) {
+        user = Instancio.of(User.class)
+                .set(field(User::getEmail), username)
+                .create();
+        userRepository.save(user);
+    }
+
+    private void givenEmptyRepository() {
+        userRepository.deleteAll();
+    }
+
+    private void givenUserWithPassword(String password) {
+        user.setPassword(password);
+    }
+
+    private void givenRegistrationForm(String username, String password) {
+        registrationForm = Instancio.of(RegistrationForm.class)
+                .set(field(RegistrationForm::email), username)
+                .set(field(RegistrationForm::password), password)
+                .create();
+        User newUser = Instancio.of(User.class)
+                .set(field(User::getEmail), username)
+                .set(field(User::getPassword), password)
+                .create();
+        when(userMapper.assemble(registrationForm, password))
+                .thenReturn(newUser);
+    }
+
+    private void givenСhangeNotificationSettingsForm() {
+        changeNotificationSettingsForm = Instancio.of(ChangeNotificationSettingsForm.class)
+                .create();
+    }
+
+    private void givenRepositoryWithNotEnabledUsers(int count) {
+        for (int i = 0; i < count; i++) {
+            userRepository.save(Instancio.of(User.class)
+                    .set(field(User::isEnabled), false)
+                    .set(field(User::getToken), null)
+                    .create());
+        }
+    }
+
+    private void whenChangeNotificationSettingsOfUser(String username) {
+        service.changeNotificationSettings(username, changeNotificationSettingsForm);
+    }
+
+    private void whenSaveUserByForm() {
+        service.save(registrationForm);
+    }
+
+    private void whenDeleteUserWithPassword(String username, String password) {
+        service.delete(username, password);
+    }
+
+    private void whenPutPassword(String username, String oldPass, String newPass) {
+        service.putPassword(username, oldPass, newPass);
+    }
+
+    private void whenChangeUser(String username) {
+        service.change(username, changeUserForm);
+    }
+
+    private void thenMapperChangeShouldBeCalled(String s) {
+        verify(userMapper, times(1))
+                .change(user, changeUserForm);
+    }
+
+    private void thenUserPasswordShouldBe(String username, String password) {
+        User user = userRepository.findByEmail(username)
+                .orElseThrow();
+        assertEquals(password, user.getPassword());
+    }
+
+    private void thenGetOneShouldReturnUser(String username) {
+        User actual = service.getOne(username);
+        assertEquals(user, actual);
+    }
+
+    private void thenGetOneShouldThrowNotFoundException(String username) {
+        assertThrows(
+                UserNotFoundException.class,
+                () -> service.getOne(username)
+        );
+    }
+
+    private void thenUserDeleted(String username) {
+        boolean userExists = userRepository.existsByEmail(username);
+        assertFalse(userExists);
+    }
+
+    private void thenDeleteUserWithPasswordShouldThrow(String username, String password, Class<? extends Throwable> exceptionClass) {
+        assertThrows(
+                exceptionClass,
+                () -> whenDeleteUserWithPassword(username, password)
+        );
+    }
+
+    private void thenUserExists(String username) {
+        boolean userExists = userRepository.existsByEmail(username);
+        assertTrue(userExists);
+    }
+
+    private void thenSaveUserByFormShouldThrowEmailAlreadyExistsException() {
+        assertThrows(
+                EmailAlreadyExistsException.class,
+                this::whenSaveUserByForm
+        );
+    }
+
+    private void thenPutPasswordShouldThrowUserNotFoundException(String username, String oldPass, String newPass,
+                                                                 Class<? extends Throwable> exceptionClass) {
+        assertThrows(
+                exceptionClass,
+                () -> whenPutPassword(username, oldPass, newPass)
+        );
+    }
+
+    private void thenChangeUserShouldThrowException(String username) {
+        assertThrows(
+                UserNotFoundException.class,
+                () -> whenChangeUser(username)
+        );
+    }
+
+    private void thenMapperChangeNotificationSettingsShouldBeCalled(String username) {
+        verify(userMapper, times(1))
+                .changeNotificationSettings(user.getNotificationSettings(), changeNotificationSettingsForm);
+    }
+
+    private void thenChangeNotificationSettingsOfUserShouldThrowException(String username) {
+        assertThrows(
+                UserNotFoundException.class,
+                () -> whenChangeNotificationSettingsOfUser(username)
+        );
+    }
+
+    private void thenClearNotEnabledWithNoTokensShouldReturn(int count) {
         int actual = service.clearNotEnabledWithNoTokens();
-
         assertEquals(count, actual);
     }
 }
