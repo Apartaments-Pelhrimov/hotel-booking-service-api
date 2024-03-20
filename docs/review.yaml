@@ -1,0 +1,135 @@
+openapi: "3.0.3"
+info:
+  title: "hotel_booking_service API"
+  description: "hotel_booking_service API"
+  version: "1.0.0"
+servers:
+  - url: "https://localhost"
+paths:
+  /api/apartments/{apartmentId}/reviews:
+    get:
+      summary: "GET api/apartments/{apartmentId}/reviews"
+      operationId: "getAllByApartment"
+      parameters:
+        - name: "apartmentId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReviewDto"
+    post:
+      security:
+        - bearerAuth: [ ]
+      summary: "POST api/apartments/{apartmentId}/reviews"
+      operationId: "create"
+      parameters:
+        - name: "apartmentId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateReviewForm"
+        required: true
+      responses:
+        "201":
+          description: "Created"
+  /api/reviews/latest:
+    get:
+      summary: "GET api/reviews/latest"
+      operationId: "getAllLatest"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReviewDto"
+  /api/reviews/{id}:
+    delete:
+      security:
+        - bearerAuth: [ ]
+      summary: "DELETE api/reviews/{id}"
+      operationId: "delete"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        "204":
+          description: "No Content"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    UserDto:
+      type: "object"
+      properties:
+        firstName:
+          type: "string"
+        lastName:
+          type: "string"
+        photo:
+          type: "string"
+        role:
+          type: "string"
+    ReviewDto:
+      type: "object"
+      properties:
+        user:
+          $ref: "#/components/schemas/UserDto"
+        createdAt:
+          type: "string"
+          format: "date-time"
+        rate:
+          type: "number"
+          format: "double"
+        body:
+          type: "string"
+    CreateReviewForm:
+      type: "object"
+      properties:
+        body:
+          type: "string"
+        rate:
+          type: "number"
+          format: "double"
+        apartmentId:
+          type: "integer"
+          format: "int64"
+        userEmail:
+          type: "string"
+    ApiError:
+      type: "object"
+      properties:
+        timestamp:
+          type: "string"
+        status:
+          type: "integer"
+        error:
+          type: "string"
+        message:
+          type: "string"
+        fieldErrors:
+          type: "array"
+          items:
+            type: "object"
+            properties:
+              field:
+                type: "string"
+              message:
+                type: "string"
