@@ -40,6 +40,7 @@
         <jakarta.mail.version>2.0.1</jakarta.mail.version>
         <instancio.version>2.9.0</instancio.version>
         <biweekly.version>0.6.8</biweekly.version>
+        <spring-starter-hateoas.version>3.2.3</spring-starter-hateoas.version>
     </properties>
 
     <dependencies>
@@ -71,6 +72,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-hateoas</artifactId>
+            <version>${spring-starter-hateoas.version}</version>
         </dependency>
 
         <!--        DB dependencies         -->
