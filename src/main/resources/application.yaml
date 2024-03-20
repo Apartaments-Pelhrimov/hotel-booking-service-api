@@ -69,8 +69,8 @@ localized-bundles.paths:
 
 app:
   name: Apartmány Pelhřimov service
-  version: 0.0.1-SNAPSHOT
+  version: 0.1-SNAPSHOT
   contact-link: https://apartmany-pe.cz/
   email:
   developer-emails:
-  locale:
+  locale: cs_CZ
