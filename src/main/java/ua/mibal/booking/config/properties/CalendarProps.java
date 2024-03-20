@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. Mykhailo Balakhon mailto:9mohapx9@gmail.com
+ * Copyright (c) 2024. Mykhailo Balakhon mailto:9mohapx9@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +18,6 @@ package ua.mibal.booking.config.properties;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import net.fortuna.ical4j.model.property.ProdId;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
@@ -35,8 +32,7 @@ import java.time.ZoneId;
 @ConfigurationProperties("calendar")
 public record CalendarProps(
         ZoneId zoneId,
-        ReservationDateTimeProps reservationDateTime,
-        ICalProps iCal
+        ReservationDateTimeProps reservationDateTime
 ) {
 
     @Validated
@@ -57,22 +53,6 @@ public record CalendarProps(
 
         public LocalTime reservationEnd() {
             return LocalTime.of(end, 0);
-        }
-    }
-
-    @Validated
-    @ConfigurationProperties("calendar.i-cal")
-    public static final class ICalProps {
-        @NotNull
-        @NotBlank
-        private final String prodId;
-
-        public ICalProps(@NotNull @NotBlank String prodId) {
-            this.prodId = prodId;
-        }
-
-        public ProdId prodId() {
-            return new ProdId("-//" + prodId + "//iCal4j 1.0//EN");
         }
     }
 }

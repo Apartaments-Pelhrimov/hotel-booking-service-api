@@ -35,7 +35,6 @@
         <java.version>17</java.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <awssdk.version>2.21.27</awssdk.version>
-        <ical4j.version>3.2.14</ical4j.version>
         <springdoc.version>2.2.0</springdoc.version>
         <jakarta.mail.version>2.0.1</jakarta.mail.version>
         <instancio.version>2.9.0</instancio.version>
@@ -99,11 +98,6 @@
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>s3</artifactId>
             <version>${awssdk.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mnode.ical4j</groupId>
-            <artifactId>ical4j</artifactId>
-            <version>${ical4j.version}</version>
         </dependency>
         <dependency>
             <groupId>net.sf.biweekly</groupId>

@@ -42,7 +42,6 @@ import ua.mibal.booking.domain.User;
         ApplicationProps.class,
         CalendarProps.class,
         CalendarProps.ReservationDateTimeProps.class,
-        CalendarProps.ICalProps.class,
         TokenProps.class,
         LocalizedMessagesProps.class,
 })

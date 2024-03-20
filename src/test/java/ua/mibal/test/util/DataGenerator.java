@@ -16,8 +16,6 @@
 
 package ua.mibal.test.util;
 
-import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.component.VEvent;
 import org.instancio.Instancio;
 import org.instancio.settings.Keys;
 import org.instancio.settings.Settings;
@@ -413,12 +411,5 @@ public class DataGenerator {
                 .entrySet()
                 .stream()
                 .map(entry -> Arguments.of(entry.getKey(), entry.getValue()));
-    }
-
-    public static Stream<Arguments> testICalVEvents() {
-        VEvent vEvent = new VEvent(new Date(new Date()), new Date(new Date()), "EVENT NAME 228");
-        return Stream.of(
-                Arguments.of(vEvent, Instancio.create(LocalDateTime.class), Instancio.create(LocalDateTime.class))
-        );
     }
 }
