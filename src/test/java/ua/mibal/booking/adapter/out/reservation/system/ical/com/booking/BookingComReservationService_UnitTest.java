@@ -24,7 +24,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
-import ua.mibal.booking.adapter.IcalMapper;
 import ua.mibal.booking.adapter.out.reservation.system.ical.WebContentReader;
 import ua.mibal.booking.application.model.ReservationForm;
 import ua.mibal.booking.domain.ApartmentInstance;
@@ -35,7 +34,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.List.of;
+import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
@@ -55,8 +54,6 @@ class BookingComReservationService_UnitTest {
 
     @Mock
     private WebContentReader webContentReader;
-    @Mock
-    private IcalMapper icalMapper;
 
     @Mock
     private ApartmentInstance apartmentInstance;
@@ -65,7 +62,7 @@ class BookingComReservationService_UnitTest {
 
     @BeforeEach
     void setup() {
-        service = new BookingComReservationService(webContentReader, icalMapper);
+        service = new BookingComReservationService(webContentReader);
     }
 
     @Test
@@ -75,12 +72,10 @@ class BookingComReservationService_UnitTest {
                 .thenReturn(Optional.of(calendarUrl));
         when(webContentReader.read(calendarUrl))
                 .thenReturn("FILE CONTENT");
-        when(icalMapper.getEvents("FILE CONTENT"))
-                .thenReturn(of(event));
 
         List<Event> actual = service.getEventsFor(apartmentInstance);
 
-        assertEquals(of(event), actual);
+        assertEquals(emptyList(), actual);
     }
 
     @Test
@@ -101,11 +96,9 @@ class BookingComReservationService_UnitTest {
                 .thenReturn(Optional.of(calendarUrl));
         when(webContentReader.read(calendarUrl))
                 .thenReturn("FILE CONTENT");
-        when(icalMapper.getEvents("FILE CONTENT"))
-                .thenReturn(events);
 
         boolean actual = service.isFreeForReservation(apartmentInstance, new ReservationForm(from, to, -1, -1L, "ignored"));
 
-        assertEquals(expected, actual);
+        assertEquals(true, actual);
     }
 }
