@@ -13,12 +13,25 @@ paths:
       summary: "GET api/users/me"
       operationId: "getOne"
       responses:
-        "200":
+        200:
           description: "OK"
           content:
             '*/*':
               schema:
                 $ref: "#/components/schemas/UserDto"
+        404:
+          description: "NOT FOUND"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        403:
+          description: "FORBIDDEN"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
   /api/users/me/account:
     get:
       security:
@@ -26,12 +39,24 @@ paths:
       summary: "GET api/users/me/account"
       operationId: "getAccount"
       responses:
-        "200":
+        200:
           description: "OK"
           content:
             '*/*':
               schema:
                 $ref: "#/components/schemas/UserAccountDto"
+        404:
+          description: "NOT FOUND"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        403:
+          description: "FORBIDDEN"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
     delete:
       security:
         - bearerAuth: [ ]
@@ -44,8 +69,20 @@ paths:
               $ref: "#/components/schemas/DeleteMeDto"
         required: true
       responses:
-        "204":
+        204:
           description: "No Content"
+        404:
+          description: "NOT FOUND"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        403:
+          description: "FORBIDDEN"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
     patch:
       security:
         - bearerAuth: [ ]
@@ -58,8 +95,20 @@ paths:
               $ref: "#/components/schemas/ChangeUserForm"
         required: true
       responses:
-        "204":
+        204:
           description: "No Content"
+        404:
+          description: "NOT FOUND"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        403:
+          description: "FORBIDDEN"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
   /api/users/me/account/password:
     put:
       security:
@@ -73,8 +122,20 @@ paths:
               $ref: "#/components/schemas/ChangePasswordDto"
         required: true
       responses:
-        "204":
+        204:
           description: "No Content"
+        404:
+          description: "NOT FOUND"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        403:
+          description: "FORBIDDEN"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
   /api/users/me/account/notifications:
     patch:
       security:
@@ -88,8 +149,20 @@ paths:
               $ref: "#/components/schemas/ChangeNotificationSettingsForm"
         required: true
       responses:
-        "204":
+        204:
           description: "No Content"
+        404:
+          description: "NOT FOUND"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        403:
+          description: "FORBIDDEN"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
 components:
   securitySchemes:
     bearerAuth:
@@ -166,3 +239,25 @@ components:
           type: "boolean"
         receiveNewsEmails:
           type: "boolean"
+    ApiError:
+      type: "object"
+      properties:
+        timestamp:
+          type: "string"
+        status:
+          type: "integer"
+        error:
+          type: "string"
+        message:
+          type: "string"
+        fieldErrors:
+          type: "array"
+          items:
+            type: "object"
+            properties:
+              field:
+                type: "string"
+              message:
+                type: "string"
+
+
