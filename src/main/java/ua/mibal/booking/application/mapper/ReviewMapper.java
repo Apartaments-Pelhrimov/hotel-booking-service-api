@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.adapter.in.web.mapper;
+package ua.mibal.booking.application.mapper;
 
 import org.mapstruct.Mapper;
-import org.springframework.data.domain.Page;
-import ua.mibal.booking.adapter.in.web.mapper.linker.PhotoLinker;
-import ua.mibal.booking.adapter.in.web.model.CommentDto;
-import ua.mibal.booking.domain.Comment;
+import ua.mibal.booking.application.model.CreateReviewForm;
+import ua.mibal.booking.domain.Review;
 
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
@@ -28,13 +26,8 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Mapper(componentModel = SPRING, uses = {
-        PhotoLinker.class, UserDtoMapper.class})
-public interface CommentDtoMapper {
+@Mapper(componentModel = SPRING)
+public interface ReviewMapper {
 
-    default Page<CommentDto> toDtos(Page<Comment> comments) {
-        return comments.map(this::toDto);
-    }
-
-    CommentDto toDto(Comment comment);
+    Review assemble(CreateReviewForm createReviewForm);
 }

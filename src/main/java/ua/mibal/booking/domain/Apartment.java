@@ -71,9 +71,9 @@ public class Apartment {
     private ApartmentOptions options = DEFAULT;
 
     @Formula("""
-                 (select avg(c.rate)
-                    from comments c
-                  where c.apartment_id = id)
+                 (select avg(r.rate)
+                    from reviews r
+                  where r.apartment_id = id)
             """)
     private Double rating;
 
@@ -128,7 +128,7 @@ public class Apartment {
 
     @OneToMany(mappedBy = "apartment")
     @Setter(PRIVATE)
-    private List<Comment> comments = new ArrayList<>();
+    private List<Review> reviews = new ArrayList<>();
 
     public void addApartmentInstance(ApartmentInstance apartmentInstance) {
         apartmentInstance.setApartment(this);
@@ -142,15 +142,15 @@ public class Apartment {
         }
     }
 
-    public void addComment(Comment comment) {
-        comment.setApartment(this);
-        this.comments.add(comment);
+    public void addReview(Review review) {
+        review.setApartment(this);
+        this.reviews.add(review);
     }
 
-    public void removeComment(Comment comment) {
-        if (this.comments.contains(comment)) {
-            this.comments.remove(comment);
-            comment.setApartment(null);
+    public void removeReview(Review review) {
+        if (this.reviews.contains(review)) {
+            this.reviews.remove(review);
+            review.setApartment(null);
         }
     }
 

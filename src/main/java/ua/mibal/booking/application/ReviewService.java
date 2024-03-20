@@ -22,15 +22,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.application.exception.ApartmentNotFoundException;
-import ua.mibal.booking.application.exception.UserHasNoAccessToCommentException;
-import ua.mibal.booking.application.exception.UserHasNoAccessToCommentsException;
-import ua.mibal.booking.application.mapper.CommentMapper;
-import ua.mibal.booking.application.model.CreateCommentForm;
+import ua.mibal.booking.application.exception.UserHasNoAccessToReviewException;
+import ua.mibal.booking.application.exception.UserHasNoAccessToReviewsException;
+import ua.mibal.booking.application.mapper.ReviewMapper;
+import ua.mibal.booking.application.model.CreateReviewForm;
 import ua.mibal.booking.application.port.jpa.ApartmentRepository;
-import ua.mibal.booking.application.port.jpa.CommentRepository;
+import ua.mibal.booking.application.port.jpa.ReviewRepository;
 import ua.mibal.booking.application.port.jpa.UserRepository;
 import ua.mibal.booking.domain.Apartment;
-import ua.mibal.booking.domain.Comment;
+import ua.mibal.booking.domain.Review;
 import ua.mibal.booking.domain.User;
 
 /**
@@ -39,55 +39,55 @@ import ua.mibal.booking.domain.User;
  */
 @RequiredArgsConstructor
 @Service
-public class CommentService {
-    private final CommentRepository commentRepository;
-    private final CommentMapper commentMapper;
+public class ReviewService {
+    private final ReviewRepository reviewRepository;
+    private final ReviewMapper reviewMapper;
     private final UserRepository userRepository;
     private final ApartmentRepository apartmentRepository;
 
-    public Page<Comment> getAllByApartment(Long apartmentId, Pageable pageable) {
-        return commentRepository.findByApartmentIdFetchUser(apartmentId, pageable);
+    public Page<Review> getAllByApartment(Long apartmentId, Pageable pageable) {
+        return reviewRepository.findByApartmentIdFetchUser(apartmentId, pageable);
     }
 
     @Transactional
-    public void create(CreateCommentForm form) {
+    public void create(CreateReviewForm form) {
         validateUserHasReservationWithThisApartment(form);
-        Comment newComment = assembleCommentBy(form);
-        commentRepository.save(newComment);
+        Review newReview = assembleReviewBy(form);
+        reviewRepository.save(newReview);
     }
 
     public void delete(Long id, String userEmail) {
-        validateUserHasComment(userEmail, id);
-        commentRepository.deleteById(id);
+        validateUserHasReview(userEmail, id);
+        reviewRepository.deleteById(id);
     }
 
-    public Page<Comment> getAllLatest(Pageable pageable) {
-        return commentRepository.findLatestFetchUser(pageable);
+    public Page<Review> getAllLatest(Pageable pageable) {
+        return reviewRepository.findLatestFetchUser(pageable);
     }
 
-    private Comment assembleCommentBy(CreateCommentForm form) {
-        Comment newComment = commentMapper.assemble(form);
+    private Review assembleReviewBy(CreateReviewForm form) {
+        Review newReview = reviewMapper.assemble(form);
         Apartment apartmentRef = apartmentRepository.getReferenceById(form.getApartmentId());
         User userRef = userRepository.getReferenceByEmail(form.getUserEmail());
-        newComment.setApartment(apartmentRef);
-        newComment.setUser(userRef);
-        return newComment;
+        newReview.setApartment(apartmentRef);
+        newReview.setUser(userRef);
+        return newReview;
     }
 
-    private void validateUserHasReservationWithThisApartment(CreateCommentForm form) {
+    private void validateUserHasReservationWithThisApartment(CreateReviewForm form) {
         Long apartmentId = form.getApartmentId();
         String userEmail = form.getUserEmail();
         if (!apartmentRepository.existsById(apartmentId)) {
             throw new ApartmentNotFoundException(apartmentId);
         }
         if (!userRepository.userHasReservationWithApartment(userEmail, apartmentId)) {
-            throw new UserHasNoAccessToCommentsException();
+            throw new UserHasNoAccessToReviewsException();
         }
     }
 
-    private void validateUserHasComment(String userEmail, Long commentId) {
-        if (!userRepository.userHasComment(userEmail, commentId)) {
-            throw new UserHasNoAccessToCommentException();
+    private void validateUserHasReview(String userEmail, Long reviewId) {
+        if (!userRepository.userHasReview(userEmail, reviewId)) {
+            throw new UserHasNoAccessToReviewException();
         }
     }
 }

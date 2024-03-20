@@ -25,15 +25,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import ua.mibal.booking.application.exception.ApartmentNotFoundException;
-import ua.mibal.booking.application.exception.UserHasNoAccessToCommentException;
-import ua.mibal.booking.application.exception.UserHasNoAccessToCommentsException;
-import ua.mibal.booking.application.mapper.CommentMapper;
-import ua.mibal.booking.application.model.CreateCommentForm;
+import ua.mibal.booking.application.exception.UserHasNoAccessToReviewException;
+import ua.mibal.booking.application.exception.UserHasNoAccessToReviewsException;
+import ua.mibal.booking.application.mapper.ReviewMapper;
+import ua.mibal.booking.application.model.CreateReviewForm;
 import ua.mibal.booking.application.port.jpa.ApartmentRepository;
-import ua.mibal.booking.application.port.jpa.CommentRepository;
+import ua.mibal.booking.application.port.jpa.ReviewRepository;
 import ua.mibal.booking.application.port.jpa.UserRepository;
 import ua.mibal.booking.domain.Apartment;
-import ua.mibal.booking.domain.Comment;
+import ua.mibal.booking.domain.Review;
 import ua.mibal.booking.domain.User;
 import ua.mibal.test.annotation.UnitTest;
 
@@ -52,23 +52,23 @@ import static org.mockito.Mockito.when;
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @UnitTest
-class CommentService_UnitTest {
+class ReviewService_UnitTest {
 
-    private CommentService service;
+    private ReviewService service;
 
     @Mock
-    private CommentRepository commentRepository;
+    private ReviewRepository reviewRepository;
     @Mock
-    private CommentMapper commentMapper;
+    private ReviewMapper reviewMapper;
     @Mock
     private UserRepository userRepository;
     @Mock
     private ApartmentRepository apartmentRepository;
 
     @Mock
-    private Comment comment;
+    private Review review;
     @Mock
-    private CreateCommentForm createCommentForm;
+    private CreateReviewForm createReviewForm;
     @Mock
     private Apartment apartment;
     @Mock
@@ -76,7 +76,7 @@ class CommentService_UnitTest {
 
     @BeforeEach
     void setup() {
-        service = new CommentService(commentRepository, commentMapper, userRepository, apartmentRepository);
+        service = new ReviewService(reviewRepository, reviewMapper, userRepository, apartmentRepository);
     }
 
     @Test
@@ -84,14 +84,14 @@ class CommentService_UnitTest {
         Long apartmentId = 1L;
         Pageable pageable = Pageable.ofSize(5);
 
-        Page<Comment> commentPage = new PageImpl<>(List.of(comment, comment));
+        Page<Review> reviewPage = new PageImpl<>(List.of(review, review));
 
-        when(commentRepository.findByApartmentIdFetchUser(apartmentId, pageable))
-                .thenReturn(commentPage);
+        when(reviewRepository.findByApartmentIdFetchUser(apartmentId, pageable))
+                .thenReturn(reviewPage);
 
         var actual = service.getAllByApartment(apartmentId, pageable);
 
-        assertThat(actual).containsOnly(comment, comment);
+        assertThat(actual).containsOnly(review, review);
     }
 
     @Test
@@ -99,9 +99,9 @@ class CommentService_UnitTest {
         String email = "email";
         Long apartmentId = 1L;
 
-        when(createCommentForm.getApartmentId())
+        when(createReviewForm.getApartmentId())
                 .thenReturn(apartmentId);
-        when(createCommentForm.getUserEmail())
+        when(createReviewForm.getUserEmail())
                 .thenReturn(email);
 
         when(apartmentRepository.existsById(apartmentId))
@@ -109,17 +109,17 @@ class CommentService_UnitTest {
         when(userRepository.userHasReservationWithApartment(email, apartmentId))
                 .thenReturn(true);
 
-        when(commentMapper.assemble(createCommentForm))
-                .thenReturn(comment);
+        when(reviewMapper.assemble(createReviewForm))
+                .thenReturn(review);
         when(apartmentRepository.getReferenceById(apartmentId))
                 .thenReturn(apartment);
         when(userRepository.getReferenceByEmail(email))
                 .thenReturn(user);
 
-        service.create(createCommentForm);
+        service.create(createReviewForm);
 
-        verify(comment, times(1)).setApartment(apartment);
-        verify(comment, times(1)).setUser(user);
+        verify(review, times(1)).setApartment(apartment);
+        verify(review, times(1)).setUser(user);
     }
 
     @Test
@@ -127,28 +127,28 @@ class CommentService_UnitTest {
         String email = "email";
         Long apartmentId = 1L;
 
-        when(createCommentForm.getApartmentId())
+        when(createReviewForm.getApartmentId())
                 .thenReturn(apartmentId);
-        when(createCommentForm.getUserEmail())
+        when(createReviewForm.getUserEmail())
                 .thenReturn(email);
 
         when(apartmentRepository.existsById(apartmentId))
                 .thenReturn(false);
 
         assertThrows(ApartmentNotFoundException.class,
-                () -> service.create(createCommentForm));
+                () -> service.create(createReviewForm));
 
-        verifyNoInteractions(comment);
+        verifyNoInteractions(review);
     }
 
     @Test
-    void create_should_throw_UserHasNoAccessToCommentsException() {
+    void create_should_throw_UserHasNoAccessToReviewsException() {
         String email = "email";
         Long apartmentId = 1L;
 
-        when(createCommentForm.getApartmentId())
+        when(createReviewForm.getApartmentId())
                 .thenReturn(apartmentId);
-        when(createCommentForm.getUserEmail())
+        when(createReviewForm.getUserEmail())
                 .thenReturn(email);
 
         when(apartmentRepository.existsById(apartmentId))
@@ -156,10 +156,10 @@ class CommentService_UnitTest {
         when(userRepository.userHasReservationWithApartment(email, apartmentId))
                 .thenReturn(false);
 
-        assertThrows(UserHasNoAccessToCommentsException.class,
-                () -> service.create(createCommentForm));
+        assertThrows(UserHasNoAccessToReviewsException.class,
+                () -> service.create(createReviewForm));
 
-        verifyNoInteractions(comment);
+        verifyNoInteractions(review);
     }
 
     @ParameterizedTest
@@ -169,11 +169,11 @@ class CommentService_UnitTest {
             "1010101001, email3",
     })
     void delete(Long id, String email) {
-        when(userRepository.userHasComment(email, id)).thenReturn(true);
+        when(userRepository.userHasReview(email, id)).thenReturn(true);
 
         service.delete(id, email);
 
-        verify(commentRepository, times(1))
+        verify(reviewRepository, times(1))
                 .deleteById(id);
 
     }
@@ -184,13 +184,13 @@ class CommentService_UnitTest {
             "2,          email2",
             "1010101001, email3",
     })
-    void delete_should_throw_UserHasNoAccessToComment(Long id, String email) {
-        when(userRepository.userHasComment(email, id)).thenReturn(false);
+    void delete_should_throw_UserHasNoAccessToReview(Long id, String email) {
+        when(userRepository.userHasReview(email, id)).thenReturn(false);
 
         assertThrows(
-                UserHasNoAccessToCommentException.class,
+                UserHasNoAccessToReviewException.class,
                 () -> service.delete(id, email)
         );
-        verify(commentRepository, never()).deleteById(id);
+        verify(reviewRepository, never()).deleteById(id);
     }
 }

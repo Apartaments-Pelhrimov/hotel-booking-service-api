@@ -34,12 +34,12 @@ import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.domain.ApartmentOptions;
 import ua.mibal.booking.domain.Bed;
-import ua.mibal.booking.domain.Comment;
 import ua.mibal.booking.domain.Event;
 import ua.mibal.booking.domain.NotificationSettings;
 import ua.mibal.booking.domain.Price;
 import ua.mibal.booking.domain.Reservation;
 import ua.mibal.booking.domain.ReservationDetails;
+import ua.mibal.booking.domain.Review;
 import ua.mibal.booking.domain.TurningOffTime;
 import ua.mibal.booking.domain.User;
 import ua.mibal.test.model.TestEvent;
@@ -248,23 +248,23 @@ public class DataGenerator {
     public static User testUser() {
         return Instancio.of(User.class)
                 .set(field(User::getId), null)
-                .set(field(User::getComments), null)
+                .set(field(User::getReviews), null)
                 .set(field(User::getReservations), null)
                 .create();
     }
 
-    public static Comment testComment() {
-        return Instancio.of(Comment.class)
-                .set(field(Comment::getId), null)
-                .set(field(Comment::getUser), null)
-                .set(field(Comment::getApartment), null)
+    public static Review testReview() {
+        return Instancio.of(Review.class)
+                .set(field(Review::getId), null)
+                .set(field(Review::getUser), null)
+                .set(field(Review::getApartment), null)
                 .create();
     }
 
     public static Apartment testApartment() {
         return Instancio.of(Apartment.class)
                 .set(field(Apartment::getId), null)
-                .set(field(Apartment::getComments), null)
+                .set(field(Apartment::getReviews), null)
                 .set(field(Apartment::getApartmentInstances), null)
                 .create();
     }

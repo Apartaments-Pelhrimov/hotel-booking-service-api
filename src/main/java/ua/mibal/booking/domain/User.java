@@ -100,7 +100,7 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user")
     @Setter(PRIVATE)
-    private List<Comment> comments = new ArrayList<>();
+    private List<Review> reviews = new ArrayList<>();
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
     private Token token;
@@ -121,15 +121,15 @@ public class User implements UserDetails {
         }
     }
 
-    public void addComment(Comment comment) {
-        comment.setUser(this);
-        this.comments.add(comment);
+    public void addReview(Review review) {
+        review.setUser(this);
+        this.reviews.add(review);
     }
 
-    public void removeComment(Comment comment) {
-        if (this.comments.contains(comment)) {
-            this.comments.remove(comment);
-            comment.setUser(null);
+    public void removeReview(Review review) {
+        if (this.reviews.contains(review)) {
+            this.reviews.remove(review);
+            review.setUser(null);
         }
     }
 

@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import ua.mibal.booking.domain.Apartment;
-import ua.mibal.booking.domain.Comment;
+import ua.mibal.booking.domain.Review;
 import ua.mibal.test.annotation.JpaTest;
 
 import java.util.List;
@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static ua.mibal.test.util.DataGenerator.testApartment;
-import static ua.mibal.test.util.DataGenerator.testComment;
+import static ua.mibal.test.util.DataGenerator.testReview;
 import static ua.mibal.test.util.DataGenerator.testUser;
 
 /**
@@ -80,7 +80,7 @@ class ApartmentJpaRepository_IntegrationTest {
         assertThrows(LazyInitializationException.class,
                 () -> managedApartment.getApartmentInstances().size());
         assertThrows(LazyInitializationException.class,
-                () -> managedApartment.getComments().size());
+                () -> managedApartment.getReviews().size());
         assertThrows(LazyInitializationException.class,
                 () -> managedApartment.getRooms().size());
         assertThrows(LazyInitializationException.class,
@@ -104,7 +104,7 @@ class ApartmentJpaRepository_IntegrationTest {
         assertDoesNotThrow(
                 () -> managedApartment.getApartmentInstances().size());
         assertDoesNotThrow(
-                () -> managedApartment.getComments().size());
+                () -> managedApartment.getReviews().size());
         assertDoesNotThrow(
                 () -> managedApartment.getRooms().size());
         assertDoesNotThrow(
@@ -179,8 +179,8 @@ class ApartmentJpaRepository_IntegrationTest {
                 repo.findById(id).orElseThrow();
         Double emptyRating = apartmentWithoutRating.getRating();
 
-        Comment newComment =
-                persistTestCommentWithApartment(apartmentWithoutRating);
+        Review newReview =
+                persistTestReviewWithApartment(apartmentWithoutRating);
         entityManager.detach(apartmentWithoutRating);
 
         Double changedRating =
@@ -188,7 +188,7 @@ class ApartmentJpaRepository_IntegrationTest {
                         .getRating();
 
         assertNotEquals(emptyRating, changedRating);
-        assertEquals(newComment.getRate(), changedRating);
+        assertEquals(newReview.getRate(), changedRating);
     }
 
     @Test
@@ -230,11 +230,11 @@ class ApartmentJpaRepository_IntegrationTest {
         });
     }
 
-    private Comment persistTestCommentWithApartment(Apartment apartment) {
-        Comment comment = testComment();
-        comment.setApartment(apartment);
-        comment.setUser(entityManager.persistAndFlush(testUser()));
-        return entityManager.persistAndFlush(comment);
+    private Review persistTestReviewWithApartment(Apartment apartment) {
+        Review review = testReview();
+        review.setApartment(apartment);
+        review.setUser(entityManager.persistAndFlush(testUser()));
+        return entityManager.persistAndFlush(review);
     }
 
     private Apartment persistTestApartment() {

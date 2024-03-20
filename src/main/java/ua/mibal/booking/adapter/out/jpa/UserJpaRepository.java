@@ -88,11 +88,11 @@ public interface UserJpaRepository extends JpaRepository<User, Long>, CustomUser
 
     @Override
     @Query("""
-            select count(c.id) = 1 from Comment c
-                left join c.user u
-            where u.email = ?1 and c.id = ?2
+            select count(r.id) = 1 from Review r
+                left join r.user u
+            where u.email = ?1 and r.id = ?2
             """)
-    boolean userHasComment(String email, Long commentId);
+    boolean userHasReview(String email, Long reviewId);
 
     @Override
     @Transactional

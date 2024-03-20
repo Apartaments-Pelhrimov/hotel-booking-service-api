@@ -32,9 +32,9 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import ua.mibal.booking.adapter.in.web.mapper.CommentDtoMapper;
-import ua.mibal.booking.application.CommentService;
-import ua.mibal.booking.application.model.CreateCommentForm;
+import ua.mibal.booking.adapter.in.web.mapper.ReviewDtoMapper;
+import ua.mibal.booking.application.ReviewService;
+import ua.mibal.booking.application.model.CreateReviewForm;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -49,10 +49,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@WebMvcTest(CommentController.class)
+@WebMvcTest(ReviewController.class)
 @TestPropertySource("classpath:application.yaml")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-class CommentController_UnitTest {
+class ReviewController_UnitTest {
 
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -62,9 +62,9 @@ class CommentController_UnitTest {
     private MockMvc mvc;
 
     @MockBean
-    private CommentService commentService;
+    private ReviewService reviewService;
     @MockBean
-    private CommentDtoMapper commentDtoMapper;
+    private ReviewDtoMapper reviewDtoMapper;
 
     @BeforeEach
     public void setup() {
@@ -77,19 +77,19 @@ class CommentController_UnitTest {
     @ParameterizedTest
     @CsvSource({"1-1", "value", "superman2004"})
     void getAllByApartment_should_throw_if_id_path_variable_is_invalid(String id) throws Exception {
-        mvc.perform(get("/api/apartments/{apartmentId}/comments", id))
+        mvc.perform(get("/api/apartments/{apartmentId}/reviews", id))
                 .andExpect(status().isBadRequest());
 
-        verifyNoInteractions(commentService);
+        verifyNoInteractions(reviewService);
     }
 
     @ParameterizedTest
     @CsvSource({"1", "1000000", "" + Long.MAX_VALUE, "" + Long.MIN_VALUE})
     void getAllByApartment_should_correct_handle_id(Long id) throws Exception {
-        mvc.perform(get("/api/apartments/{apartmentId}/comments", id))
+        mvc.perform(get("/api/apartments/{apartmentId}/reviews", id))
                 .andExpect(status().isOk());
 
-        verify(commentService, times(1))
+        verify(reviewService, times(1))
                 .getAllByApartment(eq(id), any());
     }
 
@@ -97,12 +97,12 @@ class CommentController_UnitTest {
     @Disabled("Spring Authentication does not work at test environment")
     @Test
     void create_should_allow_only_ROLE_USER() throws Exception {
-        mvc.perform(post("/api/apartments/{apartmentId}/comments", 1)
+        mvc.perform(post("/api/apartments/{apartmentId}/reviews", 1)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new CreateCommentForm("body", 5., null, null))))
+                        .content(objectMapper.writeValueAsString(new CreateReviewForm("body", 5., null, null))))
                 .andExpect(status().isBadRequest());
 
-        verifyNoInteractions(commentService);
+        verifyNoInteractions(reviewService);
     }
 
     @ParameterizedTest
@@ -113,15 +113,16 @@ class CommentController_UnitTest {
             "'      ', 0",
             "'', 0"
     }, nullValues = "null")
-    void create_should_validate_CreateCommentDto(String body, Double rate) throws Exception {
-        mvc.perform(post("/api/apartments/{apartmentId}/comments", 1)
+    void create_should_validate(String body, Double rate) throws Exception {
+        mvc.perform(post("/api/apartments/{apartmentId}/reviews", 1)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new CreateCommentForm(body, rate, null, null))))
+                        .content(objectMapper.writeValueAsString(new CreateReviewForm(body, rate, null, null))))
                 .andExpect(status().isBadRequest());
 
-        verifyNoInteractions(commentService);
+        verifyNoInteractions(reviewService);
     }
 
+    // TODO
     @Disabled("Spring Authentication does not work at test environment")
     @ParameterizedTest
     @CsvSource({
@@ -131,14 +132,14 @@ class CommentController_UnitTest {
             "55, correct_body4, 4.5",
             "4893749872138478, correct_body5, 3.21",
     })
-    void create_should_handle_args_to_CommentService(Long apartmentId, String body, Double rate) throws Exception {
-        CreateCommentForm createCommentForm = new CreateCommentForm(body, rate, null, null);
-        mvc.perform(post("/api/apartments/{apartmentId}/comments", apartmentId)
+    void create_should_handle_args_to_ReviewService(Long apartmentId, String body, Double rate) throws Exception {
+        CreateReviewForm createReviewForm = new CreateReviewForm(body, rate, null, null);
+        mvc.perform(post("/api/apartments/{apartmentId}/reviews", apartmentId)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(createCommentForm)))
+                        .content(objectMapper.writeValueAsString(createReviewForm)))
                 .andExpect(status().isOk());
 
-        verify(commentService, times(1))
-                .create(createCommentForm);
+        verify(reviewService, times(1))
+                .create(createReviewForm);
     }
 }

@@ -14,15 +14,18 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.exception;
+package ua.mibal.booking.adapter.in.web.model;
+
+import java.time.LocalDateTime;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class UserHasNoAccessToCommentsException extends BadRequestException {
-
-    public UserHasNoAccessToCommentsException() {
-        super("bad-request-error.user-has-no-access-to-comments");
-    }
+public record ReviewDto(
+        UserDto user,
+        LocalDateTime createdAt,
+        Double rate,
+        String body
+) {
 }

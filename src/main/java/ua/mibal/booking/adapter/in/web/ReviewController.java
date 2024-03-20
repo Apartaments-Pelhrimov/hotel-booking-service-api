@@ -29,12 +29,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import ua.mibal.booking.adapter.in.web.mapper.CommentDtoMapper;
-import ua.mibal.booking.adapter.in.web.model.CommentDto;
+import ua.mibal.booking.adapter.in.web.mapper.ReviewDtoMapper;
+import ua.mibal.booking.adapter.in.web.model.ReviewDto;
 import ua.mibal.booking.adapter.in.web.security.annotation.UserAllowed;
-import ua.mibal.booking.application.CommentService;
-import ua.mibal.booking.application.model.CreateCommentForm;
-import ua.mibal.booking.domain.Comment;
+import ua.mibal.booking.application.ReviewService;
+import ua.mibal.booking.application.model.CreateReviewForm;
+import ua.mibal.booking.domain.Review;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
@@ -45,40 +45,40 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/apartments")
-public class CommentController {
-    private final CommentService commentService;
-    private final CommentDtoMapper commentDtoMapper;
+@RequestMapping("/api")
+public class ReviewController {
+    private final ReviewService reviewService;
+    private final ReviewDtoMapper reviewDtoMapper;
 
-    @GetMapping("/{apartmentId}/comments")
-    public Page<CommentDto> getAllByApartment(@PathVariable Long apartmentId,
-                                              Pageable pageable) {
-        Page<Comment> comments = commentService.getAllByApartment(apartmentId, pageable);
-        return commentDtoMapper.toDtos(comments);
+    @GetMapping("/apartments/{apartmentId}/reviews")
+    public Page<ReviewDto> getAllByApartment(@PathVariable Long apartmentId,
+                                             Pageable pageable) {
+        Page<Review> reviews = reviewService.getAllByApartment(apartmentId, pageable);
+        return reviewDtoMapper.toDtos(reviews);
     }
 
-    @GetMapping("/comments/latest")
-    public Page<CommentDto> getAllLatest(Pageable pageable) {
-        Page<Comment> comments = commentService.getAllLatest(pageable);
-        return commentDtoMapper.toDtos(comments);
+    @GetMapping("/reviews/latest")
+    public Page<ReviewDto> getAllLatest(Pageable pageable) {
+        Page<Review> reviews = reviewService.getAllLatest(pageable);
+        return reviewDtoMapper.toDtos(reviews);
     }
 
     @UserAllowed
-    @PostMapping("/{apartmentId}/comments")
+    @PostMapping("/apartments/{apartmentId}/reviews")
     @ResponseStatus(CREATED)
     public void create(@PathVariable Long apartmentId,
-                       @Valid @RequestBody CreateCommentForm form,
+                       @Valid @RequestBody CreateReviewForm form,
                        Authentication authentication) {
         form.setApartmentId(apartmentId);
         form.setUserEmail(authentication.getName());
-        commentService.create(form);
+        reviewService.create(form);
     }
 
     @UserAllowed
-    @DeleteMapping("/comments/{id}")
+    @DeleteMapping("/reviews/{id}")
     @ResponseStatus(NO_CONTENT)
     public void delete(@PathVariable Long id,
                        Authentication authentication) {
-        commentService.delete(id, authentication.getName());
+        reviewService.delete(id, authentication.getName());
     }
 }

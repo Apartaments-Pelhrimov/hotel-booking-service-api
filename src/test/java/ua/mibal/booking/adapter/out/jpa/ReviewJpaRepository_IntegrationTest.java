@@ -23,7 +23,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import ua.mibal.booking.domain.Apartment;
-import ua.mibal.booking.domain.Comment;
+import ua.mibal.booking.domain.Review;
 import ua.mibal.booking.domain.User;
 import ua.mibal.test.annotation.JpaTest;
 
@@ -41,39 +41,39 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @JpaTest
-class CommentJpaRepository_IntegrationTest {
+class ReviewJpaRepository_IntegrationTest {
     private static final LocalDateTime NOW = now();
 
     @Autowired
-    private CommentJpaRepository repository;
+    private ReviewJpaRepository repository;
 
     @Autowired
     private TestEntityManager entityManager;
 
     private User user;
     private Apartment apartment;
-    private List<Comment> comments;
+    private List<Review> reviews;
     private Pageable pageable;
 
-    private Page<Comment> result;
+    private Page<Review> result;
 
     @Test
     void findLatestFetchUser_shouldReturnLatest() {
-        givenCommentsOfApartmentOfUserWithCreatedAt(
+        givenReviewsOfApartmentOfUserWithCreatedAt(
                 NOW, NOW.minusDays(1), NOW.minusDays(2)
         );
         givenPageWithSize(2);
 
         whenFindLatestFetchUser();
 
-        thenShouldContainCommentsWithCreatedAt(
+        thenShouldContainReviewsWithCreatedAt(
                 NOW, NOW.minusDays(1)
         );
     }
 
     @Test
     void findLatestFetchUser_shouldFetchUser() {
-        givenCommentsOfApartmentOfUserWithCreatedAt(NOW);
+        givenReviewsOfApartmentOfUserWithCreatedAt(NOW);
         givenPageWithSize(1);
 
         whenDetachEntitiesFromSession();
@@ -82,15 +82,15 @@ class CommentJpaRepository_IntegrationTest {
         thenShouldFetchUser();
     }
 
-    private void givenCommentsOfApartmentOfUserWithCreatedAt(LocalDateTime... createdAts) {
+    private void givenReviewsOfApartmentOfUserWithCreatedAt(LocalDateTime... createdAts) {
         givenUser();
         givenApartment();
 
-        givenCommentsWithCreatedAt(createdAts);
+        givenReviewsWithCreatedAt(createdAts);
 
-        assignCommentsToApartmentAndUser();
+        assignReviewsToApartmentAndUser();
 
-        comments.forEach(entityManager::persistAndFlush);
+        reviews.forEach(entityManager::persistAndFlush);
     }
 
     private void givenUser() {
@@ -107,28 +107,28 @@ class CommentJpaRepository_IntegrationTest {
         entityManager.persistAndFlush(apartment);
     }
 
-    private void givenCommentsWithCreatedAt(LocalDateTime[] createdAts) {
-        comments = stream(createdAts)
-                .map(this::givenCommentCreatedAt)
+    private void givenReviewsWithCreatedAt(LocalDateTime[] createdAts) {
+        reviews = stream(createdAts)
+                .map(this::givenReviewCreatedAt)
                 .toList();
     }
 
-    private Comment givenCommentCreatedAt(LocalDateTime createAt) {
-        return Instancio.of(Comment.class)
-                .set(field(Comment::getId), null)
-                .set(field(Comment::getCreatedAt), createAt)
+    private Review givenReviewCreatedAt(LocalDateTime createAt) {
+        return Instancio.of(Review.class)
+                .set(field(Review::getId), null)
+                .set(field(Review::getCreatedAt), createAt)
                 .create();
     }
 
-    private void assignCommentsToApartmentAndUser() {
-        comments.forEach(c -> c.setUser(user));
-        comments.forEach(c -> c.setApartment(apartment));
+    private void assignReviewsToApartmentAndUser() {
+        reviews.forEach(c -> c.setUser(user));
+        reviews.forEach(c -> c.setApartment(apartment));
     }
 
     private void whenDetachEntitiesFromSession() {
         entityManager.detach(user);
         entityManager.detach(apartment);
-        comments.forEach(entityManager::detach);
+        reviews.forEach(entityManager::detach);
     }
 
     private void givenPageWithSize(int size) {
@@ -139,13 +139,13 @@ class CommentJpaRepository_IntegrationTest {
         result = repository.findLatestFetchUser(pageable);
     }
 
-    private void thenShouldContainCommentsWithCreatedAt(LocalDateTime... createdAts) {
+    private void thenShouldContainReviewsWithCreatedAt(LocalDateTime... createdAts) {
         assertThat(
-                result.stream().map(Comment::getCreatedAt)
+                result.stream().map(Review::getCreatedAt)
         ).containsOnly(createdAts);
     }
 
     private void thenShouldFetchUser() {
-        assertDoesNotThrow(() -> comments.get(0).getUser().getEmail());
+        assertDoesNotThrow(() -> reviews.get(0).getUser().getEmail());
     }
 }

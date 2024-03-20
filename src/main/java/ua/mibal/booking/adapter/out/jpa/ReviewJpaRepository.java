@@ -20,28 +20,28 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import ua.mibal.booking.application.port.jpa.CommentRepository;
-import ua.mibal.booking.domain.Comment;
+import ua.mibal.booking.application.port.jpa.ReviewRepository;
+import ua.mibal.booking.domain.Review;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public interface CommentJpaRepository extends JpaRepository<Comment, Long>, CommentRepository {
+public interface ReviewJpaRepository extends JpaRepository<Review, Long>, ReviewRepository {
 
     @Override
     @Query("""
-            select c from Comment c
-                join fetch c.user
-            where c.apartment.id = ?1
+            select r from Review r
+                join fetch r.user
+            where r.apartment.id = ?1
              """)
-    Page<Comment> findByApartmentIdFetchUser(Long apartmentId, Pageable pageable);
+    Page<Review> findByApartmentIdFetchUser(Long apartmentId, Pageable pageable);
 
     @Override
     @Query("""
-            select c from Comment c
-                join fetch c.user
-            order by c.createdAt desc
+            select r from Review r
+                join fetch r.user
+            order by r.createdAt desc
              """)
-    Page<Comment> findLatestFetchUser(Pageable pageable);
+    Page<Review> findLatestFetchUser(Pageable pageable);
 }

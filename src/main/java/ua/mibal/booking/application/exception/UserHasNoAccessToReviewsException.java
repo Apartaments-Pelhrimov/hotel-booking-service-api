@@ -20,9 +20,9 @@ package ua.mibal.booking.application.exception;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public class UserHasNoAccessToCommentException extends BadRequestException {
+public class UserHasNoAccessToReviewsException extends BadRequestException {
 
-    public UserHasNoAccessToCommentException() {
-        super("bad-request-error.user-has-no-access-to-comment");
+    public UserHasNoAccessToReviewsException() {
+        super("bad-request-error.user-has-no-access-to-reviews");
     }
 }

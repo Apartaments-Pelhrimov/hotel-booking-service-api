@@ -14,19 +14,38 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.port.jpa;
+package ua.mibal.booking.application.model;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import ua.mibal.booking.domain.Comment;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public interface CommentRepository extends Repository<Comment, Long> {
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
+public class CreateReviewForm {
 
-    Page<Comment> findByApartmentIdFetchUser(Long apartmentId, Pageable pageable);
+    @NotBlank
+    @Size(min = 1, max = 255)
+    private String body;
 
-    Page<Comment> findLatestFetchUser(Pageable pageable);
+    @NotNull
+    @DecimalMin("0")
+    @DecimalMax("5")
+    private Double rate;
+
+    private Long apartmentId;
+
+    private String userEmail;
 }

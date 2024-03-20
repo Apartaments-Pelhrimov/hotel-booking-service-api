@@ -120,7 +120,7 @@ public class FakeInMemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public boolean userHasComment(String email, Long commentId) {
+    public boolean userHasReview(String email, Long reviewId) {
         throw new UnsupportedOperationException();
     }
 

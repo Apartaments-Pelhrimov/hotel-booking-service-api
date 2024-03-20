@@ -42,11 +42,11 @@ import static java.time.LocalDateTime.now;
 @Getter
 @Setter
 @Entity
-@Table(name = "comments", indexes = {
-        @Index(name = "comments_user_id_idx", columnList = "user_id"),
-        @Index(name = "comments_apartment_id_idx", columnList = "apartment_id")
+@Table(name = "reviews", indexes = {
+        @Index(name = "reviews_user_id_idx", columnList = "user_id"),
+        @Index(name = "reviews_apartment_id_idx", columnList = "apartment_id")
 })
-public class Comment {
+public class Review {
 
     @Id
     @GeneratedValue
@@ -56,7 +56,7 @@ public class Comment {
     @JoinColumn(
             name = "user_id",
             nullable = false,
-            foreignKey = @ForeignKey(name = "comments_user_id_fk")
+            foreignKey = @ForeignKey(name = "reviews_user_id_fk")
     )
     private User user;
 
@@ -64,7 +64,7 @@ public class Comment {
     @JoinColumn(
             name = "apartment_id",
             nullable = false,
-            foreignKey = @ForeignKey(name = "comments_apartment_id_fk")
+            foreignKey = @ForeignKey(name = "reviews_apartment_id_fk")
     )
     private Apartment apartment;
 
@@ -82,7 +82,7 @@ public class Comment {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Comment that)) {
+        if (!(o instanceof Review that)) {
             return false;
         }
         return id != null && id.equals(that.id);

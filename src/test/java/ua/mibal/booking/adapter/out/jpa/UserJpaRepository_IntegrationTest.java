@@ -22,9 +22,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.ApartmentInstance;
-import ua.mibal.booking.domain.Comment;
 import ua.mibal.booking.domain.Photo;
 import ua.mibal.booking.domain.Reservation;
+import ua.mibal.booking.domain.Review;
 import ua.mibal.booking.domain.User;
 import ua.mibal.test.annotation.JpaTest;
 
@@ -35,8 +35,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static ua.mibal.test.util.DataGenerator.testApartment;
 import static ua.mibal.test.util.DataGenerator.testApartmentInstance;
-import static ua.mibal.test.util.DataGenerator.testComment;
 import static ua.mibal.test.util.DataGenerator.testReservation;
+import static ua.mibal.test.util.DataGenerator.testReview;
 import static ua.mibal.test.util.DataGenerator.testUser;
 
 /**
@@ -178,28 +178,28 @@ class UserJpaRepository_IntegrationTest {
     }
 
     @Test
-    void userHasComment_true() {
+    void userHasReview_true() {
         Apartment apartment = entityManager.persistAndFlush(testApartment());
-        Comment comment = testComment();
-        comment.setApartment(apartment);
-        comment.setUser(user);
-        entityManager.persistAndFlush(comment);
+        Review review = testReview();
+        review.setApartment(apartment);
+        review.setUser(user);
+        entityManager.persistAndFlush(review);
 
         assertTrue(
-                repository.userHasComment(user.getEmail(), comment.getId())
+                repository.userHasReview(user.getEmail(), review.getId())
         );
     }
 
     @Test
-    void userHasComment_false() {
+    void userHasReview_false() {
         Apartment apartment = entityManager.persistAndFlush(testApartment());
-        Comment comment = testComment();
-        comment.setApartment(apartment);
-        comment.setUser(user);
-        entityManager.persistAndFlush(comment);
+        Review review = testReview();
+        review.setApartment(apartment);
+        review.setUser(user);
+        entityManager.persistAndFlush(review);
 
         assertFalse(
-                repository.userHasComment("another_email", comment.getId())
+                repository.userHasReview("another_email", review.getId())
         );
     }
 }

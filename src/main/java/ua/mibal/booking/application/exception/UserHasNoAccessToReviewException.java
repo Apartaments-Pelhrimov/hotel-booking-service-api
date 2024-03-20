@@ -14,38 +14,15 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.model;
-
-import jakarta.validation.constraints.DecimalMax;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+package ua.mibal.booking.application.exception;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@AllArgsConstructor
-@NoArgsConstructor
-@Setter
-@Getter
-public class CreateCommentForm {
+public class UserHasNoAccessToReviewException extends BadRequestException {
 
-    @NotBlank
-    @Size(min = 1, max = 255)
-    private String body;
-
-    @NotNull
-    @DecimalMin("0")
-    @DecimalMax("5")
-    private Double rate;
-
-    private Long apartmentId;
-
-    private String userEmail;
+    public UserHasNoAccessToReviewException() {
+        super("bad-request-error.user-has-no-access-to-review");
+    }
 }

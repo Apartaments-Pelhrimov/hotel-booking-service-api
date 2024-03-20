@@ -60,7 +60,7 @@ class UserMapper_UnitTest {
         assertThat(user.isEnabled(), is(false));
         assertThat(user.getRole(), is(USER));
         assertThat(user.getReservations(), hasSize(0));
-        assertThat(user.getComments(), hasSize(0));
+        assertThat(user.getReviews(), hasSize(0));
         assertThat(user.getToken(), nullValue());
     }
 

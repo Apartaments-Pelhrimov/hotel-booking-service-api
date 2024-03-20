@@ -46,7 +46,7 @@ public interface UserRepository extends Repository<User, Long> {
 
     boolean userHasReservationWithApartment(String email, Long apartmentId);
 
-    boolean userHasComment(String email, Long commentId);
+    boolean userHasReview(String email, Long reviewId);
 
     int deleteNotEnabledWithNoTokens();
 }

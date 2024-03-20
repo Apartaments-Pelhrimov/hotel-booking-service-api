@@ -14,20 +14,19 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.application.mapper;
+package ua.mibal.booking.application.port.jpa;
 
-import org.mapstruct.Mapper;
-import ua.mibal.booking.application.model.CreateCommentForm;
-import ua.mibal.booking.domain.Comment;
-
-import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import ua.mibal.booking.domain.Review;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Mapper(componentModel = SPRING)
-public interface CommentMapper {
+public interface ReviewRepository extends Repository<Review, Long> {
 
-    Comment assemble(CreateCommentForm createCommentForm);
+    Page<Review> findByApartmentIdFetchUser(Long apartmentId, Pageable pageable);
+
+    Page<Review> findLatestFetchUser(Pageable pageable);
 }
