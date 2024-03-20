@@ -44,7 +44,6 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
       env:
-        SPRING_PROFILES_ACTIVE: heroku
         SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/hotel_booking_service
         SPRING_DATASOURCE_USERNAME: postgres
         SPRING_DATASOURCE_PASSWORD: postgres
