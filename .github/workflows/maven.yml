@@ -15,14 +15,16 @@ on:
     branches: [ '**' ]
 
 jobs:
-  postgre-db:
+  build:
     runs-on: ubuntu-latest
-    
+
     services:
       postgres:
         image: postgres
         env:
+          POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: hotel_booking_service
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -30,9 +32,6 @@ jobs:
           --health-retries 5
         ports:
           - 5432:5432
-    
-  build:
-    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
@@ -44,3 +43,7 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml
+      env:
+          SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/hotel_booking_service
+          SPRING_DATASOURCE_USERNAME: postgres
+          SPRING_DATASOURCE_PASSWORD: postgres
