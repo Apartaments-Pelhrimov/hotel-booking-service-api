@@ -35,6 +35,7 @@ import java.util.List;
 import static java.time.LocalDateTime.now;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -129,7 +130,8 @@ class TurningOffService_UnitTest {
 
     @Test
     void getForHotelForNow() {
-        when(hotelTurningOffRepository.findFromNow())
+        // TODO FIXME LocalDateTime.now()
+        when(hotelTurningOffRepository.findActualFor(any()))
                 .thenReturn(List.of(hotelTurningOffTime, hotelTurningOffTime));
 
         var actual = service.getForHotelForNow();

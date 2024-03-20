@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.application.port.jpa.TokenRepository;
 import ua.mibal.booking.domain.Token;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 public interface TokenJpaRepository extends JpaRepository<Token, Long>, TokenRepository {
@@ -34,16 +35,16 @@ public interface TokenJpaRepository extends JpaRepository<Token, Long>, TokenRep
             where
                 t.value = ?1
             and
-                t.expiresAt > now()
+                t.expiresAt > ?2
             """)
-    Optional<Token> findNotExpiredByValue(String tokenValue);
+    Optional<Token> findNotExpiredForByValue(String tokenValue, LocalDateTime dateTime);
 
     @Override
     @Transactional
     @Modifying
     @Query("""
             delete Token t
-            where t.expiresAt < now()
+            where t.expiresAt < ?1
             """)
-    int deleteExpired();
+    int deleteExpiredFor(LocalDateTime dateTime);
 }

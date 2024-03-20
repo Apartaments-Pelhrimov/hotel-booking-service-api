@@ -18,11 +18,12 @@ package ua.mibal.booking.application.port.jpa;
 
 import ua.mibal.booking.domain.Token;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 public interface TokenRepository extends Repository<Token, Long> {
 
-    Optional<Token> findNotExpiredByValue(String tokenValue);
+    Optional<Token> findNotExpiredForByValue(String tokenValue, LocalDateTime dateTime);
 
-    int deleteExpired();
+    int deleteExpiredFor(LocalDateTime dateTime);
 }

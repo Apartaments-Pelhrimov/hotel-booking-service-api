@@ -56,7 +56,8 @@ class UserJpaRepository_IntegrationTest {
 
     @BeforeEach
     public void beforeEach() {
-        entityManager.merge(user);
+        user.setId(null);
+        entityManager.persist(user);
     }
 
     @Test

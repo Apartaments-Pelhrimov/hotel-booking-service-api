@@ -30,6 +30,8 @@ import ua.mibal.booking.domain.TurningOffTime;
 
 import java.util.List;
 
+import static java.time.LocalDateTime.now;
+
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
@@ -60,7 +62,7 @@ public class TurningOffService {
     }
 
     public List<HotelTurningOffTime> getForHotelForNow() {
-        return hotelTurningOffRepository.findFromNow();
+        return hotelTurningOffRepository.findActualFor(now());
     }
 
     private void validateToTurnOffApartmentInstance(ApartmentInstance instance,
