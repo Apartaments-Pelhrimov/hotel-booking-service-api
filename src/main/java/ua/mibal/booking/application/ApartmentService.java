@@ -39,8 +39,8 @@ public class ApartmentService {
     private final ApartmentRepository apartmentRepository;
     private final ApartmentMapper apartmentMapper;
 
-    public List<Apartment> getAllFetchPhotosBeds() {
-        return apartmentRepository.findAllFetchPhotosRooms();
+    public List<Apartment> getAllFetchPhotosPricesRoomsBeds() {
+        return apartmentRepository.findAllFetchFetchPhotosPricesRoomsBeds();
     }
 
     public Apartment getOneFetchPhotos(Long id) {

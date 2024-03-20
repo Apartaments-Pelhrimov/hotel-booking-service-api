@@ -61,7 +61,7 @@ public class ApartmentController {
 
     @GetMapping
     public List<ApartmentCardDto> getAll() {
-        List<Apartment> apartments = apartmentService.getAllFetchPhotosBeds();
+        List<Apartment> apartments = apartmentService.getAllFetchPhotosPricesRoomsBeds();
         return apartmentDtoMapper.toCardDtos(apartments);
     }
 

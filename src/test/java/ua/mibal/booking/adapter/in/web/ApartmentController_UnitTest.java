@@ -96,7 +96,7 @@ class ApartmentController_UnitTest {
                 .andExpect(status().isOk());
 
         verify(apartmentService, times(1))
-                .getAllFetchPhotosBeds();
+                .getAllFetchPhotosPricesRoomsBeds();
     }
 
     @ParameterizedTest

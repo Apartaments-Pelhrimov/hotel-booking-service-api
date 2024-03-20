@@ -74,10 +74,10 @@ class ApartmentService_UnitTest {
 
     @Test
     void getAllFetchPhotosBeds() {
-        when(apartmentRepository.findAllFetchPhotosRooms())
+        when(apartmentRepository.findAllFetchFetchPhotosPricesRoomsBeds())
                 .thenReturn(List.of(apartment, apartment));
 
-        List<Apartment> actual = service.getAllFetchPhotosBeds();
+        List<Apartment> actual = service.getAllFetchPhotosPricesRoomsBeds();
 
         assertThat(actual).containsOnly(apartment, apartment);
     }

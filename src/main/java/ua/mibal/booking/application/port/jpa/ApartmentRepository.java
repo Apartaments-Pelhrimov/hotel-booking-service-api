@@ -33,5 +33,5 @@ public interface ApartmentRepository extends Repository<Apartment, Long> {
 
     Optional<Apartment> findByIdFetchPhotosRooms(Long id);
 
-    List<Apartment> findAllFetchPhotosRooms();
+    List<Apartment> findAllFetchFetchPhotosPricesRoomsBeds();
 }

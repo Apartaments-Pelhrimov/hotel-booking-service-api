@@ -68,9 +68,13 @@ public interface ApartmentJpaRepository extends JpaRepository<Apartment, Long>, 
 
     @Override
     @Transactional(readOnly = true)
-    default List<Apartment> findAllFetchPhotosRooms() {
+    default List<Apartment> findAllFetchFetchPhotosPricesRoomsBeds() {
         List<Apartment> apartments = findAllFetchPhotos();
-        apartments.forEach(a -> a.getRooms().size()); // to load Apartment.rooms
+        apartments.forEach(a -> a.getPrices().size());  // to load prices
+        apartments.forEach(a -> a.getRooms().size());   // to load rooms
+        apartments.stream()                             // to load beds
+                .flatMap(a -> a.getRooms().stream())
+                .forEach(a -> a.getBeds().size());
         return apartments;
     }
 }

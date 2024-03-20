@@ -219,14 +219,14 @@ class ApartmentJpaRepository_IntegrationTest {
 
     @Test
     void findAllFetchPhotosRooms() {
-        List<Apartment> managedApartments = repo.findAllFetchPhotosRooms();
+        List<Apartment> managedApartments = repo.findAllFetchFetchPhotosPricesRoomsBeds();
 
         managedApartments.forEach(entityManager::detach);
         managedApartments.forEach(a -> {
-            assertDoesNotThrow(
-                    () -> a.getPhotos().size());
-            assertDoesNotThrow(
-                    () -> a.getRooms().stream().forEach(r -> r.getBeds().size()));
+            assertDoesNotThrow(() -> a.getPhotos().size());
+            assertDoesNotThrow(() -> a.getPrices().size());
+            assertDoesNotThrow(() -> a.getRooms()
+                    .forEach(r -> r.getBeds().size()));
         });
     }
 
