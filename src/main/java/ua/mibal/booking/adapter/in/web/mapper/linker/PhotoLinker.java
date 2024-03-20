@@ -17,15 +17,13 @@
 package ua.mibal.booking.adapter.in.web.mapper.linker;
 
 import org.mapstruct.Mapper;
-import ua.mibal.booking.adapter.in.web.PhotoController;
 import ua.mibal.booking.domain.Photo;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+import static org.springframework.hateoas.server.mvc.BasicLinkBuilder.linkToCurrentMapping;
 
 /**
  * @author Mykhailo Balakhon
@@ -47,8 +45,7 @@ public class PhotoLinker {
     }
 
     private String toLink(Photo photo) {
-        var getPhotoMethod = methodOn(PhotoController.class)
-                .getPhoto(photo.getKey());
-        return linkTo(getPhotoMethod).withSelfRel().getHref();
+        String baseUri = linkToCurrentMapping().toString();
+        return baseUri + "/api/photos/" + photo.getKey();
     }
 }
