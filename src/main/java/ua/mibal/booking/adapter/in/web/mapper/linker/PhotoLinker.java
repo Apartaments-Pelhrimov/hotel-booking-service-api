@@ -20,12 +20,12 @@ import org.mapstruct.Mapper;
 import ua.mibal.booking.adapter.in.web.PhotoController;
 import ua.mibal.booking.domain.Photo;
 
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Optional;
 
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 /**
  * @author Mykhailo Balakhon
@@ -47,8 +47,21 @@ public class PhotoLinker {
     }
 
     private String toLink(Photo photo) {
-        var getPhotoMethod = methodOn(PhotoController.class)
-                .getPhoto(photo.getKey());
-        return linkTo(getPhotoMethod).withSelfRel().getHref();
+        try {
+            return toLink0(photo);
+        } catch (NoSuchMethodException e) {
+            // TODO wrap into new Exception class
+            throw new RuntimeException(
+                    "Exception while trying to get relation link "
+                    + "to get photo endpoint by method", e);
+        }
+    }
+
+    private String toLink0(Photo photo) throws NoSuchMethodException {
+        Method getPhotoMethod = PhotoController.class
+                .getMethod("getPhoto", String.class);
+        return linkTo(getPhotoMethod, photo.getKey())
+                .withSelfRel()
+                .getHref();
     }
 }
