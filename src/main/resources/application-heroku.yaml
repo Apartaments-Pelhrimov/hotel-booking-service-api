@@ -51,7 +51,6 @@ server.ssl.enabled: false
 mail:
   username: ${MAIL_USERNAME}
   password: ${MAIL_PASSWORD}
-  developers: ${MAIL_DEVELOPERS}
   smtp:
     host: smtp.gmail.com
     port: 587
@@ -60,3 +59,11 @@ mail:
 localized-bundles.paths:
   - classpath:localized/mail
   - classpath:localized/messages
+
+app:
+  name: Apartmány Pelhřimov service
+  version: 0.1-SNAPSHOT
+  contact-link: https://apartmany-pe.cz/
+  email:
+  developer-emails:
+  locale: cs_CZ
