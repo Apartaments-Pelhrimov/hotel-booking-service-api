@@ -252,7 +252,6 @@ public class DataGenerator {
                 .set(field(User::getId), null)
                 .set(field(User::getComments), null)
                 .set(field(User::getReservations), null)
-                .set(field(User::getToken), null)
                 .create();
     }
 

@@ -21,7 +21,6 @@ import org.springframework.data.jpa.repository.Query;
 import ua.mibal.booking.application.port.jpa.HotelTurningOffRepository;
 import ua.mibal.booking.domain.HotelTurningOffTime;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -34,7 +33,7 @@ public interface HotelTurningOffJpaRepository extends JpaRepository<HotelTurning
     @Query("""
             select htot
                 from HotelTurningOffTime htot
-            where htot.to > ?1
+            where htot.to > now()
             """)
-    List<HotelTurningOffTime> findActualFor(LocalDateTime dateTime);
+    List<HotelTurningOffTime> findFromNow();
 }

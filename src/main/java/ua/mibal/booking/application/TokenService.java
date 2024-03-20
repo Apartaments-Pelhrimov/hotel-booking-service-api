@@ -26,8 +26,6 @@ import ua.mibal.booking.config.properties.TokenProps;
 import ua.mibal.booking.domain.Token;
 import ua.mibal.booking.domain.User;
 
-import static java.time.LocalDateTime.now;
-
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
@@ -47,12 +45,12 @@ public class TokenService {
 
     @Transactional
     public Token getOneByValue(String tokenValue) {
-        return tokenRepository.findNotExpiredForByValue(tokenValue, now())
+        return tokenRepository.findNotExpiredByValue(tokenValue)
                 .orElseThrow(() -> new TokenNotFoundException(tokenValue));
     }
 
     public int clearExpiredTokens() {
-        return tokenRepository.deleteExpiredFor(now());
+        return tokenRepository.deleteExpired();
     }
 
     private Token generateTokenFor(User user) {

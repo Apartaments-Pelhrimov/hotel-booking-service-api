@@ -18,7 +18,6 @@ package ua.mibal.booking.application.port.jpa;
 
 import ua.mibal.booking.domain.HotelTurningOffTime;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -27,5 +26,5 @@ import java.util.List;
  */
 public interface HotelTurningOffRepository extends Repository<HotelTurningOffTime, Long> {
 
-    List<HotelTurningOffTime> findActualFor(LocalDateTime dateTime);
+    List<HotelTurningOffTime> findFromNow();
 }

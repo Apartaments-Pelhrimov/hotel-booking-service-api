@@ -20,19 +20,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import ua.mibal.booking.application.component.TokenGenerator;
-import ua.mibal.booking.application.exception.TokenNotFoundException;
 import ua.mibal.booking.application.port.jpa.TokenRepository;
 import ua.mibal.booking.config.properties.TokenProps;
 import ua.mibal.booking.domain.Token;
 import ua.mibal.booking.domain.User;
+import ua.mibal.booking.application.exception.TokenNotFoundException;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -82,8 +80,7 @@ class TokenService_UnitTest {
     @Test
     void getOneByValue() {
         String tokenValue = "code";
-        // TODO FIXME LocalDateTime.now()
-        when(tokenRepository.findNotExpiredForByValue(eq(tokenValue), any()))
+        when(tokenRepository.findNotExpiredByValue(tokenValue))
                 .thenReturn(Optional.of(token));
 
         var actual = service.getOneByValue(tokenValue);
@@ -94,8 +91,7 @@ class TokenService_UnitTest {
     @Test
     void getOneByValue_should_throw_TokenNotFoundException() {
         String tokenValue = "code";
-        // TODO FIXME LocalDateTime.now()
-        when(tokenRepository.findNotExpiredForByValue(eq(tokenValue), any()))
+        when(tokenRepository.findNotExpiredByValue(tokenValue))
                 .thenReturn(Optional.empty());
 
         assertThrows(TokenNotFoundException.class,
@@ -106,8 +102,7 @@ class TokenService_UnitTest {
     void clearExpiredTokens() {
         int deletedCount = 123;
 
-        // TODO FIXME LocalDateTime.now()
-        when(tokenRepository.deleteExpiredFor(any()))
+        when(tokenRepository.deleteExpired())
                 .thenReturn(deletedCount);
 
         int actual = service.clearExpiredTokens();
