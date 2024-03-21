@@ -1,5 +1,7 @@
 # Hotel booking service Project
 
+[![CI Tests](https://github.com/Apartments-Pelhrimov/hotel-booking-service-api/actions/workflows/maven.yml/badge.svg)](https://github.com/Apartments-Pelhrimov/hotel-booking-service-api/actions/workflows/maven.yml)
+
 The **Hotel booking service** project serves as the back-end component of a hotel reservation system,
 developed using Java Spring technologies. It provides an API for managing reservations, hotel rooms, clients, and other
 aspects of accommodation booking.
