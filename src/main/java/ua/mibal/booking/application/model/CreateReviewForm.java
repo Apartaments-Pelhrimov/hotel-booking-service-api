@@ -44,7 +44,7 @@ public class CreateReviewForm {
 
     @NotNull
     @DecimalMin("0")
-    @DecimalMax("5")
+    @DecimalMax("10")
     private Double rate;
 
     private Long apartmentId;
