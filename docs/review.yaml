@@ -17,12 +17,18 @@ paths:
           schema:
             type: "integer"
       responses:
-        "200":
+        200:
           description: "OK"
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ReviewDto"
+        404:
+          description: "APARTMENT NOT FOUND"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
     post:
       security:
         - bearerAuth: [ ]
@@ -41,8 +47,21 @@ paths:
               $ref: "#/components/schemas/CreateReviewForm"
         required: true
       responses:
-        "201":
+        201:
           description: "Created"
+        404:
+          description: "APARTMENT NOT FOUND"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        403:
+          description: "Access to leave a review is FORBIDDEN"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
   /api/reviews/latest:
     get:
       summary: "GET api/reviews/latest"
@@ -67,8 +86,20 @@ paths:
           schema:
             type: "integer"
       responses:
-        "204":
+        204:
           description: "No Content"
+        404:
+          description: "NOT FOUND"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        403:
+          description: "Access to delete the review is FORBIDDEN"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
 components:
   securitySchemes:
     bearerAuth:
