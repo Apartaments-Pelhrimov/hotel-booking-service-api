@@ -17,10 +17,11 @@
 package ua.mibal.booking.adapter.in.web.mapper;
 
 import org.mapstruct.Mapper;
-import org.springframework.data.domain.Page;
 import ua.mibal.booking.adapter.in.web.mapper.linker.PhotoLinker;
 import ua.mibal.booking.adapter.in.web.model.ReviewDto;
 import ua.mibal.booking.domain.Review;
+
+import java.util.List;
 
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
@@ -32,9 +33,5 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
         PhotoLinker.class, UserDtoMapper.class})
 public interface ReviewDtoMapper {
 
-    default Page<ReviewDto> toDtos(Page<Review> reviews) {
-        return reviews.map(this::toDto);
-    }
-
-    ReviewDto toDto(Review review);
+    List<ReviewDto> toDtos(List<Review> reviews);
 }

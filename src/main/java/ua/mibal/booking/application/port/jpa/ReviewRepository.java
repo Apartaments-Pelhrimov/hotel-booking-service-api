@@ -16,9 +16,10 @@
 
 package ua.mibal.booking.application.port.jpa;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import ua.mibal.booking.domain.Review;
+
+import java.util.List;
 
 /**
  * @author Mykhailo Balakhon
@@ -26,7 +27,7 @@ import ua.mibal.booking.domain.Review;
  */
 public interface ReviewRepository extends Repository<Review, Long> {
 
-    Page<Review> findByApartmentIdFetchUser(Long apartmentId, Pageable pageable);
+    List<Review> findByApartmentIdFetchUser(Long apartmentId, Pageable pageable);
 
-    Page<Review> findLatestFetchUser(Pageable pageable);
+    List<Review> findLatestFetchUser(Pageable pageable);
 }

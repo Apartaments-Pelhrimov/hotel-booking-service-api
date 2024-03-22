@@ -21,8 +21,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import ua.mibal.booking.application.exception.ApartmentNotFoundException;
 import ua.mibal.booking.application.exception.UserHasNoAccessToReviewException;
@@ -84,7 +82,7 @@ class ReviewService_UnitTest {
         Long apartmentId = 1L;
         Pageable pageable = Pageable.ofSize(5);
 
-        Page<Review> reviewPage = new PageImpl<>(List.of(review, review));
+        List<Review> reviewPage = List.of(review, review);
 
         when(reviewRepository.findByApartmentIdFetchUser(apartmentId, pageable))
                 .thenReturn(reviewPage);

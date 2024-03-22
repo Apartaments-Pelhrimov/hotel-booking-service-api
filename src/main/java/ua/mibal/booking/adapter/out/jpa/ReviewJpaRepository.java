@@ -16,12 +16,13 @@
 
 package ua.mibal.booking.adapter.out.jpa;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ua.mibal.booking.application.port.jpa.ReviewRepository;
 import ua.mibal.booking.domain.Review;
+
+import java.util.List;
 
 /**
  * @author Mykhailo Balakhon
@@ -35,7 +36,7 @@ public interface ReviewJpaRepository extends JpaRepository<Review, Long>, Review
                 join fetch r.user
             where r.apartment.id = ?1
              """)
-    Page<Review> findByApartmentIdFetchUser(Long apartmentId, Pageable pageable);
+    List<Review> findByApartmentIdFetchUser(Long apartmentId, Pageable pageable);
 
     @Override
     @Query("""
@@ -43,5 +44,5 @@ public interface ReviewJpaRepository extends JpaRepository<Review, Long>, Review
                 join fetch r.user
             order by r.createdAt desc
              """)
-    Page<Review> findLatestFetchUser(Pageable pageable);
+    List<Review> findLatestFetchUser(Pageable pageable);
 }

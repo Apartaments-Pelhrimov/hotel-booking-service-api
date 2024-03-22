@@ -17,7 +17,6 @@
 package ua.mibal.booking.application;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +32,8 @@ import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.Review;
 import ua.mibal.booking.domain.User;
 
+import java.util.List;
+
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
@@ -45,7 +46,7 @@ public class ReviewService {
     private final UserRepository userRepository;
     private final ApartmentRepository apartmentRepository;
 
-    public Page<Review> getAllByApartment(Long apartmentId, Pageable pageable) {
+    public List<Review> getAllByApartment(Long apartmentId, Pageable pageable) {
         return reviewRepository.findByApartmentIdFetchUser(apartmentId, pageable);
     }
 
@@ -61,7 +62,7 @@ public class ReviewService {
         reviewRepository.deleteById(id);
     }
 
-    public Page<Review> getAllLatest(Pageable pageable) {
+    public List<Review> getAllLatest(Pageable pageable) {
         return reviewRepository.findLatestFetchUser(pageable);
     }
 

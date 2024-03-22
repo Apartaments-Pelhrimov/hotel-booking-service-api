@@ -20,7 +20,6 @@ import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.Review;
@@ -55,7 +54,7 @@ class ReviewJpaRepository_IntegrationTest {
     private List<Review> reviews;
     private Pageable pageable;
 
-    private Page<Review> result;
+    private List<Review> result;
 
     @Test
     void findLatestFetchUser_shouldReturnLatest() {

@@ -18,7 +18,6 @@ package ua.mibal.booking.adapter.in.web;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,6 +35,8 @@ import ua.mibal.booking.application.ReviewService;
 import ua.mibal.booking.application.model.CreateReviewForm;
 import ua.mibal.booking.domain.Review;
 
+import java.util.List;
+
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
@@ -51,15 +52,15 @@ public class ReviewController {
     private final ReviewDtoMapper reviewDtoMapper;
 
     @GetMapping("/apartments/{apartmentId}/reviews")
-    public Page<ReviewDto> getAllByApartment(@PathVariable Long apartmentId,
+    public List<ReviewDto> getAllByApartment(@PathVariable Long apartmentId,
                                              Pageable pageable) {
-        Page<Review> reviews = reviewService.getAllByApartment(apartmentId, pageable);
+        List<Review> reviews = reviewService.getAllByApartment(apartmentId, pageable);
         return reviewDtoMapper.toDtos(reviews);
     }
 
     @GetMapping("/reviews/latest")
-    public Page<ReviewDto> getAllLatest(Pageable pageable) {
-        Page<Review> reviews = reviewService.getAllLatest(pageable);
+    public List<ReviewDto> getAllLatest(Pageable pageable) {
+        List<Review> reviews = reviewService.getAllLatest(pageable);
         return reviewDtoMapper.toDtos(reviews);
     }
 
