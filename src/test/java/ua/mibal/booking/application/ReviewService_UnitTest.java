@@ -23,6 +23,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
 import org.springframework.data.domain.Pageable;
 import ua.mibal.booking.application.exception.ApartmentNotFoundException;
+import ua.mibal.booking.application.exception.ReviewNotFoundException;
 import ua.mibal.booking.application.exception.UserHasNoAccessToReviewException;
 import ua.mibal.booking.application.exception.UserHasNoAccessToReviewsException;
 import ua.mibal.booking.application.mapper.ReviewMapper;
@@ -168,6 +169,7 @@ class ReviewService_UnitTest {
     })
     void delete(Long id, String email) {
         when(userRepository.userHasReview(email, id)).thenReturn(true);
+        when(reviewRepository.existsById(id)).thenReturn(true);
 
         service.delete(id, email);
 
@@ -182,8 +184,26 @@ class ReviewService_UnitTest {
             "2,          email2",
             "1010101001, email3",
     })
+    void delete_should_throw_NotFoundException(Long id, String email) {
+        when(userRepository.userHasReview(email, id)).thenReturn(true);
+        when(reviewRepository.existsById(id)).thenReturn(false);
+
+        assertThrows(
+                ReviewNotFoundException.class,
+                () -> service.delete(id, email)
+        );
+        verify(reviewRepository, never()).deleteById(id);
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "1,          email1",
+            "2,          email2",
+            "1010101001, email3",
+    })
     void delete_should_throw_UserHasNoAccessToReview(Long id, String email) {
         when(userRepository.userHasReview(email, id)).thenReturn(false);
+        when(reviewRepository.existsById(id)).thenReturn(true);
 
         assertThrows(
                 UserHasNoAccessToReviewException.class,

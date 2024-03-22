@@ -21,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.application.exception.ApartmentNotFoundException;
+import ua.mibal.booking.application.exception.ReviewNotFoundException;
 import ua.mibal.booking.application.exception.UserHasNoAccessToReviewException;
 import ua.mibal.booking.application.exception.UserHasNoAccessToReviewsException;
 import ua.mibal.booking.application.mapper.ReviewMapper;
@@ -52,12 +53,14 @@ public class ReviewService {
 
     @Transactional
     public void create(CreateReviewForm form) {
-        validateUserHasReservationWithThisApartment(form);
+        validateApartmentExists(form.getApartmentId());
+        validateUserHasReservationWithThisApartment(form.getUserEmail(), form.getApartmentId());
         Review newReview = assembleReviewBy(form);
         reviewRepository.save(newReview);
     }
 
     public void delete(Long id, String userEmail) {
+        validateReviewExists(id);
         validateUserHasReview(userEmail, id);
         reviewRepository.deleteById(id);
     }
@@ -75,14 +78,21 @@ public class ReviewService {
         return newReview;
     }
 
-    private void validateUserHasReservationWithThisApartment(CreateReviewForm form) {
-        Long apartmentId = form.getApartmentId();
-        String userEmail = form.getUserEmail();
-        if (!apartmentRepository.existsById(apartmentId)) {
-            throw new ApartmentNotFoundException(apartmentId);
+    private void validateReviewExists(Long id) {
+        if (!reviewRepository.existsById(id)) {
+            throw new ReviewNotFoundException(id);
         }
+    }
+
+    private void validateUserHasReservationWithThisApartment(String userEmail, Long apartmentId) {
         if (!userRepository.userHasReservationWithApartment(userEmail, apartmentId)) {
             throw new UserHasNoAccessToReviewsException();
+        }
+    }
+
+    private void validateApartmentExists(Long apartmentId) {
+        if (!apartmentRepository.existsById(apartmentId)) {
+            throw new ApartmentNotFoundException(apartmentId);
         }
     }
 
