@@ -24,6 +24,7 @@ import ua.mibal.booking.application.mapper.ApartmentMapper;
 import ua.mibal.booking.application.model.ChangeApartmentForm;
 import ua.mibal.booking.application.model.ChangeApartmentOptionsForm;
 import ua.mibal.booking.application.model.CreateApartmentForm;
+import ua.mibal.booking.application.model.SearchQuery;
 import ua.mibal.booking.application.port.jpa.ApartmentRepository;
 import ua.mibal.booking.domain.Apartment;
 
@@ -88,6 +89,12 @@ public class ApartmentService {
     public List<Apartment> getPropositionsFetchPhotosPricesRoomsBeds() {
         // TODO implement condition logic
         return apartmentRepository.findAllFetchFetchPhotosPricesRoomsBeds();
+    }
+
+    public List<Apartment> getByQueryFetchPhotosPricesRoomsBeds(SearchQuery searchQuery) {
+        // TODO
+        //  this service defines default values for query
+        return null;
     }
 
     private Apartment getOne(Long id) {
