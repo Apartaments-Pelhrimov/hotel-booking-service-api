@@ -65,6 +65,12 @@ public class ApartmentController {
         return apartmentDtoMapper.toCardDtos(apartments);
     }
 
+    @GetMapping("/propositions")
+    public List<ApartmentCardDto> getPropositions() {
+        List<Apartment> apartments = apartmentService.getPropositionsFetchPhotosPricesRoomsBeds();
+        return apartmentDtoMapper.toCardDtos(apartments);
+    }
+
     @ManagerAllowed
     @PostMapping
     @ResponseStatus(CREATED)

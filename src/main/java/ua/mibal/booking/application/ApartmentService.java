@@ -85,6 +85,11 @@ public class ApartmentService {
         apartmentRepository.deleteById(id);
     }
 
+    public List<Apartment> getPropositionsFetchPhotosPricesRoomsBeds() {
+        // TODO implement condition logic
+        return apartmentRepository.findAllFetchFetchPhotosPricesRoomsBeds();
+    }
+
     private Apartment getOne(Long id) {
         return apartmentRepository.findById(id)
                 .orElseThrow(() -> new ApartmentNotFoundException(id));
