@@ -28,7 +28,6 @@ import ua.mibal.booking.application.model.ChangeNotificationSettingsForm;
 import ua.mibal.booking.application.model.ChangeUserForm;
 import ua.mibal.booking.application.model.RegistrationForm;
 import ua.mibal.booking.application.port.jpa.FakeInMemoryUserRepository;
-import ua.mibal.booking.domain.NotificationSettings;
 import ua.mibal.booking.domain.User;
 import ua.mibal.test.annotation.UnitTest;
 
@@ -59,7 +58,6 @@ class UserService_UnitTest {
     private User user;
     private RegistrationForm registrationForm;
     private ChangeUserForm changeUserForm;
-    private NotificationSettings notificationSettings;
     private ChangeNotificationSettingsForm changeNotificationSettingsForm;
 
     @Test
