@@ -118,6 +118,9 @@ components:
           type: "string"
         role:
           type: "string"
+          enum:
+            - "USER"
+            - "MANAGER"
     ReviewDto:
       type: "object"
       properties:
@@ -139,11 +142,6 @@ components:
         rate:
           type: "number"
           format: "double"
-        apartmentId:
-          type: "integer"
-          format: "int64"
-        userEmail:
-          type: "string"
     ApiError:
       type: "object"
       properties:

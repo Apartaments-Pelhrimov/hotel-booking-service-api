@@ -20,6 +20,7 @@ import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -47,7 +48,9 @@ public class CreateReviewForm {
     @DecimalMax("10")
     private Double rate;
 
+    @Null
     private Long apartmentId;
 
+    @Null
     private String userEmail;
 }
