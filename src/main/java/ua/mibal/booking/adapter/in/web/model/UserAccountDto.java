@@ -17,6 +17,7 @@
 package ua.mibal.booking.adapter.in.web.model;
 
 import ua.mibal.booking.domain.NotificationSettings;
+import ua.mibal.booking.domain.Role;
 
 /**
  * @author Mykhailo Balakhon
@@ -26,7 +27,8 @@ public record UserAccountDto(
         String firstName,
         String lastName,
         String photo,
-        String role,
+        Role role,
+
         String phone,
         String email,
         NotificationSettings notificationSettings

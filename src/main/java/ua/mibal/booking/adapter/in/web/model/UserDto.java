@@ -16,6 +16,8 @@
 
 package ua.mibal.booking.adapter.in.web.model;
 
+import ua.mibal.booking.domain.Role;
+
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
@@ -24,6 +26,6 @@ public record UserDto(
         String firstName,
         String lastName,
         String photo,
-        String role
+        Role role
 ) {
 }
