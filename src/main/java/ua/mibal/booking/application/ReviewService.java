@@ -51,6 +51,10 @@ public class ReviewService {
         return reviewRepository.findByApartmentIdFetchUser(apartmentId, pageable);
     }
 
+    public List<Review> getAllLatest(Pageable pageable) {
+        return reviewRepository.findLatestFetchUser(pageable);
+    }
+
     @Transactional
     public void create(CreateReviewForm form) {
         validateApartmentExists(form.getApartmentId());
@@ -63,10 +67,6 @@ public class ReviewService {
         validateReviewExists(id);
         validateUserHasReview(userEmail, id);
         reviewRepository.deleteById(id);
-    }
-
-    public List<Review> getAllLatest(Pageable pageable) {
-        return reviewRepository.findLatestFetchUser(pageable);
     }
 
     private Review assembleReviewBy(CreateReviewForm form) {

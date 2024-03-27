@@ -72,7 +72,7 @@ public class FakeInMemoryUserRepository implements UserRepository {
 
     @Override
     public User getReferenceByEmail(String email) {
-        throw new UnsupportedOperationException();
+        return users.get(email);
     }
 
     @Override
@@ -116,12 +116,21 @@ public class FakeInMemoryUserRepository implements UserRepository {
 
     @Override
     public boolean userHasReservationWithApartment(String email, Long apartmentId) {
-        throw new UnsupportedOperationException();
+        return findByEmail(email)
+                .map(user -> user.getReservations().stream()
+                        .anyMatch(reservation -> reservation.getApartmentInstance()
+                                .getApartment()
+                                .getId()
+                                .equals(apartmentId)))
+                .orElse(false);
     }
 
     @Override
     public boolean userHasReview(String email, Long reviewId) {
-        throw new UnsupportedOperationException();
+        return findByEmail(email)
+                .map(user -> user.getReviews().stream()
+                        .anyMatch(review -> review.getId().equals(reviewId)))
+                .orElse(false);
     }
 
     @Override
