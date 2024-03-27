@@ -59,12 +59,6 @@ public class ApartmentController {
         return apartmentDtoMapper.toDto(apartment);
     }
 
-    @GetMapping
-    public List<ApartmentCardDto> getAll() {
-        List<Apartment> apartments = apartmentService.getAllFetchPhotosPricesRoomsBeds();
-        return apartmentDtoMapper.toCardDtos(apartments);
-    }
-
     @GetMapping("/propositions")
     public List<ApartmentCardDto> getPropositions() {
         List<Apartment> apartments = apartmentService.getPropositionsFetchPhotosPricesRoomsBeds();

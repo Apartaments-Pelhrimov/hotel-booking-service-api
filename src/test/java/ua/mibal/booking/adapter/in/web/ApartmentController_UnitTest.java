@@ -20,7 +20,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -88,15 +87,6 @@ class ApartmentController_UnitTest {
 
         verify(apartmentService, times(1))
                 .getOneFetchPhotosBeds(id);
-    }
-
-    @Test
-    void getAll_should_delegate_to_ApartmentService() throws Exception {
-        mvc.perform(get("/api/apartments"))
-                .andExpect(status().isOk());
-
-        verify(apartmentService, times(1))
-                .getAllFetchPhotosPricesRoomsBeds();
     }
 
     @ParameterizedTest

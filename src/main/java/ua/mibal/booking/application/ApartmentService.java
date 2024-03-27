@@ -40,7 +40,14 @@ public class ApartmentService {
     private final ApartmentRepository apartmentRepository;
     private final ApartmentMapper apartmentMapper;
 
-    public List<Apartment> getAllFetchPhotosPricesRoomsBeds() {
+    public List<Apartment> getPropositionsFetchPhotosPricesRoomsBeds() {
+        // TODO implement filtering logic
+        return apartmentRepository.findAllFetchFetchPhotosPricesRoomsBeds();
+    }
+
+    public List<Apartment> getByQueryFetchPhotosPricesRoomsBeds(SearchQuery searchQuery) {
+        // TODO
+        //  service also defines default values for query
         return apartmentRepository.findAllFetchFetchPhotosPricesRoomsBeds();
     }
 
@@ -84,17 +91,6 @@ public class ApartmentService {
     public void delete(Long id) {
         validateExists(id);
         apartmentRepository.deleteById(id);
-    }
-
-    public List<Apartment> getPropositionsFetchPhotosPricesRoomsBeds() {
-        // TODO implement condition logic
-        return apartmentRepository.findAllFetchFetchPhotosPricesRoomsBeds();
-    }
-
-    public List<Apartment> getByQueryFetchPhotosPricesRoomsBeds(SearchQuery searchQuery) {
-        // TODO
-        //  this service defines default values for query
-        return null;
     }
 
     private Apartment getOne(Long id) {

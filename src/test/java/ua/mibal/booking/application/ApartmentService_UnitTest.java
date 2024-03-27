@@ -29,10 +29,8 @@ import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.ApartmentOptions;
 import ua.mibal.test.annotation.UnitTest;
 
-import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -70,16 +68,6 @@ class ApartmentService_UnitTest {
     @BeforeEach
     void setup() {
         service = new ApartmentService(apartmentRepository, apartmentMapper);
-    }
-
-    @Test
-    void getAllFetchPhotosBeds() {
-        when(apartmentRepository.findAllFetchFetchPhotosPricesRoomsBeds())
-                .thenReturn(List.of(apartment, apartment));
-
-        List<Apartment> actual = service.getAllFetchPhotosPricesRoomsBeds();
-
-        assertThat(actual).containsOnly(apartment, apartment);
     }
 
     @Test
