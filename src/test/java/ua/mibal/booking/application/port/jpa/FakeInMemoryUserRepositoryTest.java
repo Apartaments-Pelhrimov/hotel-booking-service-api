@@ -17,6 +17,10 @@
 package ua.mibal.booking.application.port.jpa;
 
 import org.junit.jupiter.api.Test;
+import ua.mibal.booking.domain.Apartment;
+import ua.mibal.booking.domain.ApartmentInstance;
+import ua.mibal.booking.domain.Reservation;
+import ua.mibal.booking.domain.Review;
 import ua.mibal.booking.domain.User;
 import ua.mibal.test.annotation.UnitTest;
 
@@ -32,14 +36,15 @@ import static org.junit.jupiter.api.Assertions.fail;
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @UnitTest
-class FakeInMemoryUserRepository_UnitTest {
+class FakeInMemoryUserRepositoryTest {
 
-    private final FakeInMemoryUserRepository tested = new FakeInMemoryUserRepository();
+    private final FakeInMemoryUserRepository repository = new FakeInMemoryUserRepository();
 
     private User user;
+    private Apartment apartment;
     private Optional<User> found;
     private Optional<String> foundPassword;
-    private boolean existsResult;
+    private boolean booleanResult;
     private int resultCount;
 
     @Test
@@ -57,7 +62,7 @@ class FakeInMemoryUserRepository_UnitTest {
 
         whenFindById(1L);
 
-        thenUsersIsEquals();
+        thenUsersAreEquals();
     }
 
     @Test
@@ -146,6 +151,126 @@ class FakeInMemoryUserRepository_UnitTest {
         thenUserIsDeleted("user2@email");
     }
 
+    @Test
+    void userHasReservationWithApartment_true() {
+        givenApartment(1L);
+        givenSavedUser("user@email");
+        givenReservationWithApartmentAndUser();
+
+        whenUserHasReservationWithApartment("user@email", 1L);
+
+        thenResultIs(true);
+    }
+
+    @Test
+    void userHasReservationWithApartment_false_UserNotFound() {
+        givenEmptyRepository();
+
+        whenUserHasReservationWithApartment("user@email", 1L);
+
+        thenResultIs(false);
+    }
+
+    @Test
+    void userHasReservationWithApartment_false_ApartmentNotFound() {
+        givenSavedUser("user@email");
+
+        whenUserHasReservationWithApartment("user@email", 1L);
+
+        thenResultIs(false);
+    }
+
+    @Test
+    void userHasReservationWithApartment_false_ReservationWithUserAndApartmentNotFound() {
+        givenApartment(1L);
+        givenSavedUser("user@email");
+
+        whenUserHasReservationWithApartment("user@email", 1L);
+
+        thenResultIs(false);
+    }
+
+    @Test
+    void findByEmail() {
+        givenSavedUser("user@email");
+
+        whenFindByEmail("user@email");
+
+        thenUsersAreEquals();
+    }
+
+    @Test
+    void getReferenceByEmail() {
+        givenSavedUser("user@email");
+
+        whenGetReferenceByEmail("user@email");
+
+        thenUsersAreEquals();
+    }
+
+    @Test
+    void userHasReview_false_UserDoesNotExists() {
+        givenEmptyRepository();
+
+        whenUserHasReview("user@email", 1L);
+
+        thenResultIs(false);
+    }
+
+    @Test
+    void userHasReview_false() {
+        givenSavedUser("user@email");
+
+        whenUserHasReview("user@email", 1L);
+
+        thenResultIs(false);
+    }
+
+    @Test
+    void userHasReview_true() {
+        givenSavedUser("user@email");
+        givenReviewOfUser(1L);
+
+        whenUserHasReview("user@email", 1L);
+
+        thenResultIs(true);
+    }
+
+    private void givenReviewOfUser(long reviewId) {
+        Review review = new Review();
+        review.setId(reviewId);
+        user.addReview(review);
+    }
+
+    private void whenUserHasReview(String userEmail, long reviewId) {
+        booleanResult = repository.userHasReview(userEmail, reviewId);
+    }
+
+    private void whenGetReferenceByEmail(String email) {
+        found = Optional.of(repository.getReferenceByEmail(email));
+    }
+
+    private void whenFindByEmail(String email) {
+        found = repository.findByEmail(email);
+    }
+
+    private void givenReservationWithApartmentAndUser() {
+        Reservation reservation = new Reservation();
+        ApartmentInstance apartmentInstance = new ApartmentInstance();
+        apartmentInstance.setApartment(apartment);
+        reservation.setApartmentInstance(apartmentInstance);
+        user.addReservation(reservation);
+    }
+
+    private void givenApartment(long id) {
+        apartment = new Apartment();
+        apartment.setId(id);
+    }
+
+    private void whenUserHasReservationWithApartment(String username, long apartmentId) {
+        booleanResult = repository.userHasReservationWithApartment(username, apartmentId);
+    }
+
     private void givenUser(long id) {
         user = new User();
         user.setId(id);
@@ -177,49 +302,49 @@ class FakeInMemoryUserRepository_UnitTest {
     }
 
     private void givenEmptyRepository() {
-        tested.deleteAll();
+        repository.deleteAll();
     }
 
     private void whenSaveUser() {
-        tested.save(user);
+        repository.save(user);
     }
 
     private void whenFindById(long id) {
-        found = tested.findById(id);
+        found = repository.findById(id);
     }
 
     private void whenDelete() {
-        tested.delete(user);
+        repository.delete(user);
     }
 
     private void whenDeleteAll() {
-        tested.deleteAll();
+        repository.deleteAll();
     }
 
     private void whenFindPasswordByEmail(String email) {
-        foundPassword = tested.findPasswordByEmail(email);
+        foundPassword = repository.findPasswordByEmail(email);
     }
 
     private void whenExistsByEmail(String email) {
-        existsResult = tested.existsByEmail(email);
+        booleanResult = repository.existsByEmail(email);
     }
 
     private void whenUpdateUserPasswordByEmail(String newPassword, String email) {
-        tested.updateUserPasswordByEmail(newPassword, email);
+        repository.updateUserPasswordByEmail(newPassword, email);
     }
 
     private void whenDeleteNotEnabledWithNoTokens() {
-        resultCount = tested.deleteNotEnabledWithNoTokens();
+        resultCount = repository.deleteNotEnabledWithNoTokens();
     }
 
     private void thenUserIsSaved(long id) {
-        tested.findById(id).ifPresentOrElse(
+        repository.findById(id).ifPresentOrElse(
                 u -> assertEquals(user, u),
                 () -> fail("User not found")
         );
     }
 
-    private void thenUsersIsEquals() {
+    private void thenUsersAreEquals() {
         found.ifPresentOrElse(
                 u -> assertEquals(user, u),
                 () -> fail("User not found")
@@ -228,11 +353,11 @@ class FakeInMemoryUserRepository_UnitTest {
 
     private void thenUserIsDeleted(long id) {
         assertThrows(RuntimeException.class,
-                () -> tested.findById(id).orElseThrow());
+                () -> repository.findById(id).orElseThrow());
     }
 
     private void thenUserIsDeleted(String email) {
-        assertFalse(tested.existsByEmail(email));
+        assertFalse(repository.existsByEmail(email));
     }
 
     private void thenPasswordIsEquals(String password) {
@@ -247,11 +372,11 @@ class FakeInMemoryUserRepository_UnitTest {
     }
 
     private void thenResultIs(boolean b) {
-        assertEquals(b, existsResult);
+        assertEquals(b, booleanResult);
     }
 
     private void whenDeleteByEmail(String email) {
-        tested.deleteByEmail(email);
+        repository.deleteByEmail(email);
     }
 
     private void thenUserPasswordIs(String newPassword) {
