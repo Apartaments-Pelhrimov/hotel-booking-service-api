@@ -24,7 +24,9 @@ import ua.mibal.booking.domain.Token;
  */
 public abstract class EntityNotFoundException extends NotFoundException {
 
-    protected EntityNotFoundException(Class<?> entity, Long id) {
+    // TODO fix exceptions
+
+    protected EntityNotFoundException(Class<?> entity, Object id) {
         super(
                 "not-found-error.entity.by-id",
                 entity.getSimpleName(), id

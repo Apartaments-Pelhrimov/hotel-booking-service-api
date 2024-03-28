@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.domain.Event;
+import ua.mibal.booking.domain.id.ApartmentId;
 
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class EventService {
     private final TurningOffService turningOffService;
 
     @Transactional(readOnly = true)
-    public List<List<Event>> getEventsForApartmentBy(Long apartmentId) {
+    public List<List<Event>> getEventsForApartmentBy(ApartmentId apartmentId) {
         Apartment apartment = apartmentService.getOneFetchInstances(apartmentId);
         List<? extends Event> hotelEvents = turningOffService.getForHotelForNow();
         return apartment.getApartmentInstances().stream()

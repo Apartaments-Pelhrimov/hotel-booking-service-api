@@ -35,10 +35,10 @@ import org.springframework.web.context.WebApplicationContext;
 import ua.mibal.booking.adapter.in.web.mapper.ApartmentDtoMapper;
 import ua.mibal.booking.application.ApartmentService;
 import ua.mibal.booking.application.model.CreateApartmentForm;
+import ua.mibal.booking.domain.id.ApartmentId;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -71,22 +71,13 @@ class ApartmentController_UnitTest {
     }
 
     @ParameterizedTest
-    @CsvSource({"1-1", "value", "superman2004"})
-    void getOne_should_throw_exception_if_id_path_variable_is_illegal(String id) throws Exception {
-        mvc.perform(get("/api/apartments/{id}", id))
-                .andExpect(status().isBadRequest());
-
-        verifyNoInteractions(apartmentService);
-    }
-
-    @ParameterizedTest
     @CsvSource({"1", "1000000", "" + Long.MAX_VALUE, "" + Long.MIN_VALUE})
-    void getOne_should_handle_id_correct(Long id) throws Exception {
+    void getOne_should_handle_id_correct(String id) throws Exception {
         mvc.perform(get("/api/apartments/{id}", id))
                 .andExpect(status().isOk());
 
         verify(apartmentService, times(1))
-                .getOneFetchPhotosBeds(id);
+                .getOneFetchPhotosBeds(new ApartmentId(id));
     }
 
     @ParameterizedTest

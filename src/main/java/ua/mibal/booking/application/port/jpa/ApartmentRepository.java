@@ -17,21 +17,32 @@
 package ua.mibal.booking.application.port.jpa;
 
 import ua.mibal.booking.domain.Apartment;
+import ua.mibal.booking.domain.id.ApartmentId;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface ApartmentRepository extends Repository<Apartment, Long> {
+public interface ApartmentRepository {
 
-    Optional<Apartment> findByIdFetchPhotos(Long id);
+    Apartment save(Apartment apartment);
+
+    Optional<Apartment> findById(ApartmentId id);
+
+    void deleteById(ApartmentId id);
+
+    boolean existsById(ApartmentId id);
+
+    Apartment getReferenceById(ApartmentId id);
+
+    Optional<Apartment> findByIdFetchPhotos(ApartmentId id);
 
     List<Apartment> findAllFetchPhotos();
 
-    Optional<Apartment> findByIdFetchPrices(Long id);
+    Optional<Apartment> findByIdFetchPrices(ApartmentId id);
 
-    Optional<Apartment> findByIdFetchInstances(Long id);
+    Optional<Apartment> findByIdFetchInstances(ApartmentId id);
 
-    Optional<Apartment> findByIdFetchPhotosRooms(Long id);
+    Optional<Apartment> findByIdFetchPhotosRooms(ApartmentId id);
 
     List<Apartment> findAllFetchFetchPhotosPricesRoomsBeds();
 }

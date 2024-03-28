@@ -23,6 +23,7 @@ import ua.mibal.booking.adapter.in.web.model.ReservationRejectingFormDto;
 import ua.mibal.booking.application.model.ReservationForm;
 import ua.mibal.booking.application.model.ReservationRejectingForm;
 import ua.mibal.booking.application.util.DateTimeUtils;
+import ua.mibal.booking.domain.id.ApartmentId;
 
 import java.time.LocalDateTime;
 
@@ -36,7 +37,7 @@ public class ReservationFormMapper {
     private final DateTimeUtils dateTimeUtils;
 
     public ReservationForm toForm(ReservationFormDto dto,
-                                  Long apartmentId,
+                                  ApartmentId apartmentId,
                                   String userEmail) {
         LocalDateTime from = dateTimeUtils.reserveFrom(dto.from());
         LocalDateTime to = dateTimeUtils.reserveTo(dto.to());

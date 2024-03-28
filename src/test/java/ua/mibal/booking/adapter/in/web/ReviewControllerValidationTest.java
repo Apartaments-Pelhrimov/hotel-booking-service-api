@@ -26,6 +26,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import ua.mibal.booking.adapter.in.web.mapper.ReviewDtoMapper;
 import ua.mibal.booking.application.ReviewService;
 import ua.mibal.booking.application.model.CreateReviewForm;
+import ua.mibal.booking.domain.id.ApartmentId;
 
 import java.util.HashMap;
 
@@ -43,7 +44,7 @@ import static ua.mibal.booking.adapter.in.web.security.TestSecurityJwtUtils.jwt;
  */
 @WebMvcTest(ReviewController.class)
 public class ReviewControllerValidationTest extends ControllerValidationTest {
-    private static final Long APARTMENT_ID = 1L;
+    private static final String APARTMENT_ID = "apartment-id";
     private static final String USER_USERNAME = "user@email.com";
 
     @MockBean
@@ -86,7 +87,7 @@ public class ReviewControllerValidationTest extends ControllerValidationTest {
         whenCreateThenShouldBeStatus(body, rate, 201);
 
         verify(reviewService).create(new CreateReviewForm(
-                body, rate, APARTMENT_ID, USER_USERNAME
+                body, rate, new ApartmentId(APARTMENT_ID), USER_USERNAME
         ));
     }
 

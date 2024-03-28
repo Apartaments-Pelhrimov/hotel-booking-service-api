@@ -14,18 +14,22 @@
  * limitations under the License.
  */
 
-alter table apartment_photos
-    drop constraint if exists apartment_photos_pkey;
+package ua.mibal.booking.domain.id;
 
-alter table apartment_photos
-    drop constraint if exists apartment_photos_aws_photo_key_idx;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 
-alter table apartment_photos
-    drop
-        column if exists photos_order;
+import java.io.Serializable;
 
-alter table if exists apartment_photos
-    drop constraint if exists apartment_photos_aws_photo_key_idx;
+/**
+ * @author Mykhailo Balakhon
+ * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
+ */
+@Embeddable
+public record ApartmentId(
 
-alter table if exists apartment_photos
-    add constraint apartment_photos_aws_photo_key_idx unique (aws_photo_key);
+        @Column(name = "id")
+        String value
+
+) implements Serializable {
+}

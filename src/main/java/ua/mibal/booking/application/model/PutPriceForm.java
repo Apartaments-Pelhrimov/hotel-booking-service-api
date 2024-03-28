@@ -20,10 +20,12 @@ import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ua.mibal.booking.domain.id.ApartmentId;
 
 import java.math.BigDecimal;
 
@@ -46,5 +48,6 @@ public class PutPriceForm {
     @DecimalMax("100000")
     private BigDecimal amount;
 
-    private Long apartmentId;
+    @Null
+    private ApartmentId apartmentId;
 }

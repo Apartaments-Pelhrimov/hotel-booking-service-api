@@ -20,12 +20,12 @@ import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
+import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
@@ -37,8 +37,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.GenericGenerator;
 import ua.mibal.booking.application.exception.PhotoNotFoundException;
 import ua.mibal.booking.application.exception.PriceNotFoundException;
+import ua.mibal.booking.domain.id.ApartmentId;
+import ua.mibal.booking.domain.id.ApartmentIdGenerator;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -60,9 +63,11 @@ import static ua.mibal.booking.domain.ApartmentOptions.DEFAULT;
 @Table(name = "apartments")
 public class Apartment {
 
-    @Id
-    @GeneratedValue
-    private Long id;
+    @GenericGenerator(name = "ApartmentIdGenerator",
+            type = ApartmentIdGenerator.class)
+    @GeneratedValue(generator = "ApartmentIdGenerator")
+    @EmbeddedId
+    private ApartmentId id;
 
     @Column(nullable = false)
     private String name;

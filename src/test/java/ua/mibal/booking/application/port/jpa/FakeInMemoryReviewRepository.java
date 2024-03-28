@@ -20,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import ua.mibal.booking.domain.Review;
+import ua.mibal.booking.domain.id.ApartmentId;
 
 import java.util.HashMap;
 import java.util.List;
@@ -70,7 +71,7 @@ public class FakeInMemoryReviewRepository implements ReviewRepository {
     }
 
     @Override
-    public List<Review> findByApartmentIdFetchUser(Long apartmentId, Pageable pageable) {
+    public List<Review> findByApartmentIdFetchUser(ApartmentId apartmentId, Pageable pageable) {
         return reviews.values().stream()
                 .filter(review -> review.getApartment().getId().equals(apartmentId))
                 .toList();

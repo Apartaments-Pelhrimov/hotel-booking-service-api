@@ -18,6 +18,7 @@ package ua.mibal.booking.application.port.jpa;
 
 import org.junit.jupiter.api.Test;
 import ua.mibal.booking.domain.Apartment;
+import ua.mibal.booking.domain.id.ApartmentId;
 import ua.mibal.test.annotation.UnitTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -39,46 +40,46 @@ class FakeInMemoryApartmentRepositoryTest {
 
     @Test
     void save() {
-        givenApartment(1L);
+        givenApartment(new ApartmentId("1L"));
 
         whenSave();
 
-        thenApartmentIsSaved(1L);
+        thenApartmentIsSaved(new ApartmentId("1L"));
     }
 
     @Test
     void existsById() {
-        givenSavedApartment(1L);
+        givenSavedApartment(new ApartmentId("1L"));
 
-        whenExistsById(1L);
+        whenExistsById(new ApartmentId("1L"));
 
         thenExistsIs(true);
     }
 
     @Test
     void getReferenceById() {
-        givenSavedApartment(1L);
+        givenSavedApartment(new ApartmentId("1L"));
 
-        whenGetReferenceById(1L);
+        whenGetReferenceById(new ApartmentId("1L"));
 
         thenApartmentsEquals();
     }
 
     @Test
     void deleteAll() {
-        givenSavedApartment(1L);
+        givenSavedApartment(new ApartmentId("1L"));
 
         whenDeleteAll();
 
-        thenApartmentIsDeleted(1L);
+        thenApartmentIsDeleted(new ApartmentId("1L"));
     }
 
-    private void givenApartment(long id) {
+    private void givenApartment(ApartmentId id) {
         apartment = new Apartment();
         apartment.setId(id);
     }
 
-    private void givenSavedApartment(long id) {
+    private void givenSavedApartment(ApartmentId id) {
         givenApartment(id);
         whenSave();
     }
@@ -87,15 +88,15 @@ class FakeInMemoryApartmentRepositoryTest {
         repository.save(apartment);
     }
 
-    private void whenExistsById(long id) {
+    private void whenExistsById(ApartmentId id) {
         exists = repository.existsById(id);
     }
 
-    private void whenGetReferenceById(long id) {
+    private void whenGetReferenceById(ApartmentId id) {
         found = repository.getReferenceById(id);
     }
 
-    private void thenApartmentIsSaved(long id) {
+    private void thenApartmentIsSaved(ApartmentId id) {
         assertTrue(repository.existsById(id));
     }
 
@@ -103,7 +104,7 @@ class FakeInMemoryApartmentRepositoryTest {
         repository.deleteAll();
     }
 
-    private void thenApartmentIsDeleted(long id) {
+    private void thenApartmentIsDeleted(ApartmentId id) {
         assertFalse(repository.existsById(id));
     }
 

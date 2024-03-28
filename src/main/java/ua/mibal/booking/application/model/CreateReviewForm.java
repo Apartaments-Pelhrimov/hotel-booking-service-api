@@ -27,6 +27,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ua.mibal.booking.domain.id.ApartmentId;
 
 /**
  * @author Mykhailo Balakhon
@@ -49,7 +50,7 @@ public class CreateReviewForm {
     private Double rate;
 
     @Null
-    private Long apartmentId;
+    private ApartmentId apartmentId;
 
     @Null
     private String userEmail;

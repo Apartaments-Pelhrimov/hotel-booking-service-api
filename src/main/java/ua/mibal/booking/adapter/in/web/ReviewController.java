@@ -34,6 +34,7 @@ import ua.mibal.booking.adapter.in.web.security.annotation.UserAllowed;
 import ua.mibal.booking.application.ReviewService;
 import ua.mibal.booking.application.model.CreateReviewForm;
 import ua.mibal.booking.domain.Review;
+import ua.mibal.booking.domain.id.ApartmentId;
 
 import java.util.List;
 
@@ -52,9 +53,10 @@ public class ReviewController {
     private final ReviewDtoMapper reviewDtoMapper;
 
     @GetMapping("/apartments/{apartmentId}/reviews")
-    public List<ReviewDto> getAllByApartment(@PathVariable Long apartmentId,
+    public List<ReviewDto> getAllByApartment(@PathVariable String apartmentId,
                                              Pageable pageable) {
-        List<Review> reviews = reviewService.getAllByApartment(apartmentId, pageable);
+        List<Review> reviews = reviewService.getAllByApartment(
+                new ApartmentId(apartmentId), pageable);
         return reviewDtoMapper.toDtos(reviews);
     }
 
@@ -67,10 +69,10 @@ public class ReviewController {
     @UserAllowed
     @PostMapping("/apartments/{apartmentId}/reviews")
     @ResponseStatus(CREATED)
-    public void create(@PathVariable Long apartmentId,
+    public void create(@PathVariable String apartmentId,
                        @Valid @RequestBody CreateReviewForm form,
                        Authentication authentication) {
-        form.setApartmentId(apartmentId);
+        form.setApartmentId(new ApartmentId(apartmentId));
         form.setUserEmail(authentication.getName());
         reviewService.create(form);
     }

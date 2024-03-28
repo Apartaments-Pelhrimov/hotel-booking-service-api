@@ -29,6 +29,7 @@ import ua.mibal.booking.adapter.out.reservation.system.ical.WebContentReader;
 import ua.mibal.booking.application.model.ReservationForm;
 import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.domain.Event;
+import ua.mibal.booking.domain.id.ApartmentId;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.time.LocalDateTime;
@@ -104,7 +105,7 @@ class BookingComReservationService_UnitTest {
         when(icalMapper.getEvents("FILE CONTENT"))
                 .thenReturn(events);
 
-        boolean actual = service.isFreeForReservation(apartmentInstance, new ReservationForm(from, to, -1, -1L, "ignored"));
+        boolean actual = service.isFreeForReservation(apartmentInstance, new ReservationForm(from, to, -1, new ApartmentId("apartment-id"), "ignored"));
 
         assertEquals(expected, actual);
     }

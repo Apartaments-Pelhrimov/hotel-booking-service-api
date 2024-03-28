@@ -24,6 +24,7 @@ import ua.mibal.booking.adapter.out.jpa.custom.CustomUserRepository;
 import ua.mibal.booking.application.port.jpa.UserRepository;
 import ua.mibal.booking.domain.Photo;
 import ua.mibal.booking.domain.User;
+import ua.mibal.booking.domain.id.ApartmentId;
 
 import java.util.Optional;
 
@@ -84,7 +85,7 @@ public interface UserJpaRepository extends JpaRepository<User, Long>, CustomUser
                 right join ai.apartment a
             where u.email = ?1 and a.id = ?2
             """)
-    boolean userHasReservationWithApartment(String email, Long apartmentId);
+    boolean userHasReservationWithApartment(String email, ApartmentId apartmentId);
 
     @Override
     @Query("""

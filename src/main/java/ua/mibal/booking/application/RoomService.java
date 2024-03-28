@@ -25,6 +25,7 @@ import ua.mibal.booking.application.model.CreateRoomForm;
 import ua.mibal.booking.application.port.jpa.ApartmentRepository;
 import ua.mibal.booking.application.port.jpa.RoomRepository;
 import ua.mibal.booking.domain.Room;
+import ua.mibal.booking.domain.id.ApartmentId;
 
 /**
  * @author Mykhailo Balakhon
@@ -37,7 +38,7 @@ public class RoomService {
     private final ApartmentRepository apartmentRepository;
     private final RoomMapper roomMapper;
 
-    public void create(Long apartmentId, CreateRoomForm form) {
+    public void create(ApartmentId apartmentId, CreateRoomForm form) {
         validateApartmentExists(apartmentId);
         Room room = roomMapper.assemble(form);
         room.setApartment(apartmentRepository.getReferenceById(apartmentId));
@@ -49,7 +50,7 @@ public class RoomService {
         roomRepository.deleteById(id);
     }
 
-    private void validateApartmentExists(Long id) {
+    private void validateApartmentExists(ApartmentId id) {
         if (!apartmentRepository.existsById(id)) {
             throw new ApartmentNotFoundException(id);
         }

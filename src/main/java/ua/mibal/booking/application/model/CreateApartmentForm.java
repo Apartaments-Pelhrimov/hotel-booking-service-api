@@ -16,11 +16,13 @@
 
 package ua.mibal.booking.application.model;
 
+import jakarta.persistence.Id;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import ua.mibal.booking.application.validation.constraints.Name;
 import ua.mibal.booking.domain.Apartment.ApartmentClass;
 import ua.mibal.booking.domain.ApartmentOptions;
+import ua.mibal.booking.domain.id.ApartmentId;
 
 import java.util.List;
 
@@ -29,6 +31,10 @@ import java.util.List;
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 public record CreateApartmentForm(
+
+        @Id
+        @NotNull
+        ApartmentId id,
 
         @Name
         @NotNull

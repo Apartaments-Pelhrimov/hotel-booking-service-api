@@ -33,6 +33,7 @@ import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.domain.Reservation;
 import ua.mibal.booking.domain.Review;
 import ua.mibal.booking.domain.User;
+import ua.mibal.booking.domain.id.ApartmentId;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.util.function.Predicate;
@@ -63,21 +64,21 @@ class ReviewServiceTest {
 
     @Test
     void create() {
-        givenSavedApartment(101L);
+        givenSavedApartment(new ApartmentId("apartment-id"));
         givenSavedUser("user@email.com");
         givenEmptyReviewRepository();
         givenReservationOfUserWithApartment();
-        givenCreateReviewForm("Great apartment", 5.0, 101L, "user@email.com");
+        givenCreateReviewForm("Great apartment", 5.0, new ApartmentId("apartment-id"), "user@email.com");
 
         whenCreate();
 
-        thenReviewSaved("Great apartment", 5.0, 101L, "user@email.com");
+        thenReviewSaved("Great apartment", 5.0, new ApartmentId("apartment-id"), "user@email.com");
     }
 
     @Test
     void createShouldThrowApartmentNotFoundException() {
         givenEmptyApartmentRepository();
-        givenCreateReviewForm("Great apartment", 5.0, 101L, "user@email.com");
+        givenCreateReviewForm("Great apartment", 5.0, new ApartmentId("apartment-id"), "user@email.com");
 
         assertThrows(ApartmentNotFoundException.class,
                 this::whenCreate);
@@ -85,8 +86,8 @@ class ReviewServiceTest {
 
     @Test
     void createShouldThrowUserHasNoAccessToReviewExceptionIfUserNotFound() {
-        givenSavedApartment(101L);
-        givenCreateReviewForm("Great apartment", 5.0, 101L, "user@email.com");
+        givenSavedApartment(new ApartmentId("apartment-id"));
+        givenCreateReviewForm("Great apartment", 5.0, new ApartmentId("apartment-id"), "user@email.com");
 
         assertThrows(UserHasNoAccessToReviewsException.class,
                 this::whenCreate);
@@ -94,9 +95,9 @@ class ReviewServiceTest {
 
     @Test
     void createShouldThrowUserHasNoAccessToReviewsExceptionIfUserHasNoReservationsWithApartment() {
-        givenSavedApartment(101L);
+        givenSavedApartment(new ApartmentId("apartment-id"));
         givenSavedUser("user@email.com");
-        givenCreateReviewForm("Great apartment", 5.0, 101L, "user@email.com");
+        givenCreateReviewForm("Great apartment", 5.0, new ApartmentId("apartment-id"), "user@email.com");
 
         assertThrows(UserHasNoAccessToReviewsException.class,
                 this::whenCreate);
@@ -105,7 +106,7 @@ class ReviewServiceTest {
     @Test
     void delete() {
         givenSavedUser("user@email");
-        givenSavedApartment(101L);
+        givenSavedApartment(new ApartmentId("apartment-id"));
         givenSavedReviewWithUserAndApartment(1L);
 
         whenDelete(1L, "user@email");
@@ -116,7 +117,7 @@ class ReviewServiceTest {
     @Test
     void deleteShouldThrowUserHasNoAccessToReviewExceptionIfUserNotFound() {
         givenSavedUser("user@email");
-        givenSavedApartment(101L);
+        givenSavedApartment(new ApartmentId("apartment-id"));
         givenSavedReviewWithUserAndApartment(1L);
 
         assertThrows(UserHasNoAccessToReviewException.class,
@@ -126,7 +127,7 @@ class ReviewServiceTest {
     @Test
     void deleteShouldThrowReviewNotFoundException() {
         givenSavedUser("user@email");
-        givenSavedApartment(101L);
+        givenSavedApartment(new ApartmentId("apartment-id"));
         givenSavedReviewWithUserAndApartment(1L);
 
         assertThrows(ReviewNotFoundException.class,
@@ -137,7 +138,7 @@ class ReviewServiceTest {
     void deleteShouldThrowUserHasNoAccessToReviewExceptionIfUserIsNotTheAuthorOfReview() {
         givenSavedUser("user@email");
         givenSavedUser("reviewAuthor@email");
-        givenSavedApartment(101L);
+        givenSavedApartment(new ApartmentId("apartment-id"));
         givenSavedReviewWithUserAndApartment(1L);
 
         assertThrows(UserHasNoAccessToReviewException.class,
@@ -174,12 +175,12 @@ class ReviewServiceTest {
         userRepository.save(user);
     }
 
-    private void givenApartment(long id) {
+    private void givenApartment(ApartmentId id) {
         apartment = new Apartment();
         apartment.setId(id);
     }
 
-    private void givenSavedApartment(long id) {
+    private void givenSavedApartment(ApartmentId id) {
         givenApartment(id);
         apartmentRepository.save(apartment);
     }
@@ -194,13 +195,13 @@ class ReviewServiceTest {
         user.addReservation(reservation);
     }
 
-    private void thenReviewSaved(String body, double rate, long apartmentId, String username) {
+    private void thenReviewSaved(String body, double rate, ApartmentId apartmentId, String username) {
         Page<Review> reviews = reviewRepository.findAll(unpaged());
 
         Predicate<Review> sameReviewCondition = r ->
                 r.getBody().equals(body)
-                && r.getRate() == rate
-                && r.getApartment().getId() == apartmentId
+                && r.getRate().equals(rate)
+                && r.getApartment().getId().equals(apartmentId)
                 && r.getUser().getEmail().equals(username);
 
         assertThat(reviews).anyMatch(sameReviewCondition);
@@ -218,7 +219,7 @@ class ReviewServiceTest {
         service.create(form);
     }
 
-    private void givenCreateReviewForm(String body, double rate, long apartmentId, String username) {
+    private void givenCreateReviewForm(String body, double rate, ApartmentId apartmentId, String username) {
         form = new CreateReviewForm();
         form.setBody(body);
         form.setRate(rate);

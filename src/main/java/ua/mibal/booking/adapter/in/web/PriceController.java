@@ -33,6 +33,7 @@ import ua.mibal.booking.adapter.in.web.security.annotation.ManagerAllowed;
 import ua.mibal.booking.application.PriceService;
 import ua.mibal.booking.application.model.PutPriceForm;
 import ua.mibal.booking.domain.Price;
+import ua.mibal.booking.domain.id.ApartmentId;
 
 import java.util.List;
 
@@ -50,25 +51,25 @@ public class PriceController {
     private final PriceDtoMapper priceDtoMapper;
 
     @GetMapping
-    public List<PriceDto> getPrices(@PathVariable Long apartmentId) {
-        List<Price> allByApartment = priceService.getAllByApartment(apartmentId);
+    public List<PriceDto> getPrices(@PathVariable String apartmentId) {
+        List<Price> allByApartment = priceService.getAllByApartment(new ApartmentId(apartmentId));
         return priceDtoMapper.toDtos(allByApartment);
     }
 
     @ManagerAllowed
     @PutMapping
     @ResponseStatus(NO_CONTENT)
-    public void put(@PathVariable Long apartmentId,
+    public void put(@PathVariable String apartmentId,
                     @RequestBody @Valid PutPriceForm form) {
-        form.setApartmentId(apartmentId);
+        form.setApartmentId(new ApartmentId(apartmentId));
         priceService.put(form);
     }
 
     @ManagerAllowed
     @DeleteMapping
     @ResponseStatus(NO_CONTENT)
-    public void delete(@PathVariable Long apartmentId,
+    public void delete(@PathVariable String apartmentId,
                        @RequestParam("person") Integer person) {
-        priceService.delete(apartmentId, person);
+        priceService.delete(new ApartmentId(apartmentId), person);
     }
 }

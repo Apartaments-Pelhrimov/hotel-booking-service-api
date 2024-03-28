@@ -24,6 +24,7 @@ import ua.mibal.booking.application.mapper.PriceMapper;
 import ua.mibal.booking.application.model.PutPriceForm;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.Price;
+import ua.mibal.booking.domain.id.ApartmentId;
 
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class PriceService {
     private final ApartmentService apartmentService;
     private final PriceMapper priceMapper;
 
-    public List<Price> getAllByApartment(Long apartmentId) {
+    public List<Price> getAllByApartment(ApartmentId apartmentId) {
         return apartmentService.getOneFetchPrices(apartmentId)
                 .getPrices();
     }
@@ -50,7 +51,7 @@ public class PriceService {
     }
 
     @Transactional
-    public void delete(Long apartmentId, Integer person) {
+    public void delete(ApartmentId apartmentId, Integer person) {
         Apartment apartment = apartmentService.getOneFetchPrices(apartmentId);
         if (!apartment.deletePrice(person)) {
             throw new PriceNotFoundException(person);

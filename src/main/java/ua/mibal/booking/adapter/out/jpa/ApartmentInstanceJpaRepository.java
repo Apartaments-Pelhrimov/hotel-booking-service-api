@@ -21,6 +21,7 @@ import org.springframework.data.jpa.repository.Query;
 import ua.mibal.booking.application.model.ReservationForm;
 import ua.mibal.booking.application.port.jpa.ApartmentInstanceRepository;
 import ua.mibal.booking.domain.ApartmentInstance;
+import ua.mibal.booking.domain.id.ApartmentId;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -56,7 +57,7 @@ public interface ApartmentInstanceJpaRepository extends JpaRepository<ApartmentI
                         where a.id = ?1
                             and p.person = ?4)
             """)
-    List<ApartmentInstance> findFreeByRequestFetchApartmentAndPrices(Long id, LocalDateTime from, LocalDateTime to, int people);
+    List<ApartmentInstance> findFreeByRequestFetchApartmentAndPrices(ApartmentId id, LocalDateTime from, LocalDateTime to, int people);
 
     @Override
     default List<ApartmentInstance> findFreeByRequestFetchApartmentAndPrices(ReservationForm form) {
@@ -76,14 +77,4 @@ public interface ApartmentInstanceJpaRepository extends JpaRepository<ApartmentI
             where ai.id = ?1
             """)
     Optional<ApartmentInstance> findByIdFetchReservations(Long id);
-
-    @Override
-    @Query("""
-            select ai
-                from ApartmentInstance ai
-                left join fetch ai.reservations
-            where ai.apartment.id = ?1
-                order by ai.id
-            """)
-    List<ApartmentInstance> findByApartmentIdFetchReservations(Long apartmentId);
 }

@@ -23,6 +23,7 @@ import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.domain.Event;
 import ua.mibal.booking.domain.HotelTurningOffTime;
+import ua.mibal.booking.domain.id.ApartmentId;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.util.List;
@@ -66,7 +67,7 @@ class EventService_UnitTest {
 
     @Test
     void getEventsForApartmentBy() {
-        Long apartmentId = 1L;
+        ApartmentId apartmentId = new ApartmentId("1L");
 
         when(apartmentService.getOneFetchInstances(apartmentId))
                 .thenReturn(apartment);

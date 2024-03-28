@@ -27,6 +27,7 @@ import ua.mibal.booking.application.port.jpa.ApartmentRepository;
 import ua.mibal.booking.application.port.jpa.RoomRepository;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.Room;
+import ua.mibal.booking.domain.id.ApartmentId;
 import ua.mibal.test.annotation.UnitTest;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -89,10 +90,10 @@ class RoomService_UnitTest {
 
     @Test
     public void create() {
-        when(apartment.getId()).thenReturn(1L);
-        when(apartmentRepository.existsById(1L)).thenReturn(true);
+        when(apartment.getId()).thenReturn(new ApartmentId("1L"));
+        when(apartmentRepository.existsById(new ApartmentId("1L"))).thenReturn(true);
         when(roomMapper.assemble(createRoomForm)).thenReturn(room);
-        when(apartmentRepository.getReferenceById(1L)).thenReturn(apartment);
+        when(apartmentRepository.getReferenceById(new ApartmentId("1L"))).thenReturn(apartment);
 
         service.create(apartment.getId(), createRoomForm);
 
@@ -102,8 +103,8 @@ class RoomService_UnitTest {
 
     @Test
     public void create_should_throw_ApartmentNotFoundException() {
-        when(apartment.getId()).thenReturn(1L);
-        when(apartmentRepository.existsById(1L)).thenReturn(false);
+        when(apartment.getId()).thenReturn(new ApartmentId("1L"));
+        when(apartmentRepository.existsById(new ApartmentId("1L"))).thenReturn(false);
 
         assertThrows(
                 ApartmentNotFoundException.class,

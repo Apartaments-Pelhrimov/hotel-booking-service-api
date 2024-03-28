@@ -21,6 +21,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ua.mibal.booking.application.port.jpa.ReviewRepository;
 import ua.mibal.booking.domain.Review;
+import ua.mibal.booking.domain.id.ApartmentId;
 
 import java.util.List;
 
@@ -36,7 +37,7 @@ public interface ReviewJpaRepository extends JpaRepository<Review, Long>, Review
                 join fetch r.user
             where r.apartment.id = ?1
              """)
-    List<Review> findByApartmentIdFetchUser(Long apartmentId, Pageable pageable);
+    List<Review> findByApartmentIdFetchUser(ApartmentId apartmentId, Pageable pageable);
 
     @Override
     @Query("""

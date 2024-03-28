@@ -33,6 +33,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import ua.mibal.booking.application.ApartmentInstanceService;
 import ua.mibal.booking.application.model.CreateApartmentInstanceForm;
+import ua.mibal.booking.domain.id.ApartmentId;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -69,9 +70,9 @@ class ApartmentInstanceController_UnitTest {
     @ParameterizedTest
     @MethodSource("ua.mibal.test.util.DataGenerator#validCreateApartmentInstanceForms")
     void create(CreateApartmentInstanceForm form) throws Exception {
-        Long apartmentId = 1L;
+        ApartmentId apartmentId = new ApartmentId("apartment-id");
 
-        mvc.perform(post("/api/apartments/{id}/instances", 1)
+        mvc.perform(post("/api/apartments/{id}/instances", "apartment-id")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(form)))
                 .andExpect(status().isCreated());

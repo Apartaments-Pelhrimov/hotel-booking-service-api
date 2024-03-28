@@ -29,6 +29,7 @@ import ua.mibal.booking.application.port.jpa.ApartmentInstanceRepository;
 import ua.mibal.booking.application.port.jpa.ApartmentRepository;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.ApartmentInstance;
+import ua.mibal.booking.domain.id.ApartmentId;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.util.List;
@@ -80,7 +81,7 @@ class ApartmentInstanceService_UnitTest {
     @Test
     void getFreeOne() {
         String userEmail = "userEmail";
-        Long id = 1L;
+        ApartmentId id = new ApartmentId("1L");
         int people = 1;
         ReservationForm reservationForm = new ReservationForm(MIN, MAX, people, id, userEmail);
         List<ApartmentInstance> apartmentInstances = List.of(apartmentInstance2, apartmentInstance);
@@ -102,7 +103,7 @@ class ApartmentInstanceService_UnitTest {
     @Test
     void getFreeOne_should_throw_FreeApartmentsForDateNotFoundException() {
         String userEmail = "userEmail";
-        Long id = 1L;
+        ApartmentId id = new ApartmentId("1L");
         int people = 1;
         ReservationForm reservationForm = new ReservationForm(MIN, MAX, people, id, userEmail);
 
@@ -123,7 +124,7 @@ class ApartmentInstanceService_UnitTest {
 
     @Test
     void create() {
-        Long id = 1L;
+        ApartmentId id = new ApartmentId("1L");
         when(form.getApartmentId())
                 .thenReturn(id);
 
@@ -139,7 +140,7 @@ class ApartmentInstanceService_UnitTest {
 
     @Test
     void create_should_throw_ApartmentNotFoundException() {
-        Long id = 1L;
+        ApartmentId id = new ApartmentId("1L");
         when(form.getApartmentId())
                 .thenReturn(id);
 

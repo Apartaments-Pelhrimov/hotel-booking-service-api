@@ -42,6 +42,7 @@ import ua.mibal.booking.domain.ReservationDetails;
 import ua.mibal.booking.domain.Review;
 import ua.mibal.booking.domain.TurningOffTime;
 import ua.mibal.booking.domain.User;
+import ua.mibal.booking.domain.id.ApartmentId;
 import ua.mibal.test.model.TestEvent;
 
 import java.math.BigDecimal;
@@ -158,6 +159,7 @@ public class DataGenerator {
 
     public static Stream<Arguments> validCreateApartmentForm() {
         return Stream.of(Arguments.of(new CreateApartmentForm(
+                new ApartmentId("1L"),
                 "correctName",
                 COMFORT,
                 DEFAULT,
@@ -170,18 +172,18 @@ public class DataGenerator {
     public static Stream<Arguments> invalidApartmentDto() {
         Stream<Arguments> simpleArgs = Stream.of(
                 // incorrect name
-                Arguments.of(new CreateApartmentForm("", COMFORT, DEFAULT, of(), of(), of())),
-                Arguments.of(new CreateApartmentForm(null, COMFORT, DEFAULT, of(), of(), of())),
+                Arguments.of(new CreateApartmentForm(new ApartmentId("1L"), "", COMFORT, DEFAULT, of(), of(), of())),
+                Arguments.of(new CreateApartmentForm(new ApartmentId("1L"), null, COMFORT, DEFAULT, of(), of(), of())),
 
                 // incorrect type
-                Arguments.of(new CreateApartmentForm("correct_name", null, DEFAULT, of(), of(), of())),
+                Arguments.of(new CreateApartmentForm(new ApartmentId("1L"), "correct_name", null, DEFAULT, of(), of(), of())),
 
                 // incorrect prices
-                Arguments.of(new CreateApartmentForm("correct_name", COMFORT, DEFAULT, incorrectPrices(), of(), of())),
+                Arguments.of(new CreateApartmentForm(new ApartmentId("1L"), "correct_name", COMFORT, DEFAULT, incorrectPrices(), of(), of())),
 
 
                 // incorrect rooms
-                Arguments.of(new CreateApartmentForm("correct_name", COMFORT, DEFAULT, of(), incorrectRooms(), of()))
+                Arguments.of(new CreateApartmentForm(new ApartmentId("1L"), "correct_name", COMFORT, DEFAULT, of(), incorrectRooms(), of()))
         );
         return of(
                 simpleArgs,
@@ -194,14 +196,14 @@ public class DataGenerator {
     private static Stream<Arguments> invalidCreateApartmentFormWithInvalidPrices() {
         return incorrectPrices().stream()
                 .map(price -> Arguments.of(new CreateApartmentForm(
-                        "correct_name", COMFORT, DEFAULT, of(price), of(), of())
+                        new ApartmentId("1L"), "correct_name", COMFORT, DEFAULT, of(price), of(), of())
                 ));
     }
 
     private static Stream<Arguments> invalidCreateApartmentFormWithInvalidRooms() {
         return incorrectRooms().stream()
                 .map(room -> Arguments.of(new CreateApartmentForm(
-                        "correct_name", COMFORT, DEFAULT, of(), of(room), of())
+                        new ApartmentId("1L"), "correct_name", COMFORT, DEFAULT, of(), of(room), of())
                 ));
     }
 

@@ -26,6 +26,7 @@ import ua.mibal.booking.domain.Photo;
 import ua.mibal.booking.domain.Reservation;
 import ua.mibal.booking.domain.Review;
 import ua.mibal.booking.domain.User;
+import ua.mibal.booking.domain.id.ApartmentId;
 import ua.mibal.test.annotation.JpaTest;
 
 import java.util.Optional;
@@ -173,7 +174,7 @@ class UserJpaRepository_IntegrationTest {
     @Test
     void userHasReservationWithApartment_false() {
         assertFalse(
-                repository.userHasReservationWithApartment(user.getEmail(), 0L)
+                repository.userHasReservationWithApartment(user.getEmail(), new ApartmentId("apartment-id"))
         );
     }
 

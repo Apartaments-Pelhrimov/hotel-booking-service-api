@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.Review;
+import ua.mibal.booking.domain.id.ApartmentId;
 import ua.mibal.test.annotation.JpaTest;
 
 import java.util.List;
@@ -67,7 +68,7 @@ class ApartmentJpaRepository_IntegrationTest {
 
     @Test
     void findById_should_throw_LazyInitializationException_when_call_lazy_collections() {
-        Long id = apartment.getId();
+        ApartmentId id = apartment.getId();
 
         Apartment managedApartment = repo.findById(id)
                 .orElseThrow();
@@ -92,7 +93,7 @@ class ApartmentJpaRepository_IntegrationTest {
 
     @Test
     void findById_should_not_throw_LazyInitializationException() {
-        Long id = apartment.getId();
+        ApartmentId id = apartment.getId();
 
         Apartment managedApartment = repo.findById(id)
                 .orElseThrow();
@@ -116,7 +117,7 @@ class ApartmentJpaRepository_IntegrationTest {
 
     @Test
     void findByIdFetchPhotos() {
-        Long id = apartment.getId();
+        ApartmentId id = apartment.getId();
 
         Apartment managedApartment = repo.findByIdFetchPhotos(id)
                 .orElseThrow();
@@ -135,7 +136,7 @@ class ApartmentJpaRepository_IntegrationTest {
 
     @Test
     void findByIdFetchPrices() {
-        Long id = apartment.getId();
+        ApartmentId id = apartment.getId();
 
         Apartment managedApartment = repo.findByIdFetchPrices(id)
                 .orElseThrow();
@@ -173,7 +174,7 @@ class ApartmentJpaRepository_IntegrationTest {
 
     @Test
     void Apartment_auto_rating_computing() {
-        Long id = apartment.getId();
+        ApartmentId id = apartment.getId();
 
         Apartment apartmentWithoutRating =
                 repo.findById(id).orElseThrow();
@@ -193,7 +194,7 @@ class ApartmentJpaRepository_IntegrationTest {
 
     @Test
     void findByIdFetchInstances() {
-        Long id = apartment.getId();
+        ApartmentId id = apartment.getId();
 
         Apartment managedApartment = repo.findByIdFetchInstances(id)
                 .orElseThrow();
@@ -205,7 +206,7 @@ class ApartmentJpaRepository_IntegrationTest {
 
     @Test
     void findByIdFetchPhotosRooms() {
-        Long id = apartment.getId();
+        ApartmentId id = apartment.getId();
 
         Apartment managedApartment = repo.findByIdFetchPhotosRooms(id)
                 .orElseThrow();

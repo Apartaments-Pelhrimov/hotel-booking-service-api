@@ -31,7 +31,4 @@ public interface ApartmentInstanceRepository extends Repository<ApartmentInstanc
     List<ApartmentInstance> findFreeByRequestFetchApartmentAndPrices(ReservationForm form);
 
     Optional<ApartmentInstance> findByIdFetchReservations(Long id);
-
-    // TODO delete
-    List<ApartmentInstance> findByApartmentIdFetchReservations(Long apartmentId);
 }

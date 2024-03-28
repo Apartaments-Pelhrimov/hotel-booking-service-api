@@ -26,6 +26,7 @@ import java.util.List;
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 public record ApartmentCardDto(
+//        String id,
         String name,
         List<String> photos,
         ApartmentOptions options,

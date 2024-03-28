@@ -26,6 +26,7 @@ import ua.mibal.booking.application.port.photo.storage.model.PhotoResource;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.Photo;
 import ua.mibal.booking.domain.User;
+import ua.mibal.booking.domain.id.ApartmentId;
 
 import java.util.Optional;
 
@@ -67,14 +68,14 @@ public class PhotoService {
     }
 
     @Transactional
-    public void createApartmentPhoto(Long id, MultipartFile photo) {
-        Apartment apartment = apartmentService.getOneFetchPhotos(id);
+    public void createApartmentPhoto(ApartmentId apartmentId, MultipartFile photo) {
+        Apartment apartment = apartmentService.getOneFetchPhotos(apartmentId);
         String newPhotoKey = storage.uploadPhoto(photo);
         apartment.addPhoto(newPhotoKey);
     }
 
     @Transactional
-    public void deleteApartmentPhoto(Long apartmentId, String key) {
+    public void deleteApartmentPhoto(ApartmentId apartmentId, String key) {
         Apartment apartment = apartmentService.getOneFetchPhotos(apartmentId);
         validateApartmentHasPhoto(apartment, key);
         storage.deletePhotoBy(key);

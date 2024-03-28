@@ -27,6 +27,7 @@ import ua.mibal.booking.application.model.CreateApartmentForm;
 import ua.mibal.booking.application.port.jpa.ApartmentRepository;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.ApartmentOptions;
+import ua.mibal.booking.domain.id.ApartmentId;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.util.Optional;
@@ -72,7 +73,7 @@ class ApartmentService_UnitTest {
 
     @Test
     void getOneFetchPhotos() {
-        Long id = 1L;
+        ApartmentId id = new ApartmentId("1L");
 
         when(apartmentRepository.findByIdFetchPhotos(id))
                 .thenReturn(Optional.of(apartment));
@@ -84,7 +85,7 @@ class ApartmentService_UnitTest {
 
     @Test
     void getOneFetchPhotos_should_throw_ApartmentNotFoundException() {
-        Long id = 1L;
+        ApartmentId id = new ApartmentId("1L");
 
         when(apartmentRepository.findByIdFetchPhotos(id))
                 .thenReturn(Optional.empty());
@@ -95,7 +96,7 @@ class ApartmentService_UnitTest {
 
     @Test
     void getOneFetchInstances() {
-        Long id = 1L;
+        ApartmentId id = new ApartmentId("1L");
 
         when(apartmentRepository.findByIdFetchInstances(id))
                 .thenReturn(Optional.of(apartment));
@@ -107,7 +108,7 @@ class ApartmentService_UnitTest {
 
     @Test
     void getOneFetchInstances_should_throw_ApartmentNotFoundException() {
-        Long id = 1L;
+        ApartmentId id = new ApartmentId("1L");
 
         when(apartmentRepository.findByIdFetchInstances(id))
                 .thenReturn(Optional.empty());
@@ -118,7 +119,7 @@ class ApartmentService_UnitTest {
 
     @Test
     void getOneFetchPrices() {
-        Long id = 1L;
+        ApartmentId id = new ApartmentId("1L");
         when(apartmentRepository.findByIdFetchPrices(id)).thenReturn(Optional.of(apartment));
 
         Apartment actual = service.getOneFetchPrices(id);
@@ -128,7 +129,7 @@ class ApartmentService_UnitTest {
 
     @Test
     void getOneFetchPrices_should_throw_ApartmentNotFoundException() {
-        Long id = 1L;
+        ApartmentId id = new ApartmentId("1L");
         when(apartmentRepository.findByIdFetchPrices(id)).thenReturn(Optional.empty());
 
         assertThrows(
@@ -139,11 +140,11 @@ class ApartmentService_UnitTest {
 
     @Test
     void getOneFetchPhotosBeds() {
-        when(apartmentRepository.findByIdFetchPhotosRooms(1L))
+        when(apartmentRepository.findByIdFetchPhotosRooms(new ApartmentId("1L")))
                 .thenReturn(Optional.of(apartment));
 
         Apartment actual = assertDoesNotThrow(
-                () -> service.getOneFetchPhotosBeds(1L)
+                () -> service.getOneFetchPhotosBeds(new ApartmentId("1L"))
         );
 
         assertEquals(apartment, actual);
@@ -151,16 +152,16 @@ class ApartmentService_UnitTest {
 
     @Test
     void getOneFetchPhotosBeds_should_throw_ApartmentNotFoundException() {
-        when(apartmentRepository.findByIdFetchPhotos(1L))
+        when(apartmentRepository.findByIdFetchPhotos(new ApartmentId("1L")))
                 .thenReturn(Optional.empty());
 
         ApartmentNotFoundException e = assertThrows(
                 ApartmentNotFoundException.class,
-                () -> service.getOneFetchPhotosBeds(1L)
+                () -> service.getOneFetchPhotosBeds(new ApartmentId("1L"))
         );
 
         assertEquals(
-                new ApartmentNotFoundException(1L).getMessage(),
+                new ApartmentNotFoundException(new ApartmentId("1L")).getMessage(),
                 e.getMessage()
         );
         verifyNoInteractions(apartmentMapper);
@@ -178,7 +179,7 @@ class ApartmentService_UnitTest {
 
     @Test
     void change() {
-        Long id = 1L;
+        ApartmentId id = new ApartmentId("1L");
         when(apartmentRepository.findById(id)).thenReturn(Optional.of(apartment));
 
         service.change(id, changeApartmentForm);
@@ -188,7 +189,7 @@ class ApartmentService_UnitTest {
 
     @Test
     void change_should_throw_ApartmentNotFoundException() {
-        Long id = 1L;
+        ApartmentId id = new ApartmentId("1L");
         when(apartmentRepository.findById(id)).thenReturn(Optional.empty());
 
         assertThrows(
@@ -201,7 +202,7 @@ class ApartmentService_UnitTest {
 
     @Test
     void changeOptions() {
-        Long id = 1L;
+        ApartmentId id = new ApartmentId("1L");
         when(apartmentRepository.findById(id))
                 .thenReturn(Optional.of(apartment));
         when(apartment.getOptions())
@@ -214,7 +215,7 @@ class ApartmentService_UnitTest {
 
     @Test
     void changeOptions_should_throw_ApartmentNotFoundException() {
-        Long id = 1L;
+        ApartmentId id = new ApartmentId("1L");
         when(apartmentRepository.findById(id))
                 .thenReturn(Optional.empty());
 
@@ -228,7 +229,7 @@ class ApartmentService_UnitTest {
 
     @Test
     void delete() {
-        Long id = 1L;
+        ApartmentId id = new ApartmentId("1L");
         when(apartmentRepository.existsById(id)).thenReturn(true);
 
         service.delete(id);
@@ -238,7 +239,7 @@ class ApartmentService_UnitTest {
 
     @Test
     void delete_should_throw_ApartmentNotFoundException() {
-        Long id = 1L;
+        ApartmentId id = new ApartmentId("1L");
         when(apartmentRepository.existsById(id)).thenReturn(false);
 
         assertThrows(

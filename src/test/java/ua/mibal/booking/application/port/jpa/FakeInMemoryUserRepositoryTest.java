@@ -22,6 +22,7 @@ import ua.mibal.booking.domain.ApartmentInstance;
 import ua.mibal.booking.domain.Reservation;
 import ua.mibal.booking.domain.Review;
 import ua.mibal.booking.domain.User;
+import ua.mibal.booking.domain.id.ApartmentId;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.util.Optional;
@@ -153,11 +154,11 @@ class FakeInMemoryUserRepositoryTest {
 
     @Test
     void userHasReservationWithApartment_true() {
-        givenApartment(1L);
+        givenApartment(new ApartmentId("1L"));
         givenSavedUser("user@email");
         givenReservationWithApartmentAndUser();
 
-        whenUserHasReservationWithApartment("user@email", 1L);
+        whenUserHasReservationWithApartment("user@email", new ApartmentId("1L"));
 
         thenResultIs(true);
     }
@@ -166,7 +167,7 @@ class FakeInMemoryUserRepositoryTest {
     void userHasReservationWithApartment_false_UserNotFound() {
         givenEmptyRepository();
 
-        whenUserHasReservationWithApartment("user@email", 1L);
+        whenUserHasReservationWithApartment("user@email", new ApartmentId("1L"));
 
         thenResultIs(false);
     }
@@ -175,17 +176,17 @@ class FakeInMemoryUserRepositoryTest {
     void userHasReservationWithApartment_false_ApartmentNotFound() {
         givenSavedUser("user@email");
 
-        whenUserHasReservationWithApartment("user@email", 1L);
+        whenUserHasReservationWithApartment("user@email", new ApartmentId("1L"));
 
         thenResultIs(false);
     }
 
     @Test
     void userHasReservationWithApartment_false_ReservationWithUserAndApartmentNotFound() {
-        givenApartment(1L);
+        givenApartment(new ApartmentId("1L"));
         givenSavedUser("user@email");
 
-        whenUserHasReservationWithApartment("user@email", 1L);
+        whenUserHasReservationWithApartment("user@email", new ApartmentId("1L"));
 
         thenResultIs(false);
     }
@@ -262,12 +263,12 @@ class FakeInMemoryUserRepositoryTest {
         user.addReservation(reservation);
     }
 
-    private void givenApartment(long id) {
+    private void givenApartment(ApartmentId id) {
         apartment = new Apartment();
         apartment.setId(id);
     }
 
-    private void whenUserHasReservationWithApartment(String username, long apartmentId) {
+    private void whenUserHasReservationWithApartment(String username, ApartmentId apartmentId) {
         booleanResult = repository.userHasReservationWithApartment(username, apartmentId);
     }
 

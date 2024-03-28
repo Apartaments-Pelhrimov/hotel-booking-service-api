@@ -23,6 +23,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ua.mibal.booking.application.validation.constraints.Link;
+import ua.mibal.booking.domain.id.ApartmentId;
 
 import java.util.Objects;
 
@@ -43,7 +44,7 @@ public class CreateApartmentInstanceForm {
     @Link
     private String bookingICalUrl;
 
-    private Long apartmentId;
+    private ApartmentId apartmentId;
 
     @Override
     public boolean equals(Object o) {

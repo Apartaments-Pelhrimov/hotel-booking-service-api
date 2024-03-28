@@ -25,6 +25,7 @@ import ua.mibal.booking.application.model.CreateReviewForm;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.Review;
 import ua.mibal.booking.domain.User;
+import ua.mibal.booking.domain.id.ApartmentId;
 
 import java.util.List;
 
@@ -55,11 +56,11 @@ class ReviewControllerTest extends ControllerTest {
 
     @Test
     void getAllByApartment() throws Exception {
-        givenApartment(1L);
+        givenApartment(new ApartmentId("1L"));
         givenUser("Mykhailo", "Balakhon", "user@email.com", "photo_key_123");
         givenServiceWithReview(2L, "Great apartment!", 4.9);
 
-        mvc.perform(get("/api/apartments/{apartmentId}/reviews", 1L))
+        mvc.perform(get("/api/apartments/{apartmentId}/reviews", "1L"))
 
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
@@ -79,7 +80,7 @@ class ReviewControllerTest extends ControllerTest {
 
     @Test
     void getAllLatest() throws Exception {
-        givenApartment(1L);
+        givenApartment(new ApartmentId("1L"));
         givenUser("Mykhailo", "Balakhon", "user@email.com", "photo_key_123");
         givenServiceWithReview(2L, "Great apartment!", 4.9);
 
@@ -103,7 +104,7 @@ class ReviewControllerTest extends ControllerTest {
 
     @Test
     void create() throws Exception {
-        mvc.perform(post("/api/apartments/{apartmentId}/reviews", 1L)
+        mvc.perform(post("/api/apartments/{apartmentId}/reviews", "1L")
                         .with(jwt("user@email.com", "USER"))
                         .contentType(APPLICATION_JSON)
                         .content("""
@@ -116,7 +117,7 @@ class ReviewControllerTest extends ControllerTest {
                 .andExpect(status().isCreated());
 
         verify(reviewService).create(new CreateReviewForm(
-                "Great apartment!", 4.9, 1L, "user@email.com"
+                "Great apartment!", 4.9, new ApartmentId("1L"), "user@email.com"
         ));
     }
 
@@ -178,7 +179,7 @@ class ReviewControllerTest extends ControllerTest {
         verify(reviewService, never()).delete(2L, "user@email.com");
     }
 
-    private void givenApartment(Long id) {
+    private void givenApartment(ApartmentId id) {
         apartment = new Apartment();
         apartment.setId(id);
     }

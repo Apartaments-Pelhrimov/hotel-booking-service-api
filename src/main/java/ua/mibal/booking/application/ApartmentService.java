@@ -27,6 +27,7 @@ import ua.mibal.booking.application.model.CreateApartmentForm;
 import ua.mibal.booking.application.model.SearchQuery;
 import ua.mibal.booking.application.port.jpa.ApartmentRepository;
 import ua.mibal.booking.domain.Apartment;
+import ua.mibal.booking.domain.id.ApartmentId;
 
 import java.util.List;
 
@@ -51,22 +52,22 @@ public class ApartmentService {
         return apartmentRepository.findAllFetchFetchPhotosPricesRoomsBeds();
     }
 
-    public Apartment getOneFetchPhotos(Long id) {
+    public Apartment getOneFetchPhotos(ApartmentId id) {
         return apartmentRepository.findByIdFetchPhotos(id)
                 .orElseThrow(() -> new ApartmentNotFoundException(id));
     }
 
-    public Apartment getOneFetchInstances(Long id) {
+    public Apartment getOneFetchInstances(ApartmentId id) {
         return apartmentRepository.findByIdFetchInstances(id)
                 .orElseThrow(() -> new ApartmentNotFoundException(id));
     }
 
-    public Apartment getOneFetchPrices(Long id) {
+    public Apartment getOneFetchPrices(ApartmentId id) {
         return apartmentRepository.findByIdFetchPrices(id)
                 .orElseThrow(() -> new ApartmentNotFoundException(id));
     }
 
-    public Apartment getOneFetchPhotosBeds(Long id) {
+    public Apartment getOneFetchPhotosBeds(ApartmentId id) {
         return apartmentRepository.findByIdFetchPhotosRooms(id)
                 .orElseThrow(() -> new ApartmentNotFoundException(id));
     }
@@ -77,28 +78,28 @@ public class ApartmentService {
     }
 
     @Transactional
-    public void change(Long id, ChangeApartmentForm form) {
+    public void change(ApartmentId id, ChangeApartmentForm form) {
         Apartment apartment = getOne(id);
         apartmentMapper.change(apartment, form);
     }
 
     @Transactional
-    public void changeOptions(Long id, ChangeApartmentOptionsForm form) {
+    public void changeOptions(ApartmentId id, ChangeApartmentOptionsForm form) {
         Apartment apartment = getOne(id);
         apartmentMapper.change(apartment.getOptions(), form);
     }
 
-    public void delete(Long id) {
+    public void delete(ApartmentId id) {
         validateExists(id);
         apartmentRepository.deleteById(id);
     }
 
-    private Apartment getOne(Long id) {
+    private Apartment getOne(ApartmentId id) {
         return apartmentRepository.findById(id)
                 .orElseThrow(() -> new ApartmentNotFoundException(id));
     }
 
-    private void validateExists(Long id) {
+    private void validateExists(ApartmentId id) {
         if (!apartmentRepository.existsById(id)) {
             throw new ApartmentNotFoundException(id);
         }

@@ -16,6 +16,8 @@
 
 package ua.mibal.booking.application.model;
 
+import ua.mibal.booking.domain.id.ApartmentId;
+
 import java.time.LocalDateTime;
 
 /**
@@ -26,7 +28,7 @@ public record ReservationForm(
         LocalDateTime from,
         LocalDateTime to,
         int people,
-        Long apartmentId,
+        ApartmentId apartmentId,
         String userEmail
 ) {
 }

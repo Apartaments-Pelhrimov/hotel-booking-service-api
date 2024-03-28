@@ -49,7 +49,6 @@ server:
     key-alias: hotel-booking-service
 
 calendar:
-  i-cal.prod-id: Apartments Pelhrimov Booking service
   zone-id: Europe/Prague
   reservation-hours:
     start: 15

@@ -46,6 +46,7 @@ public interface ApartmentDtoMapper {
     @Mapping(target = "beds", source = "rooms")
     ApartmentDto toDto(Apartment apartment);
 
+//    @Mapping(target = "id", source = "id.value")
     @Mapping(target = "price", source = "prices")
     @Mapping(target = "people", source = "rooms")
     ApartmentCardDto toCardDto(Apartment apartment);

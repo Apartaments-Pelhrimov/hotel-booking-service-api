@@ -25,6 +25,7 @@ import ua.mibal.booking.adapter.in.web.mapper.CalendarDtoMapper;
 import ua.mibal.booking.adapter.in.web.model.CalendarDto;
 import ua.mibal.booking.application.EventService;
 import ua.mibal.booking.domain.Event;
+import ua.mibal.booking.domain.id.ApartmentId;
 
 import java.util.List;
 
@@ -39,9 +40,9 @@ public class CalendarController {
     private final EventService eventService;
     private final CalendarDtoMapper calendarDtoMapper;
 
-    @GetMapping("/apartments/{id}/calendar")
-    public List<CalendarDto> getCalendarForApartment(@PathVariable Long id) {
-        List<List<Event>> events = eventService.getEventsForApartmentBy(id);
+    @GetMapping("/apartments/{apartmentId}/calendar")
+    public List<CalendarDto> getCalendarForApartment(@PathVariable String apartmentId) {
+        List<List<Event>> events = eventService.getEventsForApartmentBy(new ApartmentId(apartmentId));
         return calendarDtoMapper.toCalendars(events);
     }
 

@@ -34,6 +34,7 @@ import ua.mibal.booking.adapter.in.web.security.annotation.ManagerAllowed;
 import ua.mibal.booking.adapter.in.web.security.annotation.UserAllowed;
 import ua.mibal.booking.application.PhotoService;
 import ua.mibal.booking.application.port.photo.storage.model.PhotoResource;
+import ua.mibal.booking.domain.id.ApartmentId;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
@@ -71,18 +72,18 @@ public class PhotoController {
     }
 
     @ManagerAllowed
-    @PostMapping("/apartments/{id}/photos")
+    @PostMapping("/apartments/{apartmentId}/photos")
     @ResponseStatus(CREATED)
-    public void createApartmentPhoto(@PathVariable Long id,
+    public void createApartmentPhoto(@PathVariable String apartmentId,
                                      @RequestParam("file") MultipartFile file) {
-        photoService.createApartmentPhoto(id, file);
+        photoService.createApartmentPhoto(new ApartmentId(apartmentId), file);
     }
 
     @ManagerAllowed
     @DeleteMapping("/apartments/{apartmentId}/photos/{key}")
     @ResponseStatus(NO_CONTENT)
-    public void deleteApartmentPhoto(@PathVariable Long apartmentId,
+    public void deleteApartmentPhoto(@PathVariable String apartmentId,
                                      @PathVariable String key) {
-        photoService.deleteApartmentPhoto(apartmentId, key);
+        photoService.deleteApartmentPhoto(new ApartmentId(apartmentId), key);
     }
 }

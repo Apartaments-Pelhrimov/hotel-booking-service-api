@@ -24,6 +24,7 @@ import ua.mibal.booking.application.mapper.PriceMapper;
 import ua.mibal.booking.application.model.PutPriceForm;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.Price;
+import ua.mibal.booking.domain.id.ApartmentId;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.math.BigDecimal;
@@ -63,7 +64,7 @@ class PriceService_UnitTest {
 
     @Test
     void getAllByApartment() {
-        Long id = 1L;
+        ApartmentId id = new ApartmentId("1L");
         when(apartmentService.getOneFetchPrices(id)).thenReturn(apartment);
         when(apartment.getPrices()).thenReturn(List.of(price));
 
@@ -74,7 +75,7 @@ class PriceService_UnitTest {
 
     @Test
     void delete() {
-        Long id = 1L;
+        ApartmentId id = new ApartmentId("1L");
         Integer person = 2;
         when(apartmentService.getOneFetchPrices(id)).thenReturn(apartment);
         when(apartment.deletePrice(person)).thenReturn(true);
@@ -84,7 +85,7 @@ class PriceService_UnitTest {
 
     @Test
     void delete_should_throw_PriceNotFoundException() {
-        Long id = 1L;
+        ApartmentId id = new ApartmentId("1L");
         Integer person = 2;
         when(apartmentService.getOneFetchPrices(id)).thenReturn(apartment);
         when(apartment.deletePrice(person)).thenReturn(false);
@@ -102,7 +103,7 @@ class PriceService_UnitTest {
         Apartment apartment = new Apartment();
         Price price = new Price(people, BigDecimal.TEN);
 
-        Long id = 1L;
+        ApartmentId id = new ApartmentId("1L");
         when(form.getApartmentId()).thenReturn(id);
         when(priceMapper.assemble(form)).thenReturn(price);
         when(apartmentService.getOneFetchPrices(id)).thenReturn(apartment);
@@ -125,7 +126,7 @@ class PriceService_UnitTest {
 
         Price newPrice = new Price(people, BigDecimal.ONE);
 
-        Long id = 1L;
+        ApartmentId id = new ApartmentId("1L");
         when(form.getApartmentId()).thenReturn(id);
         when(priceMapper.assemble(form)).thenReturn(newPrice);
         when(apartmentService.getOneFetchPrices(id)).thenReturn(apartment);

@@ -37,7 +37,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
         "spring.datasource.url=jdbc:tc:postgresql:15:///db",
         "spring.jpa.open-in-view=false",
         "spring.jpa.show-sql=true",
-        "spring.jpa.hibernate.ddl-auto=validate",
+        "spring.jpa.hibernate.ddl-auto=create", // TODO replace after development
         "spring.jpa.properties.hibernate.generate_statistics=true",
 })
 @DisplayNameGeneration(ReplaceUnderscores.class)

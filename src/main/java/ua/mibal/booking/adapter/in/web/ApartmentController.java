@@ -36,6 +36,7 @@ import ua.mibal.booking.application.model.ChangeApartmentForm;
 import ua.mibal.booking.application.model.ChangeApartmentOptionsForm;
 import ua.mibal.booking.application.model.CreateApartmentForm;
 import ua.mibal.booking.domain.Apartment;
+import ua.mibal.booking.domain.id.ApartmentId;
 
 import java.util.List;
 
@@ -54,8 +55,8 @@ public class ApartmentController {
     private final ApartmentDtoMapper apartmentDtoMapper;
 
     @GetMapping("/{id}")
-    public ApartmentDto getOne(@PathVariable Long id) {
-        Apartment apartment = apartmentService.getOneFetchPhotosBeds(id);
+    public ApartmentDto getOne(@PathVariable String id) {
+        Apartment apartment = apartmentService.getOneFetchPhotosBeds(new ApartmentId(id));
         return apartmentDtoMapper.toDto(apartment);
     }
 
@@ -75,23 +76,23 @@ public class ApartmentController {
     @ManagerAllowed
     @PatchMapping("/{id}")
     @ResponseStatus(NO_CONTENT)
-    public void change(@PathVariable Long id,
+    public void change(@PathVariable String id,
                        @RequestBody @Valid ChangeApartmentForm form) {
-        apartmentService.change(id, form);
+        apartmentService.change(new ApartmentId(id), form);
     }
 
     @ManagerAllowed
     @PatchMapping("/{id}/options")
     @ResponseStatus(NO_CONTENT)
-    public void changeOptions(@PathVariable Long id,
+    public void changeOptions(@PathVariable String id,
                               @RequestBody @Valid ChangeApartmentOptionsForm form) {
-        apartmentService.changeOptions(id, form);
+        apartmentService.changeOptions(new ApartmentId(id), form);
     }
 
     @ManagerAllowed
     @DeleteMapping("/{id}")
     @ResponseStatus(NO_CONTENT)
-    public void delete(@PathVariable Long id) {
-        apartmentService.delete(id);
+    public void delete(@PathVariable String id) {
+        apartmentService.delete(new ApartmentId(id));
     }
 }

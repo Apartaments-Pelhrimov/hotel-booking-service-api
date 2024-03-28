@@ -28,6 +28,7 @@ import ua.mibal.booking.application.port.jpa.ApartmentInstanceRepository;
 import ua.mibal.booking.application.port.jpa.ApartmentRepository;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.ApartmentInstance;
+import ua.mibal.booking.domain.id.ApartmentId;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,7 +97,7 @@ public class ApartmentInstanceService {
         return variants.get(0);
     }
 
-    private void validateApartmentExists(Long id) {
+    private void validateApartmentExists(ApartmentId id) {
         if (!apartmentRepository.existsById(id)) {
             throw new ApartmentNotFoundException(id);
         }

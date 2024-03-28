@@ -18,6 +18,7 @@ package ua.mibal.booking.application.port.jpa;
 
 import ua.mibal.booking.domain.Photo;
 import ua.mibal.booking.domain.User;
+import ua.mibal.booking.domain.id.ApartmentId;
 
 import java.util.Optional;
 
@@ -44,7 +45,7 @@ public interface UserRepository extends Repository<User, Long> {
     // TODO delete
     void deleteUserPhotoByEmail(String email);
 
-    boolean userHasReservationWithApartment(String email, Long apartmentId);
+    boolean userHasReservationWithApartment(String email, ApartmentId apartmentId);
 
     boolean userHasReview(String email, Long reviewId);
 

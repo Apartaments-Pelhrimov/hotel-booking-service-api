@@ -39,6 +39,7 @@ import ua.mibal.booking.application.mapper.ReservationFormMapper;
 import ua.mibal.booking.application.model.ReservationForm;
 import ua.mibal.booking.application.model.ReservationRejectingForm;
 import ua.mibal.booking.domain.Reservation;
+import ua.mibal.booking.domain.id.ApartmentId;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
@@ -71,12 +72,13 @@ public class ReservationController {
     }
 
     @UserAllowed
-    @PatchMapping("/apartments/{id}/reserve")
+    @PatchMapping("/apartments/{apartmentId}/reserve")
     @ResponseStatus(CREATED)
-    public void reserve(@PathVariable Long id,
+    public void reserve(@PathVariable String apartmentId,
                         @Valid ReservationFormDto dto,
                         Authentication authentication) {
-        ReservationForm form = reservationFormMapper.toForm(dto, id, authentication.getName());
+        ReservationForm form = reservationFormMapper.toForm(
+                dto, new ApartmentId(apartmentId), authentication.getName());
         reservationService.reserve(form);
     }
 

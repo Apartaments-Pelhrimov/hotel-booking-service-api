@@ -28,6 +28,7 @@ import ua.mibal.booking.application.port.photo.storage.model.PhotoResource;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.Photo;
 import ua.mibal.booking.domain.User;
+import ua.mibal.booking.domain.id.ApartmentId;
 import ua.mibal.test.annotation.UnitTest;
 
 import static java.util.Optional.empty;
@@ -144,7 +145,7 @@ class PhotoService_UnitTest {
 
     @ParameterizedTest
     @InstancioSource
-    void createApartmentPhoto(Apartment apartment, Long id, String key) {
+    void createApartmentPhoto(Apartment apartment, ApartmentId id, String key) {
         when(apartmentService.getOneFetchPhotos(id))
                 .thenReturn(apartment);
         when(storage.uploadPhoto(photoFile))
@@ -157,7 +158,7 @@ class PhotoService_UnitTest {
 
     @ParameterizedTest
     @InstancioSource
-    void deleteApartmentPhoto(Long id, String key) {
+    void deleteApartmentPhoto(ApartmentId id, String key) {
         when(apartmentService.getOneFetchPhotos(id))
                 .thenReturn(apartment);
         when(apartment.hasPhoto(key))
@@ -173,7 +174,7 @@ class PhotoService_UnitTest {
 
     @ParameterizedTest
     @InstancioSource
-    void deleteApartmentPhoto_should_throw_ApartmentDoesNotHavePhotoException(Long id, String key) {
+    void deleteApartmentPhoto_should_throw_ApartmentDoesNotHavePhotoException(ApartmentId id, String key) {
         when(apartmentService.getOneFetchPhotos(id))
                 .thenReturn(apartment);
         when(apartment.hasPhoto(key))

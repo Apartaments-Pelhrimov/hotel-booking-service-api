@@ -16,9 +16,8 @@
 
 package ua.mibal.booking.application.port.jpa;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import ua.mibal.booking.domain.Apartment;
+import ua.mibal.booking.domain.id.ApartmentId;
 
 import java.util.HashMap;
 import java.util.List;
@@ -31,10 +30,10 @@ import java.util.Optional;
  */
 public class FakeInMemoryApartmentRepository implements ApartmentRepository {
 
-    private final Map<Long, Apartment> apartments = new HashMap<>();
+    private final Map<ApartmentId, Apartment> apartments = new HashMap<>();
 
     @Override
-    public Optional<Apartment> findByIdFetchPhotos(Long id) {
+    public Optional<Apartment> findByIdFetchPhotos(ApartmentId id) {
         throw new UnsupportedOperationException();
     }
 
@@ -44,17 +43,17 @@ public class FakeInMemoryApartmentRepository implements ApartmentRepository {
     }
 
     @Override
-    public Optional<Apartment> findByIdFetchPrices(Long id) {
+    public Optional<Apartment> findByIdFetchPrices(ApartmentId id) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Optional<Apartment> findByIdFetchInstances(Long id) {
+    public Optional<Apartment> findByIdFetchInstances(ApartmentId id) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Optional<Apartment> findByIdFetchPhotosRooms(Long id) {
+    public Optional<Apartment> findByIdFetchPhotosRooms(ApartmentId id) {
         throw new UnsupportedOperationException();
     }
 
@@ -69,33 +68,23 @@ public class FakeInMemoryApartmentRepository implements ApartmentRepository {
     }
 
     @Override
-    public Optional<Apartment> findById(Long id) {
+    public Optional<Apartment> findById(ApartmentId id) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Apartment getReferenceById(Long id) {
+    public Apartment getReferenceById(ApartmentId id) {
         return apartments.get(id);
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(ApartmentId id) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public boolean existsById(Long id) {
+    public boolean existsById(ApartmentId id) {
         return apartments.containsKey(id);
-    }
-
-    @Override
-    public Page<Apartment> findAll(Pageable pageable) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void delete(Apartment apartment) {
-        throw new UnsupportedOperationException();
     }
 
     public void deleteAll() {

@@ -90,30 +90,6 @@ class ApartmentInstanceJpaRepository_IntegrationTest {
                 .isEqualTo(stats.getQueryExecutionCount() + stats.getEntityFetchCount());
     }
 
-    // FIXME
-    //  org.hibernate.exception.ConstraintViolationException: could not execute statement [ERROR: duplicate key value violates unique constraint "prices_apartment_id_and_person_uq"
-    //  Detail: Key (apartment_id, person)=(261, 7442) already exists.] [insert into prices (apartment_id,price,person) values (?,?,?)]
-    @Test
-    void findByApartmentIdFetchReservations() {
-        Long apartmentId = apartmentInstance.getApartment().getId();
-
-        List<ApartmentInstance> managedApartmentInstances =
-                repo.findByApartmentIdFetchReservations(apartmentId);
-
-        managedApartmentInstances.forEach(ai -> {
-            entityManager.detach(ai);
-            assertDoesNotThrow(() -> ai.getReservations().size());
-        });
-
-        AssertionsForClassTypes.assertThat(stats.getEntityLoadCount()).isOne();
-        AssertionsForClassTypes.assertThat(stats.getCollectionLoadCount()).isOne();
-
-        assertThat(stats.getQueryExecutionCount()).isOne();
-        assertThat(stats.getEntityFetchCount()).isZero();
-        assertThat(stats.getPrepareStatementCount())
-                .isEqualTo(stats.getQueryExecutionCount() + stats.getEntityFetchCount());
-    }
-
     private ApartmentInstance persistTestApartmentInstance() {
         Apartment apartment = testApartment();
         entityManager.persistAndFlush(apartment);

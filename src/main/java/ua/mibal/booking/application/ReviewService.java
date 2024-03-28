@@ -32,6 +32,7 @@ import ua.mibal.booking.application.port.jpa.UserRepository;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.Review;
 import ua.mibal.booking.domain.User;
+import ua.mibal.booking.domain.id.ApartmentId;
 
 import java.util.List;
 
@@ -47,7 +48,7 @@ public class ReviewService {
     private final UserRepository userRepository;
     private final ApartmentRepository apartmentRepository;
 
-    public List<Review> getAllByApartment(Long apartmentId, Pageable pageable) {
+    public List<Review> getAllByApartment(ApartmentId apartmentId, Pageable pageable) {
         return reviewRepository.findByApartmentIdFetchUser(apartmentId, pageable);
     }
 
@@ -57,8 +58,8 @@ public class ReviewService {
 
     @Transactional
     public void create(CreateReviewForm form) {
-        validateApartmentExists(form.getApartmentId());
-        validateUserHasReservationWithThisApartment(form.getUserEmail(), form.getApartmentId());
+        validateApartmentExists(form);
+        validateUserHasReservationWithThisApartment(form);
         Review newReview = assembleReviewBy(form);
         reviewRepository.save(newReview);
     }
@@ -84,15 +85,16 @@ public class ReviewService {
         }
     }
 
-    private void validateUserHasReservationWithThisApartment(String userEmail, Long apartmentId) {
-        if (!userRepository.userHasReservationWithApartment(userEmail, apartmentId)) {
+    private void validateUserHasReservationWithThisApartment(CreateReviewForm form) {
+        if (!userRepository.userHasReservationWithApartment(
+                form.getUserEmail(), form.getApartmentId())) {
             throw new UserHasNoAccessToReviewsException();
         }
     }
 
-    private void validateApartmentExists(Long apartmentId) {
-        if (!apartmentRepository.existsById(apartmentId)) {
-            throw new ApartmentNotFoundException(apartmentId);
+    private void validateApartmentExists(CreateReviewForm form) {
+        if (!apartmentRepository.existsById(form.getApartmentId())) {
+            throw new ApartmentNotFoundException(form.getApartmentId());
         }
     }
 

@@ -20,6 +20,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.Review;
+import ua.mibal.booking.domain.id.ApartmentId;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.util.List;
@@ -79,12 +80,12 @@ class FakeInMemoryReviewRepositoryTest {
 
     @Test
     void findByApartmentIdFetchUser() {
-        givenApartment(1L);
+        givenApartment(new ApartmentId("1L"));
         givenSavedReviewForApartment(1L);
         givenSavedReviewForApartment(2L);
         givenSavedReviewForApartment(3L);
 
-        whenFindByApartmentIdFetchUser(1L);
+        whenFindByApartmentIdFetchUser(new ApartmentId("1L"));
 
         thenResultShouldContainAllReviews(1L, 2L, 3L);
     }
@@ -139,7 +140,7 @@ class FakeInMemoryReviewRepositoryTest {
         whenSave();
     }
 
-    private void givenApartment(long id) {
+    private void givenApartment(ApartmentId id) {
         apartment = new Apartment();
         apartment.setId(id);
     }
@@ -150,7 +151,7 @@ class FakeInMemoryReviewRepositoryTest {
         whenSave();
     }
 
-    private void whenFindByApartmentIdFetchUser(long apartmentId) {
+    private void whenFindByApartmentIdFetchUser(ApartmentId apartmentId) {
         result = repository.findByApartmentIdFetchUser(apartmentId, unpaged());
     }
 

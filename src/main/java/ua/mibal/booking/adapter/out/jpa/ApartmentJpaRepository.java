@@ -21,6 +21,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 import ua.mibal.booking.application.port.jpa.ApartmentRepository;
 import ua.mibal.booking.domain.Apartment;
+import ua.mibal.booking.domain.id.ApartmentId;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,7 +34,7 @@ public interface ApartmentJpaRepository extends JpaRepository<Apartment, Long>, 
                 left join fetch a.photos
             where a.id = ?1
             """)
-    Optional<Apartment> findByIdFetchPhotos(Long id);
+    Optional<Apartment> findByIdFetchPhotos(ApartmentId id);
 
     @Override
     @Query("""
@@ -48,7 +49,7 @@ public interface ApartmentJpaRepository extends JpaRepository<Apartment, Long>, 
                 left join fetch a.prices
             where a.id = ?1
             """)
-    Optional<Apartment> findByIdFetchPrices(Long id);
+    Optional<Apartment> findByIdFetchPrices(ApartmentId id);
 
     @Override
     @Query("""
@@ -56,11 +57,11 @@ public interface ApartmentJpaRepository extends JpaRepository<Apartment, Long>, 
                 left join fetch a.apartmentInstances
             where a.id = ?1
             """)
-    Optional<Apartment> findByIdFetchInstances(Long id);
+    Optional<Apartment> findByIdFetchInstances(ApartmentId id);
 
     @Override
     @Transactional(readOnly = true)
-    default Optional<Apartment> findByIdFetchPhotosRooms(Long id) {
+    default Optional<Apartment> findByIdFetchPhotosRooms(ApartmentId id) {
         Optional<Apartment> apartment = findByIdFetchPhotos(id);
         apartment.ifPresent(a -> a.getRooms().size()); // to load Apartment.rooms
         return apartment;

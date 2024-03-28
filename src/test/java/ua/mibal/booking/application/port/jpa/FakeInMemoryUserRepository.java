@@ -20,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import ua.mibal.booking.domain.Photo;
 import ua.mibal.booking.domain.User;
+import ua.mibal.booking.domain.id.ApartmentId;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -115,7 +116,7 @@ public class FakeInMemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public boolean userHasReservationWithApartment(String email, Long apartmentId) {
+    public boolean userHasReservationWithApartment(String email, ApartmentId apartmentId) {
         return findByEmail(email)
                 .map(user -> user.getReservations().stream()
                         .anyMatch(reservation -> reservation.getApartmentInstance()

@@ -17,6 +17,7 @@
 package ua.mibal.booking.application.exception;
 
 import ua.mibal.booking.domain.Apartment;
+import ua.mibal.booking.domain.id.ApartmentId;
 
 /**
  * @author Mykhailo Balakhon
@@ -24,7 +25,7 @@ import ua.mibal.booking.domain.Apartment;
  */
 public class ApartmentNotFoundException extends EntityNotFoundException {
 
-    public ApartmentNotFoundException(Long id) {
+    public ApartmentNotFoundException(ApartmentId id) {
         super(Apartment.class, id);
     }
 }
