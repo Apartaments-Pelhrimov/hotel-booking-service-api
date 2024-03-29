@@ -14,19 +14,22 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.adapter.in.web;
+package ua.mibal.booking.adapter.in.web.controller.manager;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ua.mibal.booking.adapter.in.web.security.annotation.ManagerAllowed;
-import ua.mibal.booking.application.TurningOffService;
-import ua.mibal.booking.application.model.TurnOffForm;
+import ua.mibal.booking.application.PriceService;
+import ua.mibal.booking.application.model.PutPriceForm;
+import ua.mibal.booking.domain.id.ApartmentId;
 
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
@@ -37,20 +40,22 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 @RequiredArgsConstructor
 @ManagerAllowed
 @RestController
-@RequestMapping("/api")
-public class TurnOffController {
-    private final TurningOffService turningOffService;
+@RequestMapping("/api/apartments/{apartmentId}/prices")
+public class ManagerPriceController {
+    private final PriceService priceService;
 
-    @PatchMapping("/hotel/off")
+    @PutMapping
     @ResponseStatus(NO_CONTENT)
-    public void turnOffHotel(@Valid @RequestBody TurnOffForm form) {
-        turningOffService.turnOffHotel(form);
+    public void put(@PathVariable String apartmentId,
+                    @RequestBody @Valid PutPriceForm form) {
+        form.setApartmentId(new ApartmentId(apartmentId));
+        priceService.put(form);
     }
 
-    @PatchMapping("/apartments/instances/{id}/off")
+    @DeleteMapping
     @ResponseStatus(NO_CONTENT)
-    public void turnOffApartmentInstance(@PathVariable Long id,
-                                         @Valid @RequestBody TurnOffForm form) {
-        turningOffService.turnOffApartmentInstance(id, form);
+    public void delete(@PathVariable String apartmentId,
+                       @RequestParam("person") Integer person) {
+        priceService.delete(new ApartmentId(apartmentId), person);
     }
 }

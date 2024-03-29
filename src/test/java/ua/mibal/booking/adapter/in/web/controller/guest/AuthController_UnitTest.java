@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.adapter.in.web;
+package ua.mibal.booking.adapter.in.web.controller.guest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;

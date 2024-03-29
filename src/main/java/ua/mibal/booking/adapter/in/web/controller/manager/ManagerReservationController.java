@@ -14,36 +14,35 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.adapter.in.web;
+package ua.mibal.booking.adapter.in.web.controller.manager;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ua.mibal.booking.adapter.IcalMapper;
-import ua.mibal.booking.application.EventService;
-import ua.mibal.booking.domain.Event;
-
-import java.util.List;
+import ua.mibal.booking.adapter.in.web.mapper.ReservationDtoMapper;
+import ua.mibal.booking.adapter.in.web.model.ReservationDto;
+import ua.mibal.booking.adapter.in.web.security.annotation.ManagerAllowed;
+import ua.mibal.booking.application.ReservationService;
+import ua.mibal.booking.domain.Reservation;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @RequiredArgsConstructor
+@ManagerAllowed
 @RestController
 @RequestMapping("/api")
-public class ReservationCalendarExportController {
-    private final EventService eventService;
-    private final IcalMapper icalMapper;
+public class ManagerReservationController {
+    private final ReservationService reservationService;
+    private final ReservationDtoMapper reservationDtoMapper;
 
-    @GetMapping(
-            value = "/apartments/instances/{id}/calendar.ics",
-            produces = "text/calendar"
-    )
-    public String getIcalForApartmentInstance(@PathVariable Long id) {
-        List<Event> events = eventService.getEventsForApartmentInstanceBy(id);
-        return icalMapper.toIcal(events);
+    @GetMapping("/reservations")
+    public Page<ReservationDto> getAll(Pageable pageable) {
+        Page<Reservation> reservations = reservationService.getAll(pageable);
+        return reservationDtoMapper.toDtos(reservations);
     }
 }

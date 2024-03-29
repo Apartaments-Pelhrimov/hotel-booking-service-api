@@ -28,9 +28,7 @@ import ua.mibal.booking.domain.id.ApartmentId;
 import ua.mibal.test.annotation.UnitTest;
 
 import java.math.BigDecimal;
-import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -53,24 +51,11 @@ class PriceService_UnitTest {
     @Mock
     private Apartment apartment;
     @Mock
-    private Price price;
-    @Mock
     private PutPriceForm form;
 
     @BeforeEach
     void setup() {
         service = new PriceService(apartmentService, priceMapper);
-    }
-
-    @Test
-    void getAllByApartment() {
-        ApartmentId id = new ApartmentId("1L");
-        when(apartmentService.getOneFetchPrices(id)).thenReturn(apartment);
-        when(apartment.getPrices()).thenReturn(List.of(price));
-
-        List<Price> actual = service.getAllByApartment(id);
-
-        assertThat(actual).containsOnly(price);
     }
 
     @Test

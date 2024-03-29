@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.adapter.in.web;
+package ua.mibal.booking.adapter.in.web.controller.guest;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import ua.mibal.booking.adapter.in.web.controller.ControllerTest;
 import ua.mibal.booking.application.ReviewService;
-import ua.mibal.booking.application.model.CreateReviewForm;
 import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.Review;
 import ua.mibal.booking.domain.User;
@@ -29,16 +28,11 @@ import ua.mibal.booking.domain.id.ApartmentId;
 
 import java.util.List;
 
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.data.domain.PageRequest.of;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ua.mibal.booking.adapter.in.web.security.TestSecurityJwtUtils.jwt;
 
 /**
  * @author Mykhailo Balakhon
@@ -100,83 +94,6 @@ class ReviewControllerTest extends ControllerTest {
                           }
                         ]
                         """));
-    }
-
-    @Test
-    void create() throws Exception {
-        mvc.perform(post("/api/apartments/{apartmentId}/reviews", "1L")
-                        .with(jwt("user@email.com", "USER"))
-                        .contentType(APPLICATION_JSON)
-                        .content("""
-                                {
-                                  "body": "Great apartment!",
-                                  "rate": 4.9
-                                }
-                                """))
-
-                .andExpect(status().isCreated());
-
-        verify(reviewService).create(new CreateReviewForm(
-                "Great apartment!", 4.9, new ApartmentId("1L"), "user@email.com"
-        ));
-    }
-
-    @Test
-    void createWithoutNeededAuthorities() throws Exception {
-        mvc.perform(post("/api/apartments/{apartmentId}/reviews", 1L)
-                        .with(jwt("user@email.com", "NOT_USER"))
-                        .contentType(APPLICATION_JSON)
-                        .content("""
-                                {
-                                  "body": "Great apartment!",
-                                  "rate": 4.9
-                                }
-                                """))
-
-                .andExpect(status().isForbidden());
-    }
-
-    @Test
-    void createWithoutAuthorization() throws Exception {
-        mvc.perform(post("/api/apartments/{apartmentId}/reviews", 1L)
-                        .contentType(APPLICATION_JSON)
-                        .content("""
-                                {
-                                  "body": "Great apartment!",
-                                  "rate": 4.9
-                                }
-                                """))
-
-                .andExpect(status().isForbidden());
-    }
-
-    @Test
-    void delete() throws Exception {
-        mvc.perform(MockMvcRequestBuilders
-                        .delete("/api/reviews/{id}", 2L)
-                        .with(jwt("user@email.com", "USER")))
-                .andExpect(status().isNoContent());
-
-        verify(reviewService).delete(2L, "user@email.com");
-    }
-
-    @Test
-    void deleteWithoutNeededAuthorities() throws Exception {
-        mvc.perform(MockMvcRequestBuilders
-                        .delete("/api/reviews/{id}", 2L)
-                        .with(jwt("user@email.com", "NOT_USER")))
-                .andExpect(status().isForbidden());
-
-        verify(reviewService, never()).delete(2L, "user@email.com");
-    }
-
-    @Test
-    void deleteWithoutAuthorization() throws Exception {
-        mvc.perform(MockMvcRequestBuilders
-                        .delete("/api/reviews/{id}", 2L))
-                .andExpect(status().isForbidden());
-
-        verify(reviewService, never()).delete(2L, "user@email.com");
     }
 
     private void givenApartment(ApartmentId id) {

@@ -14,32 +14,21 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.adapter.in.web;
+package ua.mibal.booking.adapter.in.web.controller.guest;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ua.mibal.booking.adapter.in.web.mapper.ReviewDtoMapper;
 import ua.mibal.booking.adapter.in.web.model.ReviewDto;
-import ua.mibal.booking.adapter.in.web.security.annotation.UserAllowed;
 import ua.mibal.booking.application.ReviewService;
-import ua.mibal.booking.application.model.CreateReviewForm;
 import ua.mibal.booking.domain.Review;
 import ua.mibal.booking.domain.id.ApartmentId;
 
 import java.util.List;
-
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 /**
  * @author Mykhailo Balakhon
@@ -52,36 +41,17 @@ public class ReviewController {
     private final ReviewService reviewService;
     private final ReviewDtoMapper reviewDtoMapper;
 
-    @GetMapping("/apartments/{apartmentId}/reviews")
-    public List<ReviewDto> getAllByApartment(@PathVariable String apartmentId,
-                                             Pageable pageable) {
-        List<Review> reviews = reviewService.getAllByApartment(
-                new ApartmentId(apartmentId), pageable);
-        return reviewDtoMapper.toDtos(reviews);
-    }
-
     @GetMapping("/reviews/latest")
     public List<ReviewDto> getAllLatest(Pageable pageable) {
         List<Review> reviews = reviewService.getAllLatest(pageable);
         return reviewDtoMapper.toDtos(reviews);
     }
 
-    @UserAllowed
-    @PostMapping("/apartments/{apartmentId}/reviews")
-    @ResponseStatus(CREATED)
-    public void create(@PathVariable String apartmentId,
-                       @Valid @RequestBody CreateReviewForm form,
-                       Authentication authentication) {
-        form.setApartmentId(new ApartmentId(apartmentId));
-        form.setUserEmail(authentication.getName());
-        reviewService.create(form);
-    }
-
-    @UserAllowed
-    @DeleteMapping("/reviews/{id}")
-    @ResponseStatus(NO_CONTENT)
-    public void delete(@PathVariable Long id,
-                       Authentication authentication) {
-        reviewService.delete(id, authentication.getName());
+    @GetMapping("/apartments/{apartmentId}/reviews")
+    public List<ReviewDto> getAllByApartment(@PathVariable String apartmentId,
+                                             Pageable pageable) {
+        List<Review> reviews = reviewService.getAllByApartment(
+                new ApartmentId(apartmentId), pageable);
+        return reviewDtoMapper.toDtos(reviews);
     }
 }

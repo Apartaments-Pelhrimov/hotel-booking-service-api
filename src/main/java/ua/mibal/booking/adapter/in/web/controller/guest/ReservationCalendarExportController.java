@@ -14,19 +14,16 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.adapter.in.web;
+package ua.mibal.booking.adapter.in.web.controller.guest;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ua.mibal.booking.adapter.in.web.mapper.ApartmentDtoMapper;
-import ua.mibal.booking.adapter.in.web.model.ApartmentCardDto;
-import ua.mibal.booking.application.ApartmentService;
-import ua.mibal.booking.application.model.SearchQuery;
-import ua.mibal.booking.domain.Apartment;
+import ua.mibal.booking.adapter.IcalMapper;
+import ua.mibal.booking.application.EventService;
+import ua.mibal.booking.domain.Event;
 
 import java.util.List;
 
@@ -36,15 +33,17 @@ import java.util.List;
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/apartments")
-public class SearchController {
-    private final ApartmentService apartmentService;
-    private final ApartmentDtoMapper apartmentDtoMapper;
+@RequestMapping("/api")
+public class ReservationCalendarExportController {
+    private final EventService eventService;
+    private final IcalMapper icalMapper;
 
-    @GetMapping
-    public List<ApartmentCardDto> searchInApartments(@Valid @RequestBody SearchQuery searchQuery) {
-        List<Apartment> apartments =
-                apartmentService.getByQueryFetchPhotosPricesRoomsBeds(searchQuery);
-        return apartmentDtoMapper.toCardDtos(apartments);
+    @GetMapping(
+            value = "/apartments/instances/{id}/calendar.ics",
+            produces = "text/calendar"
+    )
+    public String getIcalForApartmentInstance(@PathVariable Long id) {
+        List<Event> events = eventService.getEventsForApartmentInstanceBy(id);
+        return icalMapper.toIcal(events);
     }
 }

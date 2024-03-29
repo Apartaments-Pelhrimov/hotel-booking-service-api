@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.adapter.in.web;
+package ua.mibal.booking.adapter.in.web.controller.user;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,6 +23,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import ua.mibal.booking.adapter.in.web.controller.ControllerValidationTest;
 import ua.mibal.booking.adapter.in.web.mapper.ReviewDtoMapper;
 import ua.mibal.booking.application.ReviewService;
 import ua.mibal.booking.application.model.CreateReviewForm;
@@ -42,8 +43,8 @@ import static ua.mibal.booking.adapter.in.web.security.TestSecurityJwtUtils.jwt;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@WebMvcTest(ReviewController.class)
-public class ReviewControllerValidationTest extends ControllerValidationTest {
+@WebMvcTest(UserReviewController.class)
+public class UserReviewControllerValidationTest extends ControllerValidationTest {
     private static final String APARTMENT_ID = "apartment-id";
     private static final String USER_USERNAME = "user@email.com";
 

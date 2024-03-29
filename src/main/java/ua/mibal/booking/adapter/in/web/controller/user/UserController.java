@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.adapter.in.web;
+package ua.mibal.booking.adapter.in.web.controller.user;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

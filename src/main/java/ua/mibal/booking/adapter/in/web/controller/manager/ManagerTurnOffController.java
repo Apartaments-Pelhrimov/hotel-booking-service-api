@@ -14,23 +14,20 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.adapter.in.web;
+package ua.mibal.booking.adapter.in.web.controller.manager;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ua.mibal.booking.adapter.in.web.security.annotation.ManagerAllowed;
-import ua.mibal.booking.application.RoomService;
-import ua.mibal.booking.application.model.CreateRoomForm;
-import ua.mibal.booking.domain.id.ApartmentId;
+import ua.mibal.booking.application.TurningOffService;
+import ua.mibal.booking.application.model.TurnOffForm;
 
-import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 /**
@@ -38,22 +35,22 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @RequiredArgsConstructor
-@RestController
 @ManagerAllowed
-@RequestMapping("/api/apartments")
-public class RoomController {
-    private final RoomService roomService;
+@RestController
+@RequestMapping("/api")
+public class ManagerTurnOffController {
+    private final TurningOffService turningOffService;
 
-    @PostMapping("/{apartmentId}/rooms")
-    @ResponseStatus(CREATED)
-    public void create(@PathVariable String apartmentId,
-                       @RequestBody @Valid CreateRoomForm createRoomForm) {
-        roomService.create(new ApartmentId(apartmentId), createRoomForm);
+    @PatchMapping("/hotel/off")
+    @ResponseStatus(NO_CONTENT)
+    public void turnOffHotel(@Valid @RequestBody TurnOffForm form) {
+        turningOffService.turnOffHotel(form);
     }
 
-    @DeleteMapping("/rooms/{id}")
+    @PatchMapping("/apartments/instances/{id}/off")
     @ResponseStatus(NO_CONTENT)
-    public void delete(@PathVariable Long id) {
-        roomService.delete(id);
+    public void turnOffApartmentInstance(@PathVariable Long id,
+                                         @Valid @RequestBody TurnOffForm form) {
+        turningOffService.turnOffApartmentInstance(id, form);
     }
 }

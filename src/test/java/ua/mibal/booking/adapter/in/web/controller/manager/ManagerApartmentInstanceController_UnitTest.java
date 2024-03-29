@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.adapter.in.web;
+package ua.mibal.booking.adapter.in.web.controller.manager;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,10 +46,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@WebMvcTest(ApartmentInstanceController.class)
+@WebMvcTest(ManagerApartmentInstanceController.class)
 @TestPropertySource("classpath:application.yaml")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-class ApartmentInstanceController_UnitTest {
+class ManagerApartmentInstanceController_UnitTest {
 
     @Autowired
     private WebApplicationContext webApplicationContext;

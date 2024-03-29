@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.adapter.in.web;
+package ua.mibal.booking.adapter.in.web.controller.user;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,6 +24,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import ua.mibal.booking.adapter.in.web.controller.ControllerValidationTest;
 import ua.mibal.booking.adapter.in.web.mapper.UserDtoMapper;
 import ua.mibal.booking.application.UserService;
 import ua.mibal.booking.application.model.ChangeNotificationSettingsForm;

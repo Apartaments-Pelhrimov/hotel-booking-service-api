@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.adapter.in.web;
+package ua.mibal.booking.adapter.in.web.controller.user;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +32,6 @@ import ua.mibal.booking.adapter.in.web.mapper.ReservationDtoMapper;
 import ua.mibal.booking.adapter.in.web.model.ReservationDto;
 import ua.mibal.booking.adapter.in.web.model.ReservationFormDto;
 import ua.mibal.booking.adapter.in.web.model.ReservationRejectingFormDto;
-import ua.mibal.booking.adapter.in.web.security.annotation.ManagerAllowed;
 import ua.mibal.booking.adapter.in.web.security.annotation.UserAllowed;
 import ua.mibal.booking.application.ReservationService;
 import ua.mibal.booking.application.mapper.ReservationFormMapper;
@@ -49,21 +48,14 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @RequiredArgsConstructor
+@UserAllowed
 @RestController
 @RequestMapping("/api")
-public class ReservationController {
+public class UserReservationController {
     private final ReservationService reservationService;
     private final ReservationDtoMapper reservationDtoMapper;
     private final ReservationFormMapper reservationFormMapper;
 
-    @ManagerAllowed
-    @GetMapping("/reservations")
-    public Page<ReservationDto> getAll(Pageable pageable) {
-        Page<Reservation> reservations = reservationService.getAll(pageable);
-        return reservationDtoMapper.toDtos(reservations);
-    }
-
-    @UserAllowed
     @GetMapping("/users/me/reservations")
     public Page<ReservationDto> getAllByUser(Authentication authentication, Pageable pageable) {
         Page<Reservation> reservations =
@@ -71,7 +63,6 @@ public class ReservationController {
         return reservationDtoMapper.toDtos(reservations);
     }
 
-    @UserAllowed
     @PatchMapping("/apartments/{apartmentId}/reserve")
     @ResponseStatus(CREATED)
     public void reserve(@PathVariable String apartmentId,
@@ -82,7 +73,6 @@ public class ReservationController {
         reservationService.reserve(form);
     }
 
-    @UserAllowed
     @PatchMapping("/reservations/{id}/reject")
     @ResponseStatus(NO_CONTENT)
     public void rejectReservation(@PathVariable("id") Long id,

@@ -26,8 +26,6 @@ import ua.mibal.booking.domain.Apartment;
 import ua.mibal.booking.domain.Price;
 import ua.mibal.booking.domain.id.ApartmentId;
 
-import java.util.List;
-
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
@@ -37,11 +35,6 @@ import java.util.List;
 public class PriceService {
     private final ApartmentService apartmentService;
     private final PriceMapper priceMapper;
-
-    public List<Price> getAllByApartment(ApartmentId apartmentId) {
-        return apartmentService.getOneFetchPrices(apartmentId)
-                .getPrices();
-    }
 
     @Transactional
     public void put(PutPriceForm form) {
