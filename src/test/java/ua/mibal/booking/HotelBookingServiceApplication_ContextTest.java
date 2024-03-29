@@ -23,7 +23,7 @@ import org.springframework.boot.test.context.SpringBootTest;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@SpringBootTest
+@SpringBootTest(properties = "spring.jpa.hibernate.ddl-auto=create")
 class HotelBookingServiceApplication_ContextTest {
 
 
