@@ -205,17 +205,17 @@ class ApartmentJpaRepository_IntegrationTest {
     }
 
     @Test
-    void findByIdFetchPhotosRooms() {
+    void findByIdFetchPhotosPricesRoomsBeds() {
         ApartmentId id = apartment.getId();
 
-        Apartment managedApartment = repo.findByIdFetchPhotosRooms(id)
+        Apartment apartment = repo.findByIdFetchPhotosPricesRoomsBeds(id)
                 .orElseThrow();
 
-        entityManager.detach(managedApartment);
-        assertDoesNotThrow(
-                () -> managedApartment.getPhotos().size());
-        assertDoesNotThrow(
-                () -> managedApartment.getRooms().stream().forEach(r -> r.getBeds().size()));
+        entityManager.detach(apartment);
+        assertDoesNotThrow(() -> apartment.getPhotos().size());
+        assertDoesNotThrow(() -> apartment.getPrices().size());
+        assertDoesNotThrow(() -> apartment.getRooms()
+                .forEach(r -> r.getBeds().size()));
     }
 
     @Test

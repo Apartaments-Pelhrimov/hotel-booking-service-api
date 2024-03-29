@@ -1,0 +1,193 @@
+openapi: "3.0.3"
+info:
+  title: "hotel_booking_service API"
+  description: "hotel_booking_service API"
+  version: "1.0.0"
+servers:
+  - url: "https://hotel_booking_service"
+paths:
+  /api/apartments:
+    get:
+      summary: "GET api/apartments"
+      operationId: "searchInApartments"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SearchQuery"
+        required: true
+      responses:
+        200:
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/ApartmentCardDto"
+  /api/apartments/{id}:
+    get:
+      summary: "GET api/apartments/{id}"
+      operationId: "getOne"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        404:
+          description: "NOT FOUND"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        200:
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApartmentDto"
+  /api/apartments/propositions:
+    get:
+      summary: "GET api/apartments/propositions"
+      operationId: "getPropositions"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/ApartmentCardDto"
+components:
+  schemas:
+    ApartmentOptions:
+      type: "object"
+      properties:
+        mealsIncluded:
+          type: "boolean"
+        kitchen:
+          type: "boolean"
+        bathroom:
+          type: "boolean"
+        wifi:
+          type: "boolean"
+        refrigerator:
+          type: "boolean"
+    BedDto:
+      type: "object"
+      properties:
+        size:
+          type: "integer"
+          format: "int32"
+        type:
+          type: "string"
+          enum:
+            - "BUNK"
+            - "CONNECTED"
+            - "TRANSFORMER"
+    RoomDto:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        type:
+          type: "string"
+          enum:
+            - "BEDROOM"
+            - "LIVING_ROOM"
+            - "MEETING_ROOM"
+        beds:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/BedDto"
+    PriceDto:
+      type: "object"
+      properties:
+        person:
+          type: "integer"
+          format: "int32"
+        amount:
+          type: "number"
+          format: "double"
+    ApartmentDto:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+        name:
+          type: "string"
+        photos:
+          type: "array"
+          items:
+            type: "string"
+        options:
+          $ref: "#/components/schemas/ApartmentOptions"
+        rating:
+          type: "number"
+          format: "double"
+        rooms:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/RoomDto"
+        prices:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/PriceDto"
+    ApartmentCardDto:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+        name:
+          type: "string"
+        photo:
+          type: "string"
+        rating:
+          type: "number"
+          format: "double"
+        people:
+          type: "integer"
+          format: "int32"
+        price:
+          type: "number"
+          format: "double"
+    SearchQuery:
+      type: "object"
+      properties:
+        checkIn:
+          type: "string"
+          format: "date"
+        checkOut:
+          type: "string"
+          format: "date"
+        guests:
+          type: "integer"
+          format: "int32"
+        type:
+          type: "string"
+          enum:
+            - "COMFORT"
+            - "STANDARD"
+    ApiError:
+      type: "object"
+      properties:
+        timestamp:
+          type: "string"
+        status:
+          type: "integer"
+        error:
+          type: "string"
+        message:
+          type: "string"
+        fieldErrors:
+          type: "array"
+          items:
+            type: "object"
+            properties:
+              field:
+                type: "string"
+              message:
+                type: "string"

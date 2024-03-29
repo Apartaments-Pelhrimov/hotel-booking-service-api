@@ -56,7 +56,7 @@ public class ApartmentController {
 
     @GetMapping("/{id}")
     public ApartmentDto getOne(@PathVariable String id) {
-        Apartment apartment = apartmentService.getOneFetchPhotosBeds(new ApartmentId(id));
+        Apartment apartment = apartmentService.getOneFetchPhotosPricesRoomsBeds(new ApartmentId(id));
         return apartmentDtoMapper.toDto(apartment);
     }
 

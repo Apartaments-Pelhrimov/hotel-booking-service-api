@@ -42,7 +42,7 @@ public interface ApartmentRepository {
 
     Optional<Apartment> findByIdFetchInstances(ApartmentId id);
 
-    Optional<Apartment> findByIdFetchPhotosRooms(ApartmentId id);
+    Optional<Apartment> findByIdFetchPhotosPricesRoomsBeds(ApartmentId id);
 
     List<Apartment> findAllFetchFetchPhotosPricesRoomsBeds();
 }

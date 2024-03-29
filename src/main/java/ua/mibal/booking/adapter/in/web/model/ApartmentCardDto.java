@@ -16,20 +16,16 @@
 
 package ua.mibal.booking.adapter.in.web.model;
 
-import ua.mibal.booking.domain.ApartmentOptions;
-
 import java.math.BigDecimal;
-import java.util.List;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 public record ApartmentCardDto(
-//        String id,
+        String id,
         String name,
-        List<String> photos,
-        ApartmentOptions options,
+        String photo,
         Double rating,
         Integer people,
         BigDecimal price

@@ -140,11 +140,11 @@ class ApartmentService_UnitTest {
 
     @Test
     void getOneFetchPhotosBeds() {
-        when(apartmentRepository.findByIdFetchPhotosRooms(new ApartmentId("1L")))
+        when(apartmentRepository.findByIdFetchPhotosPricesRoomsBeds(new ApartmentId("1L")))
                 .thenReturn(Optional.of(apartment));
 
         Apartment actual = assertDoesNotThrow(
-                () -> service.getOneFetchPhotosBeds(new ApartmentId("1L"))
+                () -> service.getOneFetchPhotosPricesRoomsBeds(new ApartmentId("1L"))
         );
 
         assertEquals(apartment, actual);
@@ -157,7 +157,7 @@ class ApartmentService_UnitTest {
 
         ApartmentNotFoundException e = assertThrows(
                 ApartmentNotFoundException.class,
-                () -> service.getOneFetchPhotosBeds(new ApartmentId("1L"))
+                () -> service.getOneFetchPhotosPricesRoomsBeds(new ApartmentId("1L"))
         );
 
         assertEquals(

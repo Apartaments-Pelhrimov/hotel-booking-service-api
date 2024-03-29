@@ -14,23 +14,22 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.adapter.in.web.model;
+package ua.mibal.booking.adapter.in.web.mapper;
 
-import ua.mibal.booking.domain.ApartmentOptions;
+import org.mapstruct.Mapper;
+import ua.mibal.booking.adapter.in.web.model.BedDto;
+import ua.mibal.booking.domain.Bed;
 
-import java.util.List;
+import static org.mapstruct.InjectionStrategy.CONSTRUCTOR;
+import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public record ApartmentDto(
-        String id,
-        String name,
-        List<String> photos,
-        ApartmentOptions options,
-        Double rating,
-        List<RoomDto> rooms,
-        List<PriceDto> prices
-) {
+@Mapper(componentModel = SPRING,
+        injectionStrategy = CONSTRUCTOR)
+public interface BedDtoMapper {
+
+    BedDto toDto(Bed bed);
 }

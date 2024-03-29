@@ -53,7 +53,7 @@ public class FakeInMemoryApartmentRepository implements ApartmentRepository {
     }
 
     @Override
-    public Optional<Apartment> findByIdFetchPhotosRooms(ApartmentId id) {
+    public Optional<Apartment> findByIdFetchPhotosPricesRoomsBeds(ApartmentId id) {
         throw new UnsupportedOperationException();
     }
 

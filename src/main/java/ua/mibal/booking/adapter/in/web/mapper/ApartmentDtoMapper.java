@@ -42,11 +42,13 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
         })
 public interface ApartmentDtoMapper {
 
-    @Mapping(target = "price", source = "prices")
-    @Mapping(target = "beds", source = "rooms")
+    @Mapping(target = "id", source = "id.value")
+    @Mapping(target = "photos", source = "photos")
+    @Mapping(target = "prices", source = "prices")
     ApartmentDto toDto(Apartment apartment);
 
-//    @Mapping(target = "id", source = "id.value")
+    @Mapping(target = "id", source = "id.value")
+    @Mapping(target = "photo", source = "photos")
     @Mapping(target = "price", source = "prices")
     @Mapping(target = "people", source = "rooms")
     ApartmentCardDto toCardDto(Apartment apartment);

@@ -67,8 +67,8 @@ public class ApartmentService {
                 .orElseThrow(() -> new ApartmentNotFoundException(id));
     }
 
-    public Apartment getOneFetchPhotosBeds(ApartmentId id) {
-        return apartmentRepository.findByIdFetchPhotosRooms(id)
+    public Apartment getOneFetchPhotosPricesRoomsBeds(ApartmentId id) {
+        return apartmentRepository.findByIdFetchPhotosPricesRoomsBeds(id)
                 .orElseThrow(() -> new ApartmentNotFoundException(id));
     }
 

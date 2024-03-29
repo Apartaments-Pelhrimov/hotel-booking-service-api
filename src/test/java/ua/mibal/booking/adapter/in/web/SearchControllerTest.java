@@ -26,6 +26,7 @@ import ua.mibal.booking.domain.Apartment.ApartmentClass;
 import ua.mibal.booking.domain.Bed;
 import ua.mibal.booking.domain.Price;
 import ua.mibal.booking.domain.Room;
+import ua.mibal.booking.domain.id.ApartmentId;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -55,7 +56,15 @@ class SearchControllerTest extends ControllerTest {
 
     @Test
     void searchInApartments() throws Exception {
-        givenApartment("Apartment", "photo_key", 10, 2, valueOf(100.0), COMFORT);
+        givenApartment(
+                new ApartmentId("apartment_id"),
+                "Apartment",
+                "photo_key",
+                10,
+                2,
+                valueOf(100.0),
+                COMFORT
+        );
 
         mvc.perform(get("/api/apartments")
                         .with(jwt("user@email.com", "USER"))
@@ -71,10 +80,9 @@ class SearchControllerTest extends ControllerTest {
                 .andExpect(content().json("""
                         [
                           {
+                            "id": "apartment_id",
                             "name": "Apartment",
-                            "photos": [
-                              "http://localhost/api/photos/photo_key"
-                            ],
+                            "photo": "http://localhost/api/photos/photo_key",
                             "rating": 10,
                             "people": 2,
                             "price": 100.0
@@ -91,8 +99,9 @@ class SearchControllerTest extends ControllerTest {
         ));
     }
 
-    private void givenApartment(String name, String photoKey, double rating, int people, BigDecimal price, ApartmentClass type) {
+    private void givenApartment(ApartmentId id, String name, String photoKey, double rating, int people, BigDecimal price, ApartmentClass type) {
         Apartment apartment = new Apartment();
+        apartment.setId(id);
         apartment.setName(name);
         apartment.setRating(rating);
         apartment.addPhoto(photoKey);

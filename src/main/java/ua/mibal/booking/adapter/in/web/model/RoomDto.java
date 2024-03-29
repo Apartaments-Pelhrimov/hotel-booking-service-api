@@ -16,7 +16,7 @@
 
 package ua.mibal.booking.adapter.in.web.model;
 
-import ua.mibal.booking.domain.ApartmentOptions;
+import ua.mibal.booking.domain.Room;
 
 import java.util.List;
 
@@ -24,13 +24,9 @@ import java.util.List;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public record ApartmentDto(
-        String id,
+public record RoomDto(
         String name,
-        List<String> photos,
-        ApartmentOptions options,
-        Double rating,
-        List<RoomDto> rooms,
-        List<PriceDto> prices
+        Room.Type type,
+        List<BedDto> beds
 ) {
 }

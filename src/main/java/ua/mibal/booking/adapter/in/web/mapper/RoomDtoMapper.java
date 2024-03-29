@@ -16,26 +16,28 @@
 
 package ua.mibal.booking.adapter.in.web.mapper;
 
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import ua.mibal.booking.adapter.in.web.model.RoomDto;
 import ua.mibal.booking.domain.Bed;
 import ua.mibal.booking.domain.Room;
 
 import java.util.List;
 
+import static org.mapstruct.InjectionStrategy.CONSTRUCTOR;
+import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
+
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@Component
-public class RoomDtoMapper {
+@Mapper(componentModel = SPRING,
+        injectionStrategy = CONSTRUCTOR,
+        uses = BedDtoMapper.class)
+public interface RoomDtoMapper {
 
-    List<Bed> toBeds(List<Room> rooms) {
-        return rooms.stream()
-                .flatMap(room -> room.getBeds().stream())
-                .toList();
-    }
+    RoomDto toDto(Room room);
 
-    Integer toPeopleCount(List<Room> rooms) {
+    default Integer toPeopleCount(List<Room> rooms) {
         return rooms.stream()
                 .map(Room::getBeds)
                 .mapToInt(beds -> beds.stream()

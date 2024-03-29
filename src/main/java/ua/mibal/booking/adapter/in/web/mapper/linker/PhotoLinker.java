@@ -44,6 +44,14 @@ public class PhotoLinker {
                 .orElse(null);
     }
 
+    public String getPhotoLink(List<Photo> photos) {
+        if (photos.isEmpty()) {
+            return null;
+        }
+        Photo mainPhoto = photos.get(0);
+        return toLink(mainPhoto);
+    }
+
     private String toLink(Photo photo) {
         String baseUri = linkToCurrentMapping().toString();
         return baseUri + "/api/photos/" + photo.getKey();
