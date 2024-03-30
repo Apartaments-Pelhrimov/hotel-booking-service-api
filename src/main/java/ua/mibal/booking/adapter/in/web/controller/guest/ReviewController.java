@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ua.mibal.booking.adapter.in.web.controller.guest.docs.ReviewControllerDocs;
 import ua.mibal.booking.adapter.in.web.mapper.ReviewDtoMapper;
 import ua.mibal.booking.adapter.in.web.model.ReviewDto;
 import ua.mibal.booking.application.ReviewService;
@@ -37,16 +38,18 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
-public class ReviewController {
+public class ReviewController implements ReviewControllerDocs {
     private final ReviewService reviewService;
     private final ReviewDtoMapper reviewDtoMapper;
 
+    @Override
     @GetMapping("/reviews/latest")
     public List<ReviewDto> getAllLatest(Pageable pageable) {
         List<Review> reviews = reviewService.getAllLatest(pageable);
         return reviewDtoMapper.toDtos(reviews);
     }
 
+    @Override
     @GetMapping("/apartments/{apartmentId}/reviews")
     public List<ReviewDto> getAllByApartment(@PathVariable String apartmentId,
                                              Pageable pageable) {

@@ -1,0 +1,2447 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "OpenAPI definition",
+    "version": "v0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Generated server url"
+    }
+  ],
+  "paths": {
+    "/api/users/me/photo": {
+      "put": {
+        "tags": [
+          "user-photo-controller"
+        ],
+        "operationId": "changeMyPhoto",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "file"
+                ],
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "USER"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "user-photo-controller"
+        ],
+        "operationId": "deleteMyPhoto",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "USER"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/users/me/account/password": {
+      "put": {
+        "tags": [
+          "user-controller"
+        ],
+        "summary": "Put new password",
+        "operationId": "putPassword",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePasswordDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "New password is not valid or supplied old password is incorrect",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User is not authenticated",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Password updated"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "USER"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/auth/forget/password": {
+      "put": {
+        "tags": [
+          "auth-controller"
+        ],
+        "operationId": "setNewPassword",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewPasswordDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/api/apartments/{apartmentId}/prices": {
+      "put": {
+        "tags": [
+          "manager-price-controller"
+        ],
+        "operationId": "put",
+        "parameters": [
+          {
+            "name": "apartmentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PutPriceForm"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "MANAGER"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "manager-price-controller"
+        ],
+        "operationId": "delete_2",
+        "parameters": [
+          {
+            "name": "apartmentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "person",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "MANAGER"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/auth/register": {
+      "post": {
+        "tags": [
+          "auth-controller"
+        ],
+        "operationId": "register",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrationForm"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "tags": [
+          "auth-controller"
+        ],
+        "operationId": "login",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/activate": {
+      "post": {
+        "tags": [
+          "auth-controller"
+        ],
+        "operationId": "activateNewAccount",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/api/apartments": {
+      "get": {
+        "tags": [
+          "apartment-controller"
+        ],
+        "summary": "Search in apartments by query",
+        "operationId": "search",
+        "parameters": [
+          {
+            "name": "searchQuery",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SearchQuery"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid query",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Apartments received",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ApartmentCardDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "manager-apartment-controller"
+        ],
+        "operationId": "create",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateApartmentForm"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "MANAGER"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/apartments/{apartmentId}/rooms": {
+      "post": {
+        "tags": [
+          "manager-room-controller"
+        ],
+        "operationId": "create_1",
+        "parameters": [
+          {
+            "name": "apartmentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRoomForm"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "MANAGER"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/apartments/{apartmentId}/reviews": {
+      "get": {
+        "tags": [
+          "review-controller"
+        ],
+        "summary": "Get reviews for apartment",
+        "operationId": "getAllByApartment",
+        "parameters": [
+          {
+            "name": "apartmentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageable",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Pageable"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Reviews received",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ReviewDto"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Apartment not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid apartment id format",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "user-review-controller"
+        ],
+        "operationId": "create_2",
+        "parameters": [
+          {
+            "name": "apartmentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateReviewForm"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "USER"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/apartments/{apartmentId}/photos": {
+      "post": {
+        "tags": [
+          "manager-photo-controller"
+        ],
+        "operationId": "createApartmentPhoto",
+        "parameters": [
+          {
+            "name": "apartmentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "file"
+                ],
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "MANAGER"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/apartments/{apartmentId}/instances": {
+      "post": {
+        "tags": [
+          "manager-apartment-instance-controller"
+        ],
+        "operationId": "create_3",
+        "parameters": [
+          {
+            "name": "apartmentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateApartmentInstanceForm"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "MANAGER"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/users/me/account": {
+      "get": {
+        "tags": [
+          "user-controller"
+        ],
+        "summary": "Get me as user account",
+        "operationId": "getAccount",
+        "responses": {
+          "403": {
+            "description": "User is not authenticated",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "User received",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserAccountDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "USER"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "user-controller"
+        ],
+        "summary": "Delete my account",
+        "operationId": "deleteAccount",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteMeDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Deleted"
+          },
+          "403": {
+            "description": "User is not authenticated or supplied password is incorrect",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "USER"
+            ]
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "user-controller"
+        ],
+        "summary": "Update my account",
+        "operationId": "changeAccount",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeUserForm"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "403": {
+            "description": "User is not authenticated",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "User updated"
+          },
+          "400": {
+            "description": "Passed data to update is incorrect",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "USER"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/users/me/account/notifications": {
+      "patch": {
+        "tags": [
+          "user-controller"
+        ],
+        "summary": "Update notification settings",
+        "operationId": "changeNotificationSettings",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeNotificationSettingsForm"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "403": {
+            "description": "User is not authenticated",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Passed data to update is incorrect",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Notification settings updated"
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "USER"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/reservations/{id}/reject": {
+      "patch": {
+        "tags": [
+          "user-reservation-controller"
+        ],
+        "operationId": "rejectReservation",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReservationRejectingFormDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "USER"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/hotel/off": {
+      "patch": {
+        "tags": [
+          "manager-turn-off-controller"
+        ],
+        "operationId": "turnOffHotel",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TurnOffForm"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "MANAGER"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/apartments/{id}": {
+      "get": {
+        "tags": [
+          "apartment-controller"
+        ],
+        "summary": "Get an apartment by id",
+        "operationId": "getOne_1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Apartment not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Apartment received",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApartmentDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid id format",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "manager-apartment-controller"
+        ],
+        "operationId": "delete_1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "MANAGER"
+            ]
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "manager-apartment-controller"
+        ],
+        "operationId": "change",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeApartmentForm"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "MANAGER"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/apartments/{id}/options": {
+      "patch": {
+        "tags": [
+          "manager-apartment-controller"
+        ],
+        "operationId": "changeOptions",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeApartmentOptionsForm"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "MANAGER"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/apartments/{apartmentId}/reserve": {
+      "patch": {
+        "tags": [
+          "user-reservation-controller"
+        ],
+        "operationId": "reserve",
+        "parameters": [
+          {
+            "name": "apartmentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReservationFormDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "USER"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/apartments/instances/{id}/off": {
+      "patch": {
+        "tags": [
+          "manager-turn-off-controller"
+        ],
+        "operationId": "turnOffApartmentInstance",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TurnOffForm"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "MANAGER"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/users/me": {
+      "get": {
+        "tags": [
+          "user-controller"
+        ],
+        "summary": "Get me as user",
+        "operationId": "getOne",
+        "responses": {
+          "403": {
+            "description": "User is not authenticated",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "User received",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "USER"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/users/me/reservations": {
+      "get": {
+        "tags": [
+          "user-reservation-controller"
+        ],
+        "operationId": "getAllByUser",
+        "parameters": [
+          {
+            "name": "pageable",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Pageable"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageReservationDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "USER"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/reviews/latest": {
+      "get": {
+        "tags": [
+          "review-controller"
+        ],
+        "summary": "Get latest reviews",
+        "operationId": "getAllLatest",
+        "parameters": [
+          {
+            "name": "pageable",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Pageable"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Reviews received",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ReviewDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/reservations": {
+      "get": {
+        "tags": [
+          "manager-reservation-controller"
+        ],
+        "operationId": "getAll",
+        "parameters": [
+          {
+            "name": "pageable",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Pageable"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageReservationDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "MANAGER"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/photos/{key}": {
+      "get": {
+        "tags": [
+          "photo-controller"
+        ],
+        "operationId": "getPhoto",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/forget": {
+      "get": {
+        "tags": [
+          "auth-controller"
+        ],
+        "operationId": "forgetPassword",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/api/apartments/{apartmentId}/calendar": {
+      "get": {
+        "tags": [
+          "calendar-controller"
+        ],
+        "operationId": "getCalendarForApartment",
+        "parameters": [
+          {
+            "name": "apartmentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "array",
+                    "properties": {
+                      "empty": {
+                        "type": "boolean"
+                      }
+                    },
+                    "items": {
+                      "$ref": "#/components/schemas/Event"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/apartments/propositions": {
+      "get": {
+        "tags": [
+          "apartment-controller"
+        ],
+        "summary": "Get apartment propositions",
+        "operationId": "getPropositions",
+        "responses": {
+          "200": {
+            "description": "Apartments received",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ApartmentCardDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/apartments/instances/{id}/calendar": {
+      "get": {
+        "tags": [
+          "calendar-controller"
+        ],
+        "operationId": "getCalendarForApartmentInstance",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CalendarDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/apartments/instances/{id}/calendar.ics": {
+      "get": {
+        "tags": [
+          "reservation-calendar-export-controller"
+        ],
+        "operationId": "getIcalForApartmentInstance",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/calendar": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/reviews/{id}": {
+      "delete": {
+        "tags": [
+          "user-review-controller"
+        ],
+        "operationId": "delete",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "USER"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/apartments/{apartmentId}/photos/{key}": {
+      "delete": {
+        "tags": [
+          "manager-photo-controller"
+        ],
+        "operationId": "deleteApartmentPhoto",
+        "parameters": [
+          {
+            "name": "apartmentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "MANAGER"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/apartments/rooms/{id}": {
+      "delete": {
+        "tags": [
+          "manager-room-controller"
+        ],
+        "operationId": "delete_3",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "MANAGER"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/apartments/instances/{id}": {
+      "delete": {
+        "tags": [
+          "manager-apartment-instance-controller"
+        ],
+        "operationId": "delete_4",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": [
+              "MANAGER"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ChangePasswordDto": {
+        "required": [
+          "newPassword",
+          "oldPassword"
+        ],
+        "type": "object",
+        "properties": {
+          "newPassword": {
+            "type": "string"
+          },
+          "oldPassword": {
+            "type": "string"
+          }
+        }
+      },
+      "ApiError": {
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "error": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "fieldErrors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "NewPasswordDto": {
+        "required": [
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "ApartmentId": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        }
+      },
+      "PutPriceForm": {
+        "required": [
+          "amount",
+          "person"
+        ],
+        "type": "object",
+        "properties": {
+          "person": {
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32"
+          },
+          "amount": {
+            "maximum": 100000,
+            "exclusiveMaximum": false,
+            "minimum": 0,
+            "exclusiveMinimum": false,
+            "type": "number"
+          },
+          "apartmentId": {
+            "$ref": "#/components/schemas/ApartmentId"
+          }
+        }
+      },
+      "RegistrationForm": {
+        "required": [
+          "email",
+          "firstName",
+          "lastName",
+          "password",
+          "phone"
+        ],
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "LoginDto": {
+        "required": [
+          "password",
+          "username"
+        ],
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "TokenDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          }
+        }
+      },
+      "ApartmentOptions": {
+        "type": "object",
+        "properties": {
+          "mealsIncluded": {
+            "type": "boolean"
+          },
+          "kitchen": {
+            "type": "boolean"
+          },
+          "bathroom": {
+            "type": "boolean"
+          },
+          "wifi": {
+            "type": "boolean"
+          },
+          "refrigerator": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CreateApartmentForm": {
+        "required": [
+          "apartmentClass",
+          "id",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ApartmentId"
+          },
+          "name": {
+            "type": "string"
+          },
+          "apartmentClass": {
+            "type": "string",
+            "enum": [
+              "COMFORT",
+              "STANDARD"
+            ]
+          },
+          "options": {
+            "$ref": "#/components/schemas/ApartmentOptions"
+          },
+          "prices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PutPriceForm"
+            }
+          },
+          "rooms": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateRoomForm"
+            }
+          },
+          "instances": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateApartmentInstanceForm"
+            }
+          }
+        }
+      },
+      "CreateApartmentInstanceForm": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 2147483647,
+            "minLength": 3,
+            "type": "string"
+          },
+          "bookingICalUrl": {
+            "type": "string"
+          },
+          "apartmentId": {
+            "$ref": "#/components/schemas/ApartmentId"
+          }
+        }
+      },
+      "CreateBedForm": {
+        "required": [
+          "size",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "size": {
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "BUNK",
+              "CONNECTED",
+              "TRANSFORMER"
+            ]
+          }
+        }
+      },
+      "CreateRoomForm": {
+        "required": [
+          "name",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 2147483647,
+            "minLength": 3,
+            "type": "string"
+          },
+          "beds": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateBedForm"
+            }
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "BEDROOM",
+              "LIVING_ROOM",
+              "MEETING_ROOM"
+            ]
+          }
+        }
+      },
+      "CreateReviewForm": {
+        "required": [
+          "body",
+          "rate"
+        ],
+        "type": "object",
+        "properties": {
+          "body": {
+            "maxLength": 255,
+            "minLength": 1,
+            "type": "string"
+          },
+          "rate": {
+            "maximum": 10,
+            "exclusiveMaximum": false,
+            "minimum": 0,
+            "exclusiveMinimum": false,
+            "type": "number",
+            "format": "double"
+          },
+          "apartmentId": {
+            "$ref": "#/components/schemas/ApartmentId"
+          },
+          "userEmail": {
+            "type": "string"
+          }
+        }
+      },
+      "ChangeUserForm": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          }
+        }
+      },
+      "ChangeNotificationSettingsForm": {
+        "type": "object",
+        "properties": {
+          "receiveOrderEmails": {
+            "type": "boolean"
+          },
+          "receiveNewsEmails": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ReservationRejectingFormDto": {
+        "required": [
+          "reason"
+        ],
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string"
+          }
+        }
+      },
+      "TurnOffForm": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "to": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "event": {
+            "type": "string"
+          }
+        }
+      },
+      "ChangeApartmentForm": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "apartmentClass": {
+            "type": "string",
+            "enum": [
+              "COMFORT",
+              "STANDARD"
+            ]
+          }
+        }
+      },
+      "ChangeApartmentOptionsForm": {
+        "type": "object",
+        "properties": {
+          "mealsIncluded": {
+            "type": "boolean"
+          },
+          "kitchen": {
+            "type": "boolean"
+          },
+          "bathroom": {
+            "type": "boolean"
+          },
+          "wifi": {
+            "type": "boolean"
+          },
+          "refrigerator": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ReservationFormDto": {
+        "required": [
+          "from",
+          "people",
+          "to"
+        ],
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string",
+            "format": "date"
+          },
+          "to": {
+            "type": "string",
+            "format": "date"
+          },
+          "people": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "UserDto": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "photo": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "USER",
+              "MANAGER"
+            ]
+          }
+        }
+      },
+      "Pageable": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32"
+          },
+          "sort": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "PageReservationDto": {
+        "type": "object",
+        "properties": {
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReservationDto"
+            }
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          },
+          "empty": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PageableObject": {
+        "type": "object",
+        "properties": {
+          "offset": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "paged": {
+            "type": "boolean"
+          },
+          "unpaged": {
+            "type": "boolean"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "Price": {
+        "type": "object",
+        "properties": {
+          "person": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "amount": {
+            "type": "number"
+          }
+        }
+      },
+      "ReservationApartmentDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "photos": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ReservationDetails": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "to": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "price": {
+            "$ref": "#/components/schemas/Price"
+          },
+          "fullPrice": {
+            "type": "number"
+          }
+        }
+      },
+      "ReservationDto": {
+        "type": "object",
+        "properties": {
+          "apartment": {
+            "$ref": "#/components/schemas/ReservationApartmentDto"
+          },
+          "details": {
+            "$ref": "#/components/schemas/ReservationDetails"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "SortObject": {
+        "type": "object",
+        "properties": {
+          "empty": {
+            "type": "boolean"
+          },
+          "sorted": {
+            "type": "boolean"
+          },
+          "unsorted": {
+            "type": "boolean"
+          }
+        }
+      },
+      "NotificationSettings": {
+        "type": "object",
+        "properties": {
+          "receiveOrderEmails": {
+            "type": "boolean"
+          },
+          "receiveNewsEmails": {
+            "type": "boolean"
+          }
+        }
+      },
+      "UserAccountDto": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "photo": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "USER",
+              "MANAGER"
+            ]
+          },
+          "phone": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "notificationSettings": {
+            "$ref": "#/components/schemas/NotificationSettings"
+          }
+        }
+      },
+      "ReviewDto": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "$ref": "#/components/schemas/UserDto"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "rate": {
+            "type": "number",
+            "format": "double"
+          },
+          "body": {
+            "type": "string"
+          }
+        }
+      },
+      "SearchQuery": {
+        "type": "object",
+        "properties": {
+          "checkIn": {
+            "type": "string",
+            "format": "date"
+          },
+          "checkOut": {
+            "type": "string",
+            "format": "date"
+          },
+          "guests": {
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "COMFORT",
+              "STANDARD"
+            ]
+          }
+        }
+      },
+      "ApartmentCardDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "photo": {
+            "type": "string"
+          },
+          "rating": {
+            "type": "number",
+            "format": "double"
+          },
+          "people": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "price": {
+            "type": "number"
+          }
+        }
+      },
+      "ApartmentDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "photos": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "options": {
+            "$ref": "#/components/schemas/ApartmentOptions"
+          },
+          "rating": {
+            "type": "number",
+            "format": "double"
+          },
+          "rooms": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RoomDto"
+            }
+          },
+          "prices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PriceDto"
+            }
+          }
+        }
+      },
+      "BedDto": {
+        "type": "object",
+        "properties": {
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "BUNK",
+              "CONNECTED",
+              "TRANSFORMER"
+            ]
+          }
+        }
+      },
+      "PriceDto": {
+        "type": "object",
+        "properties": {
+          "person": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "amount": {
+            "type": "number"
+          }
+        }
+      },
+      "RoomDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "BEDROOM",
+              "LIVING_ROOM",
+              "MEETING_ROOM"
+            ]
+          },
+          "beds": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BedDto"
+            }
+          }
+        }
+      },
+      "CalendarDto": {
+        "type": "array",
+        "properties": {
+          "empty": {
+            "type": "boolean"
+          }
+        },
+        "items": {
+          "$ref": "#/components/schemas/Event"
+        }
+      },
+      "Event": {
+        "type": "object",
+        "properties": {
+          "start": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "end": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "eventName": {
+            "type": "string"
+          }
+        }
+      },
+      "DeleteMeDto": {
+        "required": [
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

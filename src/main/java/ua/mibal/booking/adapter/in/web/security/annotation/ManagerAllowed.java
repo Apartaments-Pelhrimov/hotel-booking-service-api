@@ -16,11 +16,14 @@
 
 package ua.mibal.booking.adapter.in.web.security.annotation;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import jakarta.annotation.security.RolesAllowed;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import static io.swagger.v3.oas.annotations.enums.SecuritySchemeType.HTTP;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
@@ -29,6 +32,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
+@SecurityScheme(name = "bearerAuth", type = HTTP, scheme = "bearer", bearerFormat = "JWT")
+@SecurityRequirement(name = "bearerAuth", scopes = "MANAGER")
 @RolesAllowed("MANAGER")
 @Retention(RUNTIME)
 @Target({TYPE, METHOD})

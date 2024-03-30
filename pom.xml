@@ -39,6 +39,7 @@
         <jakarta.mail.version>2.0.1</jakarta.mail.version>
         <instancio.version>2.9.0</instancio.version>
         <biweekly.version>0.6.8</biweekly.version>
+        <springdoc-maven-plugin.version>1.4</springdoc-maven-plugin.version>
     </properties>
 
     <dependencies>
@@ -219,6 +220,24 @@
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-maven-plugin</artifactId>
+                <version>${springdoc-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <apiDocsUrl>http://localhost:8080/v3/api-docs</apiDocsUrl>
+                    <outputFileName>openapi.json</outputFileName>
+                    <outputDir>${basedir}/docs/</outputDir>
                 </configuration>
             </plugin>
         </plugins>

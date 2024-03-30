@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import ua.mibal.booking.adapter.in.web.controller.user.docs.UserControllerDocs;
 import ua.mibal.booking.adapter.in.web.mapper.UserDtoMapper;
 import ua.mibal.booking.adapter.in.web.model.ChangePasswordDto;
 import ua.mibal.booking.adapter.in.web.model.DeleteMeDto;
@@ -48,22 +49,25 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 @UserAllowed
 @RestController
 @RequestMapping("/api/users")
-public class UserController {
+public class UserController implements UserControllerDocs {
     private final UserService userService;
     private final UserDtoMapper userDtoMapper;
 
+    @Override
     @GetMapping("/me")
     public UserDto getOne(Authentication authentication) {
         User user = userService.getOne(authentication.getName());
         return userDtoMapper.toDto(user);
     }
 
+    @Override
     @GetMapping("/me/account")
     public UserAccountDto getAccount(Authentication authentication) {
         User user = userService.getOne(authentication.getName());
         return userDtoMapper.toAccountDto(user);
     }
 
+    @Override
     @DeleteMapping("/me/account")
     @ResponseStatus(NO_CONTENT)
     public void deleteAccount(@Valid @RequestBody DeleteMeDto dto,
@@ -71,6 +75,7 @@ public class UserController {
         userService.delete(authentication.getName(), dto.password());
     }
 
+    @Override
     @PatchMapping("/me/account")
     @ResponseStatus(NO_CONTENT)
     public void changeAccount(@Valid @RequestBody ChangeUserForm form,
@@ -78,6 +83,7 @@ public class UserController {
         userService.change(authentication.getName(), form);
     }
 
+    @Override
     @PutMapping("/me/account/password")
     @ResponseStatus(NO_CONTENT)
     public void putPassword(@Valid @RequestBody ChangePasswordDto dto,
@@ -85,6 +91,7 @@ public class UserController {
         userService.putPassword(authentication.getName(), dto.oldPassword(), dto.newPassword());
     }
 
+    @Override
     @PatchMapping("/me/account/notifications")
     @ResponseStatus(NO_CONTENT)
     public void changeNotificationSettings(@RequestBody ChangeNotificationSettingsForm form,

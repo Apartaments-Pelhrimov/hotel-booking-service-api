@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ua.mibal.booking.adapter.in.web.controller.guest.docs.ApartmentControllerDocs;
 import ua.mibal.booking.adapter.in.web.mapper.ApartmentDtoMapper;
 import ua.mibal.booking.adapter.in.web.model.ApartmentCardDto;
 import ua.mibal.booking.adapter.in.web.model.ApartmentDto;
@@ -40,22 +41,25 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/apartments")
-public class ApartmentController {
+public class ApartmentController implements ApartmentControllerDocs {
     private final ApartmentService apartmentService;
     private final ApartmentDtoMapper apartmentDtoMapper;
 
+    @Override
     @GetMapping("/propositions")
     public List<ApartmentCardDto> getPropositions() {
         List<Apartment> apartments = apartmentService.getPropositionsFetchPhotosPricesRoomsBeds();
         return apartmentDtoMapper.toCardDtos(apartments);
     }
 
+    @Override
     @GetMapping("/{id}")
     public ApartmentDto getOne(@PathVariable String id) {
         Apartment apartment = apartmentService.getOneFetchPhotosPricesRoomsBeds(new ApartmentId(id));
         return apartmentDtoMapper.toDto(apartment);
     }
 
+    @Override
     @GetMapping
     public List<ApartmentCardDto> search(@Valid @RequestBody SearchQuery searchQuery) {
         List<Apartment> apartments =
