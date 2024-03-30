@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "OpenAPI definition",
-    "version": "v0"
+    "title": "Service API documentation",
+    "version": "0.1-SNAPSHOT"
   },
   "servers": [
     {
