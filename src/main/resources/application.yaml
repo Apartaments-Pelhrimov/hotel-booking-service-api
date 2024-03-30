@@ -35,15 +35,6 @@ aws:
   region: eu-north-1
   bucket.name: hotel-booking-service-dev
 
-server:
-  port: 443
-  ssl:
-    enabled: true
-    key-store-type: PKCS12
-    key-store: classpath:keystore/hotel-booking-service.p12
-    key-store-password: 210605
-    key-alias: hotel-booking-service
-
 calendar:
   zone-id: Europe/Prague
   reservation-hours:
