@@ -41,7 +41,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ua.mibal.booking.adapter.in.web.security.TestSecurityJwtUtils.jwt;
 import static ua.mibal.booking.domain.Apartment.ApartmentClass.COMFORT;
 import static ua.mibal.booking.domain.Bed.Type.BUNK;
 import static ua.mibal.booking.domain.Bed.Type.CONNECTED;
@@ -203,7 +202,6 @@ class ApartmentControllerTest extends ControllerTest {
         );
 
         mvc.perform(get("/api/apartments")
-                        .with(jwt("user@email.com", "USER"))
                         .contentType(APPLICATION_JSON)
                         .content("""
                                 {
