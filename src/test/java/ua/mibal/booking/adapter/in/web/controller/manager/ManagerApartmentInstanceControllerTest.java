@@ -17,9 +17,6 @@
 package ua.mibal.booking.adapter.in.web.controller.manager;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -27,10 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
+import ua.mibal.booking.adapter.in.web.controller.ControllerTest;
 import ua.mibal.booking.application.ApartmentInstanceService;
 import ua.mibal.booking.application.model.CreateApartmentInstanceForm;
 import ua.mibal.booking.domain.id.ApartmentId;
@@ -47,25 +41,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @WebMvcTest(ManagerApartmentInstanceController.class)
-@TestPropertySource("classpath:application.yaml")
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-class ManagerApartmentInstanceController_UnitTest {
-
-    @Autowired
-    private WebApplicationContext webApplicationContext;
-
-    private MockMvc mvc;
+class ManagerApartmentInstanceControllerTest extends ControllerTest {
 
     @MockBean
     private ApartmentInstanceService apartmentInstanceService;
 
     @Autowired
     private ObjectMapper objectMapper;
-
-    @BeforeEach
-    public void setup() {
-        this.mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-    }
 
     @ParameterizedTest
     @MethodSource("ua.mibal.test.util.DataGenerator#validCreateApartmentInstanceForms")

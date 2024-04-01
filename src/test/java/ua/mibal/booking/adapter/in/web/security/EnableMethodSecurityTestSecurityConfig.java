@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-package ua.mibal.booking.adapter.in.web.controller;
+package ua.mibal.booking.adapter.in.web.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
 /**
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-public abstract class ControllerValidationTest {
-
-    @Autowired
-    protected MockMvc mvc;
+@Configuration
+@EnableWebSecurity
+@EnableMethodSecurity(jsr250Enabled = true, proxyTargetClass = true)
+public class EnableMethodSecurityTestSecurityConfig {
 }

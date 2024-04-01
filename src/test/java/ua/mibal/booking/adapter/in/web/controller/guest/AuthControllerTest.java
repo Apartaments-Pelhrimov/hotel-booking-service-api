@@ -17,21 +17,14 @@
 package ua.mibal.booking.adapter.in.web.controller.guest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
 import org.instancio.junit.InstancioSource;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
+import ua.mibal.booking.adapter.in.web.controller.ControllerTest;
 import ua.mibal.booking.adapter.in.web.mapper.AuthDtoMapper;
 import ua.mibal.booking.adapter.in.web.model.LoginDto;
 import ua.mibal.booking.adapter.in.web.model.NewPasswordDto;
@@ -54,28 +47,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author Mykhailo Balakhon
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
-@RequiredArgsConstructor
 @WebMvcTest(AuthController.class)
-@TestPropertySource("classpath:application.yaml")
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-class AuthController_UnitTest {
-
-    @Autowired
-    private WebApplicationContext webApplicationContext;
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    private MockMvc mvc;
+class AuthControllerTest extends ControllerTest {
 
     @MockBean
     private AuthService authService;
     @MockBean
     private AuthDtoMapper authDtoMapper;
 
-    @BeforeEach
-    public void setup() {
-        this.mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-    }
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @ParameterizedTest
     @InstancioSource

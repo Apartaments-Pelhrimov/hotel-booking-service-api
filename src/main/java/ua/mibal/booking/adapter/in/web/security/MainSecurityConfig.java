@@ -47,7 +47,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @Configuration
 @EnableConfigurationProperties(CorsProps.class)
 @EnableWebSecurity
-@EnableMethodSecurity(jsr250Enabled = true)
+@EnableMethodSecurity(jsr250Enabled = true, proxyTargetClass = true)
 public class MainSecurityConfig {
     private final CorsProps corsProps;
 

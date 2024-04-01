@@ -16,17 +16,28 @@
 
 package ua.mibal.booking.adapter.in.web.controller.user;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ua.mibal.booking.adapter.in.web.controller.ControllerTest;
 import ua.mibal.booking.application.ReviewService;
 import ua.mibal.booking.application.model.CreateReviewForm;
 import ua.mibal.booking.domain.id.ApartmentId;
 
+import java.util.HashMap;
+
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -38,84 +49,81 @@ import static ua.mibal.booking.adapter.in.web.security.TestSecurityJwtUtils.jwt;
  */
 @WebMvcTest(UserReviewController.class)
 class UserReviewControllerTest extends ControllerTest {
+    private static final String USER_USERNAME = "user@email.com";
+    private static final String USER_ROLE = "USER";
+    private static final ApartmentId APARTMENT_ID = new ApartmentId("1L");
+    private static final Long REVIEW_ID = 2L;
 
     @MockBean
     private ReviewService reviewService;
 
-    @Test
-    void create() throws Exception {
-        mvc.perform(post("/api/apartments/{apartmentId}/reviews", "1L")
-                        .with(jwt("user@email.com", "USER"))
-                        .contentType(APPLICATION_JSON)
-                        .content("""
-                                {
-                                  "body": "Great apartment!",
-                                  "rate": 4.9
-                                }
-                                """))
+    @Autowired
+    private ObjectMapper mapper;
 
-                .andExpect(status().isCreated());
+    @ParameterizedTest
+    @CsvSource({
+            // body         rate
+            "bo,            0",
+            "body,          0",
+            "body,          1.1",
+            "body,          1.4289174892174928",
+            "body,          9.999999999999999",
+            "body,          10",
+    })
+    void create(String body, Double rate) throws Exception {
+        whenCreateThenShouldBeStatus(body, rate, HttpStatus.CREATED);
 
         verify(reviewService).create(new CreateReviewForm(
-                "Great apartment!", 4.9, new ApartmentId("1L"), "user@email.com"
+                body, rate, APARTMENT_ID, USER_USERNAME
         ));
     }
 
-    @Test
-    void createWithoutNeededAuthorities() throws Exception {
-        mvc.perform(post("/api/apartments/{apartmentId}/reviews", 1L)
-                        .with(jwt("user@email.com", "NOT_USER"))
-                        .contentType(APPLICATION_JSON)
-                        .content("""
-                                {
-                                  "body": "Great apartment!",
-                                  "rate": 4.9
-                                }
-                                """))
+    @ParameterizedTest
+    @CsvSource({
+            //    Invalid rate
+            // body         rate
+            "b,             10.1",
+            "body,          -0.1",
 
-                .andExpect(status().isForbidden());
-    }
+            //    Invalid body
+            // body         rate
+            "'    ',        0",
+            "'',            10",
+    })
+    void createWithInvalidBody(String body, Double rate) throws Exception {
+        whenCreateThenShouldBeStatus(body, rate, BAD_REQUEST);
 
-    @Test
-    void createWithoutAuthorization() throws Exception {
-        mvc.perform(post("/api/apartments/{apartmentId}/reviews", 1L)
-                        .contentType(APPLICATION_JSON)
-                        .content("""
-                                {
-                                  "body": "Great apartment!",
-                                  "rate": 4.9
-                                }
-                                """))
-
-                .andExpect(status().isForbidden());
+        verify(reviewService, never()).create(any());
     }
 
     @Test
     void delete() throws Exception {
-        mvc.perform(MockMvcRequestBuilders
-                        .delete("/api/reviews/{id}", 2L)
-                        .with(jwt("user@email.com", "USER")))
-                .andExpect(status().isNoContent());
+        whenDeleteThenShouldBeStatus(NO_CONTENT);
 
-        verify(reviewService).delete(2L, "user@email.com");
+        verify(reviewService).delete(REVIEW_ID, USER_USERNAME);
     }
 
-    @Test
-    void deleteWithoutNeededAuthorities() throws Exception {
+    private void whenDeleteThenShouldBeStatus(HttpStatus status) throws Exception {
         mvc.perform(MockMvcRequestBuilders
-                        .delete("/api/reviews/{id}", 2L)
-                        .with(jwt("user@email.com", "NOT_USER")))
-                .andExpect(status().isForbidden());
-
-        verify(reviewService, never()).delete(2L, "user@email.com");
+                        .delete("/api/reviews/{id}", REVIEW_ID)
+                        .with(jwt(USER_USERNAME, USER_ROLE)))
+                .andExpect(status().is(status.value()));
     }
 
-    @Test
-    void deleteWithoutAuthorization() throws Exception {
-        mvc.perform(MockMvcRequestBuilders
-                        .delete("/api/reviews/{id}", 2L))
-                .andExpect(status().isForbidden());
+    private void whenCreateThenShouldBeStatus(String body, Double rate, HttpStatus status) throws Exception {
+        String json = createRequestJson(body, rate);
 
-        verify(reviewService, never()).delete(2L, "user@email.com");
+        mvc.perform(post("/api/apartments/{apartmentId}/reviews", APARTMENT_ID.value())
+                        .with(jwt(USER_USERNAME, USER_ROLE))
+                        .contentType(APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().is(status.value()));
+    }
+
+    private String createRequestJson(String body, Double rate) throws JsonProcessingException {
+        HashMap<String, Object> json = new HashMap<>();
+        json.put("body", body);
+        json.put("rate", rate);
+        return mapper.writeValueAsString(json);
     }
 }
