@@ -47,7 +47,7 @@ import static org.mockito.Mockito.when;
  * @link <a href="mailto:9mohapx9@gmail.com">9mohapx9@gmail.com</a>
  */
 @UnitTest
-class UserService_UnitTest {
+class UserServiceTest {
 
     private final FakeInMemoryUserRepository userRepository = new FakeInMemoryUserRepository();
     private final PasswordEncoder passwordEncoder = new FakePasswordEncoder();
