@@ -18,9 +18,11 @@ package ua.mibal.booking.adapter.in.web.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.context.WebApplicationContext;
 import ua.mibal.booking.adapter.in.web.security.EnableMethodSecurityTestSecurityConfig;
 import ua.mibal.booking.adapter.in.web.security.TestConfig;
@@ -38,6 +40,9 @@ public abstract class SecurityControllerTest {
 
     @Autowired
     private WebApplicationContext context;
+
+    @MockBean
+    private LocalValidatorFactoryBean validator;
 
     @BeforeEach
     void setUp() {
