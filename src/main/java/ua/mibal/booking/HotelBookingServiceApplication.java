@@ -16,9 +16,19 @@
 
 package ua.mibal.booking;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.servers.Server;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+@OpenAPIDefinition(
+        info = @Info(
+                title = "Hotel Booking Service API documentation",
+                version = "0.1-SNAPSHOT"),
+        servers = @Server(
+                url = "https://hotel-booking-service-48a284839852.herokuapp.com",
+                description = "Heroku server"))
 @SpringBootApplication
 public class HotelBookingServiceApplication {
 
