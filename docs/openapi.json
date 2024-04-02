@@ -85,8 +85,8 @@
           "required": true
         },
         "responses": {
-          "400": {
-            "description": "New password is not valid or supplied old password is incorrect",
+          "404": {
+            "description": "User not found",
             "content": {
               "*/*": {
                 "schema": {
@@ -108,8 +108,8 @@
           "204": {
             "description": "Password updated"
           },
-          "404": {
-            "description": "User not found",
+          "400": {
+            "description": "New password is not valid or supplied old password is incorrect",
             "content": {
               "*/*": {
                 "schema": {
@@ -128,27 +128,17 @@
         ]
       }
     },
-    "/api/auth/forget/password": {
+    "/api/auth/restore/password": {
       "put": {
         "tags": [
           "auth-controller"
         ],
         "operationId": "setNewPassword",
-        "parameters": [
-          {
-            "name": "token",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewPasswordDto"
+                "$ref": "#/components/schemas/SetPasswordForm"
               }
             }
           },
@@ -238,6 +228,29 @@
         ]
       }
     },
+    "/api/auth/restore": {
+      "post": {
+        "tags": [
+          "auth-controller"
+        ],
+        "operationId": "restorePassword",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RestorePasswordForm"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
     "/api/auth/register": {
       "post": {
         "tags": [
@@ -297,16 +310,16 @@
           "auth-controller"
         ],
         "operationId": "activateNewAccount",
-        "parameters": [
-          {
-            "name": "token",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TokenForm"
+              }
             }
-          }
-        ],
+          },
+          "required": true
+        },
         "responses": {
           "204": {
             "description": "No Content"
@@ -332,16 +345,6 @@
           }
         ],
         "responses": {
-          "400": {
-            "description": "Invalid query",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
           "200": {
             "description": "Apartments received",
             "content": {
@@ -351,6 +354,16 @@
                   "items": {
                     "$ref": "#/components/schemas/ApartmentCardDto"
                   }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
                 }
               }
             }
@@ -465,8 +478,8 @@
               }
             }
           },
-          "404": {
-            "description": "Apartment not found",
+          "400": {
+            "description": "Invalid apartment id format",
             "content": {
               "*/*": {
                 "schema": {
@@ -475,8 +488,8 @@
               }
             }
           },
-          "400": {
-            "description": "Invalid apartment id format",
+          "404": {
+            "description": "Apartment not found",
             "content": {
               "*/*": {
                 "schema": {
@@ -622,6 +635,16 @@
         "summary": "Get me as user account",
         "operationId": "getAccount",
         "responses": {
+          "404": {
+            "description": "User not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "403": {
             "description": "User is not authenticated",
             "content": {
@@ -638,16 +661,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/UserAccountDto"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "User not found",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
                 }
               }
             }
@@ -678,11 +691,8 @@
           "required": true
         },
         "responses": {
-          "204": {
-            "description": "Deleted"
-          },
-          "404": {
-            "description": "User not found",
+          "403": {
+            "description": "User is not authenticated or supplied password is incorrect",
             "content": {
               "*/*": {
                 "schema": {
@@ -691,8 +701,11 @@
               }
             }
           },
-          "403": {
-            "description": "User is not authenticated or supplied password is incorrect",
+          "204": {
+            "description": "Deleted"
+          },
+          "404": {
+            "description": "User not found",
             "content": {
               "*/*": {
                 "schema": {
@@ -727,11 +740,8 @@
           "required": true
         },
         "responses": {
-          "204": {
-            "description": "User updated"
-          },
-          "403": {
-            "description": "User is not authenticated",
+          "400": {
+            "description": "Passed data to update is incorrect",
             "content": {
               "*/*": {
                 "schema": {
@@ -739,6 +749,9 @@
                 }
               }
             }
+          },
+          "204": {
+            "description": "User updated"
           },
           "404": {
             "description": "User not found",
@@ -750,8 +763,8 @@
               }
             }
           },
-          "400": {
-            "description": "Passed data to update is incorrect",
+          "403": {
+            "description": "User is not authenticated",
             "content": {
               "*/*": {
                 "schema": {
@@ -788,11 +801,8 @@
           "required": true
         },
         "responses": {
-          "204": {
-            "description": "Notification settings updated"
-          },
-          "403": {
-            "description": "User is not authenticated",
+          "400": {
+            "description": "Passed data to update is incorrect",
             "content": {
               "*/*": {
                 "schema": {
@@ -811,8 +821,8 @@
               }
             }
           },
-          "400": {
-            "description": "Passed data to update is incorrect",
+          "403": {
+            "description": "User is not authenticated",
             "content": {
               "*/*": {
                 "schema": {
@@ -820,6 +830,9 @@
                 }
               }
             }
+          },
+          "204": {
+            "description": "Notification settings updated"
           }
         },
         "security": [
@@ -920,16 +933,6 @@
           }
         ],
         "responses": {
-          "400": {
-            "description": "Invalid id format",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
           "200": {
             "description": "Apartment received",
             "content": {
@@ -942,6 +945,16 @@
           },
           "404": {
             "description": "Apartment not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid id format",
             "content": {
               "*/*": {
                 "schema": {
@@ -1147,6 +1160,16 @@
         "summary": "Get me as user",
         "operationId": "getOne",
         "responses": {
+          "404": {
+            "description": "User not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "403": {
             "description": "User is not authenticated",
             "content": {
@@ -1163,16 +1186,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/UserDto"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "User not found",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
                 }
               }
             }
@@ -1321,29 +1334,6 @@
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "/api/auth/forget": {
-      "get": {
-        "tags": [
-          "auth-controller"
-        ],
-        "operationId": "forgetPassword",
-        "parameters": [
-          {
-            "name": "email",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "No Content"
           }
         }
       }
@@ -1649,12 +1639,16 @@
           }
         }
       },
-      "NewPasswordDto": {
+      "SetPasswordForm": {
         "required": [
-          "password"
+          "password",
+          "token"
         ],
         "type": "object",
         "properties": {
+          "token": {
+            "type": "string"
+          },
           "password": {
             "type": "string"
           }
@@ -1689,6 +1683,17 @@
           },
           "apartmentId": {
             "$ref": "#/components/schemas/ApartmentId"
+          }
+        }
+      },
+      "RestorePasswordForm": {
+        "required": [
+          "email"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
           }
         }
       },
@@ -1735,6 +1740,17 @@
         }
       },
       "TokenDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          }
+        }
+      },
+      "TokenForm": {
+        "required": [
+          "token"
+        ],
         "type": "object",
         "properties": {
           "token": {
@@ -2082,12 +2098,12 @@
           "sort": {
             "$ref": "#/components/schemas/SortObject"
           },
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject"
+          },
           "numberOfElements": {
             "type": "integer",
             "format": "int32"
-          },
-          "pageable": {
-            "$ref": "#/components/schemas/PageableObject"
           },
           "first": {
             "type": "boolean"
@@ -2110,6 +2126,12 @@
           "sort": {
             "$ref": "#/components/schemas/SortObject"
           },
+          "paged": {
+            "type": "boolean"
+          },
+          "unpaged": {
+            "type": "boolean"
+          },
           "pageNumber": {
             "type": "integer",
             "format": "int32"
@@ -2117,12 +2139,6 @@
           "pageSize": {
             "type": "integer",
             "format": "int32"
-          },
-          "paged": {
-            "type": "boolean"
-          },
-          "unpaged": {
-            "type": "boolean"
           }
         }
       },
@@ -2192,10 +2208,10 @@
           "empty": {
             "type": "boolean"
           },
-          "sorted": {
+          "unsorted": {
             "type": "boolean"
           },
-          "unsorted": {
+          "sorted": {
             "type": "boolean"
           }
         }
@@ -2411,16 +2427,16 @@
       "Event": {
         "type": "object",
         "properties": {
-          "eventName": {
-            "type": "string"
+          "end": {
+            "type": "string",
+            "format": "date-time"
           },
           "start": {
             "type": "string",
             "format": "date-time"
           },
-          "end": {
-            "type": "string",
-            "format": "date-time"
+          "eventName": {
+            "type": "string"
           }
         }
       },
