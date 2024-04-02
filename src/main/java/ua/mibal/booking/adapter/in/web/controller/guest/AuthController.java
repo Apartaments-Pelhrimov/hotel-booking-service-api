@@ -18,20 +18,20 @@ package ua.mibal.booking.adapter.in.web.controller.guest;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ua.mibal.booking.adapter.in.web.mapper.AuthDtoMapper;
 import ua.mibal.booking.adapter.in.web.model.LoginDto;
-import ua.mibal.booking.adapter.in.web.model.NewPasswordDto;
 import ua.mibal.booking.adapter.in.web.model.TokenDto;
 import ua.mibal.booking.application.AuthService;
 import ua.mibal.booking.application.model.RegistrationForm;
+import ua.mibal.booking.application.model.RestorePasswordForm;
+import ua.mibal.booking.application.model.SetPasswordForm;
+import ua.mibal.booking.application.model.TokenForm;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
@@ -61,20 +61,19 @@ public class AuthController {
 
     @PostMapping("/activate")
     @ResponseStatus(NO_CONTENT)
-    public void activateNewAccount(@RequestParam("token") String activationToken) {
-        authService.activateNewAccountBy(activationToken);
+    public void activateNewAccount(@Valid @RequestBody TokenForm tokenForm) {
+        authService.activateNewAccountBy(tokenForm);
     }
 
-    @GetMapping("/forget")
+    @PostMapping("/restore")
     @ResponseStatus(NO_CONTENT)
-    public void forgetPassword(@RequestParam("email") String email) {
-        authService.restore(email);
+    public void restorePassword(@Valid @RequestBody RestorePasswordForm restorePasswordForm) {
+        authService.restore(restorePasswordForm);
     }
 
-    @PutMapping("/forget/password")
+    @PutMapping("/restore/password")
     @ResponseStatus(NO_CONTENT)
-    public void setNewPassword(@RequestParam("token") String activationToken,
-                               @Valid @RequestBody NewPasswordDto newPasswordDto) {
-        authService.setNewPassword(activationToken, newPasswordDto.password());
+    public void setNewPassword(@Valid @RequestBody SetPasswordForm setPasswordForm) {
+        authService.setNewPassword(setPasswordForm);
     }
 }

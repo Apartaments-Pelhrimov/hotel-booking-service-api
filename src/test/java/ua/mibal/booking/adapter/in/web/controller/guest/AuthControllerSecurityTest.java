@@ -24,7 +24,6 @@ import ua.mibal.booking.adapter.in.web.mapper.AuthDtoMapper;
 import ua.mibal.booking.application.AuthService;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -60,21 +59,22 @@ class AuthControllerSecurityTest extends SecurityControllerTest {
     @Test
     void activateNewAccountWithoutAuthorization() throws Exception {
         mvc.perform(post("/api/auth/activate")
-                        .param("token", "123"))
+                        .contentType(APPLICATION_JSON)
+                        .content("{}"))
                 .andExpect(status().isNoContent());
     }
 
     @Test
     void forgetPasswordWithoutAuthorization() throws Exception {
-        mvc.perform(get("/api/auth/forget")
-                        .param("email", "email"))
+        mvc.perform(post("/api/auth/restore")
+                        .contentType(APPLICATION_JSON)
+                        .content("{}"))
                 .andExpect(status().isNoContent());
     }
 
     @Test
     void setNewPasswordWithoutAuthorization() throws Exception {
-        mvc.perform(put("/api/auth/forget/password")
-                        .param("token", "token")
+        mvc.perform(put("/api/auth/restore/password")
                         .contentType(APPLICATION_JSON)
                         .content("{}"))
                 .andExpect(status().isNoContent());

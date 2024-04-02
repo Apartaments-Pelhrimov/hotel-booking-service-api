@@ -27,6 +27,9 @@ import ua.mibal.booking.application.component.TemplateEmailFactory;
 import ua.mibal.booking.application.exception.NotAuthorizedException;
 import ua.mibal.booking.application.exception.UserNotFoundException;
 import ua.mibal.booking.application.model.RegistrationForm;
+import ua.mibal.booking.application.model.RestorePasswordForm;
+import ua.mibal.booking.application.model.SetPasswordForm;
+import ua.mibal.booking.application.model.TokenForm;
 import ua.mibal.booking.application.port.email.EmailSendingService;
 import ua.mibal.booking.application.port.email.model.Email;
 import ua.mibal.booking.domain.Token;
@@ -152,7 +155,7 @@ class AuthService_UnitTest {
         when(token.getUser()).thenReturn(user);
         when(user.getId()).thenReturn(id);
 
-        service.activateNewAccountBy(code);
+        service.activateNewAccountBy(new TokenForm(code));
 
         verify(user, times(1))
                 .enable();
@@ -171,7 +174,7 @@ class AuthService_UnitTest {
                 .thenReturn(email);
 
         assertDoesNotThrow(
-                () -> service.restore(emailStr)
+                () -> service.restore(new RestorePasswordForm(emailStr))
         );
 
         verify(emailSendingService, times(1))
@@ -186,7 +189,7 @@ class AuthService_UnitTest {
         verifyNoMoreInteractions(userService);
 
         assertDoesNotThrow(
-                () -> service.restore(email)
+                () -> service.restore(new RestorePasswordForm(email))
         );
 
         verifyNoInteractions(tokenService, emailSendingService);
@@ -206,7 +209,7 @@ class AuthService_UnitTest {
         when(passwordEncoder.encode(rawPassword))
                 .thenReturn(encodedPassword);
 
-        service.setNewPassword(code, rawPassword);
+        service.setNewPassword(new SetPasswordForm(code, rawPassword));
 
         verify(user, times(1))
                 .setPassword(encodedPassword);

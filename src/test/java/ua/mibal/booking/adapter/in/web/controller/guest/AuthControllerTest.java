@@ -16,28 +16,34 @@
 
 package ua.mibal.booking.adapter.in.web.controller.guest;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.instancio.junit.InstancioSource;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
+import org.springframework.test.web.servlet.ResultActions;
 import ua.mibal.booking.adapter.in.web.controller.ControllerTest;
 import ua.mibal.booking.adapter.in.web.mapper.AuthDtoMapper;
-import ua.mibal.booking.adapter.in.web.model.LoginDto;
-import ua.mibal.booking.adapter.in.web.model.NewPasswordDto;
 import ua.mibal.booking.adapter.in.web.model.TokenDto;
 import ua.mibal.booking.application.AuthService;
 import ua.mibal.booking.application.model.RegistrationForm;
+import ua.mibal.booking.application.model.RestorePasswordForm;
+import ua.mibal.booking.application.model.SetPasswordForm;
+import ua.mibal.booking.application.model.TokenForm;
 
-import static org.mockito.Mockito.times;
+import java.util.HashMap;
+
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -56,21 +62,22 @@ class AuthControllerTest extends ControllerTest {
     private AuthDtoMapper authDtoMapper;
 
     @Autowired
-    private ObjectMapper objectMapper;
+    private ObjectMapper mapper;
 
-    @ParameterizedTest
-    @InstancioSource
-    void login(String username, String password, String token) throws Exception {
-        when(authService.login(username, password))
-                .thenReturn(token);
-        when(authDtoMapper.toTokenDto(token))
-                .thenReturn(new TokenDto(token));
+    private ResultActions responseResult;
 
-        mvc.perform(post("/api/auth/login")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new LoginDto(username, password))))
-                .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(new TokenDto(token))));
+    @Test
+    void login() throws Exception {
+        givenTokenForUser("token_value_123321", "user@email.com", "password");
+
+        whenLogin("user@email.com", "password");
+
+        thenShouldBeStatus(OK);
+        thenShouldBeJsonResponse("""
+                {
+                  "token": "token_value_123321"
+                }
+                """);
     }
 
     @ParameterizedTest
@@ -79,152 +86,205 @@ class AuthControllerTest extends ControllerTest {
             "null,    correct",
             "correct, null",
     })
-    void login_should_return_BAD_REQUEST(String username, String password) throws Exception {
-        LoginDto incorrectLoginDto = new LoginDto(username, password);
+    void loginWithInvalidBody(String username, String password) throws Exception {
+        whenLogin(username, password);
 
-        mvc.perform(post("/api/auth/login")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(incorrectLoginDto)))
-                .andExpect(status().isBadRequest());
+        thenShouldBeStatus(BAD_REQUEST);
+    }
+
+    @Test
+    void register() throws Exception {
+        whenRegister("Test", "Test", "+380951234567", "example@example.com", "password123");
+
+        thenShouldBeStatus(CREATED);
+        verify(authService).register(new RegistrationForm(
+                "Test", "Test", "+380951234567", "example@example.com", "password123"
+        ));
     }
 
     @ParameterizedTest
     @CsvSource(nullValues = "null", value = {
             // incorrect firstName
             //first last    phone                               email                   password
+            "null,    Test, +380951234567,                      example@example.com,    password1",
             "12345, Test,   +380951234567,                      example@example.com,    password1",
             "aa,    Test,   +380951234567,                      example@example.com,    password1",
             // incorrect lastName
+            "Test,  null,   +380951234567,                      example@example.com,    password1",
             "Test,  12345,  +380951234567,                      example@example.com,    password1",
             "Test,  aa,     +380951234567,                      example@example.com,    password1",
             // incorrect phone
+            "Test,  Test,   null,                               example@example.com,    password1",
             "Test,  Test,   aaa,                                example@example.com,    password1",
             "Test,  Test,   380951234567,                       example@example.com,    password1",
             "Test,  Test,   38095 1234567,                      example@example.com,    password1",
             "Test,  Test,   +38095123456774187987348978937984,  example@example.com,    password1",
-            // incorrect mail
+            // incorrect email
+            "Test,  Test,   +380951234567,                      null,                   password1",
             "Test,  Test,   +380951234567,                      example@exacom,         password1",
             "Test,  Test,   +380951234567,                      exampleexacom,          password1",
             "Test,  Test,   +380951234567,                      example@g.com,          password1",
             "Test,  Test,   +380951234567,                      @g.com,                 password1",
             // incorrect password
+            "Test,  Test,   +380951234567,                      example@example.com,    null",
             "Test,  Test,   +380951234567,                      example@example.com,    password",
             "Test,  Test,   +380951234567,                      example@example.com,    pa1",
             "Test,  Test,   +380951234567,                      example@example.com,    23424242"
     })
-    void register_should_throw_ValidationException_while_pass_incorrect_RegistrationDto(
-            String firstName, String lastName, String phone, String email, String password) throws Exception {
-        mvc.perform(post("/api/auth/register")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new RegistrationForm(firstName, lastName, phone, email, password))))
-                .andExpect(status().isBadRequest());
+    void registerWithInvalidBody(String firstName, String lastName, String phone, String email, String password)
+            throws Exception {
+        whenRegister(firstName, lastName, phone, email, password);
 
-        verifyNoInteractions(authService);
-    }
-
-    @ParameterizedTest
-    @CsvSource(
-            //first last    phone           email                   password
-            "Test,  Test,   +380951234567,  example@example.com,    password123")
-    void register_should_accept_correct_RegistrationDto(
-            String firstName, String lastName, String phone, String email, String password) throws Exception {
-        RegistrationForm registrationForm = new RegistrationForm(firstName, lastName, phone, email, password);
-
-        mvc.perform(post("/api/auth/register")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(registrationForm)))
-                .andExpect(status().isCreated());
-
-        verify(authService, times(1))
-                .register(registrationForm);
-    }
-
-    @ParameterizedTest
-    @InstancioSource
-    void activateNewAccount_should_delegate_token_to_AuthService(String token) throws Exception {
-        mvc.perform(post("/api/auth/activate")
-                        .param("token", token))
-                .andExpect(status().isNoContent());
-
-        verify(authService, times(1))
-                .activateNewAccountBy(token);
+        thenShouldBeStatus(BAD_REQUEST);
     }
 
     @Test
-    void activateNewAccount_should_throw_exception_if_token_was_not_passed() throws Exception {
-        mvc.perform(post("/api/auth/activate"))
-                .andExpect(status().isBadRequest());
+    void activateNewAccount() throws Exception {
+        whenActivateNewAccount("token");
 
-        verifyNoInteractions(authService);
-    }
-
-    @ParameterizedTest
-    @InstancioSource
-    void forgetPassword_should_delegate_email_to_AuthService(String email) throws Exception {
-        mvc.perform(get("/api/auth/forget")
-                        .param("email", email))
-                .andExpect(status().isNoContent());
-
-        verify(authService, times(1))
-                .restore(email);
+        thenShouldBeStatus(NO_CONTENT);
+        verify(authService).activateNewAccountBy(new TokenForm("token"));
     }
 
     @Test
-    void forgetPassword_should_throw_exception_if_token_was_not_passed() throws Exception {
-        mvc.perform(get("/api/auth/forget"))
-                .andExpect(status().isBadRequest());
+    void activateNewAccountWithInvalidBody() throws Exception {
+        whenActivateNewAccount(null);
 
-        verifyNoInteractions(authService);
+        thenShouldBeStatus(BAD_REQUEST);
     }
 
     @Test
-    void setNewPassword_should_delegate_params_to_AuthService() throws Exception {
-        String newPass = "password1";
-        String token = "token";
+    void restorePassword() throws Exception {
+        whenRestorePassword("user@email.com");
 
-        mvc.perform(put("/api/auth/forget/password")
-                        .param("token", token)
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new NewPasswordDto(newPass))))
-                .andExpect(status().isNoContent());
-
-        verify(authService, times(1))
-                .setNewPassword(token, newPass);
+        thenShouldBeStatus(NO_CONTENT);
+        verify(authService).restore(new RestorePasswordForm("user@email.com"));
     }
 
     @Test
-    void setNewPassword_should_throw_exception_if_token_was_not_passed() throws Exception {
-        mvc.perform(put("/api/auth/forget/password"))
-                .andExpect(status().isBadRequest());
+    void restorePasswordWithInvalidBody() throws Exception {
+        whenRestorePassword(null);
 
-        verifyNoInteractions(authService);
+        thenShouldBeStatus(BAD_REQUEST);
     }
 
     @Test
-    void setNewPassword_should_throw_exception_if_request_body_is_empty() throws Exception {
-        mvc.perform(put("/api/auth/forget/password")
-                        .param("token", "some_token"))
-                .andExpect(status().isBadRequest());
+    void setNewPassword() throws Exception {
+        whenSetNewPassword("token", "password1");
 
-        verifyNoInteractions(authService);
+        thenShouldBeStatus(NO_CONTENT);
+        verify(authService).setNewPassword(new SetPasswordForm(
+                "token", "password1"
+        ));
     }
 
     @ParameterizedTest
     @CsvSource(value = {
-            "null,                          null",
-            "token,                         null",
+            // invalid token
             "null,                          aaaa1234",
+            // invalid password
+            "token,                         null",
             "token,                         aaaaaaa",
-            "27kRW2FUvh$4zghVEF8GO0uJ=~e=A, 1234567",
+            "token,                         1234567",
             "token,                         aaa123"
     }, nullValues = "null")
-    void setNewPassword_should_throw_ValidationException_while_pass_incorrect_ForgetPasswordDto(String token, String password) throws Exception {
-        mvc.perform(put("/api/auth/forget/password")
-                        .param("token", token)
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new NewPasswordDto(password))))
-                .andExpect(status().isBadRequest());
+    void setNewPasswordWithInvalidBody(String token, String password) throws Exception {
+        whenSetNewPassword(token, password);
 
-        verifyNoInteractions(authService);
+        thenShouldBeStatus(BAD_REQUEST);
+    }
+
+    private void givenTokenForUser(String token, String username, String password) {
+        when(authService.login(username, password))
+                .thenReturn(token);
+        when(authDtoMapper.toTokenDto(token))
+                .thenReturn(new TokenDto(token));
+    }
+
+    private void whenLogin(String username, String password) throws Exception {
+        String body = loginBody(username, password);
+
+        responseResult = mvc.perform(post("/api/auth/login")
+                .contentType(APPLICATION_JSON)
+                .content(body));
+    }
+
+    private void whenRegister(String firstName, String lastName, String phone, String email, String password) throws Exception {
+        String body = registerBody(firstName, lastName, phone, email, password);
+
+        responseResult = mvc.perform(post("/api/auth/register")
+                .contentType(APPLICATION_JSON)
+                .content(body));
+
+    }
+
+    private void whenActivateNewAccount(String token) throws Exception {
+        String body = activateNewAccountBody(token);
+
+        responseResult = mvc.perform(post("/api/auth/activate")
+                .contentType(APPLICATION_JSON)
+                .content(body));
+    }
+
+    private void whenRestorePassword(String email) throws Exception {
+        String body = restorePasswordBody(email);
+
+        responseResult = mvc.perform(post("/api/auth/restore")
+                .contentType(APPLICATION_JSON)
+                .content(body));
+    }
+
+    private void whenSetNewPassword(String token, String password) throws Exception {
+        String body = setNewPasswordBody(token, password);
+
+        responseResult = mvc.perform(put("/api/auth/restore/password")
+                .contentType(APPLICATION_JSON)
+                .content(body));
+    }
+
+    private void thenShouldBeStatus(HttpStatus status) throws Exception {
+        responseResult.andExpect(status().is(status.value()));
+    }
+
+    private void thenShouldBeJsonResponse(String expectedJson) throws Exception {
+        responseResult.andExpect(content().json(expectedJson, true));
+    }
+
+    private String loginBody(String username, String password)
+            throws JsonProcessingException {
+        HashMap<String, Object> json = new HashMap<>();
+        json.put("username", username);
+        json.put("password", password);
+        return mapper.writeValueAsString(json);
+    }
+
+    private String registerBody(String firstName, String lastName, String phone, String email, String password)
+            throws JsonProcessingException {
+        HashMap<String, Object> json = new HashMap<>();
+        json.put("firstName", firstName);
+        json.put("lastName", lastName);
+        json.put("phone", phone);
+        json.put("email", email);
+        json.put("password", password);
+        return mapper.writeValueAsString(json);
+    }
+
+    private String activateNewAccountBody(String token) throws JsonProcessingException {
+        HashMap<String, Object> json = new HashMap<>();
+        json.put("token", token);
+        return mapper.writeValueAsString(json);
+    }
+
+    private String restorePasswordBody(String email) throws JsonProcessingException {
+        HashMap<String, Object> json = new HashMap<>();
+        json.put("email", email);
+        return mapper.writeValueAsString(json);
+    }
+
+    private String setNewPasswordBody(String token, String password) throws JsonProcessingException {
+        HashMap<String, Object> json = new HashMap<>();
+        json.put("token", token);
+        json.put("password", password);
+        return mapper.writeValueAsString(json);
     }
 }

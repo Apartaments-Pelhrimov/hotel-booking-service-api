@@ -25,6 +25,9 @@ import ua.mibal.booking.application.exception.IllegalPasswordException;
 import ua.mibal.booking.application.exception.NotAuthorizedException;
 import ua.mibal.booking.application.exception.UserNotFoundException;
 import ua.mibal.booking.application.model.RegistrationForm;
+import ua.mibal.booking.application.model.RestorePasswordForm;
+import ua.mibal.booking.application.model.SetPasswordForm;
+import ua.mibal.booking.application.model.TokenForm;
 import ua.mibal.booking.application.port.email.EmailSendingService;
 import ua.mibal.booking.application.port.email.model.Email;
 import ua.mibal.booking.domain.Token;
@@ -67,31 +70,31 @@ public class AuthService {
     }
 
     @Transactional
-    public void activateNewAccountBy(String tokenValue) {
-        Token token = tokenService.getOneByValue(tokenValue);
+    public void activateNewAccountBy(TokenForm form) {
+        Token token = tokenService.getOneByValue(form.token());
         User user = token.getUser();
         user.enable();
     }
 
     @Transactional
-    public void restore(String email) {
+    public void restore(RestorePasswordForm form) {
         try {
-            restoreUserPassword(email);
+            restoreUserPassword(form);
         } catch (UserNotFoundException hidden) {
             // To hide from a client that user not found
         }
     }
 
     @Transactional
-    public void setNewPassword(String tokenValue, String newPassword) {
-        Token token = tokenService.getOneByValue(tokenValue);
+    public void setNewPassword(SetPasswordForm form) {
+        Token token = tokenService.getOneByValue(form.token());
         User user = token.getUser();
-        String newEncodedPassword = passwordEncoder.encode(newPassword);
+        String newEncodedPassword = passwordEncoder.encode(form.password());
         user.setPassword(newEncodedPassword);
     }
 
-    private void restoreUserPassword(String email) {
-        User user = userService.getOne(email);
+    private void restoreUserPassword(RestorePasswordForm form) {
+        User user = userService.getOne(form.email());
         if (!user.isEnabled()) {
             return;
         }
